@@ -1,0 +1,186 @@
+id: file:///ines-core.yaml
+name: ines-core
+imports:
+  - linkml:types
+default_range: string
+
+classes:
+  entity:
+    abstract: true
+    description: abstract high-level class
+    slots:
+      - id
+      - name
+      - description
+
+  node:
+    is_a: entity
+    abstract: true
+    attributes:
+      node_type:
+        designates_type: true
+        range: string
+        description: balance, storage, commodity
+
+  balance:
+    is_a: node
+    mixins:
+      - HasFlow
+      - HasPenalty
+
+  storage:
+    is_a: node
+    mixins:
+      - HasFlow
+      - HasPenalty
+      - HasInvestments
+    attributes:
+      storage_capacity:
+      storages_existing:
+      investment_cost:
+
+  commodity:
+    is_a: node
+    attributes:
+      commodity_price:
+
+  unit:
+    is_a: entity
+    mixins:
+      - HasInvestments
+    attributes:
+      conversion_method:
+        range: conversion_method_enum
+        description: constant_efficiency
+      units_existing:
+      efficiency:
+
+  flow:
+    abstract: true
+    mixins:
+      - HasProfiles
+    attributes:
+      source:
+      sink:
+      capacity:
+      other_operational_cost:
+      investment_cost:
+    unique_keys:
+      source_sink:
+        unique_key_slots:
+          - source
+          - sink
+
+  unit__to_node:
+    is_a: flow
+    attributes:
+      source:
+        range: unit
+      sink:
+        range: node
+
+
+  node__to_unit:
+    is_a: flow
+    attributes:
+      source:
+        range: node
+      sink:
+        range: unit
+
+  link:
+    is_a: entity
+    mixins:
+      - HasInvestments
+    attributes:
+      transfer_method:
+        range: transfer_method_enum
+        description: regular_linear
+      capacity:
+      existing:
+      efficiency:
+      investment_cost:
+
+  node__link__node:
+    is_a: entity
+    attributes:
+      source:
+      link:
+      sink:
+
+  solve_pattern:
+    is_a: entity
+    attributes:
+      solve_mode:
+        range: solve_model_enum
+        description: single_solve
+      start_time:
+      duration:
+      time_resolution:
+
+  system:
+    is_a: entity
+    attributes:
+      discount_rate:
+
+
+  HasFlow:
+    mixin: true
+    attributes:
+      flow_annual:
+      flow_profile:
+      flow_scaling_method:
+        range: flow_scaling_method_enum
+        description: use_profile_directly, scale_to_annual
+
+  HasPenalty:
+    mixin: true
+    attributes:
+      penalty_upward:
+      penalty_downward:
+
+  HasInvestments:
+    mixin: true
+    attributes:
+      investment_method:
+        range: investment_method_enum
+        description: not_allowed, no_limits
+      interest_rate:
+      lifetime:
+
+  HasProfiles:
+    mixin: true
+    attributes:
+      profile_method:
+        range: profile_method_enum
+        description: upper_limit, lower_limit
+      profile_limit_upper:
+      profile_limit_lower:
+
+slots:
+  id:
+    identifier: true
+  name:
+  description:
+
+
+enums:
+  flow_scaling_method_enum:
+    permissible_values:
+      constant_efficiency
+
+  conversion_method_enum:
+    permissible_values:
+      use_profile_directly
+      scale_to_annual
+
+  transfer_method_enum:
+    permissible_values:
+      regular_linear
+
+  profile_method_enum:
+    permissible_values:
+      upper_limit
+      lower_limit
+
+

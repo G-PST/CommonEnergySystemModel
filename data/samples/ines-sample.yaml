@@ -1,0 +1,195 @@
+balance:
+  - id: 1
+    name: west
+    flow_scaling_method: scale_to_annual
+    flow_annual: 100000
+    flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
+    penalty_upward: 10000
+  - id: 2
+    name: east
+    flow_scaling_method: scale_to_annual
+    flow_annual: 80000
+    flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
+    penalty_upward: 10000
+  - id: 3
+    name: heat
+    flow_scaling_method: use_profile_directly
+    flow_profile: [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50, -50]
+    penalty_upward: 10000
+storage:
+  - id: 4
+    name: battery
+    storage_capacity: 750
+    storages_existing: 2
+    investment_method: no_limits
+    investment_cost: 600
+    interest_rate: 0.07
+    lifetime: 12
+    penalty_upward: 10000
+commodity:
+  - id: 5
+    name: biomass
+    commodity_price: 20
+  - id: 6
+    name: natural_gas
+    commodity_price: 25
+unit:
+  - id: 7
+    name: ocgt
+    conversion_method: constant_efficiency
+    units_existing: 2
+    efficiency: 0.38
+    investment_method: no_limits
+    interest_rate: 0.06
+    lifetime: 25
+  - id: 8
+    name: ccgt
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 0.58
+    investment_method: no_limits
+    interest_rate: 0.06
+    lifetime: 30
+  - id: 9
+    name: nuclear
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 0.34
+    investment_method: no_limits
+    interest_rate: 0.08
+    lifetime: 40
+  - id: 10
+    name: wind
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 1
+    investment_method: no_limits
+    interest_rate: 0.06
+    lifetime: 25
+  - id: 11
+    name: bio_chp
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 0.94
+    investment_method: no_limits
+    interest_rate: 0.06
+    lifetime: 30
+  - id: 12
+    name: heatpump
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 2.5
+    investment_method: no_limits
+    interest_rate: 0.06
+    lifetime: 30
+node__to_unit:
+  - id: 13
+    name: natural_gas__ocgt
+    source: natural_gas
+    sink: ocgt
+  - id: 14
+    name: natural_gas__ccgt
+    source: natural_gas
+    sink: ccgt
+  - id: 16
+    name: biomass__bio_chp
+    source: biomass
+    sink: bio_chp
+  - id: 17
+    name: west__heatpump
+    source: west
+    sink: heatpump
+unit__to_node:
+  - id: 18
+    name: ocgt__west
+    source: ocgt
+    sink: west
+    capacity: 50
+    investment_cost: 500
+  - id: 19
+    name: ccgt__east
+    source: ccgt
+    sink: east
+    capacity: 500
+    investment_cost: 1200
+  - id: 20
+    name: nuclear__west
+    source: nuclear
+    sink: west
+    capacity: 800
+    other_operational_cost: 12
+    investment_cost: 5500
+  - id: 21
+    name: wind__west
+    source: wind
+    sink: west
+    capacity: 1500
+    investment_cost: 1000
+    profile_method: upper_limit
+    profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
+  - id: 22
+    name: bio_chp__east
+    source: bio_chp
+    sink: east
+    capacity: 10
+    investment_cost: 1400
+  - id: 23
+    name: bio_chp__heat
+    source: bio_chp
+    sink: heat
+    capacity: 40
+  - id: 24
+    name: heatpump__heat
+    source: heatpump
+    sink: heat
+    capacity: 40
+    investment_cost: 700
+link:
+  - id: 24
+    name: pony1
+    source: west
+    sink: east
+    transfer_method: regular_linear
+    capacity: 500
+    existing: 1
+    efficiency: 0.98
+    investment_method: no_limits
+    investment_cost: 1600
+    interest_rate: 0.04
+    lifetime: 50
+  - id: 25
+    name: charger
+    source: east
+    sink: battery
+    transfer_method: regular_linear
+    capacity: 750
+    existing: 1
+    efficiency: 0.9
+    investment_method: no_limits
+    investment_cost: 0
+    interest_rate: 0.07
+    lifetime: 12
+balance__link__balance:
+  - id: 26
+    name: west__pony1__east
+    source: west
+    link: pony1
+    sink: east
+  - id: 27
+    name: east__charger__battery
+    source: west
+    link: charger
+    sink: battery
+solve_pattern:
+  - id: 28
+    name: solve_once
+    solve_mode: single_solve
+    start_time: 1
+    duration: 10
+system:
+  - id: 29
+    name: test_system
+    discount_rate: 0.03
+
+
+
