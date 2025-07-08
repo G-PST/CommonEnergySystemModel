@@ -12,27 +12,26 @@ def read_yaml_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return yaml.safe_load(file)
 
-if __name__ == "__main__":
-    try:
-        sample = read_yaml_file('ines-sample.yaml')
-        print("Sample loaded:")
-    except FileNotFoundError:
-        print("sample.yaml not found")
-    except yaml.YAMLError as e:
-        print(f"Error parsing YAML: {e}")
-    
-    
-if len(sys.argv) > 1:
-    yaml_data = sys.argv[1]
-else:
-    exit("Please provide input yaml file and output database url as arguments. The latter should be of the form ""sqlite:///path/db_file.sqlite""")
-if len(sys.argv) > 2:
-    url_db_out = sys.argv[2]
-else:
-    exit("Please provide output database url as the 2nd argument. It should be of the form ""sqlite:///path/db_file.sqlite""")
-
 
 def main():
+    if len(sys.argv) < 2:
+        print("Please provide input yaml file and output database url as arguments.")
+        print("Usage: python write_to_spine.py <yaml-file> <db-url> (i.e. sqlite:///path/db_file.sqlite)")
+        sys.exit(1)
+
+    yaml_file = sys.argv[1]
+    url_db_out = sys.argv[2]
+
+    try:
+        yaml_data = read_yaml_file(yaml_file)
+        print("Sample loaded:")
+    except FileNotFoundError:
+        print(f"{yaml_file} not found")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML: {e}")
+        sys.exit(1)
+
     purge.purge_url(url=url_db_out, purge_settings={"entity": True, "alternative": True})
 
     with DatabaseMapping(url_db_out, upgrade=True) as target_db:
@@ -41,7 +40,7 @@ def main():
         except:
             pass
         target_db.commit_session("foo")
-        for class_name, entities in sample.items():
+        for class_name, entities in yaml_data.items():
             class_name = class_name.replace('balance', 'node')
             class_name = class_name.replace('commodity', 'node')
             class_name = class_name.replace('storage', 'node')
@@ -106,8 +105,6 @@ def main():
                     except:
                         pass
         target_db.commit_session("foo")
-
-                    
 
 
 
