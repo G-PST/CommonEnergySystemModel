@@ -14,7 +14,7 @@ balance:
   - id: 3
     name: heat
     flow_scaling_method: use_profile_directly
-    flow_profile: [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50, -50]
+    flow_profile: [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50]
     penalty_upward: 10000
 storage:
   - id: 4
@@ -190,6 +190,7 @@ system:
   - id: 29
     name: test_system
     discount_rate: 0.03
+    timeline: ['2023-01-01T00:00', '2023-01-01T01:00', '2023-01-01T02:00', '2023-01-01T03:00', '2023-01-01T04:00', '2023-01-01T05:00', '2023-01-01T06:00', '2023-01-01T07:00', '2023-01-01T08:00', '2023-01-01T09:00']
 
 
 
