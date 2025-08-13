@@ -2,9 +2,18 @@ id: file:///ines-core.yaml
 name: ines-core
 imports:
   - linkml:types
+prefixes:
+  # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
+  unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
+  # qkind: http://qudt.org/vocab/quantitykind/   # Quantity kinds (Energy, Length, Mass, etc.)
 default_range: string
 
 classes:
+  Database:
+    slots:
+      - currency_year
+      - entities
+
   entity:
     abstract: true
     description: abstract high-level class
@@ -34,15 +43,15 @@ classes:
       - HasFlow
       - HasPenalty
       - HasInvestments
-    attributes:
-      storage_capacity:
-      storages_existing:
-      investment_cost:
+    slots:
+      - storage_capacity
+      - storages_existing
+      - investment_cost
 
   commodity:
     is_a: node
-    attributes:
-      commodity_price:
+    slots:
+      - price_per_unit
 
   unit:
     is_a: entity
@@ -52,19 +61,20 @@ classes:
       conversion_method:
         range: conversion_method_enum
         description: constant_efficiency
-      units_existing:
-      efficiency:
+    slots:
+      - efficiency
+      - units_existing
 
   flow:
     abstract: true
     mixins:
       - HasProfiles
-    attributes:
-      source:
-      sink:
-      capacity:
-      other_operational_cost:
-      investment_cost:
+    slots:
+      - source
+      - sink
+      - capacity
+      - other_operational_cost
+      - investment_cost
     unique_keys:
       source_sink:
         unique_key_slots:
@@ -92,21 +102,20 @@ classes:
     is_a: entity
     mixins:
       - HasInvestments
+    slot_usage:
+      efficiency:
+        range: EfficiencyValue
+    slots:
+      - node_A
+      - node_B
+      - efficiency
+      - capacity
+      - links_existing
+      - investment_cost
     attributes:
       transfer_method:
         range: transfer_method_enum
         description: regular_linear
-      capacity:
-      existing:
-      efficiency:
-      investment_cost:
-
-  node__link__node:
-    is_a: entity
-    attributes:
-      source:
-      link:
-      sink:
 
   solve_pattern:
     is_a: entity
@@ -157,12 +166,87 @@ classes:
       profile_limit_upper:
       profile_limit_lower:
 
+  DirectionalValue:
+    slots:
+      - forward:
+          range: float
+          required: true
+      - reverse:
+          range: float
+          required: true
+
 slots:
+  entities:
+    range: entity
+    multivalued: true
+    description: "All entities in this database"
+  currency_year:
+    pattern: "^cur:[A-Z]{3}_\\d{4}$"  # e.g., "cur:USD_2023"
+    description: "QUDT currency and reference year for all monetary values in the dataset"
+    comments:
+      - "Currency codes must exist in http://qudt.org/vocab/currency/"
+      - "Validation requires external QUDT vocabulary check"
+      - "Maybe LinkML could validate against external vocabulary, but perhaps not well supported yet."
   id:
     identifier: true
+    description: "Unique identifier of the entity"
   name:
+    description: "Name of the entity"
   description:
+    description: "Description of the entity"
+  efficiency:
+    range: float
+    annotations:
+      qudt_unit: "unit:PERCENT"
+  capacity:
+    range: float
+    annotations:
+      qudt_unit: "unit:MegaW"
+  storage_capacity:
+    range: float
+    annotations:
+      qudt_unit: "unit:MegaW"
+  storages_existing:
+    range: float
+    annotations:
+      qudt_unit: "unit:UNITLESS"
+  investment_cost:
+    range: float
+    description: "Price (in currency_year denomination) per kW"
+  price_per_unit:
+    range: float
+    description: "Price (in currency_year denomination) per unit of the product being bought or sold"
+  units_existing:
+    range: float
+    annotations:
+      qudt_unit: "unit:UNITLESS"
+  other_operational_cost:
+    range: float
+    description: "Cost (in currency_year denomination) per unit of the product flowing through"
+  source:
+    range: unit and node
+    description: "Source of the unidirectional flow"
+  sink:
+    range: unit and node
+    description: "Sink of the unidirectional flow"
+  node_A:
+    range: node
+    description: "First node of a bidirectional link"
+  node_B:
+    range: node
+    description: "Second node of a bidirectional link"
+  links_existing:
+    range: float
+    annotations:
+      qudt_unit: "unit:UNITLESS"
 
+
+
+types:
+  EfficiencyValue:
+    union_of:
+      - float
+      - DirectionalValue
 
 enums:
   flow_scaling_method_enum:
