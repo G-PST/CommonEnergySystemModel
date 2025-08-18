@@ -1,10 +1,10 @@
-balance:
+balances:
   - id: 1
     name: west
     flow_scaling_method: scale_to_annual
-    flow_annual: 100000
+    flow_annual: 100000.0
     flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
-    penalty_upward: 10000
+    penalty_upward: 10000.0
   - id: 2
     name: east
     flow_scaling_method: scale_to_annual
@@ -16,7 +16,7 @@ balance:
     flow_scaling_method: use_profile_directly
     flow_profile: [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50]
     penalty_upward: 10000
-storage:
+storages:
   - id: 4
     name: battery
     storage_capacity: 750
@@ -29,10 +29,10 @@ storage:
 commodity:
   - id: 5
     name: biomass
-    commodity_price: 20
+    price_per_unit: 20
   - id: 6
     name: natural_gas
-    commodity_price: 25
+    price_per_unit: 25
 unit:
   - id: 7
     name: ocgt
@@ -85,73 +85,73 @@ unit:
 node__to_unit:
   - id: 13
     name: natural_gas__ocgt
-    source: natural_gas
-    sink: ocgt
+    source: 6
+    sink: 7
   - id: 14
     name: natural_gas__ccgt
-    source: natural_gas
-    sink: ccgt
+    source: 6
+    sink: 8
   - id: 16
     name: biomass__bio_chp
-    source: biomass
-    sink: bio_chp
+    source: 5
+    sink: 11
   - id: 17
     name: west__heatpump
-    source: west
-    sink: heatpump
+    source: 1
+    sink: 12
 unit__to_node:
   - id: 18
     name: ocgt__west
-    source: ocgt
-    sink: west
+    source: 7
+    sink: 1
     capacity: 50
     investment_cost: 500
   - id: 19
     name: ccgt__east
-    source: ccgt
-    sink: east
+    source: 8
+    sink: 2
     capacity: 500
     investment_cost: 1200
   - id: 20
     name: nuclear__west
-    source: nuclear
-    sink: west
+    source: 9
+    sink: 2
     capacity: 800
     other_operational_cost: 12
     investment_cost: 5500
   - id: 21
     name: wind__west
-    source: wind
-    sink: west
+    source: 10
+    sink: 2
     capacity: 1500
     investment_cost: 1000
     profile_method: upper_limit
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
   - id: 22
     name: bio_chp__east
-    source: bio_chp
-    sink: east
+    source: 11
+    sink: 1
     capacity: 10
     investment_cost: 1400
   - id: 23
     name: bio_chp__heat
-    source: bio_chp
-    sink: heat
+    source: 11
+    sink: 3
     capacity: 40
   - id: 24
     name: heatpump__heat
-    source: heatpump
-    sink: heat
+    source: 12
+    sink: 3
     capacity: 40
     investment_cost: 700
 link:
   - id: 24
     name: pony1
-    source: west
-    sink: east
+    node_A: 2
+    node_B: 1
     transfer_method: regular_linear
     capacity: 500
-    existing: 1
+    links_existing: 1
     efficiency: 0.98
     investment_method: no_limits
     investment_cost: 1600
@@ -159,38 +159,24 @@ link:
     lifetime: 50
   - id: 25
     name: charger
-    source: east
-    sink: battery
+    node_A: 2
+    node_B: 4
     transfer_method: regular_linear
     capacity: 750
-    existing: 1
+    links_existing: 1
     efficiency: 0.9
     investment_method: no_limits
     investment_cost: 0
     interest_rate: 0.07
     lifetime: 12
-balance__link__balance:
-  - id: 26
-    name: west__pony1__east
-    source: west
-    link: pony1
-    sink: east
-  - id: 27
-    name: east__charger__battery
-    source: west
-    link: charger
-    sink: battery
 solve_pattern:
-  - id: 28
+  - id: 26
     name: solve_once
     solve_mode: single_solve
     start_time: 1
-    duration: 10
+    duration: 10H
 system:
-  - id: 29
+  - id: 27
     name: test_system
     discount_rate: 0.03
     timeline: ['2023-01-01T00:00', '2023-01-01T01:00', '2023-01-01T02:00', '2023-01-01T03:00', '2023-01-01T04:00', '2023-01-01T05:00', '2023-01-01T06:00', '2023-01-01T07:00', '2023-01-01T08:00', '2023-01-01T09:00']
-
-
-

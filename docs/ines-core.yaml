@@ -1,20 +1,16 @@
 id: file:///ines-core.yaml
 name: ines-core
-imports:
-  - linkml:types
 prefixes:
+  linkml: https://w3id.org/linkml/
   # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
   # qkind: http://qudt.org/vocab/quantitykind/   # Quantity kinds (Energy, Length, Mass, etc.)
+imports:
+  - linkml:types
 default_range: string
 
 classes:
-  Database:
-    slots:
-      - currency_year
-      - entities
-
-  entity:
+  Entity:
     abstract: true
     description: abstract high-level class
     slots:
@@ -22,8 +18,8 @@ classes:
       - name
       - description
 
-  node:
-    is_a: entity
+  Node:
+    is_a: Entity
     abstract: true
     attributes:
       node_type:
@@ -31,14 +27,14 @@ classes:
         range: string
         description: balance, storage, commodity
 
-  balance:
-    is_a: node
+  Balance:
+    is_a: Node
     mixins:
       - HasFlow
       - HasPenalty
 
-  storage:
-    is_a: node
+  Storage:
+    is_a: Node
     mixins:
       - HasFlow
       - HasPenalty
@@ -48,13 +44,13 @@ classes:
       - storages_existing
       - investment_cost
 
-  commodity:
-    is_a: node
+  Commodity:
+    is_a: Node
     slots:
       - price_per_unit
 
-  unit:
-    is_a: entity
+  Unit:
+    is_a: Entity
     mixins:
       - HasInvestments
     attributes:
@@ -65,7 +61,8 @@ classes:
       - efficiency
       - units_existing
 
-  flow:
+  Flow:
+    is_a: Entity
     abstract: true
     mixins:
       - HasProfiles
@@ -81,30 +78,32 @@ classes:
           - source
           - sink
 
-  unit__to_node:
-    is_a: flow
+  Unit__to_node:
+    is_a: Flow
     attributes:
       source:
-        range: unit
+        range: Unit
       sink:
-        range: node
+        range: Node
 
 
-  node__to_unit:
-    is_a: flow
+  Node__to_unit:
+    is_a: Flow
     attributes:
       source:
-        range: node
+        range: Node
       sink:
-        range: unit
+        range: Unit
 
-  link:
-    is_a: entity
+  Link:
+    is_a: Entity
     mixins:
       - HasInvestments
     slot_usage:
       efficiency:
-        range: EfficiencyValue
+        any_of:
+          - range: float
+          - range: EfficiencyValue
     slots:
       - node_A
       - node_B
@@ -117,27 +116,35 @@ classes:
         range: transfer_method_enum
         description: regular_linear
 
-  solve_pattern:
-    is_a: entity
+  Solve_pattern:
+    is_a: Entity
     attributes:
       solve_mode:
         range: solve_model_enum
         description: single_solve
       start_time:
+        range: integer
       duration:
+        range: linkml:duration
       time_resolution:
 
-  system:
-    is_a: entity
+  System:
+    is_a: Entity
     attributes:
       discount_rate:
+        range: float
+      timeline:
+        multivalued: True
 
 
   HasFlow:
     mixin: true
     attributes:
       flow_annual:
+        range: float
       flow_profile:
+        range: float
+        multivalued: True
       flow_scaling_method:
         range: flow_scaling_method_enum
         description: use_profile_directly, scale_to_annual
@@ -146,7 +153,9 @@ classes:
     mixin: true
     attributes:
       penalty_upward:
+        range: float
       penalty_downward:
+        range: float
 
   HasInvestments:
     mixin: true
@@ -155,7 +164,9 @@ classes:
         range: investment_method_enum
         description: not_allowed, no_limits
       interest_rate:
+        range: float
       lifetime:
+        range: float
 
   HasProfiles:
     mixin: true
@@ -164,20 +175,78 @@ classes:
         range: profile_method_enum
         description: upper_limit, lower_limit
       profile_limit_upper:
+        range: float
+        multivalued: True
       profile_limit_lower:
+        range: float
+        multivalued: True
 
   DirectionalValue:
     slots:
-      - forward:
-          range: float
-          required: true
-      - reverse:
-          range: float
-          required: true
+      - forward
+      - reverse
+
+  EfficiencyValue:
+    union_of:
+      - float
+      - DirectionalValue
+
+  Database:
+    tree_root: true
+    attributes:
+      balances:
+        range: Balance
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      storages:
+        range: Storage
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      commodity:
+        range: Commodity
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      unit:
+        range: Unit
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      node__to_unit:
+        range: Node__to_unit
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      unit__to_node:
+        range: Unit__to_node
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      link:
+        range: Link
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      solve_pattern:
+        range: Solve_pattern
+        multivalued: True
+        inlined_as_list: True
+        required: False
+      system:
+        range: System
+        multivalued: True
+        inlined_as_list: True
+        required: False
+    # slots:
+      # - currency_year
+      # - entity
+
 
 slots:
-  entities:
-    range: entity
+  entity:
+    range: Entity
     multivalued: true
     description: "All entities in this database"
   currency_year:
@@ -189,6 +258,7 @@ slots:
       - "Maybe LinkML could validate against external vocabulary, but perhaps not well supported yet."
   id:
     identifier: true
+    range: integer
     description: "Unique identifier of the entity"
   name:
     description: "Name of the entity"
@@ -205,7 +275,7 @@ slots:
   storage_capacity:
     range: float
     annotations:
-      qudt_unit: "unit:MegaW"
+      qudt_unit: "unit:MegaW-HR"
   storages_existing:
     range: float
     annotations:
@@ -224,47 +294,67 @@ slots:
     range: float
     description: "Cost (in currency_year denomination) per unit of the product flowing through"
   source:
-    range: unit and node
+    any_of:
+      - range: Unit
+      - range: Node
     description: "Source of the unidirectional flow"
   sink:
-    range: unit and node
+    any_of:
+      - range: Unit
+      - range: Node
     description: "Sink of the unidirectional flow"
   node_A:
-    range: node
+    range: Node
     description: "First node of a bidirectional link"
   node_B:
-    range: node
+    range: Node
     description: "Second node of a bidirectional link"
   links_existing:
     range: float
     annotations:
       qudt_unit: "unit:UNITLESS"
+  forward:
+    range: float
+    required: true
+  reverse:
+    range: float
+    required: true
 
 
-
-types:
-  EfficiencyValue:
-    union_of:
-      - float
-      - DirectionalValue
 
 enums:
   flow_scaling_method_enum:
     permissible_values:
-      constant_efficiency
+      use_profile_directly:
+        text: use_profile_directly
+      scale_to_annual:
+        text: scale_to_annual
 
   conversion_method_enum:
     permissible_values:
-      use_profile_directly
-      scale_to_annual
+      constant_efficiency:
+        text: constant_efficiency
 
   transfer_method_enum:
     permissible_values:
-      regular_linear
+      regular_linear:
+        text: regular_linear
 
   profile_method_enum:
     permissible_values:
-      upper_limit
-      lower_limit
+      upper_limit:
+        text: upper_limit
+      lower_limit:
+        text: lower_limit
 
+  solve_model_enum:
+    permissible_values:
+      single_solve:
+        text: single_solve
 
+  investment_method_enum:
+    permissible_values:
+      not_allowed:
+        text: not_allowed
+      no_limits:
+        text: no_limits
