@@ -6,7 +6,7 @@ It is designed to work well with other relevant standards like the [IEC-CIM](htt
 
 ## Overview
 
-The INES model is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. It supports:
+The Common Energy System Model is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. It supports:
 - Multi-energy system representation
 - Balance nodes with flow profiles
 - Storage units with investment capabilities

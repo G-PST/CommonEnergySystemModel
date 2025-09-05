@@ -125,7 +125,7 @@ classes:
       start_time:
         range: integer
       duration:
-        range: linkml:duration
+        range: integer # linkml:duration
       time_resolution:
 
   System:
