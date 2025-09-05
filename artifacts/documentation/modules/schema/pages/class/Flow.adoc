@@ -1,0 +1,32 @@
+= `Flow`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Abstract class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** *`Flow`*
+ *** xref::class/Node__to_unit.adoc[`Node__to_unit`]
+ *** xref::class/Unit__to_node.adoc[`Unit__to_node`]
+
+
+== Slots
+
+
+This class has no slots.
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

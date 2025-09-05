@@ -1,0 +1,99 @@
+= Index
+
+== Classes
+
+[cols="1,2"]
+|===
+| Name | Description
+
+
+| xref::class/Balance.adoc[`Balance`]
+| n/a
+
+| xref::class/Commodity.adoc[`Commodity`]
+| n/a
+
+| xref::class/Database.adoc[`Database`]
+| n/a
+
+| xref::class/DirectionalValue.adoc[`DirectionalValue`]
+| n/a
+
+| xref::class/EfficiencyValue.adoc[`EfficiencyValue`]
+| n/a
+
+| xref::class/Entity.adoc[`Entity`]
+| +++abstract high-level class+++
+
+| xref::class/Flow.adoc[`Flow`]
+| n/a
+
+| xref::class/HasFlow.adoc[`HasFlow`]
+| n/a
+
+| xref::class/HasInvestments.adoc[`HasInvestments`]
+| n/a
+
+| xref::class/HasPenalty.adoc[`HasPenalty`]
+| n/a
+
+| xref::class/HasProfiles.adoc[`HasProfiles`]
+| n/a
+
+| xref::class/Link.adoc[`Link`]
+| n/a
+
+| xref::class/Node.adoc[`Node`]
+| n/a
+
+| xref::class/Node__to_unit.adoc[`Node__to_unit`]
+| n/a
+
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| n/a
+
+| xref::class/Storage.adoc[`Storage`]
+| n/a
+
+| xref::class/System.adoc[`System`]
+| n/a
+
+| xref::class/Unit.adoc[`Unit`]
+| n/a
+
+| xref::class/Unit__to_node.adoc[`Unit__to_node`]
+| n/a
+
+|===
+
+== Types
+
+No types are defined in the schema.
+
+
+== Enumerations
+
+
+[cols="1,2"]
+|===
+| Name | Description
+
+| xref::enumeration/conversion_method_enum.adoc[`conversion_method_enum`]
+| n/a
+
+| xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
+| n/a
+
+| xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
+| n/a
+
+| xref::enumeration/profile_method_enum.adoc[`profile_method_enum`]
+| n/a
+
+| xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
+| n/a
+
+| xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
+| n/a
+
+|===

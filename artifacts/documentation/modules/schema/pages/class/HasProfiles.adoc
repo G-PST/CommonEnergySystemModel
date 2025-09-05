@@ -1,0 +1,138 @@
+= `HasProfiles`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`HasProfiles`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<profile_limit_lower,`profile_limit_lower`>>
+//| [[slots_table.profile_limit_lower]]<<profile_limit_lower,`profile_limit_lower`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<profile_limit_upper,`profile_limit_upper`>>
+//| [[slots_table.profile_limit_upper]]<<profile_limit_upper,`profile_limit_upper`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<profile_method,`profile_method`>>
+//| [[slots_table.profile_method]]<<profile_method,`profile_method`>>
+| 0..* +
+xref::enumeration/profile_method_enum.adoc[`profile_method_enum`]
+| +++upper_limit, lower_limit+++
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#profile_limit_lower]
+=== `profile_limit_lower`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.profile_limit_lower,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#profile_limit_upper]
+=== `profile_limit_upper`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.profile_limit_upper,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#profile_method]
+=== `profile_method`
++++upper_limit, lower_limit+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/profile_method_enum.adoc[`profile_method_enum`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.profile_method,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

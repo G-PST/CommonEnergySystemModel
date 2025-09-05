@@ -1,0 +1,37 @@
+= `Entity`
+:toclevels: 4
+
+
++++abstract high-level class+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Abstract class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`Entity`*
+ ** xref::class/Flow.adoc[`Flow`]
+ ** xref::class/Link.adoc[`Link`]
+ ** xref::class/Node.adoc[`Node`]
+ ** xref::class/Solve_pattern.adoc[`Solve_pattern`]
+ ** xref::class/System.adoc[`System`]
+ ** xref::class/Unit.adoc[`Unit`]
+
+
+== Slots
+
+
+This class has no slots.
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

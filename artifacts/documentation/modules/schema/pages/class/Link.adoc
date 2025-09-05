@@ -1,0 +1,83 @@
+= `Link`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** *`Link`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<transfer_method,`transfer_method`>>
+//| [[slots_table.transfer_method]]<<transfer_method,`transfer_method`>>
+| 0..* +
+xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
+| +++regular_linear+++
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#transfer_method]
+=== `transfer_method`
++++regular_linear+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.transfer_method,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#link[`link`]
+
+
+|===
+

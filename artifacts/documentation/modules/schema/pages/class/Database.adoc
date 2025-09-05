@@ -1,0 +1,510 @@
+= `Database`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`Database`*
+
+
+== Slots
+
+
+
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+Database {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Balance {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Storage {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Commodity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Unit {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Node__to_unit {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Unit__to_node {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Link {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+System {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Database -> Balance: balances
+
+
+Database -> Storage: storages
+
+
+Database -> Commodity: commodity
+
+
+Database -> Unit: unit
+
+
+Database -> Node__to_unit: node__to_unit
+
+
+Database -> Unit__to_node: unit__to_node
+
+
+Database -> Link: link
+
+
+Database -> Solve_pattern: solve_pattern
+
+
+Database -> System: system
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<balances,`balances`>>
+//| [[slots_table.balances]]<<balances,`balances`>>
+| 0..* +
+xref::class/Balance.adoc[`Balance`]
+| _n/a_
+| _n/a_
+
+| <<commodity,`commodity`>>
+//| [[slots_table.commodity]]<<commodity,`commodity`>>
+| 0..* +
+xref::class/Commodity.adoc[`Commodity`]
+| _n/a_
+| _n/a_
+
+| <<link,`link`>>
+//| [[slots_table.link]]<<link,`link`>>
+| 0..* +
+xref::class/Link.adoc[`Link`]
+| _n/a_
+| _n/a_
+
+| <<node__to_unit,`node__to_unit`>>
+//| [[slots_table.node__to_unit]]<<node__to_unit,`node__to_unit`>>
+| 0..* +
+xref::class/Node__to_unit.adoc[`Node__to_unit`]
+| _n/a_
+| _n/a_
+
+| <<solve_pattern,`solve_pattern`>>
+//| [[slots_table.solve_pattern]]<<solve_pattern,`solve_pattern`>>
+| 0..* +
+xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| _n/a_
+| _n/a_
+
+| <<storages,`storages`>>
+//| [[slots_table.storages]]<<storages,`storages`>>
+| 0..* +
+xref::class/Storage.adoc[`Storage`]
+| _n/a_
+| _n/a_
+
+| <<system,`system`>>
+//| [[slots_table.system]]<<system,`system`>>
+| 0..* +
+xref::class/System.adoc[`System`]
+| _n/a_
+| _n/a_
+
+| <<unit,`unit`>>
+//| [[slots_table.unit]]<<unit,`unit`>>
+| 0..* +
+xref::class/Unit.adoc[`Unit`]
+| _n/a_
+| _n/a_
+
+| <<unit__to_node,`unit__to_node`>>
+//| [[slots_table.unit__to_node]]<<unit__to_node,`unit__to_node`>>
+| 0..* +
+xref::class/Unit__to_node.adoc[`Unit__to_node`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#balances]
+=== `balances`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Balance.adoc[`Balance`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.balances,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#commodity]
+=== `commodity`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Commodity.adoc[`Commodity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.commodity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#link]
+=== `link`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Link.adoc[`Link`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.link,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#node__to_unit]
+=== `node__to_unit`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Node__to_unit.adoc[`Node__to_unit`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.node__to_unit,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#solve_pattern]
+=== `solve_pattern`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.solve_pattern,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#storages]
+=== `storages`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Storage.adoc[`Storage`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.storages,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#system]
+=== `system`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/System.adoc[`System`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.system,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#unit]
+=== `unit`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Unit.adoc[`Unit`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.unit,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#unit__to_node]
+=== `unit__to_node`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Unit__to_node.adoc[`Unit__to_node`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.unit__to_node,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

@@ -72,11 +72,11 @@ classes:
       - capacity
       - other_operational_cost
       - investment_cost
-    unique_keys:
-      source_sink:
-        unique_key_slots:
-          - source
-          - sink
+    # unique_keys:
+    #   source_sink:
+    #     unique_key_slots:
+    #       - source
+    #       - sink
 
   Unit__to_node:
     is_a: Flow
@@ -127,6 +127,7 @@ classes:
       duration:
         range: integer # linkml:duration
       time_resolution:
+        range: integer
 
   System:
     is_a: Entity

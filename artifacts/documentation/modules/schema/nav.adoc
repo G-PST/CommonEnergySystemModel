@@ -1,0 +1,87 @@
+[.truncate]
+* Information model
+** xref::index.adoc[Index]
+** Classes
+*** xref::class/Database.adoc[Database (root)]
+
+*** xref::class/Balance.adoc[Balance]
+
+
+
+*** xref::class/Commodity.adoc[Commodity]
+
+
+
+
+*** xref::class/DirectionalValue.adoc[DirectionalValue]
+
+
+
+*** xref::class/EfficiencyValue.adoc[EfficiencyValue]
+
+
+
+*** xref::class/Entity.adoc[Entity]
+
+
+
+*** xref::class/Flow.adoc[Flow]
+
+
+
+*** xref::class/HasFlow.adoc[HasFlow]
+
+
+
+*** xref::class/HasInvestments.adoc[HasInvestments]
+
+
+
+*** xref::class/HasPenalty.adoc[HasPenalty]
+
+
+
+*** xref::class/HasProfiles.adoc[HasProfiles]
+
+
+
+*** xref::class/Link.adoc[Link]
+
+
+
+*** xref::class/Node.adoc[Node]
+
+
+
+*** xref::class/Node__to_unit.adoc[Node__to_unit]
+
+
+
+*** xref::class/Solve_pattern.adoc[Solve_pattern]
+
+
+
+*** xref::class/Storage.adoc[Storage]
+
+
+
+*** xref::class/System.adoc[System]
+
+
+
+*** xref::class/Unit.adoc[Unit]
+
+
+
+*** xref::class/Unit__to_node.adoc[Unit__to_node]
+
+
+
+
+** Enumerations
+*** xref::enumeration/conversion_method_enum.adoc[conversion_method_enum]
+*** xref::enumeration/flow_scaling_method_enum.adoc[flow_scaling_method_enum]
+*** xref::enumeration/investment_method_enum.adoc[investment_method_enum]
+*** xref::enumeration/profile_method_enum.adoc[profile_method_enum]
+*** xref::enumeration/solve_model_enum.adoc[solve_model_enum]
+*** xref::enumeration/transfer_method_enum.adoc[transfer_method_enum]

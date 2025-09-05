@@ -1,0 +1,138 @@
+= `HasInvestments`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`HasInvestments`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<interest_rate,`interest_rate`>>
+//| [[slots_table.interest_rate]]<<interest_rate,`interest_rate`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<investment_method,`investment_method`>>
+//| [[slots_table.investment_method]]<<investment_method,`investment_method`>>
+| 0..* +
+xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
+| +++not_allowed, no_limits+++
+| _n/a_
+
+| <<lifetime,`lifetime`>>
+//| [[slots_table.lifetime]]<<lifetime,`lifetime`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#interest_rate]
+=== `interest_rate`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.interest_rate,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#investment_method]
+=== `investment_method`
++++not_allowed, no_limits+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.investment_method,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#lifetime]
+=== `lifetime`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.lifetime,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.
