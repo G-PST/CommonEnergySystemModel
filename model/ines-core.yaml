@@ -78,7 +78,7 @@ classes:
     #       - source
     #       - sink
 
-  Unit__to_node:
+  Unit_to_node:
     is_a: Flow
     attributes:
       source:
@@ -87,7 +87,7 @@ classes:
         range: Node
 
 
-  Node__to_unit:
+  Node_to_unit:
     is_a: Flow
     attributes:
       source:
@@ -215,13 +215,13 @@ classes:
         multivalued: True
         inlined_as_list: True
         required: False
-      node__to_unit:
-        range: Node__to_unit
+      node_to_unit:
+        range: Node_to_unit
         multivalued: True
         inlined_as_list: True
         required: False
-      unit__to_node:
-        range: Unit__to_node
+      unit_to_node:
+        range: Unit_to_node
         multivalued: True
         inlined_as_list: True
         required: False

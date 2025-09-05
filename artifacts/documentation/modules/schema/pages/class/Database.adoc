@@ -74,7 +74,7 @@ Unit {
 
 
 
-Node__to_unit {
+Node_to_unit {
   style {
     fill: "#cccccc"
     shadow: true
@@ -83,7 +83,7 @@ Node__to_unit {
 
 
 
-Unit__to_node {
+Unit_to_node {
   style {
     fill: "#cccccc"
     shadow: true
@@ -132,10 +132,10 @@ Database -> Commodity: commodity
 Database -> Unit: unit
 
 
-Database -> Node__to_unit: node__to_unit
+Database -> Node_to_unit: node_to_unit
 
 
-Database -> Unit__to_node: unit__to_node
+Database -> Unit_to_node: unit_to_node
 
 
 Database -> Link: link
@@ -221,10 +221,10 @@ xref::class/Link.adoc[`Link`]
 | _n/a_
 | _n/a_
 
-| <<node__to_unit,`node__to_unit`>>
-//| [[slots_table.node__to_unit]]<<node__to_unit,`node__to_unit`>>
+| <<node_to_unit,`node_to_unit`>>
+//| [[slots_table.node_to_unit]]<<node_to_unit,`node_to_unit`>>
 | 0..* +
-xref::class/Node__to_unit.adoc[`Node__to_unit`]
+xref::class/Node_to_unit.adoc[`Node_to_unit`]
 | _n/a_
 | _n/a_
 
@@ -256,10 +256,10 @@ xref::class/Unit.adoc[`Unit`]
 | _n/a_
 | _n/a_
 
-| <<unit__to_node,`unit__to_node`>>
-//| [[slots_table.unit__to_node]]<<unit__to_node,`unit__to_node`>>
+| <<unit_to_node,`unit_to_node`>>
+//| [[slots_table.unit_to_node]]<<unit_to_node,`unit_to_node`>>
 | 0..* +
-xref::class/Unit__to_node.adoc[`Unit__to_node`]
+xref::class/Unit_to_node.adoc[`Unit_to_node`]
 | _n/a_
 | _n/a_
 |===
@@ -346,8 +346,8 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 
 
 //[discrete]
-[#node__to_unit]
-=== `node__to_unit`
+[#node_to_unit]
+=== `node_to_unit`
 
 
 
@@ -358,7 +358,7 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 | Cardinality
 | 0..*
 | Type
-| xref::class/Node__to_unit.adoc[`Node__to_unit`]
+| xref::class/Node_to_unit.adoc[`Node_to_unit`]
 
 
 |===
@@ -366,7 +366,7 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 ////
 [.text-left]
 --
-<<slots_table.node__to_unit,&#10548;>>
+<<slots_table.node_to_unit,&#10548;>>
 --
 ////
 
@@ -476,8 +476,8 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 
 
 //[discrete]
-[#unit__to_node]
-=== `unit__to_node`
+[#unit_to_node]
+=== `unit_to_node`
 
 
 
@@ -488,7 +488,7 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 | Cardinality
 | 0..*
 | Type
-| xref::class/Unit__to_node.adoc[`Unit__to_node`]
+| xref::class/Unit_to_node.adoc[`Unit_to_node`]
 
 
 |===
@@ -496,7 +496,7 @@ xref::class/Unit__to_node.adoc[`Unit__to_node`]
 ////
 [.text-left]
 --
-<<slots_table.unit__to_node,&#10548;>>
+<<slots_table.unit_to_node,&#10548;>>
 --
 ////
 

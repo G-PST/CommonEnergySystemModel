@@ -16,8 +16,8 @@
 == Class hierarchy
 * xref::class/Entity.adoc[`Entity`]
 ** *`Flow`*
- *** xref::class/Node__to_unit.adoc[`Node__to_unit`]
- *** xref::class/Unit__to_node.adoc[`Unit__to_node`]
+ *** xref::class/Node_to_unit.adoc[`Node_to_unit`]
+ *** xref::class/Unit_to_node.adoc[`Unit_to_node`]
 
 
 == Slots
