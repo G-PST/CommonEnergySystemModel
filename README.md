@@ -6,7 +6,7 @@ It is designed to work well with other relevant standards like the [IEC-CIM](htt
 
 ## Overview
 
-The INES model is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. It supports:
+The Common Energy System Model is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. It supports:
 - Multi-energy system representation
 - Balance nodes with flow profiles
 - Storage units with investment capabilities
@@ -56,6 +56,7 @@ This project includes a devcontainer configuration that provides a consistent de
    - LinkML tools
    - Required dependencies
    - Pre-configured extensions for AsciiDoc and Drawio
+5. Once the repository has been reopened in the container, run ```poetry install``` to download all the python dependencies
 
 ### Using Dev Container with GitHub Codespaces
 
