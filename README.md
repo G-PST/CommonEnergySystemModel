@@ -58,11 +58,23 @@ This project includes a devcontainer configuration that provides a consistent de
    - Pre-configured extensions for AsciiDoc and Drawio
 5. Once the repository has been reopened in the container, run ```poetry install``` to download all the python dependencies
 
-### Using Dev Container with GitHub Codespaces
+### Generate Documentation
 
-1. Create a new codespace from this repository
-2. The devcontainer configuration will automatically be applied
-3. You can then work directly in the cloud-based development environment
+In order to generate the static website that will be published on g-PST.github.io/CommonEnergySystemModel, two commands will need to be run
+
+First, to run generat the asciidoc files from the linkML models, Run
+
+```BASH
+
+poetry run python -m linkml_asciidoc_generator.main  "model/ines-core.yaml" "artifacts/documentation/modules/schema" --test
+
+```
+
+then, to generate the HTML versions using antora, run
+
+```BASH
+antora antora-playmbook.yml 
+```
 
 ## Usage
 
