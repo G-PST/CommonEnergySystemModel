@@ -1,8 +1,8 @@
 
 site:
   title: Energy System Model
-  url: http://localhost:8080
-  # start_page: ROOT::index.adoc
+  url: https://G-PST.github.io/CommonEnergySystemModel # ttp://localhost:8080
+  start_page: ROOT:schema:index.adoc
 content:
   sources: 
   - url: .
