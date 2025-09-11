@@ -8,7 +8,7 @@
 [cols="h,3",width=65%]
 |===
 | Type
-| Abstract class
+| Class
 
 
 
@@ -34,4 +34,14 @@ This class has no slots.
 == Used by
 
 
-This class is not used by any other classes as the range of a slot.
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#entities[`entities`]
+
+
+|===
+

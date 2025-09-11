@@ -2,4 +2,4 @@ name: energy-system-model
 title: Energy System Model
 version: ~
 nav:
-- artifacts/documentation/modules/schema/nav.adoc
+- modules/schema/nav.adoc

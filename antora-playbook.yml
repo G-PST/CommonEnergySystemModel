@@ -1,14 +1,14 @@
 
 site:
   title: Energy System Model
-  url: https://G-PST.github.io/CommonEnergySystemModel # ttp://localhost:8080
-  start_page: ROOT:schema:index.adoc
+  url: https://G-PST.github.io/CommonEnergySystemModel
+  start_page: energy-system-model:schema:index.adoc
 content:
   sources: 
   - url: .
     branches: HEAD
     start_path: artifacts/documentation
-    
+
   # - url: https://gitlab.com/antora/demo/demo-component-b.git
   #   branches: [v2.0, v1.0]
   #   start_path: docs

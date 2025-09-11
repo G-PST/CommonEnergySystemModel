@@ -82,6 +82,7 @@
 *** xref::enumeration/conversion_method_enum.adoc[conversion_method_enum]
 *** xref::enumeration/flow_scaling_method_enum.adoc[flow_scaling_method_enum]
 *** xref::enumeration/investment_method_enum.adoc[investment_method_enum]
+*** xref::enumeration/node_type_enum.adoc[node_type_enum]
 *** xref::enumeration/profile_method_enum.adoc[profile_method_enum]
 *** xref::enumeration/solve_model_enum.adoc[solve_model_enum]
 *** xref::enumeration/transfer_method_enum.adoc[transfer_method_enum]

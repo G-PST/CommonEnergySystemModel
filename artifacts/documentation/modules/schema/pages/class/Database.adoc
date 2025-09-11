@@ -38,6 +38,15 @@ Database {
 
 
 
+Entity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
 Balance {
   style {
     fill: "#cccccc"
@@ -118,6 +127,9 @@ System {
 }
 
 
+
+
+Database -> Entity: entities
 
 
 Database -> Balance: balances
@@ -211,6 +223,20 @@ xref::class/Balance.adoc[`Balance`]
 //| [[slots_table.commodity]]<<commodity,`commodity`>>
 | 0..* +
 xref::class/Commodity.adoc[`Commodity`]
+| _n/a_
+| _n/a_
+
+| <<entities,`entities`>>
+//| [[slots_table.entities]]<<entities,`entities`>>
+| 0..* +
+xref::class/Entity.adoc[`Entity`]
+| _n/a_
+| _n/a_
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
 | _n/a_
 | _n/a_
 
@@ -315,6 +341,58 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 [.text-left]
 --
 <<slots_table.commodity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#entities]
+=== `entities`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.entities,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#id]
+=== `id`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
 --
 ////
 

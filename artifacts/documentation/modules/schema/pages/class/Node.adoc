@@ -6,7 +6,7 @@
 [cols="h,3",width=65%]
 |===
 | Type
-| Abstract class
+| Class
 
 
 
@@ -33,8 +33,8 @@
 | <<node_type,`node_type`>>
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
-| +++balance, storage, commodity+++
+xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+| +++Balance, Storage, Commodity+++
 | _n/a_
 |===
 
@@ -44,7 +44,7 @@ https://w3id.org/linkml/String[`string`]
 //[discrete]
 [#node_type]
 === `node_type`
-+++balance, storage, commodity+++
++++Balance, Storage, Commodity+++
 
 
 [cols="h,4",width=65%]
@@ -54,7 +54,7 @@ https://w3id.org/linkml/String[`string`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/String[`string`]
+| xref::enumeration/node_type_enum.adoc[`node_type_enum`]
 
 
 |===

@@ -1,6 +1,8 @@
 id: file:///ines-core.yaml
 name: ines-core
+default_prefix: ines_core
 prefixes:
+  ines_core: file:///ines-core.yaml
   linkml: https://w3id.org/linkml/
   # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
@@ -375,5 +377,8 @@ enums:
   node_type_enum:
     permissible_values:
       Balance:
+        meaning: ines_core:Balance
       Storage:
+        meaning: ines_core:Storage
       Commodity:
+        meaning: ines_core:Commodity

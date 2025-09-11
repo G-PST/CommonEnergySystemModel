@@ -87,6 +87,9 @@ No types are defined in the schema.
 | xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
 | n/a
 
+| xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+| n/a
+
 | xref::enumeration/profile_method_enum.adoc[`profile_method_enum`]
 | n/a
 

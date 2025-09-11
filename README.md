@@ -65,7 +65,7 @@ First, to generate the asciidoc files from the linkML models, run
 
 ```BASH
 
-poetry run python -m linkml_asciidoc_generator.main  "docs/ines-core.yaml" "artifacts/documentation/modules/schema" --test
+poetry run python -m linkml_asciidoc_generator.main  "model/ines-core.yaml" "artifacts/documentation/modules/schema" --test
 
 ```
 

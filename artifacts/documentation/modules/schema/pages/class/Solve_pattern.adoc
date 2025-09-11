@@ -30,8 +30,8 @@
 | <<duration,`duration`>>
 //| [[slots_table.duration]]<<duration,`duration`>>
 | 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| _n/a_
+https://w3id.org/linkml/String[`string`]
+| +++Duration in ISO 8601 format+++
 | _n/a_
 
 | <<solve_mode,`solve_mode`>>
@@ -62,7 +62,7 @@ https://w3id.org/linkml/Integer[`integer`]
 //[discrete]
 [#duration]
 === `duration`
-
++++Duration in ISO 8601 format+++
 
 
 [cols="h,4",width=65%]
@@ -72,7 +72,7 @@ https://w3id.org/linkml/Integer[`integer`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Integer[`integer`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
