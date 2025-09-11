@@ -6,12 +6,18 @@ It is designed to work well with other relevant standards like the [IEC-CIM](htt
 
 ## Overview
 
-The Common Energy System Model is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. It supports:
+The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. CESM is at early phase and currently supports:
+
 - Multi-energy system representation
-- Balance nodes with flow profiles
-- Storage units with investment capabilities
-- Commodity definitions
-- Penalty mechanisms for optimization
+- Nodes:
+  - Balance nodes
+  - Storage nodes
+  - Commodity nodes
+- Links between nodes
+- Conversion units
+- System level parameters
+- Model definition
+
 
 ## Files Structure
 
@@ -22,7 +28,7 @@ The Common Energy System Model is built using [LinkML](https://linkml.io/), a po
 - `data/samples/ines-sample.yaml` - Example data demonstrating how to structure energy system information
 
 ### Processing Scripts
-- `scripts/processing/write_to_spine.py` - Script for reading YAML files (placeholder)
+- `scripts/processing/` - Scripts for basic conversions (e.g. YAML to SQL) - placeholder at the moment
 
 ## Getting Started
 
@@ -31,16 +37,9 @@ The Common Energy System Model is built using [LinkML](https://linkml.io/), a po
    - `Storage`: Storage units with capacity and investment parameters
    - `Commodity`: Energy commodities with pricing
    - `Unit`: Conversion units with efficiency
+   - `Link`: Transfer energy between nodes
 
-2. **Sample Data**: The sample file shows how to structure data according to the model:
-   - Balances with flow profiles and penalty costs
-   - Storage units with capacity, investments, and costs
-   - Commodities with associated identifiers
-
-3. **Extending the Model**: 
-   - Add new node types by extending the `Node` class
-   - Create custom penalties or investment rules
-   - Define additional commodity properties as needed
+2. **Sample Data**: The sample file shows how to structure data according to the model. It has examples for all the classes and forms a small test system.
 
 ## Development Environment
 
@@ -48,8 +47,8 @@ This project includes a devcontainer configuration that provides a consistent de
 
 ### Using Dev Container in VS Code or VSCodium
 
-1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code or VSCodium
-2. Open this repository in VS Code or VSCodium
+1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code or use DevPod with VSCodium. You will also need to have Docker Engine (and devpod for VSCodium).
+2. Open this repository in VS Code or use VSCodium: cd to repository in terminal, `devpod up . --ide codium`
 3. When prompted, select "Reopen in Container" or run the command (ctrl+shift+P) "Dev Containers: Reopen in Container"
 4. The container will automatically build and configure the development environment with:
    - Python 3.x
@@ -62,11 +61,11 @@ This project includes a devcontainer configuration that provides a consistent de
 
 In order to generate the static website that will be published on g-PST.github.io/CommonEnergySystemModel, two commands will need to be run
 
-First, to run generat the asciidoc files from the linkML models, Run
+First, to generate the asciidoc files from the linkML models, run
 
 ```BASH
 
-poetry run python -m linkml_asciidoc_generator.main  "model/ines-core.yaml" "artifacts/documentation/modules/schema" --test
+poetry run python -m linkml_asciidoc_generator.main  "docs/ines-core.yaml" "artifacts/documentation/modules/schema" --test
 
 ```
 
@@ -86,7 +85,7 @@ This model can be used to:
 
 ## Contributing
 
-Contributions are welcome! Please follow standard GitHub practices for pull requests and issues.
+Contributions are welcome. Any contributions to the specification development must be carefully vetted, so best to open an issue first. As the work progresses towards data transformers between the specification and specific modelling tools, then those contributions can be more straight forward (e.g. through pull requests).
 
 ## License
 
