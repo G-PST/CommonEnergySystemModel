@@ -72,13 +72,13 @@ classes:
       - capacity
       - other_operational_cost
       - investment_cost
-    unique_keys:
-      source_sink:
-        unique_key_slots:
-          - source
-          - sink
+    # unique_keys:
+    #   source_sink:
+    #     unique_key_slots:
+    #       - source
+    #       - sink
 
-  Unit__to_node:
+  Unit_to_node:
     is_a: Flow
     attributes:
       source:
@@ -87,7 +87,7 @@ classes:
         range: Node
 
 
-  Node__to_unit:
+  Node_to_unit:
     is_a: Flow
     attributes:
       source:
@@ -129,6 +129,7 @@ classes:
         pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
         description: "Duration in ISO 8601 format"
       time_resolution:
+        range: integer
 
   System:
     is_a: Entity
@@ -224,13 +225,13 @@ classes:
         multivalued: True
         inlined_as_list: True
         required: False
-      node__to_unit:
-        range: Node__to_unit
+      node_to_unit:
+        range: Node_to_unit
         multivalued: True
         inlined_as_list: True
         required: False
-      unit__to_node:
-        range: Unit__to_node
+      unit_to_node:
+        range: Unit_to_node
         multivalued: True
         inlined_as_list: True
         required: False

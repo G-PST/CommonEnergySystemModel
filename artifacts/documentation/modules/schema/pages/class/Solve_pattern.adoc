@@ -1,0 +1,182 @@
+= `Solve_pattern`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** *`Solve_pattern`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<duration,`duration`>>
+//| [[slots_table.duration]]<<duration,`duration`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| _n/a_
+| _n/a_
+
+| <<solve_mode,`solve_mode`>>
+//| [[slots_table.solve_mode]]<<solve_mode,`solve_mode`>>
+| 0..* +
+xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
+| +++single_solve+++
+| _n/a_
+
+| <<start_time,`start_time`>>
+//| [[slots_table.start_time]]<<start_time,`start_time`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| _n/a_
+| _n/a_
+
+| <<time_resolution,`time_resolution`>>
+//| [[slots_table.time_resolution]]<<time_resolution,`time_resolution`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#duration]
+=== `duration`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.duration,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#solve_mode]
+=== `solve_mode`
++++single_solve+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.solve_mode,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#start_time]
+=== `start_time`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.start_time,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#time_resolution]
+=== `time_resolution`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.time_resolution,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#solve_pattern[`solve_pattern`]
+
+
+|===
+

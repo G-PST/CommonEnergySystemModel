@@ -1,0 +1,40 @@
+
+site:
+  title: Energy System Model
+  url: https://G-PST.github.io/CommonEnergySystemModel # ttp://localhost:8080
+  start_page: ROOT:schema:index.adoc
+content:
+  sources: 
+  - url: .
+    branches: HEAD
+    start_path: artifacts/documentation
+    
+  # - url: https://gitlab.com/antora/demo/demo-component-b.git
+  #   branches: [v2.0, v1.0]
+  #   start_path: docs
+ui: 
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+
+asciidoc:
+  attributes:
+    page-pagination: ''
+    experimental: ''
+    kroki-fetch-diagram: false # Render images in browser. Makes building much faster which is convenient for local development.
+    kroki-default-format: svg@
+    kroki-server-url: http://fruit.ritger.nl:9000
+  extensions:
+    - asciidoctor-kroki
+    - '@djencks/asciidoctor-mathjax'
+output:
+  clean: true
+  dir: ./docs
+# urls:
+  # latest_version_segment: latest
+
+antora:
+  extensions:
+  - require: '@antora/lunr-extension'
+

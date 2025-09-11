@@ -1,0 +1,87 @@
+= `Storage`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** xref::class/Node.adoc[`Node`]
+*** *`Storage`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<node_type,`node_type`>>
+//| [[slots_table.node_type]]<<node_type,`node_type`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++balance, storage, commodity+++
+| xref::class/Node.adoc[`Node`]
+|===
+
+'''
+
+
+//[discrete]
+[#node_type]
+=== `node_type`
++++balance, storage, commodity+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Node.adoc[`Node`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.node_type,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#storages[`storages`]
+
+
+|===
+

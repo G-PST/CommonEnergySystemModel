@@ -1,0 +1,138 @@
+= `HasFlow`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`HasFlow`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<flow_annual,`flow_annual`>>
+//| [[slots_table.flow_annual]]<<flow_annual,`flow_annual`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<flow_profile,`flow_profile`>>
+//| [[slots_table.flow_profile]]<<flow_profile,`flow_profile`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<flow_scaling_method,`flow_scaling_method`>>
+//| [[slots_table.flow_scaling_method]]<<flow_scaling_method,`flow_scaling_method`>>
+| 0..* +
+xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
+| +++use_profile_directly, scale_to_annual+++
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#flow_annual]
+=== `flow_annual`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.flow_annual,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#flow_profile]
+=== `flow_profile`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.flow_profile,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#flow_scaling_method]
+=== `flow_scaling_method`
++++use_profile_directly, scale_to_annual+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.flow_scaling_method,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

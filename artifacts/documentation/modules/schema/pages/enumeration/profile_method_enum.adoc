@@ -1,0 +1,47 @@
+= `profile_method_enum`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `lower_limit`
+| n/a
+| n/a
+
+| `upper_limit`
+| n/a
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/HasProfiles.adoc[`HasProfiles`] | xref::class/HasProfiles.adoc#profile_method[`profile_method`]
+
+
+|===
+

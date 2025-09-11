@@ -1,0 +1,105 @@
+= `HasPenalty`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`HasPenalty`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<penalty_downward,`penalty_downward`>>
+//| [[slots_table.penalty_downward]]<<penalty_downward,`penalty_downward`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<penalty_upward,`penalty_upward`>>
+//| [[slots_table.penalty_upward]]<<penalty_upward,`penalty_upward`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#penalty_downward]
+=== `penalty_downward`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.penalty_downward,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#penalty_upward]
+=== `penalty_upward`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.penalty_upward,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

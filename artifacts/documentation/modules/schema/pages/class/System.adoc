@@ -1,0 +1,116 @@
+= `System`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** *`System`*
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<discount_rate,`discount_rate`>>
+//| [[slots_table.discount_rate]]<<discount_rate,`discount_rate`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+
+| <<timeline,`timeline`>>
+//| [[slots_table.timeline]]<<timeline,`timeline`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#discount_rate]
+=== `discount_rate`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.discount_rate,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#timeline]
+=== `timeline`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.timeline,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#system[`system`]
+
+
+|===
+

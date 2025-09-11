@@ -1,0 +1,90 @@
+= `Node`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Abstract class
+
+
+
+
+|===
+
+== Class hierarchy
+* xref::class/Entity.adoc[`Entity`]
+** *`Node`*
+ *** xref::class/Balance.adoc[`Balance`]
+ *** xref::class/Commodity.adoc[`Commodity`]
+ *** xref::class/Storage.adoc[`Storage`]
+
+
+== Slots
+
+
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<node_type,`node_type`>>
+//| [[slots_table.node_type]]<<node_type,`node_type`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++balance, storage, commodity+++
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#node_type]
+=== `node_type`
++++balance, storage, commodity+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.node_type,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Node_to_unit.adoc[`Node_to_unit`] | xref::class/Node_to_unit.adoc#source[`source`]
+
+
+
+| xref::class/Unit_to_node.adoc[`Unit_to_node`] | xref::class/Unit_to_node.adoc#sink[`sink`]
+
+
+|===
+
