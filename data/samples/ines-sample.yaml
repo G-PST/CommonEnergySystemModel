@@ -174,7 +174,7 @@ solve_pattern:
     name: solve_once
     solve_mode: single_solve
     start_time: 1
-    duration: 10H
+    duration: PT10H
 system:
   - id: 27
     name: test_system

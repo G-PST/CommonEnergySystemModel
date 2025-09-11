@@ -11,7 +11,7 @@ default_range: string
 
 classes:
   Entity:
-    abstract: true
+    # abstract: true
     description: abstract high-level class
     slots:
       - id
@@ -20,12 +20,12 @@ classes:
 
   Node:
     is_a: Entity
-    abstract: true
+    # abstract: true
     attributes:
       node_type:
-        designates_type: true
-        range: string
-        description: balance, storage, commodity
+        # designates_type: true
+        range: node_type_enum
+        description: Balance, Storage, Commodity
 
   Balance:
     is_a: Node
@@ -63,7 +63,7 @@ classes:
 
   Flow:
     is_a: Entity
-    abstract: true
+    # abstract: true
     mixins:
       - HasProfiles
     slots:
@@ -125,7 +125,9 @@ classes:
       start_time:
         range: integer
       duration:
-        range: linkml:duration
+        range: string
+        pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
+        description: "Duration in ISO 8601 format"
       time_resolution:
 
   System:
@@ -194,6 +196,14 @@ classes:
   Database:
     tree_root: true
     attributes:
+      id:
+        identifier: True
+        range: integer
+      entities:
+        range: Entity
+        multivalued: True
+        inlined_as_list: True
+        required: False
       balances:
         range: Balance
         multivalued: True
@@ -294,14 +304,16 @@ slots:
     range: float
     description: "Cost (in currency_year denomination) per unit of the product flowing through"
   source:
-    any_of:
-      - range: Unit
-      - range: Node
+    range: integer
+    #any_of:
+    #  - range: Unit
+    #  - range: Node
     description: "Source of the unidirectional flow"
   sink:
-    any_of:
-      - range: Unit
-      - range: Node
+    range: integer
+    # any_of:
+    #  - range: Unit
+    #  - range: Node
     description: "Sink of the unidirectional flow"
   node_A:
     range: Node
@@ -358,3 +370,9 @@ enums:
         text: not_allowed
       no_limits:
         text: no_limits
+
+  node_type_enum:
+    permissible_values:
+      Balance:
+      Storage:
+      Commodity:
