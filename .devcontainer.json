@@ -1,0 +1,25 @@
+{
+  "name": "NBNL Dev Container",
+  "image": "ghcr.io/netbeheer-nederland/env:latest",
+  "remoteUser": "devuser",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "asciidoctor.asciidoctor-vscode",
+        "hediet.vscode-drawio"
+      ],
+      "settings": {
+        "git.defaultCloneDirectory": "/workspaces/",
+        "asciidoc.extensions.enableKroki": true,
+        "asciidoc.preview.asciidoctorAttributes": {
+          "imagesdir": "../images/",
+          "page-pagination": "",
+          "experimental": "",
+          "kroki-fetch-diagram": false,
+          "kroki-default-format": "svg@",
+          "kroki-server-url": "http://fruit.ritger.nl:9000"
+        }
+      }
+    }
+  }
+}
