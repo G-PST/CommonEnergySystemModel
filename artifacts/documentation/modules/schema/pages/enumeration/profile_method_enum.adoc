@@ -34,14 +34,4 @@
 == Used by
 
 
-[cols="1,1",width=65%]
-|===
-| Source class | Slot name
-
-
-
-| xref::class/HasProfiles.adoc[`HasProfiles`] | xref::class/HasProfiles.adoc#profile_method[`profile_method`]
-
-
-|===
-
+This enumeration is not used by any classes as the range of a slot.

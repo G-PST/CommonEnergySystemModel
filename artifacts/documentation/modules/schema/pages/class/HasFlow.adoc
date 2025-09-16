@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Mixin for flow (annual_flow, flow_profile) related properties.+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -30,21 +32,21 @@
 //| [[slots_table.flow_annual]]<<flow_annual,`flow_annual`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.+++
 | _n/a_
 
 | <<flow_profile,`flow_profile`>>
 //| [[slots_table.flow_profile]]<<flow_profile,`flow_profile`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.+++
 | _n/a_
 
 | <<flow_scaling_method,`flow_scaling_method`>>
 //| [[slots_table.flow_scaling_method]]<<flow_scaling_method,`flow_scaling_method`>>
 | 0..* +
 xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
-| +++use_profile_directly, scale_to_annual+++
+| +++How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.+++
 | _n/a_
 |===
 
@@ -54,7 +56,7 @@ xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
 //[discrete]
 [#flow_annual]
 === `flow_annual`
-
++++Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.+++
 
 
 [cols="h,4",width=65%]
@@ -80,7 +82,7 @@ xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
 //[discrete]
 [#flow_profile]
 === `flow_profile`
-
++++Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.+++
 
 
 [cols="h,4",width=65%]
@@ -106,7 +108,7 @@ xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
 //[discrete]
 [#flow_scaling_method]
 === `flow_scaling_method`
-+++use_profile_directly, scale_to_annual+++
++++How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.+++
 
 
 [cols="h,4",width=65%]

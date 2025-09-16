@@ -8,61 +8,61 @@
 
 
 | xref::class/Balance.adoc[`Balance`]
-| n/a
+| +++Nodes that maintain a balance between inputs and outputs in each time step, but do not have a storage.+++
 
 | xref::class/Commodity.adoc[`Commodity`]
-| n/a
+| +++Nodes where the model can buy and sell commodities against an exogenous price.+++
 
 | xref::class/Database.adoc[`Database`]
-| n/a
+| +++Database properties and holder for classes available in the schema.+++
 
 | xref::class/DirectionalValue.adoc[`DirectionalValue`]
-| n/a
+| +++To which direction the parameter value is applied for in a link.+++
 
 | xref::class/EfficiencyValue.adoc[`EfficiencyValue`]
-| n/a
+| +++Valid formats for the efficiency parameter.+++
 
 | xref::class/Entity.adoc[`Entity`]
-| +++abstract high-level class+++
-
-| xref::class/Flow.adoc[`Flow`]
-| n/a
+| +++Abstract top-level class that contains all other classes (except Database).+++
 
 | xref::class/HasFlow.adoc[`HasFlow`]
-| n/a
+| +++Mixin for flow (annual_flow, flow_profile) related properties.+++
 
 | xref::class/HasInvestments.adoc[`HasInvestments`]
-| n/a
+| +++Mixin for investment related attributes.+++
 
 | xref::class/HasPenalty.adoc[`HasPenalty`]
-| n/a
+| +++Mixin for penalty related attributes (penalty_upward, penalty_downward).+++
 
 | xref::class/HasProfiles.adoc[`HasProfiles`]
-| n/a
+| +++Mixin for profile related attributes.+++
 
 | xref::class/Link.adoc[`Link`]
-| n/a
+| +++Connects two nodes.+++
 
 | xref::class/Node.adoc[`Node`]
-| n/a
+| +++Abstract class that contains all types of nodes+++
 
 | xref::class/Node_to_unit.adoc[`Node_to_unit`]
-| n/a
+| +++An input port from a node to a unit.+++
+
+| xref::class/Port.adoc[`Port`]
+| +++Ports designates an input or an output between a unit and a node.+++
 
 | xref::class/Solve_pattern.adoc[`Solve_pattern`]
-| n/a
+| +++Defines a sequence of solves and the properties of each solve.+++
 
 | xref::class/Storage.adoc[`Storage`]
-| n/a
+| +++Nodes that include a state variable to represent storage. Also maintains balance between inputs and outputs including charging and discharging of the state.+++
 
 | xref::class/System.adoc[`System`]
-| n/a
+| +++Parameters related to the whole system to be modelled.+++
 
 | xref::class/Unit.adoc[`Unit`]
-| n/a
+| +++Units convert input(s) to output(s) using a ratio multiplier.+++
 
 | xref::class/Unit_to_node.adoc[`Unit_to_node`]
-| n/a
+| +++An output port from a unit to a node.+++
 
 |===
 
@@ -79,24 +79,21 @@ No types are defined in the schema.
 | Name | Description
 
 | xref::enumeration/conversion_method_enum.adoc[`conversion_method_enum`]
-| n/a
+| +++Choose how the unit converts inputs to outputs+++
 
 | xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
-| n/a
+| +++How to use flow_profile and flow_annual.+++
 
 | xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
-| n/a
+| +++Choice of investment method.+++
 
 | xref::enumeration/node_type_enum.adoc[`node_type_enum`]
-| n/a
+| +++Limits allowed node types: Balance, Storage, Commodity+++
 
-| xref::enumeration/profile_method_enum.adoc[`profile_method_enum`]
-| n/a
-
-| xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
-| n/a
+| xref::enumeration/solve_mode_enum.adoc[`solve_mode_enum`]
+| +++Choice of solve process handled within the model.+++
 
 | xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
-| n/a
+| +++How to transfer between the two links.+++
 
 |===

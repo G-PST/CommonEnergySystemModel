@@ -2,11 +2,13 @@
 :toclevels: 4
 
 
++++Abstract class that contains all types of nodes+++
+
 
 [cols="h,3",width=65%]
 |===
 | Type
-| Class
+| Abstract class
 
 
 
@@ -34,17 +36,168 @@
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
 xref::enumeration/node_type_enum.adoc[`node_type_enum`]
-| +++Balance, Storage, Commodity+++
+| +++Limits allowed types: Balance, Storage, Commodity+++
 | _n/a_
+
+| <<alternative_names,`alternative_names`>>
+//| [[slots_table.alternative_names]]<<alternative_names,`alternative_names`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++List of alternative names and aliases.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<description,`description`>>
+//| [[slots_table.description]]<<description,`description`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++Description of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 1 +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Unique identifier of the entity within the dataset.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<name,`name`>>
+//| [[slots_table.name]]<<name,`name`>>
+| 1 +
+https://w3id.org/linkml/String[`string`]
+| +++Name of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<semantic_id,`semantic_id`>>
+//| [[slots_table.semantic_id]]<<semantic_id,`semantic_id`>>
+| 0..* +
+https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+| +++Optional id for semantic web integration.+++
+| xref::class/Entity.adoc[`Entity`]
 |===
 
 '''
 
 
 //[discrete]
+[#alternative_names]
+=== `alternative_names`
++++List of alternative names and aliases.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.alternative_names,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#description]
+=== `description`
++++Description of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.description,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#id]
+=== `id`
++++Unique identifier of the entity within the dataset.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#name]
+=== `name`
++++Name of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.name,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#node_type]
 === `node_type`
-+++Balance, Storage, Commodity+++
++++Limits allowed types: Balance, Storage, Commodity+++
 
 
 [cols="h,4",width=65%]
@@ -67,6 +220,35 @@ xref::enumeration/node_type_enum.adoc[`node_type_enum`]
 ////
 
 
+//[discrete]
+[#semantic_id]
+=== `semantic_id`
++++Optional id for semantic web integration.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.semantic_id,&#10548;>>
+--
+////
+
+
 
 
 
@@ -76,6 +258,10 @@ xref::enumeration/node_type_enum.adoc[`node_type_enum`]
 [cols="1,1",width=65%]
 |===
 | Source class | Slot name
+
+
+
+| xref::class/Link.adoc[`Link`] | xref::class/Link.adoc#node_B[`node_B`]
 
 
 

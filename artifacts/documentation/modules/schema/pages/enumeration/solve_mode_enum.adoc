@@ -1,8 +1,8 @@
-= `conversion_method_enum`
+= `solve_mode_enum`
 :toclevels: 4
 
 
-+++Choose how the unit converts inputs to outputs+++
++++Choice of solve process handled within the model.+++
 
 
 [cols="h,3",width=65%]
@@ -24,7 +24,7 @@
 |===
 | Value | URI | Description
 
-| `constant_efficiency`
+| `single_solve`
 | n/a
 | n/a
 |===
@@ -38,7 +38,7 @@
 
 
 
-| xref::class/Unit.adoc[`Unit`] | xref::class/Unit.adoc#conversion_method[`conversion_method`]
+| xref::class/Solve_pattern.adoc[`Solve_pattern`] | xref::class/Solve_pattern.adoc#solve_mode[`solve_mode`]
 
 
 |===

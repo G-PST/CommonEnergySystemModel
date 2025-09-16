@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Valid formats for the efficiency parameter.+++
+
 
 [cols="h,3",width=65%]
 |===

@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++An input port from a node to a unit.+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -15,7 +17,7 @@
 
 == Class hierarchy
 * xref::class/Entity.adoc[`Entity`]
-** xref::class/Flow.adoc[`Flow`]
+** xref::class/Port.adoc[`Port`]
 *** *`Node_to_unit`*
 
 
@@ -122,24 +124,326 @@ legend: "" {
 //| [[slots_table.sink]]<<sink,`sink`>>
 | 0..* +
 xref::class/Unit.adoc[`Unit`]
-| _n/a_
+| +++Sink unit of the node_to_unit port.+++
 | _n/a_
 
 | <<source,`source`>>
 //| [[slots_table.source]]<<source,`source`>>
 | 0..* +
 xref::class/Node.adoc[`Node`]
+| +++Source node of the node_to_unit port.+++
 | _n/a_
-| _n/a_
+
+| <<capacity,`capacity`>>
+//| [[slots_table.capacity]]<<capacity,`capacity`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Capacity of a single asset (flow or link).+++
+| xref::class/Port.adoc[`Port`]
+
+| <<investment_cost,`investment_cost`>>
+//| [[slots_table.investment_cost]]<<investment_cost,`investment_cost`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Price (in currency_year denomination) per kW.+++
+| xref::class/Port.adoc[`Port`]
+
+| <<other_operational_cost,`other_operational_cost`>>
+//| [[slots_table.other_operational_cost]]<<other_operational_cost,`other_operational_cost`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Cost (in currency_year denomination) per unit of the product flowing through+++
+| xref::class/Port.adoc[`Port`]
+
+| <<sink,`sink`>>
+//| [[slots_table.sink]]<<sink,`sink`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Sink of the unidirectional flow+++
+| xref::class/Port.adoc[`Port`]
+
+| <<source,`source`>>
+//| [[slots_table.source]]<<source,`source`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Source of the unidirectional flow+++
+| xref::class/Port.adoc[`Port`]
+
+| <<alternative_names,`alternative_names`>>
+//| [[slots_table.alternative_names]]<<alternative_names,`alternative_names`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++List of alternative names and aliases.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<description,`description`>>
+//| [[slots_table.description]]<<description,`description`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++Description of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 1 +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Unique identifier of the entity within the dataset.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<name,`name`>>
+//| [[slots_table.name]]<<name,`name`>>
+| 1 +
+https://w3id.org/linkml/String[`string`]
+| +++Name of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<semantic_id,`semantic_id`>>
+//| [[slots_table.semantic_id]]<<semantic_id,`semantic_id`>>
+| 0..* +
+https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+| +++Optional id for semantic web integration.+++
+| xref::class/Entity.adoc[`Entity`]
 |===
 
 '''
 
 
 //[discrete]
+[#alternative_names]
+=== `alternative_names`
++++List of alternative names and aliases.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.alternative_names,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#capacity]
+=== `capacity`
++++Capacity of a single asset (flow or link).+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.capacity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#description]
+=== `description`
++++Description of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.description,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#id]
+=== `id`
++++Unique identifier of the entity within the dataset.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#investment_cost]
+=== `investment_cost`
++++Price (in currency_year denomination) per kW.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.investment_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#name]
+=== `name`
++++Name of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.name,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#other_operational_cost]
+=== `other_operational_cost`
++++Cost (in currency_year denomination) per unit of the product flowing through+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.other_operational_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#semantic_id]
+=== `semantic_id`
++++Optional id for semantic web integration.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.semantic_id,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#sink]
 === `sink`
-
++++Sink unit of the node_to_unit port.+++
 
 
 [cols="h,4",width=65%]
@@ -163,9 +467,38 @@ xref::class/Node.adoc[`Node`]
 
 
 //[discrete]
+[#sink]
+=== `sink`
++++Sink of the unidirectional flow+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.sink,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#source]
 === `source`
-
++++Source node of the node_to_unit port.+++
 
 
 [cols="h,4",width=65%]
@@ -176,6 +509,35 @@ xref::class/Node.adoc[`Node`]
 | 0..*
 | Type
 | xref::class/Node.adoc[`Node`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.source,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#source]
+=== `source`
++++Source of the unidirectional flow+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
 
 
 |===

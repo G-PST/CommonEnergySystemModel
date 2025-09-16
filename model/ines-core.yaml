@@ -13,67 +13,122 @@ default_range: string
 
 classes:
   Entity:
-    # abstract: true
-    description: abstract high-level class
-    slots:
-      - id
-      - name
-      - description
+    abstract: true
+    description: "Abstract top-level class that contains all other classes (except Database)."
+    attributes:
+        id:
+            identifier: true
+            required: true
+            range: integer
+            multivalued: false
+            description: "Unique identifier of the entity within the dataset."
+        semantic_id:
+            range: uriorcurie
+            description: "Optional id for semantic web integration."
+        name:
+            required: true
+            description: "Name of the entity."
+            multivalued: false
+        alternative_names:
+            multivalued: true
+            description: "List of alternative names and aliases."
+        description:
+            description: "Description of the entity."
 
   Node:
     is_a: Entity
-    # abstract: true
+    abstract: true
+    description: "Abstract class that contains all types of nodes"
     attributes:
       node_type:
         # designates_type: true
         range: node_type_enum
-        description: Balance, Storage, Commodity
+        description: "Limits allowed types: Balance, Storage, Commodity"
 
   Balance:
     is_a: Node
+    description: "Nodes that maintain a balance between inputs and outputs in each time step, but do not have a storage."
     mixins:
       - HasFlow
       - HasPenalty
 
   Storage:
     is_a: Node
+    description: "Nodes that include a state variable to represent storage. Also maintains balance between inputs and outputs including charging and discharging of the state."
     mixins:
       - HasFlow
       - HasPenalty
       - HasInvestments
-    slots:
-      - storage_capacity
-      - storages_existing
-      - investment_cost
+    attributes:
+      storage_capacity:
+        range: float
+        description: "Capacity of a single storage asset."
+        annotations:
+          qudt_unit: "unit:MegaW-HR"
+      storages_existing:
+        range: float
+        description: "Number of pre-existing storage assets at the model start."
+        annotations:
+          qudt_unit: "unit:UNITLESS"
+      investment_cost:
+        range: float
+        description: "Price (in currency_year denomination) per kWh."
 
   Commodity:
     is_a: Node
-    slots:
-      - price_per_unit
+    description: "Nodes where the model can buy and sell commodities against an exogenous price."
+    attributes:
+      price_per_unit:
+        range: float
+        description: "Price (in currency_year denomination) per unit of the product being bought or sold."
 
   Unit:
     is_a: Entity
+    description: "Units convert input(s) to output(s) using a ratio multiplier."
     mixins:
       - HasInvestments
     attributes:
       conversion_method:
         range: conversion_method_enum
-        description: constant_efficiency
+        description: "Choose how the unit converts inputs to outputs"
+      units_existing:
+        range: float
+        description: "Number of pre-existing conversion units at the model start."
+        annotations:
+          qudt_unit: "unit:UNITLESS"
     slots:
       - efficiency
-      - units_existing
 
-  Flow:
+  Port:
     is_a: Entity
+    description: "Ports designates an input or an output between a unit and a node."
     # abstract: true
     mixins:
       - HasProfiles
-    slots:
-      - source
-      - sink
-      - capacity
-      - other_operational_cost
-      - investment_cost
+    attributes:
+      source:
+        range: integer
+        #any_of:
+        #  - range: Unit
+        #  - range: Node
+        description: "Source of the unidirectional flow"
+      sink:
+        range: integer
+        # any_of:
+        #  - range: Unit
+        #  - range: Node
+        description: "Sink of the unidirectional flow"
+      capacity:
+        range: float
+        description: "Capacity of a single asset (flow or link)."
+        annotations:
+          qudt_unit: "unit:MegaW"
+      investment_cost:
+        range: float
+        description: "Price (in currency_year denomination) per kW."
+      other_operational_cost:
+        range: float
+        description: "Cost (in currency_year denomination) per unit of the product flowing through"
     # unique_keys:
     #   source_sink:
     #     unique_key_slots:
@@ -81,24 +136,31 @@ classes:
     #       - sink
 
   Unit_to_node:
-    is_a: Flow
+    is_a: Port
+    description: "An output port from a unit to a node."
     attributes:
       source:
         range: Unit
+        description: "Source unit of the unit_to_node port."
       sink:
         range: Node
+        description: "Sink node of the unit_to_node port."
 
 
   Node_to_unit:
-    is_a: Flow
+    is_a: Port
+    description: "An input port from a node to a unit."
     attributes:
       source:
         range: Node
+        description: "Source node of the node_to_unit port."
       sink:
         range: Unit
+        description: "Sink unit of the node_to_unit port."
 
   Link:
     is_a: Entity
+    description: "Connects two nodes."
     mixins:
       - HasInvestments
     slot_usage:
@@ -107,78 +169,120 @@ classes:
           - range: float
           - range: EfficiencyValue
     slots:
-      - node_A
-      - node_B
       - efficiency
-      - capacity
-      - links_existing
-      - investment_cost
     attributes:
+      node_A:
+        range: Node
+        description: "First node of a bidirectional link"
+      node_B:
+        range: Node
+        description: "Second node of a bidirectional link"
       transfer_method:
         range: transfer_method_enum
-        description: regular_linear
+        description: "How to transfer between the two links."
+      capacity:
+        range: float
+        description: "Capacity of a single asset (flow or link)."
+        annotations:
+          qudt_unit: "unit:MegaW"
+      links_existing:
+        range: float
+        description: "Number of pre-existing links at the model start"
+        annotations:
+          qudt_unit: "unit:UNITLESS"
+      investment_cost:
+        range: float
+        description: "Price (in currency_year denomination) per kW."
 
   Solve_pattern:
     is_a: Entity
+    description: "Defines a sequence of solves and the properties of each solve."
     attributes:
       solve_mode:
-        range: solve_model_enum
-        description: single_solve
+        range: solve_mode_enum
+        description: "Choice of solve process handled within the model."
       start_time:
         range: integer
+        description: "Start time of the solve - needs to match a value in the timeline."
+        comments:
+          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format datetime."
       duration:
-        range: string
-        pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
-        description: "Duration in ISO 8601 format"
+        range: integer
+        description: "Duration of the solve in time steps."
+        comments:
+          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
+        # range: string
+        # pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
+        # description: "Duration of the solve in ISO 8601 format"
       time_resolution:
         range: integer
+        description: "Time resolution the model should use. Multiples of the time resolution of the original data."
+        comments:
+          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
+          - "Variable time resolution to be added later."
 
   System:
     is_a: Entity
+    description: "Parameters related to the whole system to be modelled."
     attributes:
-      discount_rate:
+      inflation_rate:
+        description: "Rate of inflation from the currency_year of the database."
         range: float
+        annotations:
+          qudt_unit: "unit:PERCENT"
       timeline:
         multivalued: True
+        description: "Time steps for which data can be entered in the database. Used to validate input data."
 
 
   HasFlow:
     mixin: true
+    description: "Mixin for flow (annual_flow, flow_profile) related properties."
     attributes:
       flow_annual:
         range: float
+        annotations:
+          qudt_unit: "unit:MegaW-HR"
+        description: "Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction."
       flow_profile:
         range: float
         multivalued: True
+        annotations:
+          qudt_unit: "unit:PERCENT"
+        description: "Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node."
       flow_scaling_method:
         range: flow_scaling_method_enum
-        description: use_profile_directly, scale_to_annual
+        description: How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.
 
   HasPenalty:
     mixin: true
+    description: "Mixin for penalty related attributes (penalty_upward, penalty_downward)."
     attributes:
       penalty_upward:
         range: float
+        description: "Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff."
       penalty_downward:
         range: float
+        description: "Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff."
 
   HasInvestments:
     mixin: true
+    description: "Mixin for investment related attributes."
     attributes:
       investment_method:
         range: investment_method_enum
-        description: not_allowed, no_limits
-      interest_rate:
+        description: Choice of investment method.
+      discount_rate:
         range: float
-      lifetime:
+        description: Discount rate of the investment.
+      payback_time:
         range: float
+        description: Economic payback time of the investment. Used to annualize investments.
 
   HasProfiles:
     mixin: true
+    description: "Mixin for profile related attributes."
     attributes:
-      profile_method:
-        range: profile_method_enum
-        description: upper_limit, lower_limit
       profile_limit_upper:
         range: float
         multivalued: True
@@ -187,21 +291,31 @@ classes:
         multivalued: True
 
   DirectionalValue:
-    slots:
-      - forward
-      - reverse
+    attributes:
+      forward:
+        range: float
+        required: true
+        description: The parameter is applied to the forward direction (Node_A --> Node_B).
+      reverse:
+        range: float
+        required: true
+        description: The parameter is applied to the backward direction (Node_B --> Node_A).
+    description: To which direction the parameter value is applied for in a link.
 
   EfficiencyValue:
     union_of:
       - float
       - DirectionalValue
+    description: "Valid formats for the efficiency parameter."
 
   Database:
     tree_root: true
+    description: "Database properties and holder for classes available in the schema."
     attributes:
       id:
         identifier: True
         range: integer
+        description: "Database level id to distuingish between database versions."
       entities:
         range: Entity
         multivalued: True
@@ -269,72 +383,11 @@ slots:
       - "Currency codes must exist in http://qudt.org/vocab/currency/"
       - "Validation requires external QUDT vocabulary check"
       - "Maybe LinkML could validate against external vocabulary, but perhaps not well supported yet."
-  id:
-    identifier: true
-    range: integer
-    description: "Unique identifier of the entity"
-  name:
-    description: "Name of the entity"
-  description:
-    description: "Description of the entity"
   efficiency:
     range: float
+    description: "Multiplier for turning inputs to outputs."
     annotations:
       qudt_unit: "unit:PERCENT"
-  capacity:
-    range: float
-    annotations:
-      qudt_unit: "unit:MegaW"
-  storage_capacity:
-    range: float
-    annotations:
-      qudt_unit: "unit:MegaW-HR"
-  storages_existing:
-    range: float
-    annotations:
-      qudt_unit: "unit:UNITLESS"
-  investment_cost:
-    range: float
-    description: "Price (in currency_year denomination) per kW"
-  price_per_unit:
-    range: float
-    description: "Price (in currency_year denomination) per unit of the product being bought or sold"
-  units_existing:
-    range: float
-    annotations:
-      qudt_unit: "unit:UNITLESS"
-  other_operational_cost:
-    range: float
-    description: "Cost (in currency_year denomination) per unit of the product flowing through"
-  source:
-    range: integer
-    #any_of:
-    #  - range: Unit
-    #  - range: Node
-    description: "Source of the unidirectional flow"
-  sink:
-    range: integer
-    # any_of:
-    #  - range: Unit
-    #  - range: Node
-    description: "Sink of the unidirectional flow"
-  node_A:
-    range: Node
-    description: "First node of a bidirectional link"
-  node_B:
-    range: Node
-    description: "Second node of a bidirectional link"
-  links_existing:
-    range: float
-    annotations:
-      qudt_unit: "unit:UNITLESS"
-  forward:
-    range: float
-    required: true
-  reverse:
-    range: float
-    required: true
-
 
 
 enums:
@@ -344,28 +397,25 @@ enums:
         text: use_profile_directly
       scale_to_annual:
         text: scale_to_annual
+    description: How to use flow_profile and flow_annual.
 
   conversion_method_enum:
     permissible_values:
       constant_efficiency:
         text: constant_efficiency
+    description: "Choose how the unit converts inputs to outputs"
 
   transfer_method_enum:
     permissible_values:
       regular_linear:
         text: regular_linear
+    description: "How to transfer between the two links."
 
-  profile_method_enum:
-    permissible_values:
-      upper_limit:
-        text: upper_limit
-      lower_limit:
-        text: lower_limit
-
-  solve_model_enum:
+  solve_mode_enum:
     permissible_values:
       single_solve:
         text: single_solve
+    description: "Choice of solve process handled within the model."
 
   investment_method_enum:
     permissible_values:
@@ -373,6 +423,7 @@ enums:
         text: not_allowed
       no_limits:
         text: no_limits
+    description: Choice of investment method.
 
   node_type_enum:
     permissible_values:
@@ -382,3 +433,4 @@ enums:
         meaning: ines_core:Storage
       Commodity:
         meaning: ines_core:Commodity
+    description: "Limits allowed node types: Balance, Storage, Commodity"

@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Mixin for penalty related attributes (penalty_upward, penalty_downward).+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -30,14 +32,14 @@
 //| [[slots_table.penalty_downward]]<<penalty_downward,`penalty_downward`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff.+++
 | _n/a_
 
 | <<penalty_upward,`penalty_upward`>>
 //| [[slots_table.penalty_upward]]<<penalty_upward,`penalty_upward`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff.+++
 | _n/a_
 |===
 
@@ -47,7 +49,7 @@ https://w3id.org/linkml/Float[`float`]
 //[discrete]
 [#penalty_downward]
 === `penalty_downward`
-
++++Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff.+++
 
 
 [cols="h,4",width=65%]
@@ -73,7 +75,7 @@ https://w3id.org/linkml/Float[`float`]
 //[discrete]
 [#penalty_upward]
 === `penalty_upward`
-
++++Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff.+++
 
 
 [cols="h,4",width=65%]

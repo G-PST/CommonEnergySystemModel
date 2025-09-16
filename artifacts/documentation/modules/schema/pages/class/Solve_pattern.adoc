@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Defines a sequence of solves and the properties of each solve.+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -30,39 +32,74 @@
 | <<duration,`duration`>>
 //| [[slots_table.duration]]<<duration,`duration`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
-| +++Duration in ISO 8601 format+++
+https://w3id.org/linkml/Integer[`integer`]
+| +++Duration of the solve in time steps.+++
 | _n/a_
 
 | <<solve_mode,`solve_mode`>>
 //| [[slots_table.solve_mode]]<<solve_mode,`solve_mode`>>
 | 0..* +
-xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
-| +++single_solve+++
+xref::enumeration/solve_mode_enum.adoc[`solve_mode_enum`]
+| +++Choice of solve process handled within the model.+++
 | _n/a_
 
 | <<start_time,`start_time`>>
 //| [[slots_table.start_time]]<<start_time,`start_time`>>
 | 0..* +
 https://w3id.org/linkml/Integer[`integer`]
-| _n/a_
+| +++Start time of the solve - needs to match a value in the timeline.+++
 | _n/a_
 
 | <<time_resolution,`time_resolution`>>
 //| [[slots_table.time_resolution]]<<time_resolution,`time_resolution`>>
 | 0..* +
 https://w3id.org/linkml/Integer[`integer`]
+| +++Time resolution the model should use. Multiples of the time resolution of the original data.+++
 | _n/a_
-| _n/a_
+
+| <<alternative_names,`alternative_names`>>
+//| [[slots_table.alternative_names]]<<alternative_names,`alternative_names`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++List of alternative names and aliases.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<description,`description`>>
+//| [[slots_table.description]]<<description,`description`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++Description of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 1 +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Unique identifier of the entity within the dataset.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<name,`name`>>
+//| [[slots_table.name]]<<name,`name`>>
+| 1 +
+https://w3id.org/linkml/String[`string`]
+| +++Name of the entity.+++
+| xref::class/Entity.adoc[`Entity`]
+
+| <<semantic_id,`semantic_id`>>
+//| [[slots_table.semantic_id]]<<semantic_id,`semantic_id`>>
+| 0..* +
+https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+| +++Optional id for semantic web integration.+++
+| xref::class/Entity.adoc[`Entity`]
 |===
 
 '''
 
 
 //[discrete]
-[#duration]
-=== `duration`
-+++Duration in ISO 8601 format+++
+[#alternative_names]
+=== `alternative_names`
++++List of alternative names and aliases.+++
 
 
 [cols="h,4",width=65%]
@@ -73,6 +110,64 @@ https://w3id.org/linkml/Integer[`integer`]
 | 0..*
 | Type
 | https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.alternative_names,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#description]
+=== `description`
++++Description of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.description,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#duration]
+=== `duration`
++++Duration of the solve in time steps.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
 
 
 |===
@@ -86,9 +181,67 @@ https://w3id.org/linkml/Integer[`integer`]
 
 
 //[discrete]
-[#solve_mode]
-=== `solve_mode`
-+++single_solve+++
+[#id]
+=== `id`
++++Unique identifier of the entity within the dataset.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#name]
+=== `name`
++++Name of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.name,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#semantic_id]
+=== `semantic_id`
++++Optional id for semantic web integration.+++
 
 
 [cols="h,4",width=65%]
@@ -98,7 +251,36 @@ https://w3id.org/linkml/Integer[`integer`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/solve_model_enum.adoc[`solve_model_enum`]
+| https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+
+| Inherited from
+| xref::class/Entity.adoc[`Entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.semantic_id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#solve_mode]
+=== `solve_mode`
++++Choice of solve process handled within the model.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/solve_mode_enum.adoc[`solve_mode_enum`]
 
 
 |===
@@ -114,7 +296,7 @@ https://w3id.org/linkml/Integer[`integer`]
 //[discrete]
 [#start_time]
 === `start_time`
-
++++Start time of the solve - needs to match a value in the timeline.+++
 
 
 [cols="h,4",width=65%]
@@ -140,7 +322,7 @@ https://w3id.org/linkml/Integer[`integer`]
 //[discrete]
 [#time_resolution]
 === `time_resolution`
-
++++Time resolution the model should use. Multiples of the time resolution of the original data.+++
 
 
 [cols="h,4",width=65%]

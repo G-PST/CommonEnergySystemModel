@@ -95,9 +95,6 @@
     <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Flow.html">Flow</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -117,6 +114,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
@@ -152,10 +152,7 @@
     <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/profile_method_enum.html">profile_method_enum</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_model_enum.html">solve_model_enum</a>
+    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
@@ -205,6 +202,9 @@
 <h1 class="page"><code>Storage</code></h1>
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Nodes that include a state variable to represent storage. Also maintains balance between inputs and outputs including charging and discharging of the state.</p>
+</div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
 <col style="width: 25%;">
@@ -265,19 +265,221 @@
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#investment_cost"><code>investment_cost</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Price (in currency_year denomination) per kWh.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#storage_capacity"><code>storage_capacity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of a single storage asset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#storages_existing"><code>storages_existing</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pre-existing storage assets at the model start.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#node_type"><code>node_type</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="../enumeration/node_type_enum.html" class="xref page"><code>node_type_enum</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Balance, Storage, Commodity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limits allowed types: Balance, Storage, Commodity</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Node.html" class="xref page"><code>Node</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#alternative_names"><code>alternative_names</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of alternative names and aliases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#description"><code>description</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description of the entity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id"><code>id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
+<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier of the entity within the dataset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#name"><code>name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the entity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#semantic_id"><code>semantic_id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Uriorcurie"><code>uriorcurie</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional id for semantic web integration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 </tr>
 </tbody>
 </table>
 <hr>
 <div class="sect2">
+<h3 id="alternative_names"><a class="anchor" href="#alternative_names"></a><code>alternative_names</code></h3>
+<div class="paragraph">
+<p>List of alternative names and aliases.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="description"><a class="anchor" href="#description"></a><code>description</code></h3>
+<div class="paragraph">
+<p>Description of the entity.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="id"><a class="anchor" href="#id"></a><code>id</code></h3>
+<div class="paragraph">
+<p>Unique identifier of the entity within the dataset.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="investment_cost"><a class="anchor" href="#investment_cost"></a><code>investment_cost</code></h3>
+<div class="paragraph">
+<p>Price (in currency_year denomination) per kWh.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="name"><a class="anchor" href="#name"></a><code>name</code></h3>
+<div class="paragraph">
+<p>Name of the entity.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="node_type"><a class="anchor" href="#node_type"></a><code>node_type</code></h3>
 <div class="paragraph">
-<p>Balance, Storage, Commodity</p>
+<p>Limits allowed types: Balance, Storage, Commodity</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -300,6 +502,88 @@
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Node.html" class="xref page"><code>Node</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="semantic_id"><a class="anchor" href="#semantic_id"></a><code>semantic_id</code></h3>
+<div class="paragraph">
+<p>Optional id for semantic web integration.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Uriorcurie"><code>uriorcurie</code></a></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="storage_capacity"><a class="anchor" href="#storage_capacity"></a><code>storage_capacity</code></h3>
+<div class="paragraph">
+<p>Capacity of a single storage asset.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="storages_existing"><a class="anchor" href="#storages_existing"></a><code>storages_existing</code></h3>
+<div class="paragraph">
+<p>Number of pre-existing storage assets at the model start.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
 </tr>
 </tbody>
 </table>

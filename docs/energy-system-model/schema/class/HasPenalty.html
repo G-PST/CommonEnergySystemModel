@@ -95,9 +95,6 @@
     <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Flow.html">Flow</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -117,6 +114,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
@@ -152,10 +152,7 @@
     <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/profile_method_enum.html">profile_method_enum</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_model_enum.html">solve_model_enum</a>
+    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
@@ -205,6 +202,9 @@
 <h1 class="page"><code>HasPenalty</code></h1>
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Mixin for penalty related attributes (penalty_upward, penalty_downward).</p>
+</div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
 <col style="width: 25%;">
@@ -254,14 +254,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#penalty_downward"><code>penalty_downward</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#penalty_upward"><code>penalty_upward</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 </tbody>
@@ -269,6 +269,9 @@
 <hr>
 <div class="sect2">
 <h3 id="penalty_downward"><a class="anchor" href="#penalty_downward"></a><code>penalty_downward</code></h3>
+<div class="paragraph">
+<p>Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff.</p>
+</div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
 <col style="width: 20%;">
@@ -292,6 +295,9 @@
 </div>
 <div class="sect2">
 <h3 id="penalty_upward"><a class="anchor" href="#penalty_upward"></a><code>penalty_upward</code></h3>
+<div class="paragraph">
+<p>Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff.</p>
+</div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
 <col style="width: 20%;">

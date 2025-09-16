@@ -1,0 +1,53 @@
+= `node_type_enum`
+:toclevels: 4
+
+
++++Limits allowed node types: Balance, Storage, Commodity+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `Balance`
+| file:///ines-core.yamlBalance[`ines_core:Balance`]
+| n/a
+
+| `Commodity`
+| file:///ines-core.yamlCommodity[`ines_core:Commodity`]
+| n/a
+
+| `Storage`
+| file:///ines-core.yamlStorage[`ines_core:Storage`]
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Node.adoc[`Node`] | xref::class/Node.adoc#node_type[`node_type`]
+
+
+|===
+

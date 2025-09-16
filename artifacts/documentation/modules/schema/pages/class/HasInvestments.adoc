@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Mixin for investment related attributes.+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -26,25 +28,25 @@
 |===
 | Name | Type | Description | Inherited from
 
-| <<interest_rate,`interest_rate`>>
-//| [[slots_table.interest_rate]]<<interest_rate,`interest_rate`>>
+| <<discount_rate,`discount_rate`>>
+//| [[slots_table.discount_rate]]<<discount_rate,`discount_rate`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Discount rate of the investment.+++
 | _n/a_
 
 | <<investment_method,`investment_method`>>
 //| [[slots_table.investment_method]]<<investment_method,`investment_method`>>
 | 0..* +
 xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
-| +++not_allowed, no_limits+++
+| +++Choice of investment method.+++
 | _n/a_
 
-| <<lifetime,`lifetime`>>
-//| [[slots_table.lifetime]]<<lifetime,`lifetime`>>
+| <<payback_time,`payback_time`>>
+//| [[slots_table.payback_time]]<<payback_time,`payback_time`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| _n/a_
+| +++Economic payback time of the investment. Used to annualize investments.+++
 | _n/a_
 |===
 
@@ -52,9 +54,9 @@ https://w3id.org/linkml/Float[`float`]
 
 
 //[discrete]
-[#interest_rate]
-=== `interest_rate`
-
+[#discount_rate]
+=== `discount_rate`
++++Discount rate of the investment.+++
 
 
 [cols="h,4",width=65%]
@@ -72,7 +74,7 @@ https://w3id.org/linkml/Float[`float`]
 ////
 [.text-left]
 --
-<<slots_table.interest_rate,&#10548;>>
+<<slots_table.discount_rate,&#10548;>>
 --
 ////
 
@@ -80,7 +82,7 @@ https://w3id.org/linkml/Float[`float`]
 //[discrete]
 [#investment_method]
 === `investment_method`
-+++not_allowed, no_limits+++
++++Choice of investment method.+++
 
 
 [cols="h,4",width=65%]
@@ -104,9 +106,9 @@ https://w3id.org/linkml/Float[`float`]
 
 
 //[discrete]
-[#lifetime]
-=== `lifetime`
-
+[#payback_time]
+=== `payback_time`
++++Economic payback time of the investment. Used to annualize investments.+++
 
 
 [cols="h,4",width=65%]
@@ -124,7 +126,7 @@ https://w3id.org/linkml/Float[`float`]
 ////
 [.text-left]
 --
-<<slots_table.lifetime,&#10548;>>
+<<slots_table.payback_time,&#10548;>>
 --
 ////
 

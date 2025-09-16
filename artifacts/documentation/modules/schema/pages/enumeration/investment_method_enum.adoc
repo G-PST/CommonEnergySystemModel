@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Choice of investment method.+++
+
 
 [cols="h,3",width=65%]
 |===

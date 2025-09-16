@@ -2,13 +2,13 @@
 :toclevels: 4
 
 
-+++abstract high-level class+++
++++Abstract top-level class that contains all other classes (except Database).+++
 
 
 [cols="h,3",width=65%]
 |===
 | Type
-| Class
+| Abstract class
 
 
 
@@ -17,9 +17,9 @@
 
 == Class hierarchy
 * *`Entity`*
- ** xref::class/Flow.adoc[`Flow`]
  ** xref::class/Link.adoc[`Link`]
  ** xref::class/Node.adoc[`Node`]
+ ** xref::class/Port.adoc[`Port`]
  ** xref::class/Solve_pattern.adoc[`Solve_pattern`]
  ** xref::class/System.adoc[`System`]
  ** xref::class/Unit.adoc[`Unit`]
@@ -28,7 +28,182 @@
 == Slots
 
 
-This class has no slots.
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<alternative_names,`alternative_names`>>
+//| [[slots_table.alternative_names]]<<alternative_names,`alternative_names`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++List of alternative names and aliases.+++
+| _n/a_
+
+| <<description,`description`>>
+//| [[slots_table.description]]<<description,`description`>>
+| 0..* +
+https://w3id.org/linkml/String[`string`]
+| +++Description of the entity.+++
+| _n/a_
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 1 +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Unique identifier of the entity within the dataset.+++
+| _n/a_
+
+| <<name,`name`>>
+//| [[slots_table.name]]<<name,`name`>>
+| 1 +
+https://w3id.org/linkml/String[`string`]
+| +++Name of the entity.+++
+| _n/a_
+
+| <<semantic_id,`semantic_id`>>
+//| [[slots_table.semantic_id]]<<semantic_id,`semantic_id`>>
+| 0..* +
+https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+| +++Optional id for semantic web integration.+++
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#alternative_names]
+=== `alternative_names`
++++List of alternative names and aliases.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.alternative_names,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#description]
+=== `description`
++++Description of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.description,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#id]
+=== `id`
++++Unique identifier of the entity within the dataset.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#name]
+=== `name`
++++Name of the entity.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1
+| Type
+| https://w3id.org/linkml/String[`string`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.name,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#semantic_id]
+=== `semantic_id`
++++Optional id for semantic web integration.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.semantic_id,&#10548;>>
+--
+////
+
+
+
 
 
 == Used by

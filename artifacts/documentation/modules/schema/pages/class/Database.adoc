@@ -2,6 +2,8 @@
 :toclevels: 4
 
 
++++Database properties and holder for classes available in the schema.+++
+
 
 [cols="h,3",width=65%]
 |===
@@ -237,7 +239,7 @@ xref::class/Entity.adoc[`Entity`]
 //| [[slots_table.id]]<<id,`id`>>
 | 0..* +
 https://w3id.org/linkml/Integer[`integer`]
-| _n/a_
+| +++Database level id to distuingish between database versions.+++
 | _n/a_
 
 | <<link,`link`>>
@@ -374,7 +376,7 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 //[discrete]
 [#id]
 === `id`
-
++++Database level id to distuingish between database versions.+++
 
 
 [cols="h,4",width=65%]

@@ -6,7 +6,7 @@
     <title>Entity :: Energy System Model</title>
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Entity.html">
     <link rel="prev" href="EfficiencyValue.html">
-    <link rel="next" href="Flow.html">
+    <link rel="next" href="HasFlow.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
@@ -95,9 +95,6 @@
     <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Flow.html">Flow</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -117,6 +114,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
@@ -152,10 +152,7 @@
     <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/profile_method_enum.html">profile_method_enum</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_model_enum.html">solve_model_enum</a>
+    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
@@ -206,7 +203,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>abstract high-level class</p>
+<p>Abstract top-level class that contains all other classes (except Database).</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -216,7 +213,7 @@
 <tbody>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Abstract class</p></td>
 </tr>
 </tbody>
 </table>
@@ -232,13 +229,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="Flow.html" class="xref page"><code>Flow</code></a></p>
-</li>
-<li>
 <p><a href="Link.html" class="xref page"><code>Link</code></a></p>
 </li>
 <li>
 <p><a href="Node.html" class="xref page"><code>Node</code></a></p>
+</li>
+<li>
+<p><a href="Port.html" class="xref page"><code>Port</code></a></p>
 </li>
 <li>
 <p><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p>
@@ -259,8 +256,189 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Inherited from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#alternative_names"><code>alternative_names</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of alternative names and aliases.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#description"><code>description</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description of the entity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id"><code>id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
+<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier of the entity within the dataset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#name"><code>name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the entity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#semantic_id"><code>semantic_id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Uriorcurie"><code>uriorcurie</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional id for semantic web integration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sect2">
+<h3 id="alternative_names"><a class="anchor" href="#alternative_names"></a><code>alternative_names</code></h3>
 <div class="paragraph">
-<p>This class has no slots.</p>
+<p>List of alternative names and aliases.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="description"><a class="anchor" href="#description"></a><code>description</code></h3>
+<div class="paragraph">
+<p>Description of the entity.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="id"><a class="anchor" href="#id"></a><code>id</code></h3>
+<div class="paragraph">
+<p>Unique identifier of the entity within the dataset.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="name"><a class="anchor" href="#name"></a><code>name</code></h3>
+<div class="paragraph">
+<p>Name of the entity.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="semantic_id"><a class="anchor" href="#semantic_id"></a><code>semantic_id</code></h3>
+<div class="paragraph">
+<p>Optional id for semantic web integration.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Uriorcurie"><code>uriorcurie</code></a></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -289,7 +467,7 @@
 </div>
 <nav class="pagination">
   <span class="prev"><a href="EfficiencyValue.html">EfficiencyValue</a></span>
-  <span class="next"><a href="Flow.html">Flow</a></span>
+  <span class="next"><a href="HasFlow.html">HasFlow</a></span>
 </nav>
 </article>
   </div>

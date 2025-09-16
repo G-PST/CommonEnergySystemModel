@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Solve_pattern :: Energy System Model</title>
-    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Solve_pattern.html">
-    <link rel="prev" href="Port.html">
-    <link rel="next" href="Storage.html">
+    <title>Port :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Port.html">
+    <link rel="prev" href="Node_to_unit.html">
+    <link rel="next" href="Solve_pattern.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
@@ -115,10 +115,10 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="Port.html">Port</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -189,21 +189,21 @@
     <li><a href="../../index.html">Energy System Model</a></li>
     <li>Information model</li>
     <li>Classes</li>
-    <li><a href="Solve_pattern.html">Solve_pattern</a></li>
+    <li><a href="Port.html">Port</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/Solve_pattern.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/Port.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page"><code>Solve_pattern</code></h1>
+<h1 class="page"><code>Port</code></h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Defines a sequence of solves and the properties of each solve.</p>
+<p>Ports designates an input or an output between a unit and a node.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -229,7 +229,17 @@
 <div class="ulist">
 <ul>
 <li>
-<p><strong><code>Solve_pattern</code></strong></p>
+<p><strong><code>Port</code></strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="Node_to_unit.html" class="xref page"><code>Node_to_unit</code></a></p>
+</li>
+<li>
+<p><a href="Unit_to_node.html" class="xref page"><code>Unit_to_node</code></a></p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -258,31 +268,38 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#duration"><code>duration</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#capacity"><code>capacity</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Duration of the solve in time steps.</p></td>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of a single asset (flow or link).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#solve_mode"><code>solve_mode</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#investment_cost"><code>investment_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="../enumeration/solve_mode_enum.html" class="xref page"><code>solve_mode_enum</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Choice of solve process handled within the model.</p></td>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Price (in currency_year denomination) per kW.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#start_time"><code>start_time</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#other_operational_cost"><code>other_operational_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Start time of the solve - needs to match a value in the timeline.</p></td>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost (in currency_year denomination) per unit of the product flowing through</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#time_resolution"><code>time_resolution</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink"><code>sink</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Time resolution the model should use. Multiples of the time resolution of the original data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sink of the unidirectional flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source"><code>source</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source of the unidirectional flow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
@@ -354,6 +371,32 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="capacity"><a class="anchor" href="#capacity"></a><code>capacity</code></h3>
+<div class="paragraph">
+<p>Capacity of a single asset (flow or link).</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="description"><a class="anchor" href="#description"></a><code>description</code></h3>
 <div class="paragraph">
 <p>Description of the entity.</p>
@@ -379,32 +422,6 @@
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="duration"><a class="anchor" href="#duration"></a><code>duration</code></h3>
-<div class="paragraph">
-<p>Duration of the solve in time steps.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -440,6 +457,32 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="investment_cost"><a class="anchor" href="#investment_cost"></a><code>investment_cost</code></h3>
+<div class="paragraph">
+<p>Price (in currency_year denomination) per kW.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="name"><a class="anchor" href="#name"></a><code>name</code></h3>
 <div class="paragraph">
 <p>Name of the entity.</p>
@@ -465,6 +508,32 @@
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="other_operational_cost"><a class="anchor" href="#other_operational_cost"></a><code>other_operational_cost</code></h3>
+<div class="paragraph">
+<p>Cost (in currency_year denomination) per unit of the product flowing through</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -500,35 +569,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="solve_mode"><a class="anchor" href="#solve_mode"></a><code>solve_mode</code></h3>
+<h3 id="sink"><a class="anchor" href="#sink"></a><code>sink</code></h3>
 <div class="paragraph">
-<p>Choice of solve process handled within the model.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/solve_mode_enum.html" class="xref page"><code>solve_mode_enum</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="start_time"><a class="anchor" href="#start_time"></a><code>start_time</code></h3>
-<div class="paragraph">
-<p>Start time of the solve - needs to match a value in the timeline.</p>
+<p>Sink of the unidirectional flow</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -552,9 +595,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="time_resolution"><a class="anchor" href="#time_resolution"></a><code>time_resolution</code></h3>
+<h3 id="source"><a class="anchor" href="#source"></a><code>source</code></h3>
 <div class="paragraph">
-<p>Time resolution the model should use. Multiples of the time resolution of the original data.</p>
+<p>Source of the unidirectional flow</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -582,29 +625,14 @@
 <div class="sect1">
 <h2 id="_used_by"><a class="anchor" href="#_used_by"></a>Used by</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Source class</th>
-<th class="tableblock halign-left valign-top">Slot name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Database.html" class="xref page"><code>Database</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Database.html#solve_pattern" class="xref page"><code>solve_pattern</code></a></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>This class is not used by any other classes as the range of a slot.</p>
+</div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="Port.html">Port</a></span>
-  <span class="next"><a href="Storage.html">Storage</a></span>
+  <span class="prev"><a href="Node_to_unit.html">Node_to_unit</a></span>
+  <span class="next"><a href="Solve_pattern.html">Solve_pattern</a></span>
 </nav>
 </article>
   </div>

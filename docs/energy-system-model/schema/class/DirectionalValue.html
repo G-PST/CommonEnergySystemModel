@@ -95,9 +95,6 @@
     <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Flow.html">Flow</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -117,6 +114,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
@@ -152,10 +152,7 @@
     <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/profile_method_enum.html">profile_method_enum</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_model_enum.html">solve_model_enum</a>
+    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
@@ -205,6 +202,9 @@
 <h1 class="page"><code>DirectionalValue</code></h1>
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>To which direction the parameter value is applied for in a link.</p>
+</div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
 <col style="width: 25%;">
@@ -234,8 +234,90 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Inherited from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#forward"><code>forward</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The parameter is applied to the forward direction (Node_A --> Node_B).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#reverse"><code>reverse</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The parameter is applied to the backward direction (Node_B --> Node_A).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sect2">
+<h3 id="forward"><a class="anchor" href="#forward"></a><code>forward</code></h3>
 <div class="paragraph">
-<p>This class has no slots.</p>
+<p>The parameter is applied to the forward direction (Node_A --> Node_B).</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="reverse"><a class="anchor" href="#reverse"></a><code>reverse</code></h3>
+<div class="paragraph">
+<p>The parameter is applied to the backward direction (Node_B --> Node_A).</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
