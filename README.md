@@ -2,7 +2,7 @@
 
 This repository contains a LinkML model that defines an information standard for multi-energy system modelling. The model provides a structured framework for representing energy systems with balances, storages, commodities, and other components.
 
-It is designed to work well with other relevant standards like the [IEC-CIM](https://www.entsoe.eu/digital/common-information-model/), [qudt](https://qudt.org/)
+It is designed to work well with other relevant standards like the [IEC-CIM](https://www.entsoe.eu/digital/common-information-model/), [qudt](https://qudt.org/). CESM has roots in in [ines-spec](https://github.com/ines-tools/ines-spec), but is built from the ground-up to conform with ontology standards and to have a clear separation between specification and implementation. It tries to consider the needs of several major modeling tools in the domain.
 
 ## Overview
 
@@ -18,6 +18,19 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - System level parameters
 - Model definition
 
+## Design principles for CESM include:
+
+- Specification is separate from implementation (the aim is to have a common implementation as well as this would make it easier for users to transform datasets).
+- Avoid domain specificity (i.e. units convert energy/matter, there is no need for the specification to separately define heat pumps and gas turbines, they just have different parametrization). This keeps the specification tractable and allows models that have been built with a layer of abstraction to avoid maintaining long compatibility lists.
+- Parameters reflect physical properties (at the level applicable to energy system planning models that can manage operational detail as well as sector specific detail).
+- For financial parameters, currency and inflation are not specified - each dataset should use one and the same 'currency_year' throughout.
+- CESM is explicit about how something should be modeled through methods. E.g. 'piecewise_SOS2' unit_conversion_method means that conversion efficiency is presented through operating points using binary variables to enforce the ordering of those operating points.
+- Methods therefore define what parameters are required and allows to check the existence of correct parameters.
+- Certain model can either support or not support a specific method - easy to inform the user if something is not supported by a specific model (when transforming a dataset out to the model).
+- Methods make it easier to extend the specification - usually adding a new method does not break existing functionality.
+- Single definition for single thing (e.g. either efficiency or heat rate but not both). Makes life easier for the transformers interacting with INES.
+- Flexibility in time: needs to allow models of different temporal scales to co-exist. Needs to distinguish between 'profile' time series and future oriented scenario-like values. Enable multi-stage multi-year modelling as well as detailed operational modelling. Support stochastic modelling.
+- Non-breaking changes only within major version branches, after the version branch has been 'released'.
 
 ## Files Structure
 
