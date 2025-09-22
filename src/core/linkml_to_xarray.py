@@ -1,5 +1,6 @@
 import xarray as xr
 import numpy as np
+import pandas as pd
 from typing import Dict, List, Any, Union, Type
 from linkml_runtime.utils.yamlutils import YAMLRoot
 from generated.cesm import Database, Entity
@@ -23,9 +24,9 @@ MULTI_DIMENSIONAL_CLASSES = {
     }
 }
 
-def linkml_to_xarray(database: Database) -> xr.Dataset:
+def linkml_to_xarray(database: Database) -> Dict[str, xr.Dataset]:
     """
-    Convert LinkML Database object to xarray Dataset.
+    Convert LinkML Database object to multiple xarray Datasets.
     
     Parameters:
     -----------
@@ -34,30 +35,49 @@ def linkml_to_xarray(database: Database) -> xr.Dataset:
         
     Returns:
     --------
-    xr.Dataset
-        Dataset with coordinates based on class dimensions and parameters as DataArrays
+    Dict[str, xr.Dataset]
+        Dictionary of datasets:
+        - 'base': Dataset with single-dimensional classes
+        - 'unit_to_node': Dataset with unit_to_node parameters
+        - 'node_to_unit': Dataset with node_to_unit parameters  
+        - 'link': Dataset with link parameters
     """
     
     # Get timeline from database (special hardcoded case)
     timeline = database.timeline if database.timeline else []
     time_coord = np.array(timeline)
     
-    # Initialize coordinates dictionary
-    coords = {'time': time_coord}
-    
-    # Initialize data variables dictionary
-    data_vars = {}
-    
     # Discover all class collections dynamically
     class_collections = _discover_class_collections(database)
     
-    # Process each class collection
-    for collection_name, entities_dict in class_collections.items():
-        if not entities_dict:
-            continue
-            
-        # Skip if this is a multi-dimensional class (handle separately)
+    # Create base dataset for single-dimensional classes
+    base_dataset = _create_base_dataset(class_collections, time_coord)
+    
+    # Create separate datasets for each multi-dimensional class
+    multi_datasets = {}
+    for collection_name in class_collections:
         if _is_multi_dimensional_class(collection_name):
+            dataset = _create_multi_dimensional_dataset(
+                collection_name, class_collections[collection_name], time_coord
+            )
+            if dataset is not None:
+                multi_datasets[collection_name] = dataset
+    
+    # Combine results
+    results = {'base': base_dataset}
+    results.update(multi_datasets)
+    
+    return results
+
+
+def _create_base_dataset(class_collections: Dict, time_coord: np.ndarray) -> xr.Dataset:
+    """Create dataset for single-dimensional classes."""
+    coords = {'time': time_coord}
+    data_vars = {}
+    
+    # Process each single-dimensional class collection
+    for collection_name, entities_dict in class_collections.items():
+        if not entities_dict or _is_multi_dimensional_class(collection_name):
             continue
             
         # Create coordinate for this class dimension
@@ -90,11 +110,11 @@ def linkml_to_xarray(database: Database) -> xr.Dataset:
                 
                 if value is None:
                     if actual_has_time_dimension:
-                        param_values.append([np.nan] * len(timeline))
+                        param_values.append([np.nan] * len(time_coord))
                     else:
                         param_values.append(np.nan)
                 elif isinstance(value, list) and is_time_dimensional:
-                    aligned_value = _align_with_timeline(value, len(timeline))
+                    aligned_value = _align_with_timeline(value, len(time_coord))
                     param_values.append(aligned_value)
                 elif isinstance(value, list) and not is_time_dimensional:
                     first_val = value[0] if value else np.nan
@@ -103,7 +123,7 @@ def linkml_to_xarray(database: Database) -> xr.Dataset:
                     # Scalar parameter
                     processed_value = _convert_enum_to_string(value)
                     if actual_has_time_dimension:
-                        param_values.append([processed_value] * len(timeline))
+                        param_values.append([processed_value] * len(time_coord))
                     else:
                         param_values.append(processed_value)
             
@@ -129,14 +149,112 @@ def linkml_to_xarray(database: Database) -> xr.Dataset:
             var_name = f"{collection_name}_{param_name}"
             data_vars[var_name] = data_array
     
-    # Handle multi-dimensional classes
-    print("Processing multi-dimensional classes...")
-    _process_multi_dimensional_classes(database, coords, data_vars, time_coord, class_collections)
+    return xr.Dataset(data_vars, coords=coords)
+
+
+def _create_multi_dimensional_dataset(collection_name: str, entities_dict: Dict, 
+                                     time_coord: np.ndarray) -> xr.Dataset:
+    """Create dataset for a single multi-dimensional class."""
+    mapping = _get_dimension_mapping(collection_name)
+    if not mapping:
+        return None
+        
+    dim1, dim2, source_field, sink_field = mapping
     
-    # Create Dataset
-    dataset = xr.Dataset(data_vars, coords=coords)
+    # Get parameter information
+    first_entity = next(iter(entities_dict.values()))
+    entity_class = type(first_entity)
+    param_info = _get_parameter_info(entity_class)
     
-    return dataset
+    coords = {'time': time_coord}
+    data_vars = {}
+    
+    # Process each parameter
+    for param_name, is_time_dimensional in param_info.items():
+        
+        # Check if any entity actually has time-dimensional data
+        actual_has_time_dimension = False
+        for entity in entities_dict.values():
+            value = getattr(entity, param_name, None)
+            if value is not None and isinstance(value, list) and is_time_dimensional:
+                actual_has_time_dimension = True
+                break
+        
+        # Collect sparse data - only store actual connections
+        sparse_coords = []
+        sparse_values = []
+        
+        for entity in entities_dict.values():
+            source_val = getattr(entity, source_field, None)
+            sink_val = getattr(entity, sink_field, None)
+            value = getattr(entity, param_name, None)
+            
+            if source_val and sink_val and value is not None:
+                # Convert enums before storing
+                processed_value = _convert_enum_to_string(value)
+                
+                if actual_has_time_dimension and isinstance(value, list):
+                    aligned_value = _align_with_timeline(value, len(time_coord))
+                    sparse_coords.append((str(source_val), str(sink_val)))
+                    sparse_values.append(aligned_value)
+                elif actual_has_time_dimension and processed_value is not None:
+                    # Scalar value broadcast to time dimension
+                    broadcast_value = [processed_value] * len(time_coord)
+                    sparse_coords.append((str(source_val), str(sink_val)))
+                    sparse_values.append(broadcast_value)
+                elif not actual_has_time_dimension and processed_value is not None:
+                    # Scalar value
+                    if not (isinstance(processed_value, list) and len(processed_value) == 0):
+                        sparse_coords.append((str(source_val), str(sink_val)))
+                        sparse_values.append(processed_value)
+        
+        # Create sparse DataArray only if we have data
+        if sparse_coords and sparse_values:
+            # Clean enum objects from sparse values
+            cleaned_sparse_values = [_convert_enum_to_string(val) for val in sparse_values]
+            
+            # Create MultiIndex for sparse coordinates
+            if dim1 == dim2:
+                # Handle case where both dimensions are the same (e.g., link: node->node)
+                level_names = [f"{dim1}_from", f"{dim2}_to"]
+            else:
+                level_names = [dim1, dim2]
+            
+            multi_index = pd.MultiIndex.from_tuples(
+                sparse_coords, 
+                names=level_names
+            )
+            
+            coord_name = f"{collection_name}_coords"
+            
+            if actual_has_time_dimension:
+                # Create 2D array: connections x time
+                data_array = xr.DataArray(
+                    np.array(cleaned_sparse_values),
+                    dims=[coord_name, 'time'],
+                    coords={
+                        coord_name: multi_index, 
+                        'time': time_coord
+                    },
+                    name=f"{collection_name}_{param_name}"
+                )
+            else:
+                # Create 1D array: connections only
+                data_array = xr.DataArray(
+                    cleaned_sparse_values,
+                    dims=[coord_name],
+                    coords=[multi_index],
+                    name=f"{collection_name}_{param_name}"
+                )
+            
+            var_name = f"{collection_name}_{param_name}"
+            data_vars[var_name] = data_array
+    
+    # Only return dataset if we have data variables
+    if data_vars:
+        return xr.Dataset(data_vars, coords=coords)
+    else:
+        return None
 
 
 def _discover_class_collections(database: Database) -> Dict[str, Dict]:
@@ -259,64 +377,19 @@ def _align_with_timeline(values: List[float], timeline_length: int) -> List[floa
         return values[:timeline_length]
 
 
-def _process_multi_dimensional_classes(database: Database, coords: Dict, 
-                                     data_vars: Dict, time_coord: np.ndarray,
-                                     class_collections: Dict):
+def _process_multi_dimensional_classes(database: Database, data_vars: Dict, 
+                                     time_coord: np.ndarray, class_collections: Dict):
     """Process classes that have multiple dimensions using sparse representation."""
     
     for collection_name, entities_dict in class_collections.items():
-        print(f"Checking collection '{collection_name}': multi-dim = {_is_multi_dimensional_class(collection_name)}")
         if not entities_dict or not _is_multi_dimensional_class(collection_name):
             continue
             
-        print(f"Processing multi-dimensional collection: {collection_name}")
         mapping = _get_dimension_mapping(collection_name)
         if not mapping:
-            print(f"  No mapping found for {collection_name}")
             continue
             
-        print(f"  Mapping: {mapping}")
         dim1, dim2, source_field, sink_field = mapping
-        
-        print(f"  Starting coordinate collection...")
-        
-        # Collect all possible coordinate values from all collections
-        all_dim1_values = set()
-        all_dim2_values = set()
-        
-        # Get values from this collection
-        for entity in entities_dict.values():
-            source_val = getattr(entity, source_field, None)
-            sink_val = getattr(entity, sink_field, None)
-            if source_val:
-                all_dim1_values.add(str(source_val))
-            if sink_val:
-                all_dim2_values.add(str(sink_val))
-        
-        print(f"  Found {dim1} values: {all_dim1_values}")
-        print(f"  Found {dim2} values: {all_dim2_values}")
-        
-        # Also collect from other collections to get complete coordinate space
-        for other_collection_name, other_entities_dict in class_collections.items():
-            if other_collection_name == collection_name:
-                continue
-                
-            # Add entities of matching types
-            if dim1 == 'unit' and 'unit' in other_collection_name:
-                all_dim1_values.update(other_entities_dict.keys())
-            elif dim1 == 'node' and any(node_type in other_collection_name for node_type in ['balance', 'storage', 'commodity']):
-                all_dim1_values.update(other_entities_dict.keys())
-                
-            if dim2 == 'unit' and 'unit' in other_collection_name:
-                all_dim2_values.update(other_entities_dict.keys())
-            elif dim2 == 'node' and any(node_type in other_collection_name for node_type in ['balance', 'storage', 'commodity']):
-                all_dim2_values.update(other_entities_dict.keys())
-        
-        print(f"  Final {dim1} values: {all_dim1_values}")
-        print(f"  Final {dim2} values: {all_dim2_values}")
-        
-        # Don't add multi-dimensional coordinates to main coords dict - they'll be handled separately
-        # Each sparse representation will have its own coordinate space
         
         # Get parameter information
         first_entity = next(iter(entities_dict.values()))
@@ -325,8 +398,6 @@ def _process_multi_dimensional_classes(database: Database, coords: Dict,
         
         # Process each parameter with sparse representation
         for param_name, is_time_dimensional in param_info.items():
-            if dim1 not in coords or dim2 not in coords:
-                continue
             
             # Check if any entity actually has time-dimensional data
             actual_has_time_dimension = False
@@ -351,17 +422,16 @@ def _process_multi_dimensional_classes(database: Database, coords: Dict,
                     
                     if actual_has_time_dimension and isinstance(value, list):
                         aligned_value = _align_with_timeline(value, len(time_coord))
-                        for t_idx, time_val in enumerate(aligned_value):
-                            if not (np.isnan(time_val) if isinstance(time_val, (int, float)) else False):  # Only store non-NaN values
-                                sparse_coords.append((str(source_val), str(sink_val), t_idx))
-                                sparse_values.append(time_val)
+                        # Store as (source, sink) pairs, with separate time dimension
+                        sparse_coords.append((str(source_val), str(sink_val)))
+                        sparse_values.append(aligned_value)
                     elif actual_has_time_dimension and processed_value is not None:
                         # Scalar value broadcast to time dimension
-                        for t_idx in range(len(time_coord)):
-                            sparse_coords.append((str(source_val), str(sink_val), t_idx))
-                            sparse_values.append(processed_value)
+                        broadcast_value = [processed_value] * len(time_coord)
+                        sparse_coords.append((str(source_val), str(sink_val)))
+                        sparse_values.append(broadcast_value)
                     elif not actual_has_time_dimension and processed_value is not None:
-                        # Scalar value - only add if not None and not empty list
+                        # Scalar value
                         if not (isinstance(processed_value, list) and len(processed_value) == 0):
                             sparse_coords.append((str(source_val), str(sink_val)))
                             sparse_values.append(processed_value)
@@ -371,45 +441,37 @@ def _process_multi_dimensional_classes(database: Database, coords: Dict,
                 # Clean enum objects from sparse values
                 cleaned_sparse_values = [_convert_enum_to_string(val) for val in sparse_values]
                 
-                # Debug: Check if any problematic values remain
-                for i, val in enumerate(cleaned_sparse_values):
-                    if hasattr(val, 'text') or 'Enum' in str(type(val)):
-                        print(f"WARNING: Enum object still present at index {i}: {val} (type: {type(val)})")
+                # Create MultiIndex for sparse coordinates - use simple level names
+                if dim1 == dim2:
+                    # Handle case where both dimensions are the same (e.g., link: node->node)
+                    level_names = [f"{dim1}_from", f"{dim2}_to"]
+                else:
+                    level_names = [dim1, dim2]
                 
-                print(f"Creating sparse array for {param_name}: {len(cleaned_sparse_values)} values")
-                print(f"Sample values: {cleaned_sparse_values[:3]}")
-                print(f"Value types: {[type(v) for v in cleaned_sparse_values[:3]]}")
+                multi_index = pd.MultiIndex.from_tuples(
+                    sparse_coords, 
+                    names=level_names
+                )
+                
+                coord_name = f"{collection_name}_coords"
                 
                 if actual_has_time_dimension:
-                    # Create MultiIndex for sparse 3D data
-                    import pandas as pd
-                    
-                    multi_index = pd.MultiIndex.from_tuples(
-                        sparse_coords, 
-                        names=[dim1, dim2, 'time']
-                    )
-                    
-                    coord_name = f"{collection_name}_coords"
+                    # Create 2D array: connections x time
                     data_array = xr.DataArray(
-                        cleaned_sparse_values,
-                        coords={coord_name: multi_index},
-                        dims=[coord_name],
+                        np.array(cleaned_sparse_values),
+                        dims=[coord_name, 'time'],
+                        coords={
+                            coord_name: multi_index, 
+                            'time': time_coord
+                        },
                         name=f"{collection_name}_{param_name}"
                     )
                 else:
-                    # Create MultiIndex for sparse 2D data
-                    import pandas as pd
-                    
-                    multi_index = pd.MultiIndex.from_tuples(
-                        sparse_coords, 
-                        names=[dim1, dim2]
-                    )
-                    
-                    coord_name = f"{collection_name}_coords"
+                    # Create 1D array: connections only
                     data_array = xr.DataArray(
                         cleaned_sparse_values,
-                        coords={coord_name: multi_index},
                         dims=[coord_name],
+                        coords=[multi_index],
                         name=f"{collection_name}_{param_name}"
                     )
                 

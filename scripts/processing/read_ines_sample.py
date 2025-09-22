@@ -19,72 +19,116 @@ if errors:
 
 # Convert to xarray
 print("\nConverting to xarray...")
-dataset = linkml_to_xarray(data)
+datasets = linkml_to_xarray(data)
 
-# Explore the dataset
-print("\nDataset overview:")
-print(dataset)
+# Show available datasets
+print(f"\nAvailable datasets: {list(datasets.keys())}")
 
-print("\nCoordinates:")
-for coord_name, coord_values in dataset.coords.items():
+# Get individual datasets
+base_ds = datasets['base']
+unit_to_node_ds = datasets.get('unit_to_node')
+node_to_unit_ds = datasets.get('node_to_unit')
+link_ds = datasets.get('link')
+
+# Explore the base dataset
+print("\nBase Dataset overview:")
+print(base_ds)
+
+print("\nBase Dataset coordinates:")
+for coord_name, coord_values in base_ds.coords.items():
     print(f"  {coord_name}: {len(coord_values)} items - {list(coord_values.values)}")
 
-print("\nData variables:")
-for var_name in dataset.data_vars:
-    var = dataset[var_name]
+print("\nBase Dataset data variables:")
+for var_name in base_ds.data_vars:
+    var = base_ds[var_name]
     print(f"  {var_name}: {var.dims} - shape {var.shape}")
+
+# Explore multi-dimensional datasets
+if unit_to_node_ds is not None:
+    print("\nUnit-to-node Dataset overview:")
+    print(unit_to_node_ds)
+    
+    print("\nUnit-to-node data variables:")
+    for var_name in unit_to_node_ds.data_vars:
+        var = unit_to_node_ds[var_name]
+        print(f"  {var_name}: {var.dims} - shape {var.shape}")
+
+if link_ds is not None:
+    print("\nLink Dataset overview:")
+    print(link_ds)
 
 # Example operations
 print("\n--- Example Operations ---")
 
-# # 1. Access unit efficiency
-# if 'unit_efficiency' in dataset:
-#     print("\nUnit efficiencies:")
-#     print(dataset['unit_efficiency'])
+# 1. Access unit efficiency from base dataset
+if 'unit_efficiency' in base_ds:
+    print("\nUnit efficiencies:")
+    print(base_ds['unit_efficiency'])
 
-# # 2. Look at flow profiles over time
-# if 'balances_flow_profile' in dataset:
-#     print("\nBalance flow profiles (first few time steps):")
-#     flow_profiles = dataset['balances_flow_profile']
-#     print(flow_profiles.isel(time=slice(0, 3)))  # First 3 time steps
+# 2. Look at flow profiles over time from base dataset
+if 'balances_flow_profile' in base_ds:
+    print("\nBalance flow profiles (first few time steps):")
+    flow_profiles = base_ds['balances_flow_profile']
+    print(flow_profiles.isel(time=slice(0, 3)))  # First 3 time steps
 
-# # 3. Multi-dimensional data (unit-to-node capacities)
-# if 'unit_to_node_capacity' in dataset:
-#     print("\nUnit-to-node capacity matrix:")
-#     capacity_matrix = dataset['unit_to_node_capacity']
-#     print(capacity_matrix)
+# 3. Multi-dimensional data (unit-to-node capacities)
+if unit_to_node_ds is not None and 'unit_to_node_capacity' in unit_to_node_ds:
+    print("\nUnit-to-node capacity matrix:")
+    capacity_matrix = unit_to_node_ds['unit_to_node_capacity']
+    print(capacity_matrix)
 
-#     # Sum capacity by unit
-#     print("\nTotal capacity per unit:")
-#     total_cap_per_unit = capacity_matrix.sum(dim='node', skipna=True)
-#     print(total_cap_per_unit)
+    # Sum capacity by unit (now works with proper MultiIndex!)
+    print("\nTotal capacity per unit:")
+    total_cap_per_unit = capacity_matrix.groupby('unit').sum()
+    print(total_cap_per_unit)
+    
+    # Sum capacity by node
+    print("\nTotal capacity per node:")
+    total_cap_per_node = capacity_matrix.groupby('node').sum()
+    print(total_cap_per_node)
 
-# # 4. Time-based operations
-# if 'balances_flow_profile' in dataset:
-#     print("\nTime-based analysis:")
-#     flow_profiles = dataset['balances_flow_profile']
+# 4. Time-based operations from base dataset
+if 'balances_flow_profile' in base_ds:
+    print("\nTime-based analysis:")
+    flow_profiles = base_ds['balances_flow_profile']
 
-#     # Average flow over time for each balance
-#     avg_flows = flow_profiles.mean(dim='time')
-#     print("Average flows:", avg_flows)
+    # Average flow over time for each balance
+    avg_flows = flow_profiles.mean(dim='time')
+    print("Average flows:", avg_flows)
 
-#     # Peak flows
-#     peak_flows = flow_profiles.max(dim='time')
-#     print("Peak flows:", peak_flows)
+    # Peak flows
+    peak_flows = flow_profiles.max(dim='time')
+    print("Peak flows:", peak_flows)
 
-# # 5. Simple transformations
-# print("\n--- Simple Transformations ---")
+# 5. Multi-dimensional time series operations
+if unit_to_node_ds is not None and 'unit_to_node_profile_limit_upper' in unit_to_node_ds:
+    print("\nUnit-to-node profile limits (time series):")
+    profiles = unit_to_node_ds['unit_to_node_profile_limit_upper']
+    print(profiles)
+    
+    # Average profile over time by unit
+    print("\nAverage profile limits by unit:")
+    avg_by_unit = profiles.groupby('unit').mean()
+    print(avg_by_unit)
 
-# # Scale all efficiencies by 100 to get percentages
-# if 'unit_efficiency' in dataset:
-#     efficiency_pct = dataset['unit_efficiency'] * 100
-#     print("Unit efficiencies as percentages:")
-#     print(efficiency_pct)
+# 6. Simple transformations
+print("\n--- Simple Transformations ---")
 
-# # Calculate power output (efficiency * capacity where both exist)
-# if 'unit_efficiency' in dataset and 'unit_to_node_capacity' in dataset:
-#     # This would require aligning dimensions, more complex example
-#     print("\nNote: Complex multi-dimensional operations would require dimension alignment")
+# Scale all efficiencies by 100 to get percentages
+if 'unit_efficiency' in base_ds:
+    efficiency_pct = base_ds['unit_efficiency'] * 100
+    print("Unit efficiencies as percentages:")
+    print(efficiency_pct)
 
-# print("\n--- Dataset saved for further analysis ---")
-# print("You can now use standard xarray operations for analysis and visualization")
+# 7. Cross-dataset operations (when coordinates align)
+print("\n--- Cross-Dataset Operations ---")
+if unit_to_node_ds is not None and 'unit_to_node_capacity' in unit_to_node_ds:
+    print("Multi-dimensional datasets enable focused operations:")
+    print("- Each dataset has proper coordinate structure")
+    print("- Operations like groupby work correctly")
+    print("- No NaN-filled dense arrays")
+    print("- Separate coordinate spaces avoid conflicts")
+
+print("\n--- Datasets saved for further analysis ---")
+print("You can now use standard xarray operations for analysis and visualization")
+print("Each dataset maintains proper coordinate alignment for its data type")
