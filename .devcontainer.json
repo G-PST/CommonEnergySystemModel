@@ -1,7 +1,8 @@
 {
-  "name": "NBNL Dev Container",
-  "image": "ghcr.io/netbeheer-nederland/env:latest",
+  "name": "cesm container",
+  "image": "python:3.11",
   "remoteUser": "devuser",
+  "postCreateCommand": "pip install -e .",
   "customizations": {
     "vscode": {
       "extensions": [

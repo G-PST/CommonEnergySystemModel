@@ -1,3 +1,5 @@
+id: 0
+timeline: ['2023-01-01T00:00', '2023-01-01T01:00', '2023-01-01T02:00', '2023-01-01T03:00', '2023-01-01T04:00', '2023-01-01T05:00', '2023-01-01T06:00', '2023-01-01T07:00', '2023-01-01T08:00', '2023-01-01T09:00']
 balances:
   - id: 1
     name: west
@@ -23,8 +25,8 @@ storages:
     storages_existing: 2
     investment_method: no_limits
     investment_cost: 600
-    interest_rate: 0.07
-    lifetime: 12
+    discount_rate: 0.07
+    payback_time: 12
     penalty_upward: 10000
 commodity:
   - id: 5
@@ -40,143 +42,141 @@ unit:
     units_existing: 2
     efficiency: 0.38
     investment_method: no_limits
-    interest_rate: 0.06
-    lifetime: 25
+    discount_rate: 0.06
+    payback_time: 25
   - id: 8
     name: ccgt
     conversion_method: constant_efficiency
     units_existing: 1
     efficiency: 0.58
     investment_method: no_limits
-    interest_rate: 0.06
-    lifetime: 30
+    discount_rate: 0.06
+    payback_time: 30
   - id: 9
     name: nuclear
     conversion_method: constant_efficiency
     units_existing: 1
     efficiency: 0.34
     investment_method: no_limits
-    interest_rate: 0.08
-    lifetime: 40
+    discount_rate: 0.08
+    payback_time: 40
   - id: 10
     name: wind
     conversion_method: constant_efficiency
     units_existing: 1
     efficiency: 1
     investment_method: no_limits
-    interest_rate: 0.06
-    lifetime: 25
+    discount_rate: 0.06
+    payback_time: 25
   - id: 11
     name: bio_chp
     conversion_method: constant_efficiency
     units_existing: 1
     efficiency: 0.94
     investment_method: no_limits
-    interest_rate: 0.06
-    lifetime: 30
+    discount_rate: 0.06
+    payback_time: 30
   - id: 12
     name: heatpump
     conversion_method: constant_efficiency
     units_existing: 1
     efficiency: 2.5
     investment_method: no_limits
-    interest_rate: 0.06
-    lifetime: 30
-node__to_unit:
+    discount_rate: 0.06
+    payback_time: 30
+node_to_unit:
   - id: 13
     name: natural_gas__ocgt
-    source: 6
-    sink: 7
+    source_name: natural_gas
+    sink_name: ocgt
   - id: 14
     name: natural_gas__ccgt
-    source: 6
-    sink: 8
+    source_name: natural_gas
+    sink_name: ccgt
   - id: 16
     name: biomass__bio_chp
-    source: 5
-    sink: 11
+    source_name: biomass
+    sink_name: bio_chp
   - id: 17
     name: west__heatpump
-    source: 1
-    sink: 12
-unit__to_node:
+    source_name: west
+    sink_name: heatpump
+unit_to_node:
   - id: 18
     name: ocgt__west
-    source: 7
-    sink: 1
+    source_name: ocgt
+    sink_name: west
     capacity: 50
     investment_cost: 500
   - id: 19
     name: ccgt__east
-    source: 8
-    sink: 2
+    source_name: ccgt
+    sink_name: east
     capacity: 500
     investment_cost: 1200
   - id: 20
     name: nuclear__west
-    source: 9
-    sink: 2
+    source_name: nuclear
+    sink_name: west
     capacity: 800
     other_operational_cost: 12
     investment_cost: 5500
   - id: 21
     name: wind__west
-    source: 10
-    sink: 2
+    source_name: wind
+    sink_name: west
     capacity: 1500
     investment_cost: 1000
-    profile_method: upper_limit
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
   - id: 22
     name: bio_chp__east
-    source: 11
-    sink: 1
+    source_name: bio_chp
+    sink_name: east
     capacity: 10
     investment_cost: 1400
   - id: 23
     name: bio_chp__heat
-    source: 11
-    sink: 3
+    source_name: bio_chp
+    sink_name: heat
     capacity: 40
   - id: 24
     name: heatpump__heat
-    source: 12
-    sink: 3
+    source_name: heatpump
+    sink_name: heat
     capacity: 40
     investment_cost: 700
 link:
   - id: 24
     name: pony1
-    node_A: 2
-    node_B: 1
+    node_A: east
+    node_B: west
     transfer_method: regular_linear
     capacity: 500
     links_existing: 1
     efficiency: 0.98
     investment_method: no_limits
     investment_cost: 1600
-    interest_rate: 0.04
-    lifetime: 50
+    discount_rate: 0.04
+    payback_time: 50
   - id: 25
     name: charger
-    node_A: 2
-    node_B: 4
+    node_A: east
+    node_B: battery
     transfer_method: regular_linear
     capacity: 750
     links_existing: 1
     efficiency: 0.9
     investment_method: no_limits
     investment_cost: 0
-    interest_rate: 0.07
-    lifetime: 12
+    discount_rate: 0.07
+    payback_time: 12
 solve_pattern:
   - id: 26
     name: solve_once
     solve_mode: single_solve
     start_time: 1
-    duration: PT10H
+    duration: 10
 system:
   - id: 27
     name: test_system
-    discount_rate: 0.03
-    timeline: ['2023-01-01T00:00', '2023-01-01T01:00', '2023-01-01T02:00', '2023-01-01T03:00', '2023-01-01T04:00', '2023-01-01T05:00', '2023-01-01T06:00', '2023-01-01T07:00', '2023-01-01T08:00', '2023-01-01T09:00']
+    inflation_rate: 0.03

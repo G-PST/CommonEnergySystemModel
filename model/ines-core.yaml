@@ -11,29 +11,39 @@ imports:
   - linkml:types
 default_range: string
 
+# annotations:
+  # time_dimensional:
+    # tag: value
+    # description: "Indicates this parameter has a time dimension aligned with the database timeline"
+
 classes:
   Entity:
     abstract: true
     description: "Abstract top-level class that contains all other classes (except Database)."
     attributes:
-        id:
+        name:
             identifier: true
+            required: true
+            description: "User-facing unique name identifier."
+            multivalued: false
+        id:
             required: true
             range: integer
             multivalued: false
-            description: "Unique identifier of the entity within the dataset."
+            description: "Auto-generated unique identifier (hidden from user, used internally for performance)."
         semantic_id:
             range: uriorcurie
             description: "Optional id for semantic web integration."
-        name:
-            required: true
-            description: "Name of the entity."
-            multivalued: false
         alternative_names:
             multivalued: true
             description: "List of alternative names and aliases."
         description:
             description: "Description of the entity."
+    unique_keys:
+        internal_id:
+            description: "Internal integer ID must be unique."
+            unique_key_slots:
+              - id
 
   Node:
     is_a: Entity
@@ -102,22 +112,18 @@ classes:
   Port:
     is_a: Entity
     description: "Ports designates an input or an output between a unit and a node."
-    # abstract: true
+    abstract: true
     mixins:
       - HasProfiles
     attributes:
-      source:
-        range: integer
-        #any_of:
-        #  - range: Unit
-        #  - range: Node
-        description: "Source of the unidirectional flow"
-      sink:
-        range: integer
-        # any_of:
-        #  - range: Unit
-        #  - range: Node
-        description: "Sink of the unidirectional flow"
+      source_name:
+        range: Entity
+        required: True
+        description: "Name of the source entity (Unit of Node)."
+      sink_name:
+        range: Entity
+        required: True
+        description: "Name of the sink entity (Unit of Node)."
       capacity:
         range: float
         description: "Capacity of a single asset (flow or link)."
@@ -139,10 +145,10 @@ classes:
     is_a: Port
     description: "An output port from a unit to a node."
     attributes:
-      source:
+      source_name:
         range: Unit
         description: "Source unit of the unit_to_node port."
-      sink:
+      sink_name:
         range: Node
         description: "Sink node of the unit_to_node port."
 
@@ -151,10 +157,10 @@ classes:
     is_a: Port
     description: "An input port from a node to a unit."
     attributes:
-      source:
+      source_name:
         range: Node
         description: "Source node of the node_to_unit port."
-      sink:
+      sink_name:
         range: Unit
         description: "Sink unit of the node_to_unit port."
 
@@ -173,9 +179,11 @@ classes:
     attributes:
       node_A:
         range: Node
+        required: True
         description: "First node of a bidirectional link"
       node_B:
         range: Node
+        required: True
         description: "Second node of a bidirectional link"
       transfer_method:
         range: transfer_method_enum
@@ -230,10 +238,6 @@ classes:
         range: float
         annotations:
           qudt_unit: "unit:PERCENT"
-      timeline:
-        multivalued: True
-        description: "Time steps for which data can be entered in the database. Used to validate input data."
-
 
   HasFlow:
     mixin: true
@@ -249,6 +253,7 @@ classes:
         multivalued: True
         annotations:
           qudt_unit: "unit:PERCENT"
+          time_dimensional: true
         description: "Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node."
       flow_scaling_method:
         range: flow_scaling_method_enum
@@ -286,9 +291,13 @@ classes:
       profile_limit_upper:
         range: float
         multivalued: True
+        annotations:
+          time_dimensional: true
       profile_limit_lower:
         range: float
         multivalued: True
+        annotations:
+          time_dimensional: true
 
   DirectionalValue:
     attributes:
@@ -316,6 +325,9 @@ classes:
         identifier: True
         range: integer
         description: "Database level id to distuingish between database versions."
+      timeline:
+        multivalued: True
+        description: "Time steps for which data can be entered in the database. Used to validate input data."
       entities:
         range: Entity
         multivalued: True
@@ -366,9 +378,9 @@ classes:
         multivalued: True
         inlined_as_list: True
         required: False
-    # slots:
-      # - currency_year
-      # - entity
+    slots:
+      - currency_year
+      - entity
 
 
 slots:
@@ -434,3 +446,4 @@ enums:
       Commodity:
         meaning: ines_core:Commodity
     description: "Limits allowed node types: Balance, Storage, Commodity"
+
