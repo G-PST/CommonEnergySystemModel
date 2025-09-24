@@ -24,9 +24,9 @@ MULTI_DIMENSIONAL_CLASSES = {
     }
 }
 
-def linkml_to_xarray(database: Database) -> Dict[str, xr.Dataset]:
+def linkml_to_xarray(database: Database) -> Dict[str, xr.DataArray]:
     """
-    Convert LinkML Database object to multiple xarray Datasets.
+    Convert LinkML Database object to dictionary of xarray DataArrays.
     
     Parameters:
     -----------
@@ -35,137 +35,66 @@ def linkml_to_xarray(database: Database) -> Dict[str, xr.Dataset]:
         
     Returns:
     --------
-    Dict[str, xr.Dataset]
-        Dictionary of datasets:
-        - 'base': Dataset with single-dimensional classes
-        - 'unit_to_node': Dataset with unit_to_node parameters
-        - 'node_to_unit': Dataset with node_to_unit parameters  
-        - 'link': Dataset with link parameters
+    Dict[str, xr.DataArray]
+        Dictionary of DataArrays preserving sparseness for multi-dimensional data
     """
     
     # Get timeline from database (special hardcoded case)
     timeline = database.timeline if database.timeline else []
     time_coord = np.array(timeline)
+    timeline_length = len(time_coord)  # Cache timeline length
     
     # Discover all class collections dynamically
     class_collections = _discover_class_collections(database)
     
-    # Create base dataset for single-dimensional classes
-    base_dataset = _create_base_dataset(class_collections, time_coord)
+    # Create all DataArrays in a single dictionary
+    all_dataarrays = {}
     
-    # Create separate datasets for each multi-dimensional class
-    multi_datasets = {}
-    for collection_name in class_collections:
-        if _is_multi_dimensional_class(collection_name):
-            dataarrays = _create_multi_dimensional_dataarrays(
-                collection_name, class_collections[collection_name], time_coord
-            )
-    
-    # Combine results
-    results = {'base': base_dataset}
-    results.update(multi_datasets)
-    
-    return results
-
-
-def _create_base_dataset(class_collections: Dict, time_coord: np.ndarray) -> xr.Dataset:
-    """Create dataset for single-dimensional classes."""
-    coords = {'time': time_coord}
-    data_vars = {}
-    
-    # Process each single-dimensional class collection
+    # Process all classes (single and multi-dimensional)
     for collection_name, entities_dict in class_collections.items():
-        if not entities_dict or _is_multi_dimensional_class(collection_name):
-            continue
-            
-        # Create coordinate for this class dimension
-        entity_names = list(entities_dict.keys())
-        dim_name = collection_name.rstrip('s')  # Remove plural 's'
-        coords[dim_name] = np.array(entity_names)
-        
-        # Get parameter information from the class
-        first_entity = next(iter(entities_dict.values()))
-        entity_class = type(first_entity)
-        param_info = _get_parameter_info(entity_class)
-        
-        # Process each parameter
-        for param_name, is_time_dimensional in param_info.items():
-            param_values = []
-            actual_has_time_dimension = False
-            
-            # First pass: check if any entity actually has time-dimensional data
-            for entity_name in entity_names:
-                entity = entities_dict[entity_name]
-                value = getattr(entity, param_name, None)
-                if value is not None and isinstance(value, list) and is_time_dimensional:
-                    actual_has_time_dimension = True
-                    break
-            
-            # Second pass: collect values consistently
-            for entity_name in entity_names:
-                entity = entities_dict[entity_name]
-                value = getattr(entity, param_name, None)
-                
-                if value is None:
-                    if actual_has_time_dimension:
-                        param_values.append([np.nan] * len(time_coord))
-                    else:
-                        param_values.append(np.nan)
-                elif isinstance(value, list) and is_time_dimensional:
-                    aligned_value = _align_with_timeline(value, len(time_coord))
-                    param_values.append(aligned_value)
-                elif isinstance(value, list) and not is_time_dimensional:
-                    first_val = value[0] if value else np.nan
-                    param_values.append(_convert_enum_to_string(first_val))
-                else:
-                    # Scalar parameter
-                    processed_value = _convert_enum_to_string(value)
-                    if actual_has_time_dimension:
-                        param_values.append([processed_value] * len(time_coord))
-                    else:
-                        param_values.append(processed_value)
-            
-            # Clean enum objects before creating DataArray
-            cleaned_param_values = _clean_enum_objects(param_values)
-            
-            # Create DataArray
-            if actual_has_time_dimension:
-                data_array = xr.DataArray(
-                    np.array(cleaned_param_values),
-                    dims=[dim_name, 'time'],
-                    coords={dim_name: coords[dim_name], 'time': time_coord},
-                    name=f"{collection_name}_{param_name}"
-                )
-            else:
-                data_array = xr.DataArray(
-                    np.array(cleaned_param_values),
-                    dims=[dim_name],
-                    coords={dim_name: coords[dim_name]},
-                    name=f"{collection_name}_{param_name}"
-                )
-            
-            var_name = f"{collection_name}_{param_name}"
-            data_vars[var_name] = data_array
+        if entities_dict:
+            class_dataarrays = _create_class_dataarrays(
+                collection_name, entities_dict, time_coord, timeline_length
+            )
+            all_dataarrays.update(class_dataarrays)
     
-    return xr.Dataset(data_vars, coords=coords)
+    return all_dataarrays
 
 
-def _create_multi_dimensional_dataarrays(collection_name: str, entities_dict: Dict, 
-                                     time_coord: np.ndarray) -> Dict:
-    """Create dataset for a single multi-dimensional class."""
-    mapping = _get_dimension_mapping(collection_name)
-    if not mapping:
-        return None
-        
-    dim1, dim2, source_field, sink_field = mapping
+def _create_class_dataarrays(collection_name: str, entities_dict: Dict, 
+                           time_coord: np.ndarray, timeline_length: int) -> Dict[str, xr.DataArray]:
+    """Create DataArrays for any class using unified sparse approach."""
     
-    # Get parameter information
+    # Get parameter information from the class
     first_entity = next(iter(entities_dict.values()))
     entity_class = type(first_entity)
     param_info = _get_parameter_info(entity_class)
     
-    coords = {'time': time_coord}
-    data_vars = {}
+    data_arrays = {}
+    is_multi_dimensional = collection_name in MULTI_DIMENSIONAL_CLASSES
+    
+    # Get dimension configuration
+    if is_multi_dimensional:
+        config = MULTI_DIMENSIONAL_CLASSES[collection_name]
+        dimensions = config['dimensions']
+        source_field = config['source_field']
+        sink_field = config['sink_field']
+        
+        # Handle same dimension case
+        if dimensions[0] == dimensions[1]:
+            level_names = [f"{dimensions[0]}_from", f"{dimensions[1]}_to"]
+        else:
+            level_names = dimensions
+        
+        coord_fields = [source_field, sink_field]
+    else:
+        # Single dimension - entity name is the only coordinate
+        dim_name = collection_name.rstrip('s')
+        level_names = [dim_name]
+        coord_fields = [None]  # No field lookup needed
+    
+    # Define coordinate name for all parameters
+    coord_name = f"{collection_name}"
     
     # Process each parameter
     for param_name, is_time_dimensional in param_info.items():
@@ -174,84 +103,86 @@ def _create_multi_dimensional_dataarrays(collection_name: str, entities_dict: Di
         actual_has_time_dimension = False
         for entity in entities_dict.values():
             value = getattr(entity, param_name, None)
-            if value is not None and isinstance(value, list) and len(value) > 0 and is_time_dimensional:
+            if value is not None and isinstance(value, list) and is_time_dimensional:
                 actual_has_time_dimension = True
                 break
         
-        # Collect sparse data - only store actual connections
+        # Collect sparse data
         sparse_coords = []
         sparse_values = []
         
-        for entity in entities_dict.values():
-            source_val = getattr(entity, source_field, None)
-            sink_val = getattr(entity, sink_field, None)
+        for entity_key, entity in entities_dict.items():
+            # Get coordinate values
+            if is_multi_dimensional:
+                # Multi-dimensional: get from entity fields
+                coord_values = []
+                for field in coord_fields:
+                    val = getattr(entity, field, None)
+                    if val is None:
+                        break
+                    coord_values.append(str(val))
+                
+                if len(coord_values) != len(coord_fields):
+                    continue  # Skip if missing coordinate values
+                    
+                coord_tuple = tuple(coord_values)
+            else:
+                # Single-dimensional: use entity key
+                coord_tuple = (str(entity_key),)
+            
+            # Get parameter value
             value = getattr(entity, param_name, None)
             
-            if source_val and sink_val and value is not None:
-                
+            if value is not None:
                 if actual_has_time_dimension and isinstance(value, list) and len(value) > 0:
-                    aligned_value = _align_with_timeline(value, len(time_coord))
-                    sparse_coords.append((str(source_val), str(sink_val)))
+                    aligned_value = _align_with_timeline(value, timeline_length)
+                    sparse_coords.append(coord_tuple)
                     sparse_values.append(aligned_value)
-                elif not actual_has_time_dimension and value is not None:
-                    # Handle non-time dimensional values
-                    if isinstance(value, list):
-                        # If it's a list but not time-dimensional, take first value or NaN
-                        processed_value = _convert_enum_to_string(value[0] if value else np.nan)
-                    else:
-                        # Scalar value
-                        processed_value = _convert_enum_to_string(value)
+                elif not actual_has_time_dimension:
+                    if not isinstance(value, list):
+                        # Convert enums to strings, but preserve numeric types
+                        if hasattr(value, 'text'):
+                            value = str(value.text)
+                        elif hasattr(value, 'value'):
+                            value = value.value  # Keep original type for numeric values
+                        elif hasattr(value, '__class__') and 'Enum' in str(type(value)):
+                            value = str(value)
+                        # else: keep original value and type
                     
-                    if not (isinstance(processed_value, list) and len(processed_value) == 0):
-                        sparse_coords.append((str(source_val), str(sink_val)))
-                        sparse_values.append(processed_value)
+                    if not (isinstance(value, list) and len(value) == 0):
+                        sparse_coords.append(coord_tuple)
+                        sparse_values.append(value)
         
-        # Create sparse DataArray only if we have data
+        # Create sparse DataArray if we have data
         if sparse_coords and sparse_values:
-            
-            # Create MultiIndex for sparse coordinates
-            if dim1 == dim2:
-                # Handle case where both dimensions are the same (e.g., link: node->node)
-                level_names = [f"{dim1}_from", f"{dim2}_to"]
+            # Create coordinate index
+            if len(level_names) == 1:
+                # For single dimension, extract values and use coord_name as index name
+                coord_values = [coord[0] for coord in sparse_coords]
+                coord_index = pd.Index(coord_values, name=coord_name)
             else:
-                level_names = [dim1, dim2]
+                coord_index = pd.MultiIndex.from_tuples(sparse_coords, names=level_names)
             
-            multi_index = pd.MultiIndex.from_tuples(
-                sparse_coords, 
-                names=level_names
-            )
-            
-            coord_name = f"{collection_name}_coords"
+            var_name = f"{collection_name}_{param_name}"
             
             if actual_has_time_dimension:
-                # Create 2D array: connections x time
                 data_array = xr.DataArray(
                     np.array(sparse_values),
                     dims=[coord_name, 'time'],
-                    coords={
-                        coord_name: multi_index, 
-                        'time': time_coord
-                    },
-                    name=f"{collection_name}_{param_name}"
+                    coords={coord_name: coord_index, 'time': time_coord},
+                    name=var_name
                 )
             else:
-                # Create 1D array: connections only
                 data_array = xr.DataArray(
                     sparse_values,
                     dims=[coord_name],
-                    coords=[multi_index],
-                    name=f"{collection_name}_{param_name}"
+                    coords=[coord_index],
+                    name=var_name
                 )
             
-            var_name = f"{collection_name}_{param_name}"
-            data_vars[var_name] = data_array
+            data_arrays[var_name] = data_array
     
-    # Only return dataset if we have data variables
-    if data_vars:
-        return data_vars
-    else:
-        return None
-
+    return data_arrays
 
 def _discover_class_collections(database: Database) -> Dict[str, Dict]:
     """Dynamically discover all class collections in the database."""
@@ -268,8 +199,7 @@ def _discover_class_collections(database: Database) -> Dict[str, Dict]:
             first_value = attr_value[0]
             if isinstance(first_value, Entity):
                 # Convert list to dictionary keyed by name
-                entity_dict = {entity.name: entity for entity in attr_value}
-                collections[attr_name] = entity_dict
+                collections[attr_name] = {entity.name: entity for entity in attr_value}
     
     return collections
 
@@ -293,73 +223,14 @@ def _get_parameter_info(entity_class: Type) -> Dict[str, bool]:
             if field_name in excluded_fields:
                 continue
                 
-            is_time_dimensional = _is_time_dimensional_heuristic(field_name, field_info)
+            # Inline time-dimensional heuristic
+            is_time_dimensional = (
+                field_name in {'flow_profile', 'profile_limit_upper', 'profile_limit_lower'} or
+                any(keyword in field_name.lower() for keyword in ['profile', 'series', 'timeline', 'temporal'])
+            )
             param_info[field_name] = is_time_dimensional
     
     return param_info
-
-
-def _is_time_dimensional_heuristic(field_name: str, field_info) -> bool:
-    """
-    Heuristic to determine if a field is time dimensional.
-    This should eventually be replaced by schema annotations.
-    """
-    time_dimensional_patterns = {
-        'flow_profile', 'profile_limit_upper', 'profile_limit_lower'
-    }
-    
-    if field_name in time_dimensional_patterns:
-        return True
-        
-    time_keywords = ['profile', 'series', 'timeline', 'temporal']
-    if any(keyword in field_name.lower() for keyword in time_keywords):
-        return True
-    
-    return False
-
-
-def _convert_enum_to_string(value):
-    """Convert enum objects to strings."""
-    if hasattr(value, 'text'):
-        return str(value.text)
-    elif hasattr(value, 'value'):
-        return str(value.value)
-    elif 'Enum' in str(type(value)):
-        return str(value)
-    else:
-        return value
-
-
-def _clean_enum_objects(param_values):
-    """Force convert any remaining enum objects to strings."""
-    cleaned_param_values = []
-    for val in param_values:
-        if hasattr(val, 'text') or hasattr(val, 'value') or 'Enum' in str(type(val)):
-            cleaned_param_values.append(_convert_enum_to_string(val))
-        elif isinstance(val, list):
-            cleaned_list = [_convert_enum_to_string(item) for item in val]
-            cleaned_param_values.append(cleaned_list)
-        else:
-            cleaned_param_values.append(val)
-    return cleaned_param_values
-
-
-def _is_multi_dimensional_class(collection_name: str) -> bool:
-    """Check if a class is configured as multi-dimensional."""
-    return collection_name in MULTI_DIMENSIONAL_CLASSES
-
-
-def _get_dimension_mapping(collection_name: str) -> tuple:
-    """Get dimension mapping for multi-dimensional classes from configuration."""
-    if collection_name not in MULTI_DIMENSIONAL_CLASSES:
-        return None
-    
-    config = MULTI_DIMENSIONAL_CLASSES[collection_name]
-    dimensions = config['dimensions']
-    source_field = config['source_field']
-    sink_field = config['sink_field']
-    
-    return (dimensions[0], dimensions[1], source_field, sink_field)
 
 
 def _align_with_timeline(values: List[float], timeline_length: int) -> List[float]:
