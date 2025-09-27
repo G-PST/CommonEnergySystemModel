@@ -36,13 +36,6 @@ https://w3id.org/linkml/Float[`float`]
 | +++Rate of inflation from the currency_year of the database.+++
 | _n/a_
 
-| <<timeline,`timeline`>>
-//| [[slots_table.timeline]]<<timeline,`timeline`>>
-| 0..* +
-https://w3id.org/linkml/String[`string`]
-| +++Time steps for which data can be entered in the database. Used to validate input data.+++
-| _n/a_
-
 | <<alternative_names,`alternative_names`>>
 //| [[slots_table.alternative_names]]<<alternative_names,`alternative_names`>>
 | 0..* +
@@ -61,14 +54,14 @@ https://w3id.org/linkml/String[`string`]
 //| [[slots_table.id]]<<id,`id`>>
 | 1 +
 https://w3id.org/linkml/Integer[`integer`]
-| +++Unique identifier of the entity within the dataset.+++
+| +++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<name,`name`>>
 //| [[slots_table.name]]<<name,`name`>>
 | 1 +
 https://w3id.org/linkml/String[`string`]
-| +++Name of the entity.+++
+| +++User-facing unique name identifier.+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<semantic_id,`semantic_id`>>
@@ -143,7 +136,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#id]
 === `id`
-+++Unique identifier of the entity within the dataset.+++
++++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 
 
 [cols="h,4",width=65%]
@@ -198,7 +191,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#name]
 === `name`
-+++Name of the entity.+++
++++User-facing unique name identifier.+++
 
 
 [cols="h,4",width=65%]
@@ -249,32 +242,6 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.semantic_id,&#10548;>>
---
-////
-
-
-//[discrete]
-[#timeline]
-=== `timeline`
-+++Time steps for which data can be entered in the database. Used to validate input data.+++
-
-
-[cols="h,4",width=65%]
-|===
-| URI
-| _n/a_
-| Cardinality
-| 0..*
-| Type
-| https://w3id.org/linkml/String[`string`]
-
-
-|===
-
-////
-[.text-left]
---
-<<slots_table.timeline,&#10548;>>
 --
 ////
 

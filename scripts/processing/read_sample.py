@@ -4,7 +4,7 @@ from core.linkml_to_xarray import linkml_to_xarray
 import xarray as xr
 from linkml_runtime.utils.schemaview import SchemaView
 
-schema = SchemaView("model/ines-core.yaml")
+schema = SchemaView("model/cesm.yaml")
 
 # Get a specific slot object
 slot = schema.get_slot("efficiency")
@@ -20,7 +20,7 @@ for attr, value in slot_dict.items():
 
 # Read the data
 reader = LinkMLYAMLReader()
-data = reader.read("data/samples/ines-sample.yaml")  # Returns Database object
+data = reader.read("data/samples/cesm-sample.yaml")  # Returns Database object
 
 # Direct access (your preferred approach)
 units = data.unit  # Dict of Unit objects

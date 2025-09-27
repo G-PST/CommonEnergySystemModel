@@ -35,17 +35,17 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 ## Files Structure
 
 ### Core Model
-- `docs/ines-core.yaml` - The main LinkML schema defining the energy system model
+- `docs/cesm.yaml` - The main LinkML schema defining the energy system model
 
 ### Sample Data
-- `data/samples/ines-sample.yaml` - Example data demonstrating how to structure energy system information
+- `data/samples/cesm-sample.yaml` - Example data demonstrating how to structure energy system information
 
 ### Processing Scripts
 - `scripts/processing/` - Scripts for basic conversions (e.g. YAML to SQL) - placeholder at the moment
 
 ## Getting Started
 
-1. **Understanding the Model**: The `ines-core.yaml` file defines the core classes:
+1. **Understanding the Model**: The `cesm.yaml` file defines the core classes:
    - `Balance`: Energy balance nodes with flow characteristics
    - `Storage`: Storage units with capacity and investment parameters
    - `Commodity`: Energy commodities with pricing
@@ -74,18 +74,18 @@ This project includes a devcontainer configuration that provides a consistent de
 
 In order to generate the static website that will be published on g-PST.github.io/CommonEnergySystemModel, two commands will need to be run
 
-First, to generate the asciidoc files from the linkML models, run
+First, to generate the asciidoc files from the linkML models, run (inside devcontainer)
 
 ```BASH
 
-poetry run python -m linkml_asciidoc_generator.main  "model/ines-core.yaml" "artifacts/documentation/modules/schema" --test
+python -m linkml_asciidoc_generator.main  "model/cesm.yaml" "artifacts/documentation/modules/schema" --test
 
 ```
 
 then, to generate the HTML versions using antora, run
 
 ```BASH
-antora antora-playmbook.yml 
+antora antora-playbook.yml 
 ```
 
 ## Usage

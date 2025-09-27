@@ -58,6 +58,9 @@
 | xref::class/System.adoc[`System`]
 | +++Parameters related to the whole system to be modelled.+++
 
+| xref::class/TimeSeriesValues.adoc[`TimeSeriesValues`]
+| +++Array of values indexed by Database.timeline+++
+
 | xref::class/Unit.adoc[`Unit`]
 | +++Units convert input(s) to output(s) using a ratio multiplier.+++
 

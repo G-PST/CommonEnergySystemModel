@@ -3,6 +3,7 @@
   "image": "python:3.11",
   "remoteUser": "devuser",
   "postCreateCommand": "pip install -e .",
+  "postStartCommand": "pip install -e .",
   "customizations": {
     "vscode": {
       "extensions": [

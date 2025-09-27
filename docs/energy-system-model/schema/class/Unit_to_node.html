@@ -128,6 +128,9 @@
     <a class="nav-link" href="System.html">System</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="TimeSeriesValues.html">TimeSeriesValues</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
   </li>
   <li class="nav-item is-current-page" data-depth="3">
@@ -250,7 +253,7 @@
 <div class="sectionbody">
 <div class="imageblock kroki">
 <div class="content">
-<img src="http://fruit.ritger.nl:9000/d2/svg/eNq1Uc9LwzAYve-v-KiXeSi0HW6agxcZ4kFvnkeafGlDu6SkmVOk_7tJ1m7rUByMBVry3vfrvS8f1LQEvicAPIuZVkIWOwjQUE4gS9y9m3STdyXtyuqV0hxDQmu_auxThaxrAtENCycKXFtSrrcErNlg38Md3-aC8rfLpo9dxI_gMYFWbwzDX8J-nAtLVblgjQUqt5IoOiggIwnWUNU21KCyOxHW6ApP-c59hZE8Nnrrdj8bINP1Zq0ckw1MQRsCqX8BhdQQyLW1eh0bWZS-kUQ2Tx_m9ytXqc1e2Im0w354iguWRT07iMtryqoRF28lt6WbHNgu_AcqCahEL6GH3bEUi5-Oj16WTwHDdKksmsbIFm_38kra-K241FH5IjnXCTImWH5FJ07KyMkigemze5J_PGSz7O5cD0KIHMXVPAQpRx48hukrNRXaP110P459H1A=?theme=4" alt="Associated classes">
+<img src="http://fruit.ritger.nl:9000/d2/svg/eNrFkTFvgzAQhff8ihNd0gGJEDVpPXSpoqpDx87ImDNYEBsdTtOo4r_XOJCESG2yRLUE4j2dj-_dfXJqGHxPALI4FEZLle8lQM0zBnHkvttJO_nQyibWJNpk6Asau6uwL5WqqhgEd8KfwHtNwTOzZWBpg30Pd1baKrv7zwbjJOEz7DsyaMyGBCaar_GvKqXLoabCHLUbUhAcedgIyBLXTc0Jtd0jWTIlnvute3JSWUhm67YxH6Qw1WatnRMPTs5rBrNuJxo5MUiNtWYdksqLrpFCsZg9LR4Td9PQAewM7TitbIZLEQe9O8ClFRflyAu3KrOF-7N3W_8erMirAjuEXranKBa_nB-8rV68hqmbJFJNqsH7A17B624qrnR0fRldmwSFkCK9YRKHMkqyjGD66lZyIUM8jx-uzSClTFHeLINHOcnQaZi-cyrR_pqi_QF-Wib4?theme=4" alt="Associated classes">
 </div>
 <div class="title">Figure 1. Associated classes</div>
 </div>
@@ -271,24 +274,10 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink"><code>sink</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Node.html" class="xref page"><code>Node</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sink node of the unit_to_node port.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source"><code>source</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Unit.html" class="xref page"><code>Unit</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source unit of the unit_to_node port.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#capacity"><code>capacity</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of a single asset (flow or link).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of the port for a single unit.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Port.html" class="xref page"><code>Port</code></a></p></td>
 </tr>
 <tr>
@@ -306,17 +295,17 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Port.html" class="xref page"><code>Port</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink"><code>sink</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sink of the unidirectional flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink_name"><code>sink_name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
+<a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the sink entity (Unit or Node).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Port.html" class="xref page"><code>Port</code></a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source"><code>source</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Source of the unidirectional flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source_name"><code>source_name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
+<a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the source entity (Unit or Node).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Port.html" class="xref page"><code>Port</code></a></p></td>
 </tr>
 <tr>
@@ -337,14 +326,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id"><code>id</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
 <a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier of the entity within the dataset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated unique identifier (hidden from user, used internally for performance).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#name"><code>name</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1<br>
 <a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the entity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User-facing unique name identifier.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 </tr>
 <tr>
@@ -390,7 +379,7 @@
 <div class="sect2">
 <h3 id="capacity"><a class="anchor" href="#capacity"></a><code>capacity</code></h3>
 <div class="paragraph">
-<p>Capacity of a single asset (flow or link).</p>
+<p>Capacity of the port for a single unit.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -450,7 +439,7 @@
 <div class="sect2">
 <h3 id="id"><a class="anchor" href="#id"></a><code>id</code></h3>
 <div class="paragraph">
-<p>Unique identifier of the entity within the dataset.</p>
+<p>Auto-generated unique identifier (hidden from user, used internally for performance).</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -510,7 +499,7 @@
 <div class="sect2">
 <h3 id="name"><a class="anchor" href="#name"></a><code>name</code></h3>
 <div class="paragraph">
-<p>Name of the entity.</p>
+<p>User-facing unique name identifier.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -598,9 +587,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="sink"><a class="anchor" href="#sink"></a><code>sink</code></h3>
+<h3 id="sink_name"><a class="anchor" href="#sink_name"></a><code>sink_name</code></h3>
 <div class="paragraph">
-<p>Sink node of the unit_to_node port.</p>
+<p>Name of the sink entity (Unit or Node).</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -614,37 +603,11 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*</p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Node.html" class="xref page"><code>Node</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="sink"><a class="anchor" href="#sink"></a><code>sink</code></h3>
-<div class="paragraph">
-<p>Sink of the unidirectional flow</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
@@ -654,9 +617,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="source"><a class="anchor" href="#source"></a><code>source</code></h3>
+<h3 id="source_name"><a class="anchor" href="#source_name"></a><code>source_name</code></h3>
 <div class="paragraph">
-<p>Source unit of the unit_to_node port.</p>
+<p>Name of the source entity (Unit or Node).</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -670,37 +633,11 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1..*</p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Unit.html" class="xref page"><code>Unit</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="source"><a class="anchor" href="#source"></a><code>source</code></h3>
-<div class="paragraph">
-<p>Source of the unidirectional flow</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>

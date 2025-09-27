@@ -1,8 +1,8 @@
-id: file:///ines-core.yaml
-name: ines-core
+id: file:///cesm.yaml
+name: cesm
 default_prefix: ines_core
 prefixes:
-  ines_core: file:///ines-core.yaml
+  ines_core: file:///cesm.yaml
   linkml: https://w3id.org/linkml/
   # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
@@ -41,6 +41,7 @@ classes:
             description: "Description of the entity."
     unique_keys:
         internal_id:
+            unique_key_name: internal_id
             description: "Internal integer ID must be unique."
             unique_key_slots:
               - id
@@ -118,15 +119,15 @@ classes:
     attributes:
       source_name:
         range: Entity
-        required: True
-        description: "Name of the source entity (Unit of Node)."
+        required: true
+        description: "Name of the source entity (Unit or Node)."
       sink_name:
         range: Entity
-        required: True
-        description: "Name of the sink entity (Unit of Node)."
+        required: true
+        description: "Name of the sink entity (Unit or Node)."
       capacity:
         range: float
-        description: "Capacity of a single asset (flow or link)."
+        description: "Capacity of the port for a single unit."
         annotations:
           qudt_unit: "unit:MegaW"
       investment_cost:
@@ -144,7 +145,7 @@ classes:
   Unit_to_node:
     is_a: Port
     description: "An output port from a unit to a node."
-    attributes:
+    slot_usage:
       source_name:
         range: Unit
         description: "Source unit of the unit_to_node port."
@@ -156,7 +157,7 @@ classes:
   Node_to_unit:
     is_a: Port
     description: "An input port from a node to a unit."
-    attributes:
+    slot_usage:
       source_name:
         range: Node
         description: "Source node of the node_to_unit port."
@@ -179,11 +180,11 @@ classes:
     attributes:
       node_A:
         range: Node
-        required: True
+        required: true
         description: "First node of a bidirectional link"
       node_B:
         range: Node
-        required: True
+        required: true
         description: "Second node of a bidirectional link"
       transfer_method:
         range: transfer_method_enum
@@ -325,70 +326,68 @@ classes:
     description: "Database properties and holder for classes available in the schema."
     attributes:
       id:
-        identifier: True
+        identifier: true
         range: integer
         description: "Database level id to distuingish between database versions."
       timeline:
         range: datetime
-        multivalued: True
+        multivalued: true
         description: "Time steps for which data can be entered in the database. Used to validate input data."
       entities:
         range: Entity
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       balances:
         range: Balance
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       storages:
         range: Storage
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       commodity:
         range: Commodity
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       unit:
         range: Unit
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       node_to_unit:
         range: Node_to_unit
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       unit_to_node:
         range: Unit_to_node
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       link:
         range: Link
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       solve_pattern:
         range: Solve_pattern
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
       system:
         range: System
-        multivalued: True
-        inlined_as_list: True
-        required: False
+        multivalued: true
+        inlined_as_list: true
+        required: false
     slots:
       - currency_year
       - entity
 
   TimeSeriesValues:
-    is_a: float
-    multivalued: true
     description: "Array of values indexed by Database.timeline"
 
 slots:
@@ -454,4 +453,3 @@ enums:
       Commodity:
         meaning: ines_core:Commodity
     description: "Limits allowed node types: Balance, Storage, Commodity"
-

@@ -61,14 +61,14 @@ https://w3id.org/linkml/String[`string`]
 //| [[slots_table.id]]<<id,`id`>>
 | 1 +
 https://w3id.org/linkml/Integer[`integer`]
-| +++Unique identifier of the entity within the dataset.+++
+| +++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<name,`name`>>
 //| [[slots_table.name]]<<name,`name`>>
 | 1 +
 https://w3id.org/linkml/String[`string`]
-| +++Name of the entity.+++
+| +++User-facing unique name identifier.+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<semantic_id,`semantic_id`>>
@@ -169,7 +169,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#id]
 === `id`
-+++Unique identifier of the entity within the dataset.+++
++++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 
 
 [cols="h,4",width=65%]
@@ -198,7 +198,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#name]
 === `name`
-+++Name of the entity.+++
++++User-facing unique name identifier.+++
 
 
 [cols="h,4",width=65%]
@@ -292,14 +292,6 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 | xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#unit[`unit`]
-
-
-
-| xref::class/Node_to_unit.adoc[`Node_to_unit`] | xref::class/Node_to_unit.adoc#sink[`sink`]
-
-
-
-| xref::class/Unit_to_node.adoc[`Unit_to_node`] | xref::class/Unit_to_node.adoc#source[`source`]
 
 
 |===

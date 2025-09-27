@@ -1,0 +1,31 @@
+= `TimeSeriesValues`
+:toclevels: 4
+
+
++++Array of values indexed by Database.timeline+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`TimeSeriesValues`*
+
+
+== Slots
+
+
+This class has no slots.
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

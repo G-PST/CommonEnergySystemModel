@@ -8,7 +8,7 @@
 [cols="h,3",width=65%]
 |===
 | Type
-| Class
+| Abstract class
 
 
 
@@ -26,6 +26,96 @@
 
 
 
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+Port {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Entity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Entity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Port -> Entity: source_name
+
+
+Port -> Entity: sink_name
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
 
 [cols="1,1,2,1",width=100%]
 |===
@@ -35,7 +125,7 @@
 //| [[slots_table.capacity]]<<capacity,`capacity`>>
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
-| +++Capacity of a single asset (flow or link).+++
+| +++Capacity of the port for a single unit.+++
 | _n/a_
 
 | <<investment_cost,`investment_cost`>>
@@ -52,18 +142,18 @@ https://w3id.org/linkml/Float[`float`]
 | +++Cost (in currency_year denomination) per unit of the product flowing through+++
 | _n/a_
 
-| <<sink,`sink`>>
-//| [[slots_table.sink]]<<sink,`sink`>>
-| 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Sink of the unidirectional flow+++
+| <<sink_name,`sink_name`>>
+//| [[slots_table.sink_name]]<<sink_name,`sink_name`>>
+| 1..* +
+xref::class/Entity.adoc[`Entity`]
+| +++Name of the sink entity (Unit or Node).+++
 | _n/a_
 
-| <<source,`source`>>
-//| [[slots_table.source]]<<source,`source`>>
-| 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Source of the unidirectional flow+++
+| <<source_name,`source_name`>>
+//| [[slots_table.source_name]]<<source_name,`source_name`>>
+| 1..* +
+xref::class/Entity.adoc[`Entity`]
+| +++Name of the source entity (Unit or Node).+++
 | _n/a_
 
 | <<alternative_names,`alternative_names`>>
@@ -84,14 +174,14 @@ https://w3id.org/linkml/String[`string`]
 //| [[slots_table.id]]<<id,`id`>>
 | 1 +
 https://w3id.org/linkml/Integer[`integer`]
-| +++Unique identifier of the entity within the dataset.+++
+| +++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<name,`name`>>
 //| [[slots_table.name]]<<name,`name`>>
 | 1 +
 https://w3id.org/linkml/String[`string`]
-| +++Name of the entity.+++
+| +++User-facing unique name identifier.+++
 | xref::class/Entity.adoc[`Entity`]
 
 | <<semantic_id,`semantic_id`>>
@@ -137,7 +227,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#capacity]
 === `capacity`
-+++Capacity of a single asset (flow or link).+++
++++Capacity of the port for a single unit.+++
 
 
 [cols="h,4",width=65%]
@@ -192,7 +282,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#id]
 === `id`
-+++Unique identifier of the entity within the dataset.+++
++++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 
 
 [cols="h,4",width=65%]
@@ -247,7 +337,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#name]
 === `name`
-+++Name of the entity.+++
++++User-facing unique name identifier.+++
 
 
 [cols="h,4",width=65%]
@@ -329,9 +419,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#sink]
-=== `sink`
-+++Sink of the unidirectional flow+++
+[#sink_name]
+=== `sink_name`
++++Name of the sink entity (Unit or Node).+++
 
 
 [cols="h,4",width=65%]
@@ -339,9 +429,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | URI
 | _n/a_
 | Cardinality
-| 0..*
+| 1..*
 | Type
-| https://w3id.org/linkml/Integer[`integer`]
+| xref::class/Entity.adoc[`Entity`]
 
 
 |===
@@ -349,15 +439,15 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.sink,&#10548;>>
+<<slots_table.sink_name,&#10548;>>
 --
 ////
 
 
 //[discrete]
-[#source]
-=== `source`
-+++Source of the unidirectional flow+++
+[#source_name]
+=== `source_name`
++++Name of the source entity (Unit or Node).+++
 
 
 [cols="h,4",width=65%]
@@ -365,9 +455,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | URI
 | _n/a_
 | Cardinality
-| 0..*
+| 1..*
 | Type
-| https://w3id.org/linkml/Integer[`integer`]
+| xref::class/Entity.adoc[`Entity`]
 
 
 |===
@@ -375,7 +465,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.source,&#10548;>>
+<<slots_table.source_name,&#10548;>>
 --
 ////
 

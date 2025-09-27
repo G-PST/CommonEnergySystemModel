@@ -69,6 +69,10 @@
 
 
 
+*** xref::class/TimeSeriesValues.adoc[TimeSeriesValues]
+
+
+
 *** xref::class/Unit.adoc[Unit]
 
 

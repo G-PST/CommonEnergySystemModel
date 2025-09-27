@@ -52,14 +52,14 @@ https://w3id.org/linkml/String[`string`]
 //| [[slots_table.id]]<<id,`id`>>
 | 1 +
 https://w3id.org/linkml/Integer[`integer`]
-| +++Unique identifier of the entity within the dataset.+++
+| +++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 | _n/a_
 
 | <<name,`name`>>
 //| [[slots_table.name]]<<name,`name`>>
 | 1 +
 https://w3id.org/linkml/String[`string`]
-| +++Name of the entity.+++
+| +++User-facing unique name identifier.+++
 | _n/a_
 
 | <<semantic_id,`semantic_id`>>
@@ -128,7 +128,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#id]
 === `id`
-+++Unique identifier of the entity within the dataset.+++
++++Auto-generated unique identifier (hidden from user, used internally for performance).+++
 
 
 [cols="h,4",width=65%]
@@ -154,7 +154,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#name]
 === `name`
-+++Name of the entity.+++
++++User-facing unique name identifier.+++
 
 
 [cols="h,4",width=65%]
@@ -216,6 +216,10 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 | xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#entities[`entities`]
+
+
+
+| xref::class/Port.adoc[`Port`] | xref::class/Port.adoc#sink_name[`sink_name`]
 
 
 |===

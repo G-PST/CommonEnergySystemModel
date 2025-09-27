@@ -277,6 +277,13 @@ xref::class/System.adoc[`System`]
 | _n/a_
 | _n/a_
 
+| <<timeline,`timeline`>>
+//| [[slots_table.timeline]]<<timeline,`timeline`>>
+| 0..* +
+https://w3id.org/linkml/Datetime[`datetime`]
+| +++Time steps for which data can be entered in the database. Used to validate input data.+++
+| _n/a_
+
 | <<unit,`unit`>>
 //| [[slots_table.unit]]<<unit,`unit`>>
 | 0..* +
@@ -525,6 +532,32 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 [.text-left]
 --
 <<slots_table.system,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#timeline]
+=== `timeline`
++++Time steps for which data can be entered in the database. Used to validate input data.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Datetime[`datetime`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.timeline,&#10548;>>
 --
 ////
 

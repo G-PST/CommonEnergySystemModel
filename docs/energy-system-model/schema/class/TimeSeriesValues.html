@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>HasFlow :: Energy System Model</title>
-    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/HasFlow.html">
-    <link rel="prev" href="Entity.html">
-    <link rel="next" href="HasInvestments.html">
+    <title>TimeSeriesValues :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/TimeSeriesValues.html">
+    <link rel="prev" href="System.html">
+    <link rel="next" href="Unit.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
@@ -94,7 +94,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Entity.html">Entity</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -127,7 +127,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="System.html">System</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="TimeSeriesValues.html">TimeSeriesValues</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -192,21 +192,21 @@
     <li><a href="../../index.html">Energy System Model</a></li>
     <li>Information model</li>
     <li>Classes</li>
-    <li><a href="HasFlow.html">HasFlow</a></li>
+    <li><a href="TimeSeriesValues.html">TimeSeriesValues</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/HasFlow.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/TimeSeriesValues.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page"><code>HasFlow</code></h1>
+<h1 class="page"><code>TimeSeriesValues</code></h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Mixin for flow (annual_flow, flow_profile) related properties.</p>
+<p>Array of values indexed by Database.timeline</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -228,7 +228,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><strong><code>HasFlow</code></strong></p>
+<p><strong><code>TimeSeriesValues</code></strong></p>
 </li>
 </ul>
 </div>
@@ -237,123 +237,8 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Inherited from</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#flow_annual"><code>flow_annual</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#flow_profile"><code>flow_profile</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#flow_scaling_method"><code>flow_scaling_method</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="../enumeration/flow_scaling_method_enum.html" class="xref page"><code>flow_scaling_method_enum</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-</tbody>
-</table>
-<hr>
-<div class="sect2">
-<h3 id="flow_annual"><a class="anchor" href="#flow_annual"></a><code>flow_annual</code></h3>
 <div class="paragraph">
-<p>Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="flow_profile"><a class="anchor" href="#flow_profile"></a><code>flow_profile</code></h3>
-<div class="paragraph">
-<p>Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="flow_scaling_method"><a class="anchor" href="#flow_scaling_method"></a><code>flow_scaling_method</code></h3>
-<div class="paragraph">
-<p>How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/flow_scaling_method_enum.html" class="xref page"><code>flow_scaling_method_enum</code></a></p></td>
-</tr>
-</tbody>
-</table>
+<p>This class has no slots.</p>
 </div>
 </div>
 </div>
@@ -366,8 +251,8 @@
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="Entity.html">Entity</a></span>
-  <span class="next"><a href="HasInvestments.html">HasInvestments</a></span>
+  <span class="prev"><a href="System.html">System</a></span>
+  <span class="next"><a href="Unit.html">Unit</a></span>
 </nav>
 </article>
   </div>
