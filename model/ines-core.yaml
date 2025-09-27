@@ -249,8 +249,9 @@ classes:
           qudt_unit: "unit:MegaW-HR"
         description: "Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction."
       flow_profile:
-        range: float
-        multivalued: True
+        any_of:
+          - range: float
+          - range: TimeSeriesValues
         annotations:
           qudt_unit: "unit:PERCENT"
           time_dimensional: true
@@ -289,13 +290,15 @@ classes:
     description: "Mixin for profile related attributes."
     attributes:
       profile_limit_upper:
-        range: float
-        multivalued: True
+        any_of:
+          - range: float
+          - range: TimeSeriesValues
         annotations:
           time_dimensional: true
       profile_limit_lower:
-        range: float
-        multivalued: True
+        any_of:
+          - range: float
+          - range: TimeSeriesValues
         annotations:
           time_dimensional: true
 
@@ -326,6 +329,7 @@ classes:
         range: integer
         description: "Database level id to distuingish between database versions."
       timeline:
+        range: datetime
         multivalued: True
         description: "Time steps for which data can be entered in the database. Used to validate input data."
       entities:
@@ -382,6 +386,10 @@ classes:
       - currency_year
       - entity
 
+  TimeSeriesValues:
+    is_a: float
+    multivalued: true
+    description: "Array of values indexed by Database.timeline"
 
 slots:
   entity:

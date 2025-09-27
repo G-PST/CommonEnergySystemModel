@@ -2,6 +2,21 @@ from readers.linkml_yaml import LinkMLYAMLReader
 from core.data_handler import DataHandler
 from core.linkml_to_xarray import linkml_to_xarray
 import xarray as xr
+from linkml_runtime.utils.schemaview import SchemaView
+
+schema = SchemaView("model/ines-core.yaml")
+
+# Get a specific slot object
+slot = schema.get_slot("efficiency")
+
+# Get all attributes of the slot object
+slot_dict = vars(slot)
+
+# See all available attributes
+for attr, value in slot_dict.items():
+    if value is not None:
+        print(f"{attr}: {value}")
+
 
 # Read the data
 reader = LinkMLYAMLReader()
