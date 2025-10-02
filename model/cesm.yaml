@@ -1,8 +1,8 @@
 id: file:///cesm.yaml
 name: cesm
-default_prefix: ines_core
+default_prefix: cesm
 prefixes:
-  ines_core: file:///cesm.yaml
+  cesm: file:///cesm.yaml
   linkml: https://w3id.org/linkml/
   # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
@@ -26,11 +26,6 @@ classes:
             required: true
             description: "User-facing unique name identifier."
             multivalued: false
-        id:
-            required: true
-            range: integer
-            multivalued: false
-            description: "Auto-generated unique identifier (hidden from user, used internally for performance)."
         semantic_id:
             range: uriorcurie
             description: "Optional id for semantic web integration."
@@ -39,12 +34,6 @@ classes:
             description: "List of alternative names and aliases."
         description:
             description: "Description of the entity."
-    unique_keys:
-        internal_id:
-            unique_key_name: internal_id
-            description: "Internal integer ID must be unique."
-            unique_key_slots:
-              - id
 
   Node:
     is_a: Entity
@@ -333,17 +322,17 @@ classes:
         range: datetime
         multivalued: true
         description: "Time steps for which data can be entered in the database. Used to validate input data."
-      entities:
+      entitie:
         range: Entity
         multivalued: true
         inlined_as_list: true
         required: false
-      balances:
+      balance:
         range: Balance
         multivalued: true
         inlined_as_list: true
         required: false
-      storages:
+      storage:
         range: Storage
         multivalued: true
         inlined_as_list: true
@@ -447,9 +436,9 @@ enums:
   node_type_enum:
     permissible_values:
       Balance:
-        meaning: ines_core:Balance
+        meaning: cesm:Balance
       Storage:
-        meaning: ines_core:Storage
+        meaning: cesm:Storage
       Commodity:
-        meaning: ines_core:Commodity
+        meaning: cesm:Commodity
     description: "Limits allowed node types: Balance, Storage, Commodity"

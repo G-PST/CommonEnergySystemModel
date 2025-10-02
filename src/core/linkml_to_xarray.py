@@ -163,7 +163,7 @@ def _create_class_dataarrays(collection_name: str, entities_dict: Dict,
             else:
                 coord_index = pd.MultiIndex.from_tuples(sparse_coords, names=level_names)
             
-            var_name = f"{collection_name}_{param_name}"
+            var_name = f"{collection_name}.{param_name}"
             
             if actual_has_time_dimension:
                 data_array = xr.DataArray(

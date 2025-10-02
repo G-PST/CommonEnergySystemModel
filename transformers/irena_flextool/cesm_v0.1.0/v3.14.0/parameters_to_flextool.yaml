@@ -1,0 +1,102 @@
+# Configuration file to perform data transformation between two data formats.
+# For each operation, first list tells the source or sources, second list target(s)
+# and third list defines special operations. There can be multiple special operations performed in list order.
+#
+# Structure of each operation:
+# name for the operation:
+# - source class: source paramater  OR - source class (used to copy entities or to create parameters based on entities in which case target entities will get a parameter from 'value')
+# - target class: target parameter  OR - target class (used to copy entities)
+# - - order: [optional list of lists for dimension positions: separate list for each dimension in the target - each target dimension can pick dimension names from multiple source dimensions]
+#   - rename:
+#       source parameter value: target parameter value
+#   - algebra: programmatically interpreted algebraic formula between two or more source parameters
+#   - [multiply, divide, add or subtract]:
+#       with: float
+
+balance-entities:
+- balance
+- node
+storage-entities:
+- storage
+- node
+commodity-entities:
+- commodity
+- - node
+  - commodity
+  - commodity__node:
+      order: [[1], [1]]
+unit-entities:
+- unit
+- unit
+node-to-unit-entities:
+- node_to_unit
+- unit__input_node:
+- order: [[2], [1]]
+inflation_rate:
+- system: inflation_rate
+- model: discount_rate
+annual_flow:
+- balance: flow_annual
+  storage: flow_annual
+- node: annual_flow
+flow_profile:
+- balance: flow_profile
+  storage: flow_profile
+- node: inflow
+flow-scaling-method:
+- balance: flow_scaling_method
+  storage: flow_scaling_method
+- node: inflow_method
+- rename:
+    use_profile_directly: use_original
+    scale_to_annual: scale_to_annual_flow
+storage_existing:
+- storage: storage_existing
+- node: existing
+storage_capacity:
+- storage: storage_capacity
+- node: virtual_unitsize
+storage-invest-cost:
+- storage: investment_cost
+- node: invest_cost
+- multiply:
+    with: 0.001
+storage_investment_method:
+- storage: investment_method:
+- node: invest_method
+- rename:
+    not_allowed: not_allowed
+    no_limits: invest_no_limit
+storage_discount_rate:
+- storage: discount_rate
+- node: interest_rate
+storage_payback_time:
+- storage: payback_time
+- node: lifetime
+storage penalty_upward:
+- storage: penalty_upward
+- node: penalty_up
+storage penalty_downward:
+- storage: penalty_downward
+- node: penalty_down
+has_balance:
+- balance
+- node: has_balance
+- value: 'yes'
+has_storage:
+- storage
+- node: has_storage
+- value: 'yes'
+other_operational_cost:
+- node_to_unit: other_operational_cost
+- unit__input_node: other_operational_cost
+- - order: [[2], [1]]
+  - divide:
+      with: 1
+test-multiply:
+- node_to_unit: other_operational_cost
+  unit: efficiency
+- unit__input_node: test
+- - algebra: "1*2"
+    match: [[2], [1]]
+  - order: [[2], [1]]
