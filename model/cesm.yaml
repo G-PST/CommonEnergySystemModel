@@ -242,6 +242,7 @@ classes:
         any_of:
           - range: float
           - range: TimeSeriesValues
+        multivalued: true
         annotations:
           qudt_unit: "unit:PERCENT"
           time_dimensional: true
@@ -283,12 +284,14 @@ classes:
         any_of:
           - range: float
           - range: TimeSeriesValues
+        multivalued: true
         annotations:
           time_dimensional: true
       profile_limit_lower:
         any_of:
           - range: float
           - range: TimeSeriesValues
+        multivalued: true
         annotations:
           time_dimensional: true
 

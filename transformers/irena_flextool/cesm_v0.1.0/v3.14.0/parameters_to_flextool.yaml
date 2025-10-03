@@ -13,6 +13,7 @@
 #   - [multiply, divide, add or subtract]:
 #       with: float
 
+# Entities
 balance-entities:
 - balance
 - node
@@ -23,18 +24,44 @@ commodity-entities:
 - commodity
 - - node
   - commodity
-  - commodity__node:
+  - commodity.node:
       order: [[1], [1]]
 unit-entities:
 - unit
 - unit
+unit-to-node-entities:
+- unit_to_node
+- unit.outputNode
+- dimensions: [unit, node]
+- order: [[2], [1]]
 node-to-unit-entities:
 - node_to_unit
-- unit__input_node:
+- unit.inputNode
+- dimensions: [unit, node]
 - order: [[2], [1]]
+profile-entities:
+- unit_to_node
+- profile
+- order: [[1, 2]]
+
+# Parameters
+# System
 inflation_rate:
 - system: inflation_rate
 - model: discount_rate
+
+timeline:
+- database: timeline
+- timeline: timestep_duration
+
+# Solve pattern
+solve_mode:
+- solve_pattern: solve_mode
+- solve: solve_mode
+- rename:
+    single_solve: single_solve
+
+# Nodes
 annual_flow:
 - balance: flow_annual
   storage: flow_annual
@@ -43,6 +70,8 @@ flow_profile:
 - balance: flow_profile
   storage: flow_profile
 - node: inflow
+- to_datatype:
+    ts: table
 flow-scaling-method:
 - balance: flow_scaling_method
   storage: flow_scaling_method
@@ -50,19 +79,22 @@ flow-scaling-method:
 - rename:
     use_profile_directly: use_original
     scale_to_annual: scale_to_annual_flow
-storage_existing:
+price_per_unit:
+- commodity: price_per_unit
+- node: commodity_price
+storage existing:
 - storage: storage_existing
 - node: existing
-storage_capacity:
+storage capacity:
 - storage: storage_capacity
 - node: virtual_unitsize
-storage-invest-cost:
+storage invest-cost:
 - storage: investment_cost
 - node: invest_cost
 - multiply:
     with: 0.001
 storage_investment_method:
-- storage: investment_method:
+- storage: investment_method
 - node: invest_method
 - rename:
     not_allowed: not_allowed
@@ -73,30 +105,111 @@ storage_discount_rate:
 storage_payback_time:
 - storage: payback_time
 - node: lifetime
-storage penalty_upward:
+penalty_upward:
 - storage: penalty_upward
+  balance: penalty_upward
 - node: penalty_up
-storage penalty_downward:
+penalty_downward:
 - storage: penalty_downward
+  balance: penalty_downward
 - node: penalty_down
 has_balance:
-- balance
+- [balance, storage]
 - node: has_balance
 - value: 'yes'
 has_storage:
 - storage
 - node: has_storage
 - value: 'yes'
-other_operational_cost:
-- node_to_unit: other_operational_cost
-- unit__input_node: other_operational_cost
+
+# Units
+conversion_method:
+- unit: conversion_method
+- unit: conversion_method
+- rename:
+    constant_efficiency: constant_efficiency
+units_existing:
+- unit: units_existing
+- unit: existing
+efficiency:
+- unit: efficiency
+- unit: efficiency
+unit investment_method:
+- unit: investment_method
+- unit: invest_method
+- rename:
+    not_allowed: not_allowed
+    no_limits: invest_no_limit
+unit discount_rate:
+- unit: discount_rate
+- unit: interest_rate
+unit payback_time:
+- unit: payback_time
+- unit: lifetime
+
+# to from units
+unit_to_node capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: sum
+unit_to_node investment_cost:
+- unit_to_node: investment_cost
+- unit: invest_cost
+- - order: [[1]]
+    aggregate: sum
+unit_to_node other_operational_cost:
+- unit_to_node: other_operational_cost
+- unit.outputNode: other_operational_cost
+- dimensions: [unit, node]
 - - order: [[2], [1]]
-  - divide:
-      with: 1
-test-multiply:
+node_to_unit other_operational_cost:
 - node_to_unit: other_operational_cost
-  unit: efficiency
-- unit__input_node: test
-- - algebra: "1*2"
-    match: [[2], [1]]
-  - order: [[2], [1]]
+- unit.inputNode: other_operational_cost
+- dimensions: [unit, node]
+- - order: [[2], [1]]
+unit_to_node profile_limit_upper:
+- unit_to_node: profile_limit_upper
+- profile: profile
+- to_datatype:
+    ts: table
+- dimensions: [unit, node]
+- - order: [[1, 2]]
+#test-multiply:
+#- node_to_unit: other_operational_cost
+#  unit: efficiency
+#- unit.inputNode: test
+#- - algebra: "1*2"
+#    match: [[2], [1]]
+#  - order: [[2], [1]]
+
+# Link
+link efficiency:
+- link: efficiency
+- connection: efficiency
+transfer_method:
+- link: transfer_method
+- connection: transfer_method
+- rename:
+    regular_linear: regular
+link capacity:
+- link: capacity
+- connection: virtual_unitsize
+link existing:
+- link: links_existing
+- connection: existing
+link investment_cost:
+- link: investment_cost
+- connection: invest_cost
+link investment_method:
+- link: investment_method
+- connection: invest_method
+- rename:
+    not_allowed: not_allowed
+    no_limits: invest_no_limit
+link discount_rate:
+- link: discount_rate
+- connection: interest_rate
+link payback_time:
+- link: payback_time
+- connection: lifetime

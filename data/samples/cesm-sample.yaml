@@ -73,51 +73,51 @@ unit:
     discount_rate: 0.06
     payback_time: 30
 node_to_unit:
-  - name: natural_gas__ocgt
+  - name: natural_gas.ocgt
     source_name: natural_gas
     sink_name: ocgt
-  - name: natural_gas__ccgt
+  - name: natural_gas.ccgt
     source_name: natural_gas
     sink_name: ccgt
-  - name: biomass__bio_chp
+  - name: biomass.bio_chp
     source_name: biomass
     sink_name: bio_chp
-  - name: west__heatpump
+  - name: west.heatpump
     source_name: west
     sink_name: heatpump
 unit_to_node:
-  - name: ocgt__west
+  - name: ocgt.west
     source_name: ocgt
     sink_name: west
     capacity: 50
     investment_cost: 500
-  - name: ccgt__east
+  - name: ccgt.east
     source_name: ccgt
     sink_name: east
     capacity: 500
     investment_cost: 1200
-  - name: nuclear__west
+  - name: nuclear.west
     source_name: nuclear
     sink_name: west
     capacity: 800
     other_operational_cost: 12
     investment_cost: 5500
-  - name: wind__west
+  - name: wind.west
     source_name: wind
     sink_name: west
     capacity: 1500
     investment_cost: 1000
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
-  - name: bio_chp__east
+  - name: bio_chp.east
     source_name: bio_chp
     sink_name: east
     capacity: 10
     investment_cost: 1400
-  - name: bio_chp__heat
+  - name: bio_chp.heat
     source_name: bio_chp
     sink_name: heat
     capacity: 40
-  - name: heatpump__heat
+  - name: heatpump.heat
     source_name: heatpump
     sink_name: heat
     capacity: 40

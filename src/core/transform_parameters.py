@@ -10,7 +10,58 @@ def load_config(config_path: str) -> Dict:
         return yaml.safe_load(f)
 
 
-def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, Dict]:
+def split_dimensions(df: pd.DataFrame, df_key: str, dimensions: List[str] = None) -> pd.DataFrame:
+    """
+    Split multi-dimensional 'name' column into separate dimension columns.
+    Only splits if the df_key contains a dot (indicating multi-dimensional class).
+    
+    Args:
+        df: DataFrame with 'name' column containing dot-separated dimensions
+        df_key: Key like 'unit.outputNode' to extract dimension names
+        dimensions: Optional list of dimension names to use instead of extracting from df_key
+    
+    Returns:
+        DataFrame with dimensions split into columns named after the classes
+    """
+    if 'name' not in df.columns:
+        return df
+    
+    # Extract dimension names from df_key (e.g., 'unit.outputNode' -> ['unit', 'outputNode'])
+    # Skip '.ts.' parts for time series keys
+    if '.ts.' in df_key:
+        base_key = df_key.split('.ts.')[0]
+    else:
+        base_key = df_key
+    
+    # Only split if the class is multi-dimensional (has a dot)
+    if '.' not in base_key:
+        return df
+    
+    # Use provided dimensions list if available, otherwise extract from base_key
+    if dimensions:
+        dimension_names = dimensions
+    else:
+        dimension_names = base_key.split('.')
+    
+    # Split the name column by '.'
+    name_parts = df['name'].str.split('.', expand=True)
+    
+    # Create new columns for each dimension
+    for i, dim_name in enumerate(dimension_names):
+        if i < name_parts.shape[1]:
+            df[dim_name] = name_parts[i]
+    
+    # Drop the original 'name' column
+    df = df.drop(columns=['name'])
+    
+    # Reorder columns to put dimension columns first
+    other_cols = df.columns.difference(dimension_names)
+    df = df.reindex(columns=dimension_names + other_cols.tolist())
+    
+    return df
+
+
+def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, Dict, List]:
     """
     Parse a single operation from the config.
     
@@ -18,12 +69,14 @@ def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, Dict
         source_specs: List of source class:attribute pairs or just classes
         target_specs: List of target class:attribute pairs or just classes
         operations: Dict of additional operations (order, rename, operation, with, value)
+        dimensions: List of dimension names (optional)
     """
     operation_config = config[operation_name]
     
     source_specs = []
     target_specs = []
     operations = {}
+    dimensions = None
     
     for i, item in enumerate(operation_config):
         if i == 0:
@@ -32,11 +85,15 @@ def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, Dict
         elif i == 1:
             # Second item is target
             target_specs = parse_spec(item)
-        elif i == 2:
-            # Third item is operations/modifiers
-            operations = item
+        else:
+            # Remaining items are operations/modifiers or dimensions
+            if isinstance(item, dict):
+                if 'dimensions' in item:
+                    dimensions = item['dimensions']
+                else:
+                    operations = item
     
-    return source_specs, target_specs, operations
+    return source_specs, target_specs, operations, dimensions
 
 
 def parse_spec(spec: Any) -> List[Dict]:
@@ -82,7 +139,8 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
                  source_specs: List[Dict], 
                  target_specs: List[Dict],
                  target_dfs: Dict[str, pd.DataFrame],
-                 operations: Dict) -> Dict[str, pd.DataFrame]:
+                 operations: Dict,
+                 dimensions: List[str] = None) -> Dict[str, pd.DataFrame]:
     """Copy entities from source class to target class."""
     source_class = source_specs[0]['class']
     target_class = target_specs[0]['class']
@@ -111,38 +169,72 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
     
     return target_dfs
 
-
+def apply_rename_to_timeseries(ts_df: pd.DataFrame, rename_map: Dict) -> pd.DataFrame:
+    """Apply rename mapping to time series column names (entity names)."""
+    # Rename columns except 'datetime'
+    new_columns = {}
+    for col in ts_df.columns:
+        if col != 'datetime':
+            new_columns[col] = rename_map.get(col, col)
+    return ts_df.rename(columns=new_columns)
+    
 def create_parameter(source_dfs: Dict[str, pd.DataFrame],
                     source_specs: List[Dict],
                     target_specs: List[Dict],
                     target_dfs: Dict[str, pd.DataFrame],
-                    operations: Dict) -> Dict[str, pd.DataFrame]:
-    """Create a parameter with a fixed value for entities that exist."""
-    source_class = source_specs[0]['class']
+                    operations: Dict,
+                    dimensions: List[str] = None) -> Dict[str, pd.DataFrame]:
+    """Create a parameter with a fixed value for entities that exist in source classes."""
     target_class = target_specs[0]['class']
     target_attribute = target_specs[0]['attribute']
     value = operations.get('value')
     
-    if source_class not in source_dfs:
+    # Collect entities from all source classes
+    all_source_entities = []
+    for source_spec in source_specs:
+        source_class = source_spec['class']
+        if source_class not in source_dfs:
+            continue
+        
+        source_df = source_dfs[source_class]
+        if 'name' in source_df.columns:
+            all_source_entities.extend(source_df['name'].tolist())
+    
+    if not all_source_entities:
         return target_dfs
     
-    source_df = source_dfs[source_class]
+    # Create dataframe with parameter for these specific entities only
+    param_df = pd.DataFrame({
+        'name': all_source_entities,
+        target_attribute: value
+    })
     
     # Initialize target if needed
     if target_class not in target_dfs:
-        target_dfs[target_class] = source_df[['name']].copy()
+        target_dfs[target_class] = param_df
+    else:
+        # Merge only for entities that exist in source
+        target_dfs[target_class] = target_dfs[target_class].merge(
+            param_df, on='name', how='left', suffixes=('', '_new')
+        )
+        if f'{target_attribute}_new' in target_dfs[target_class].columns:
+            # Only update where we have new values (i.e., where source entities exist)
+            target_dfs[target_class][target_attribute] = target_dfs[target_class][f'{target_attribute}_new'].combine_first(
+                target_dfs[target_class].get(target_attribute)
+            )
+            target_dfs[target_class].drop(columns=[f'{target_attribute}_new'], inplace=True)
     
-    # Add the parameter with the specified value
-    target_dfs[target_class][target_attribute] = value
+    # Replace NaN with None
+    target_dfs[target_class] = target_dfs[target_class].replace({np.nan: None})
     
     return target_dfs
-
 
 def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                        source_specs: List[Dict],
                        target_specs: List[Dict],
                        target_dfs: Dict[str, pd.DataFrame],
-                       operations: Dict) -> Dict[str, pd.DataFrame]:
+                       operations: Dict,
+                       dimensions: List[str] = None) -> Dict[str, pd.DataFrame]:
     """Transform parameter values from source to target."""
     target_class = target_specs[0]['class']
     target_attribute = target_specs[0]['attribute']
@@ -170,7 +262,25 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
             target_dfs[target_class][target_attribute] = None
         return target_dfs
     
-    result_data = source_data_list[0]
+    # Check if this is an algebra operation or a union operation
+    is_algebra = operations and any('algebra' in op for op in (operations if isinstance(operations, list) else [operations]))
+    
+    if len(source_data_list) > 1 and not is_algebra:
+        # Union operation - concatenate data from multiple sources
+        combined_dfs = []
+        for data in source_data_list:
+            if isinstance(data, tuple):
+                # Time series data - skip for now or handle separately
+                continue
+            combined_dfs.append(data)
+        
+        if combined_dfs:
+            result_data = pd.concat(combined_dfs, ignore_index=True).drop_duplicates(subset=['name'])
+            # Rename the attribute column to target attribute name
+            old_col = [c for c in result_data.columns if c != 'name'][0]
+            result_data.rename(columns={old_col: target_attribute}, inplace=True)
+    else:
+        result_data = source_data_list[0]
 
     if operations:
         if not type(operations) == list:
@@ -178,11 +288,20 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
         
         for operation in operations:
             if 'algebra' in operation:
-                result_data = apply_algebra_operation(source_data_list, operation['algebra'], operation['match'], target_attribute)
+                result_data = apply_algebra_operation(source_data_list, operation['algebra'], operation.get('match'), target_attribute)
             elif 'order' in operation:
-                result_data = reorder_dimensions(result_data, operation['order'])
+                result_data = reorder_dimensions(result_data, operation['order'], operation.get('aggregate'))
             elif 'rename' in operation:
                 result_data = apply_rename(result_data, target_attribute, operation['rename'])
+            elif 'to_datatype' in operation:
+                # Handle datatype conversion for series data
+                if isinstance(result_data, tuple):
+                    ts_key, ts_df = result_data
+                    to_datatype = operation['to_datatype']
+                    if 'ts' in to_datatype and to_datatype['ts'] == 'table':
+                        # Change the key from .ts. to .table.
+                        new_key = f"{target_class}.table.{target_attribute}"
+                        result_data = (new_key, ts_df)
             else:
                 # Must be a operation with a constant
                 if isinstance(result_data, tuple):
@@ -193,7 +312,17 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     # Regular data
                     result_data = apply_operations_to_data(result_data, source_specs[0]['attribute'], operation)
     
-    # Merge into target dataframe
+    # Handle time series / map data
+    if isinstance(result_data, tuple):
+        ts_key, ts_df = result_data
+        if ts_key not in target_dfs:
+            target_dfs[ts_key] = ts_df
+        else:
+            target_dfs[ts_key] = pd.concat([target_dfs[target_ts_key], ts_df], 
+                                            ignore_index=True).drop_duplicates()
+        return target_dfs
+    
+    # Merge into target dataframe (only for regular data)
     if target_class not in target_dfs:
         target_dfs[target_class] = result_data
     else:
@@ -208,8 +337,10 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
         elif target_attribute not in target_dfs[target_class].columns:
             target_dfs[target_class][target_attribute] = None
     
+    # Replace NaN with None
+    target_dfs[target_class] = target_dfs[target_class].replace({np.nan: None})
+    
     return target_dfs
-
 
 def apply_operations_to_data(data: pd.DataFrame, column: str, operation: Dict) -> pd.DataFrame:
     """Apply mathematical operations to regular data."""
@@ -280,12 +411,12 @@ def apply_algebra_operation(source_data_list: List, operation: str, match: str, 
         
         # Extract matching keys from multi-dimensional names
         df1_match_key = df1['name'].apply(
-            lambda x: '__'.join([x.split('__')[i] for i in df1_match_dims]) 
-            if len(x.split('__')) > max(df1_match_dims) else None
+            lambda x: '.'.join([x.split('.')[i] for i in df1_match_dims]) 
+            if len(x.split('.')) > max(df1_match_dims) else None
         )
         df2_match_key = df2['name'].apply(
-            lambda x: '__'.join([x.split('__')[i] for i in df2_match_dims])
-            if len(x.split('__')) > max(df2_match_dims) else x
+            lambda x: '.'.join([x.split('.')[i] for i in df2_match_dims])
+            if len(x.split('.')) > max(df2_match_dims) else x
         )
         
         # Add match keys to dataframes
@@ -324,18 +455,26 @@ def apply_algebra_operation(source_data_list: List, operation: str, match: str, 
     
     return result
 
-def reorder_dimensions(data: pd.DataFrame, order_spec: List[List[int]]) -> pd.DataFrame:
+def reorder_dimensions(data: pd.DataFrame, order_spec: List[List[int]], aggregate: str = None) -> pd.DataFrame:
     """
     Reorder dimensions according to order specification.
     order_spec: [[source_dims for target_dim_0], [source_dims for target_dim_1], ...]
     Dimension indices in config are 1-based, convert to 0-based.
+    
+    Args:
+        aggregate: How to aggregate numeric values when collapsing dimensions. 
+                   Currently only 'sum' is supported.
     """
     if 'name' not in data.columns:
         return data
     
     # Parse the name column to extract dimensions
-    # Assume format like "dim1__dim2" for multi-dimensional entities
-    name_parts = data['name'].str.split('__', expand=True)
+    name_parts = data['name'].str.split('.', expand=True)
+    
+    # Get numeric columns for potential aggregation
+    numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
+    if 'name' in numeric_cols:
+        numeric_cols.remove('name')
     
     if name_parts.shape[1] == 1:
         # Single dimension, no reordering needed unless creating multi-dim
@@ -345,11 +484,9 @@ def reorder_dimensions(data: pd.DataFrame, order_spec: List[List[int]]) -> pd.Da
             for _, row in data.iterrows():
                 parts = []
                 for target_dim in order_spec:
-                    # target_dim is 1-based, convert to 0-based
                     source_indices = [i - 1 for i in target_dim]
-                    # All source indices point to same dimension (0)
                     parts.append(name_parts.iloc[_, 0])
-                new_names.append('__'.join(parts))
+                new_names.append('.'.join(parts))
             data['name'] = new_names
     else:
         # Multi-dimensional, reorder
@@ -357,16 +494,27 @@ def reorder_dimensions(data: pd.DataFrame, order_spec: List[List[int]]) -> pd.Da
         for idx, row in data.iterrows():
             parts = []
             for target_dim in order_spec:
-                # target_dim is 1-based, convert to 0-based
                 source_indices = [i - 1 for i in target_dim]
                 if len(source_indices) == 1:
                     parts.append(name_parts.iloc[idx, source_indices[0]])
                 else:
                     # Concatenate multiple source dimensions
                     concat_parts = [name_parts.iloc[idx, si] for si in source_indices]
-                    parts.append('_'.join(concat_parts))
-            new_names.append('__'.join(parts))
+                    parts.append('.'.join(concat_parts))
+            new_names.append('.'.join(parts))
         data['name'] = new_names
+        
+        # Check if we're collapsing dimensions (target has fewer dims than source)
+        source_dims = name_parts.shape[1]
+        target_dims = len(order_spec)
+        
+        if target_dims < source_dims and aggregate and numeric_cols:
+            # Aggregate numeric columns by the new name
+            if aggregate == 'sum':
+                agg_dict = {col: 'sum' for col in numeric_cols}
+                data = data.groupby('name', as_index=False).agg(agg_dict)
+            else:
+                raise ValueError(f"Unsupported aggregation method: {aggregate}. Currently only 'sum' is supported.")
     
     return data
 
@@ -388,30 +536,43 @@ def transform_data(source_dfs: Dict[str, pd.DataFrame],
         config_path: Path to YAML configuration file
         
     Returns:
-        Dictionary of transformed target dataframes
+        Dictionary of transformed target dataframes with dimensions split into columns
     """
     config = load_config(config_path)
     target_dfs = {}
+    dimensions_map = {}  # Store dimensions metadata
     
     for operation_name in config.keys():
         print(f"Processing operation: {operation_name}")
         
-        source_specs, target_specs, operations = parse_operation(operation_name, config)
+        source_specs, target_specs, operations, dimensions = parse_operation(operation_name, config)
         operation_type = get_operation_type(source_specs, target_specs, operations)
         
         print(f"  Operation type: {operation_type}")
         
+        # Store dimensions for target class
+        target_class = target_specs[0]['class']
+        if dimensions and '.' in target_class:
+            dimensions_map[target_class] = dimensions
+        
         if operation_type == 'copy_entities':
             target_dfs = copy_entities(source_dfs, source_specs, target_specs, 
-                                      target_dfs, operations)
+                                      target_dfs, operations, dimensions)
         elif operation_type == 'create_parameter':
             target_dfs = create_parameter(source_dfs, source_specs, target_specs,
-                                         target_dfs, operations)
+                                         target_dfs, operations, dimensions)
         elif operation_type == 'transform_parameter':
             target_dfs = transform_parameter(source_dfs, source_specs, target_specs,
-                                            target_dfs, operations)
+                                            target_dfs, operations, dimensions)
     
-    return target_dfs
+    # Split dimensions for all target dataframes
+    final_dfs = {}
+    for df_key, df in target_dfs.items():
+        # Check if we have custom dimensions for this key
+        custom_dims = dimensions_map.get(df_key)
+        final_dfs[df_key] = split_dimensions(df, df_key, custom_dims)
+    
+    return final_dfs
 
 
 # Example usage:

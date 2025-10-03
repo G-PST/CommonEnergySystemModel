@@ -72,13 +72,6 @@ https://w3id.org/linkml/String[`string`]
 | +++Description of the entity.+++
 | xref::class/Entity.adoc[`Entity`]
 
-| <<id,`id`>>
-//| [[slots_table.id]]<<id,`id`>>
-| 1 +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Auto-generated unique identifier (hidden from user, used internally for performance).+++
-| xref::class/Entity.adoc[`Entity`]
-
 | <<name,`name`>>
 //| [[slots_table.name]]<<name,`name`>>
 | 1 +
@@ -151,35 +144,6 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.description,&#10548;>>
---
-////
-
-
-//[discrete]
-[#id]
-=== `id`
-+++Auto-generated unique identifier (hidden from user, used internally for performance).+++
-
-
-[cols="h,4",width=65%]
-|===
-| URI
-| _n/a_
-| Cardinality
-| 1
-| Type
-| https://w3id.org/linkml/Integer[`integer`]
-
-| Inherited from
-| xref::class/Entity.adoc[`Entity`]
-
-
-|===
-
-////
-[.text-left]
---
-<<slots_table.id,&#10548;>>
 --
 ////
 
@@ -361,7 +325,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#storages[`storages`]
+| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#storage[`storage`]
 
 
 |===

@@ -131,13 +131,13 @@ System {
 
 
 
-Database -> Entity: entities
+Database -> Entity: entitie
 
 
-Database -> Balance: balances
+Database -> Balance: balance
 
 
-Database -> Storage: storages
+Database -> Storage: storage
 
 
 Database -> Commodity: commodity
@@ -214,8 +214,8 @@ legend: "" {
 |===
 | Name | Type | Description | Inherited from
 
-| <<balances,`balances`>>
-//| [[slots_table.balances]]<<balances,`balances`>>
+| <<balance,`balance`>>
+//| [[slots_table.balance]]<<balance,`balance`>>
 | 0..* +
 xref::class/Balance.adoc[`Balance`]
 | _n/a_
@@ -228,8 +228,8 @@ xref::class/Commodity.adoc[`Commodity`]
 | _n/a_
 | _n/a_
 
-| <<entities,`entities`>>
-//| [[slots_table.entities]]<<entities,`entities`>>
+| <<entitie,`entitie`>>
+//| [[slots_table.entitie]]<<entitie,`entitie`>>
 | 0..* +
 xref::class/Entity.adoc[`Entity`]
 | _n/a_
@@ -263,8 +263,8 @@ xref::class/Solve_pattern.adoc[`Solve_pattern`]
 | _n/a_
 | _n/a_
 
-| <<storages,`storages`>>
-//| [[slots_table.storages]]<<storages,`storages`>>
+| <<storage,`storage`>>
+//| [[slots_table.storage]]<<storage,`storage`>>
 | 0..* +
 xref::class/Storage.adoc[`Storage`]
 | _n/a_
@@ -303,8 +303,8 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 
 
 //[discrete]
-[#balances]
-=== `balances`
+[#balance]
+=== `balance`
 
 
 
@@ -323,7 +323,7 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 ////
 [.text-left]
 --
-<<slots_table.balances,&#10548;>>
+<<slots_table.balance,&#10548;>>
 --
 ////
 
@@ -355,8 +355,8 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 
 
 //[discrete]
-[#entities]
-=== `entities`
+[#entitie]
+=== `entitie`
 
 
 
@@ -375,7 +375,7 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 ////
 [.text-left]
 --
-<<slots_table.entities,&#10548;>>
+<<slots_table.entitie,&#10548;>>
 --
 ////
 
@@ -485,8 +485,8 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 
 
 //[discrete]
-[#storages]
-=== `storages`
+[#storage]
+=== `storage`
 
 
 
@@ -505,7 +505,7 @@ xref::class/Unit_to_node.adoc[`Unit_to_node`]
 ////
 [.text-left]
 --
-<<slots_table.storages,&#10548;>>
+<<slots_table.storage,&#10548;>>
 --
 ////
 
