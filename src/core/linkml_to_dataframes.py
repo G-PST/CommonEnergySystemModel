@@ -26,8 +26,9 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
     timeline = getattr(database, 'timeline', None)
     if timeline is None:
         raise ValueError("Database must have a 'timeline' attribute")
-    
+
     result_dfs = {}
+    result_dfs['timeline'] = timeline
     
     # Get all collection attributes from database (excluding 'timeline', 'id', etc.)
     collection_attrs = _get_collection_attributes(database)

@@ -15,7 +15,6 @@ from spinedb_api.parameter_value import to_database
 def dataframes_to_spine(
     dataframes: Dict[str, pd.DataFrame],
     db_url: str,
-    timeline_df: pd.DataFrame = None,
     import_datetime: str = None,
     purge_before_import: bool = True
 ):
@@ -25,7 +24,6 @@ def dataframes_to_spine(
     Args:
         dataframes: Dict mapping dataframe names to DataFrames
         db_url: Database URL (e.g., "sqlite:///path/to/database.sqlite")
-        timeline_df: DataFrame with 'datetime' column defining the timeline
         import_datetime: Datetime string for alternative name (format: yyyy-mm-dd_hh-mm)
                         If None, uses current datetime
         purge_before_import: If True, purge parameter values, entities, and alternatives 
@@ -35,16 +33,17 @@ def dataframes_to_spine(
     
     # Generate alternative name with datetime
     if import_datetime is None:
-        import_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M')
-    alternative_name = f'import_{import_datetime}'
-    
+        import_datetime = datetime.now().strftime('%Y_%m_%d-%H_%M')
+    alternative_name = f'cesm-{import_datetime}'
+
     with DatabaseMapping(db_url) as db_map:
         # Phase -1: Purge if requested
         if purge_before_import:
             print("Phase -1: Purging database...")
-            #db_map.purge_items('parameter_value')
-            #db_map.purge_items('entity')
+            db_map.purge_items('parameter_value')
+            db_map.purge_items('entity')
             db_map.purge_items('alternative')
+            db_map.purge_items('scenario')
             db_map.refresh_session()
             db_map.commit_session("Purged parameter values, entities and alternatives")
             print("  Purged parameter values, entities, and alternatives")
@@ -74,9 +73,13 @@ def dataframes_to_spine(
 
         
         # Phase 0: Add alternative
-        print(f"Phase 0: Adding alternative '{alternative_name}'...")
+        print(f"Phase 0: Adding a scenario and an alternative '{alternative_name}'...")
         try:
             db_map.add_alternative(name=alternative_name)
+            db_map.add_scenario(name='base')
+            db_map.add_scenario_alternative(scenario_name='base',
+                                            alternative_name=alternative_name,
+                                            rank=0)
             db_map.commit_session(f"Added alternative {alternative_name}")
             print(f"  Added alternative: {alternative_name}")
         except Exception as e:
@@ -84,7 +87,7 @@ def dataframes_to_spine(
 
        # Phase 1: Add entity classes and entities
         print("Phase 1: Adding entity classes and entities...")
-        _add_entity_classes_and_entities(db_map, entity_dfs)
+        _add_entity_classes_and_entities(db_map, entity_dfs, alternative_name)
         try:
             db_map.commit_session("Added entity classes and entities")
         except NothingToCommit:
@@ -101,7 +104,7 @@ def dataframes_to_spine(
         # Phase 3: Add time series parameters
         if ts_dfs:
             print("Phase 3: Adding time series parameters...")
-            _add_time_series(db_map, ts_dfs, timeline_df, alternative_name)
+            _add_time_series(db_map, ts_dfs, dataframes["timeline"], alternative_name)
             try:
                 db_map.commit_session("Added time series parameters")
             except NothingToCommit:
@@ -118,8 +121,11 @@ def dataframes_to_spine(
         
         print("Done!")
 
-def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]):
+def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame], alternative_name: str):
     """Add entity classes and their entities."""
+
+    # List of entity_classes that require entity_alternative to be true
+    ent_alt_classes = ['unit', 'node', 'connection', 'reserve__upDown__unit__node', 'reserve__upDown__connection__node']
     # Sort: single-dimensional classes first (no dots), then multi-dimensional
     sorted_classes = sorted(entity_dfs.keys(), key=lambda x: ('.' in x, x))
     
@@ -145,19 +151,29 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
             print(f"  Entity class {class_name} already exists or error: {e}")
         
         # Add entities
-        if 'name' not in df.columns:
+        if dimension_name_list:
             # Multi-dimensional: first N columns are dimensions
-            if dimension_name_list:
-                dimension_cols = list(dimension_name_list)
-                for _, row in df.iterrows():
-                    element_name_list = tuple(str(row[dim]) for dim in dimension_cols)
+            dimension_cols = list(dimension_name_list)
+            for _, row in df.iterrows():
+                element_name_list = tuple(str(row[dim]) for dim in dimension_cols)
+                try:
+                    db_map.add_entity(
+                        entity_class_name=class_name,
+                        element_name_list=element_name_list
+                    )
+                except Exception as e:
+                    pass  # Entity might already exist
+                
+                if class_name in ent_alt_classes:
                     try:
-                        db_map.add_entity(
+                        db_map.add_entity_alternative(
                             entity_class_name=class_name,
-                            element_name_list=element_name_list
+                            element_name_list=element_name_list,
+                            alternative_name=alternative_name
                         )
                     except Exception as e:
-                        pass  # Entity might already exist
+                        pass  # Entity_alternative might already exist
+
         else:
             # Single-dimensional: 'name' column contains entity names
             for entity_name in df['name'].unique():
@@ -168,6 +184,18 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
                     )
                 except Exception as e:
                     pass  # Entity might already exist
+
+                if class_name in ent_alt_classes:
+                    try:
+                        db_map.add_entity_alternative(
+                            entity_class_name=class_name,
+                            entity_byname=(str(entity_name),),
+                            alternative_name=alternative_name,
+                            active=True
+                        )
+                    except Exception as e:
+                        pass  # Entity_alternative might already exist
+
 
 def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame], alternative_name: str):
     """Add parameter definitions and values."""
@@ -184,15 +212,15 @@ def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]
         param_cols = [col for col in df.columns if col not in dimension_cols]
         
         # Add parameter definitions
-        for param_name in param_cols:
-            try:
-                db_map.add_parameter_definition(
-                    entity_class_name=class_name,
-                    name=param_name
-                )
-                print(f"  Added parameter definition: {class_name}.{param_name}")
-            except Exception as e:
-                pass  # Parameter might already exist
+        # for param_name in param_cols:
+        #     try:
+        #         db_map.add_parameter_definition(
+        #             entity_class_name=class_name,
+        #             name=param_name
+        #         )
+        #         print(f"  Added parameter definition: {class_name}.{param_name}")
+        #     except Exception as e:
+        #         pass  # Parameter might already exist
         
         # Add parameter values
         for _, row in df.iterrows():
@@ -335,15 +363,18 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
             pass  # Already exists
         
         # Entity names are columns (except 'datetime')
-        entity_cols = [col for col in df.columns if col != 'datetime']
+        entity_cols = [col for col in df.columns if col != 'datetime' and col != 'period']
         
         # Determine index type from datetime column
         if 'datetime' in df.columns:
             # Convert datetime strings to DateTime objects for indexes
             indexes = df['datetime'].tolist()
             index_name = 'time'
+        elif 'period' in df.columns:
+            indexes = df['period'].tolist()
+            index_name = 'period'
         else:
-            print(f"  Warning: No datetime column found in {table_name}")
+            print(f"  Warning: No datetime or period column found in {table_name}")
             continue
         
         for entity_name in entity_cols:

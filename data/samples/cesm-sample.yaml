@@ -23,6 +23,8 @@ storage:
     investment_cost: 600
     discount_rate: 0.07
     payback_time: 12
+    flow_scaling_method: use_profile_directly
+    flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     penalty_upward: 10000
 commodity:
   - name: biomass
@@ -150,6 +152,8 @@ solve_pattern:
     solve_mode: single_solve
     start_time: 1
     duration: 10
+    periods_realise_investments: ['y2030']
+    periods_realise_operations: ['y2030']
 system:
   - name: test_system
     inflation_rate: 0.03

@@ -31,18 +31,20 @@ unit-entities:
 - unit
 unit-to-node-entities:
 - unit_to_node
-- unit.outputNode
+- unit.outputNode:
+    order: [[1], [2]]
 - dimensions: [unit, node]
-- order: [[2], [1]]
 node-to-unit-entities:
 - node_to_unit
-- unit.inputNode
+- unit.inputNode:
+    order: [[2], [1]]
 - dimensions: [unit, node]
-- order: [[2], [1]]
 profile-entities:
 - unit_to_node
-- profile
-- order: [[1, 2]]
+- - profile:
+      order: [[1, 2]]
+  - unit.node.profile:
+      order: [[1], [2], [1, 2]]
 
 # Parameters
 # System
@@ -50,9 +52,7 @@ inflation_rate:
 - system: inflation_rate
 - model: discount_rate
 
-timeline:
-- database: timeline
-- timeline: timestep_duration
+# timeline: in function
 
 # Solve pattern
 solve_mode:
@@ -60,6 +60,15 @@ solve_mode:
 - solve: solve_mode
 - rename:
     single_solve: single_solve
+
+periods_invested:
+- solve_pattern: periods_realise_investments
+- solve: realised_invest_periods
+
+periods_realised:
+- solve_pattern: periods_realise_operations
+- solve: realized_periods
+
 
 # Nodes
 annual_flow:
@@ -81,7 +90,7 @@ flow-scaling-method:
     scale_to_annual: scale_to_annual_flow
 price_per_unit:
 - commodity: price_per_unit
-- node: commodity_price
+- commodity: price
 storage existing:
 - storage: storage_existing
 - node: existing
@@ -121,6 +130,11 @@ has_storage:
 - storage
 - node: has_storage
 - value: 'yes'
+profile_method:
+- unit_to_node
+- unit.node.profile: profile_method
+- - order: [[1], [2], [1, 2]]
+  - value: 'upper_limit'
 
 # Units
 conversion_method:
@@ -151,30 +165,32 @@ unit payback_time:
 unit_to_node capacity:
 - unit_to_node: capacity
 - unit: virtual_unitsize
-- - order: [[1]]
-    aggregate: sum
+- - order:
+      order: [[1]]
+      aggregate: sum
 unit_to_node investment_cost:
 - unit_to_node: investment_cost
 - unit: invest_cost
-- - order: [[1]]
-    aggregate: sum
+- - order:
+      order: [[1]]
+      aggregate: sum
 unit_to_node other_operational_cost:
 - unit_to_node: other_operational_cost
 - unit.outputNode: other_operational_cost
-- dimensions: [unit, node]
-- - order: [[2], [1]]
+- - dimensions: [unit, node]
+  - order: [[1], [2]]
 node_to_unit other_operational_cost:
 - node_to_unit: other_operational_cost
 - unit.inputNode: other_operational_cost
-- dimensions: [unit, node]
-- - order: [[2], [1]]
+- - dimensions: [unit, node]
+  - order: [[2], [1]]
 unit_to_node profile_limit_upper:
 - unit_to_node: profile_limit_upper
 - profile: profile
-- to_datatype:
-    ts: table
-- dimensions: [unit, node]
 - - order: [[1, 2]]
+  - to_datatype:
+      ts: table
+  - dimensions: [unit, node]
 #test-multiply:
 #- node_to_unit: other_operational_cost
 #  unit: efficiency

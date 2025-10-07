@@ -192,21 +192,44 @@ classes:
         range: float
         description: "Price (in currency_year denomination) per kW."
 
+  Period:
+    is_a: Entity
+    description: "The properties of the periods available for the model."
+    attributes:
+      years_represented:
+        range: float
+        description: "How many years the period represents before the next period in the solve. Used for discounting. Can be below one (multiple periods in one year)."
+
   Solve_pattern:
     is_a: Entity
-    description: "Defines a sequence of solves and the properties of each solve."
+    description: "Defines the properties of each solve pattern."
     attributes:
       solve_mode:
         range: solve_mode_enum
         description: "Choice of solve process handled within the model."
+      periods_realise_investments:
+        range: Period
+        multivalued: true
+        list_elements_ordered: true
+        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
+      periods_realise_operations:
+        range: Period
+        multivalued: true
+        list_elements_ordered: true
+        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
+      periods_additional_horizon:
+        range: Period
+        multivalued: true
+        list_elements_ordered: true
+        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
       start_time:
-        range: integer
-        description: "Start time of the solve - needs to match a value in the timeline."
+        range: string
+        description: "Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline."
         comments:
-          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format datetime."
+          - "String to keep the sample simple for now. Will be made to use ISO 8601 format datetime."
       duration:
         range: integer
-        description: "Duration of the solve in time steps."
+        description:  "Duration of the solve in time steps. Defaults to full timeline."
         comments:
           - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
         # range: string
@@ -218,13 +241,23 @@ classes:
         comments:
           - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
           - "Variable time resolution to be added later."
+      next_solve:
+        range: Solve_pattern
+        description: "The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern."
+      contains_solve:
+        range: Solve_pattern
+        description: "A child solve_pattern to be executed inside of the parent solve_pattern."
 
   System:
     is_a: Entity
-    description: "Parameters related to the whole system to be modelled."
+    description: "Parameters related to the whole system to be modelled. "
     attributes:
+      solve_order:
+        range: Solve_pattern
+        multivalued: true
+        list_elements_ordered: true
       inflation_rate:
-        description: "Rate of inflation from the currency_year of the database."
+        description: "Rate of inflation for the currency_year of the database."
         range: float
         annotations:
           qudt_unit: "unit:PERCENT"
@@ -325,11 +358,11 @@ classes:
         range: datetime
         multivalued: true
         description: "Time steps for which data can be entered in the database. Used to validate input data."
-      entitie:
-        range: Entity
-        multivalued: true
-        inlined_as_list: true
-        required: false
+      # entity:
+      #   range: Entity
+      #   multivalued: true
+      #   inlined_as_list: true
+      #   required: false
       balance:
         range: Balance
         multivalued: true
