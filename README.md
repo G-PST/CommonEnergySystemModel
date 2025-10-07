@@ -35,13 +35,19 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 ## Files Structure
 
 ### Core Model
-- `docs/cesm.yaml` - The main LinkML schema defining the energy system model
+- `model/cesm.yaml` - The main LinkML schema defining the energy system model
 
 ### Sample Data
 - `data/samples/cesm-sample.yaml` - Example data demonstrating how to structure energy system information
 
 ### Processing Scripts
-- `scripts/processing/` - Scripts for basic conversions (e.g. YAML to SQL) - placeholder at the moment
+- `scripts/processing/` - Scripts for basic conversions (e.g. YAML to SQL) and for trying out the workflows
+
+### Tools
+- 'src/core/' - Functions to perform data conversions
+- 'src/readers/' - Functions to read from files to memory
+- 'src/writers/' - Functions to write from memory to files
+- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-python --validate  model/cesm.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
 
 ## Getting Started
 
@@ -72,7 +78,7 @@ This project includes a devcontainer configuration that provides a consistent de
 
 ### Generate Documentation
 
-In order to generate the static website that will be published on g-PST.github.io/CommonEnergySystemModel, two commands will need to be run
+In order to generate the static website for local use or to be published on g-PST.github.io/CommonEnergySystemModel, two commands will need to be run
 
 First, to generate the asciidoc files from the linkML models, run (inside devcontainer)
 
