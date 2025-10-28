@@ -53,7 +53,7 @@ cesm = yaml_to_df(database, schema_path="model/cesm.yaml")
 
 # Transform from CESM to FlexTool (using configuration file)
 flextool = transform_data(cesm, 
-    "transformers/irena_flextool/cesm_v0.1.0/v3.14.0/parameters_to_flextool.yaml")
+    "transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml")
 
 # Process time parameters separately
 flextool = time_to_spine(flextool, cesm)

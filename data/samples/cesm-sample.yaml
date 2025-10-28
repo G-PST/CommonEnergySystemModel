@@ -28,8 +28,10 @@ storage:
     penalty_upward: 10000
 commodity:
   - name: biomass
+    commodity_type: fuel
     price_per_unit: 20
   - name: natural_gas
+    commodity_type: fuel
     price_per_unit: 25
 unit:
   - name: ocgt
@@ -76,52 +78,52 @@ unit:
     payback_time: 30
 node_to_unit:
   - name: natural_gas.ocgt
-    source_name: natural_gas
-    sink_name: ocgt
+    source: natural_gas
+    sink: ocgt
   - name: natural_gas.ccgt
-    source_name: natural_gas
-    sink_name: ccgt
+    source: natural_gas
+    sink: ccgt
   - name: biomass.bio_chp
-    source_name: biomass
-    sink_name: bio_chp
+    source: biomass
+    sink: bio_chp
   - name: west.heatpump
-    source_name: west
-    sink_name: heatpump
+    source: west
+    sink: heatpump
 unit_to_node:
   - name: ocgt.west
-    source_name: ocgt
-    sink_name: west
+    source: ocgt
+    sink: west
     capacity: 50
     investment_cost: 500
   - name: ccgt.east
-    source_name: ccgt
-    sink_name: east
+    source: ccgt
+    sink: east
     capacity: 500
     investment_cost: 1200
   - name: nuclear.west
-    source_name: nuclear
-    sink_name: west
+    source: nuclear
+    sink: west
     capacity: 800
     other_operational_cost: 12
     investment_cost: 5500
   - name: wind.west
-    source_name: wind
-    sink_name: west
+    source: wind
+    sink: west
     capacity: 1500
     investment_cost: 1000
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
   - name: bio_chp.east
-    source_name: bio_chp
-    sink_name: east
+    source: bio_chp
+    sink: east
     capacity: 10
     investment_cost: 1400
   - name: bio_chp.heat
-    source_name: bio_chp
-    sink_name: heat
+    source: bio_chp
+    sink: heat
     capacity: 40
   - name: heatpump.heat
-    source_name: heatpump
-    sink_name: heat
+    source: heatpump
+    sink: heat
     capacity: 40
     investment_cost: 700
 link:
@@ -147,6 +149,16 @@ link:
     investment_cost: 0
     discount_rate: 0.07
     payback_time: 12
+group:
+  - name: elec_nodes
+    group_type: power_grid
+group_entity:
+  - name: elec_nodes.west
+    group: elec_nodes
+    entity: west
+  - name: elec_nodes.east
+    group: elec_nodes
+    entity: east
 solve_pattern:
   - name: solve_once
     solve_mode: single_solve

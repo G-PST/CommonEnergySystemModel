@@ -1,5 +1,5 @@
 """
-Convert FlexTool dataframes to Spine Toolbox database.
+Convert dataframes to Spine Toolbox database.
 
 This module provides functions to write pandas DataFrames to a Spine database,
 handling entity classes, entities, parameters, and time series data.

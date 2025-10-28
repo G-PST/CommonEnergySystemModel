@@ -78,6 +78,10 @@ classes:
     is_a: Node
     description: "Nodes where the model can buy and sell commodities against an exogenous price."
     attributes:
+      commodity_type:
+        range: commodity_type_enum
+        required: true
+        description: "Type of a commodity"
       price_per_unit:
         range: float
         description: "Price (in currency_year denomination) per unit of the product being bought or sold."
@@ -106,14 +110,18 @@ classes:
     mixins:
       - HasProfiles
     attributes:
-      source_name:
-        range: Entity
+      source:
+        range: Entity  # Will be overriden in the sub-class
         required: true
         description: "Name of the source entity (Unit or Node)."
-      sink_name:
-        range: Entity
+        annotations:
+            is_dimension: true
+      sink:
+        range: Entity  # Will be overriden in the sub-class
         required: true
         description: "Name of the sink entity (Unit or Node)."
+        annotations:
+            is_dimension: true
       capacity:
         range: float
         description: "Capacity of the port for a single unit."
@@ -135,10 +143,10 @@ classes:
     is_a: Port
     description: "An output port from a unit to a node."
     slot_usage:
-      source_name:
+      source:
         range: Unit
         description: "Source unit of the unit_to_node port."
-      sink_name:
+      sink:
         range: Node
         description: "Sink node of the unit_to_node port."
 
@@ -147,10 +155,10 @@ classes:
     is_a: Port
     description: "An input port from a node to a unit."
     slot_usage:
-      source_name:
+      source:
         range: Node
         description: "Source node of the node_to_unit port."
-      sink_name:
+      sink:
         range: Unit
         description: "Sink unit of the node_to_unit port."
 
@@ -171,10 +179,14 @@ classes:
         range: Node
         required: true
         description: "First node of a bidirectional link"
+        annotations:
+            is_dimension: true
       node_B:
         range: Node
         required: true
         description: "Second node of a bidirectional link"
+        annotations:
+            is_dimension: true
       transfer_method:
         range: transfer_method_enum
         description: "How to transfer between the two links."
@@ -199,6 +211,32 @@ classes:
       years_represented:
         range: float
         description: "How many years the period represents before the next period in the solve. Used for discounting. Can be below one (multiple periods in one year)."
+
+  Group:
+    is_a: Entity
+    description: "Groups allow to define constraints that affect multiple entities at once"
+    attributes:
+      group_type: 
+        range: group_type_enum
+        required: true
+        description: "Choice of group type"
+
+  Group_entity:
+    is_a: Entity
+    description: "Makes an entity to be a member of a group"
+    attributes:
+      group:
+        range: Group
+        required: true
+        description: "Group name that the entity belongs to"
+        annotations:
+            is_dimension: true
+      entity:
+        range: Entity
+        required: true
+        description: "Entity name"
+        annotations:
+            is_dimension: true
 
   Solve_pattern:
     is_a: Entity
@@ -398,6 +436,16 @@ classes:
         multivalued: true
         inlined_as_list: true
         required: false
+      group:
+        range: Group
+        multivalued: true
+        inlined_as_list: true
+        required: false
+      group_entity:
+        range: Group_entity
+        multivalued: true
+        inlined_as_list: true
+        required: false
       solve_pattern:
         range: Solve_pattern
         multivalued: true
@@ -478,3 +526,21 @@ enums:
       Commodity:
         meaning: cesm:Commodity
     description: "Limits allowed node types: Balance, Storage, Commodity"
+
+  commodity_type_enum:
+    permissible_values:
+      fuel:
+        text: fuel
+      emission:
+        text: emission
+    description: "Limits allowed commodity types"
+
+  group_type_enum:
+    permissible_values:
+      node:
+        description: Defines a group of nodes that have shared constraints.
+      power_grid:
+        description: Defines a group of balance nodes that form a synchronous power grid (these nodes can also have shared constraints).
+      link:
+        description: Defines a group of links that have shared constraints.
+    description: "Limits allowed group types"

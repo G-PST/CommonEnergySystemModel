@@ -1,7 +1,12 @@
 import pandas as pd
 import inspect
 from typing import Dict, List, Any, Tuple
+import dataclasses
 import yaml
+import typing
+from linkml_runtime.utils.schemaview import SchemaView
+from linkml_runtime.loaders import yaml_loader
+import generated.cesm as cesm
 
 def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
     """
@@ -19,6 +24,7 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
     
     # Load schema to identify time_dimensional attributes
     time_dimensional_attrs = set()
+    schema = SchemaView(schema_path)
     if schema_path:
         time_dimensional_attrs = _extract_time_dimensional_attrs(schema_path)
     
@@ -28,7 +34,7 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         raise ValueError("Database must have a 'timeline' attribute")
 
     result_dfs = {}
-    result_dfs['timeline'] = timeline
+    result_dfs['timeline'] = df = pd.DataFrame(index=pd.to_datetime(timeline))
     
     # Get all collection attributes from database (excluding 'timeline', 'id', etc.)
     collection_attrs = _get_collection_attributes(database)
@@ -38,15 +44,22 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         if not collection:
             continue
             
-        class_name = attr_name  # e.g., 'balances', 'storages'
-        
+        slot_class_name = attr_name  # e.g., 'balance', 'storage'
+        slot = schema.induced_slot(slot_class_name, "Database")        
+        class_name = slot.range
+        dimensions = get_dimensions(schema, class_name)
+
+        if schema.get_class(slot.range):
+            range_class_name = slot.range
+
+
         # Extract single-dimensional and time-series data separately
         single_dim_data = []
         timeseries_data = {}
         
         for entity in collection:
             entity_dict = _entity_to_dict(entity)
-            
+
             # Get entity identifier for time-series column naming (before filtering)
             entity_name = getattr(entity, 'name', None) or getattr(entity, 'id', None)
             if entity_name is None:
@@ -63,9 +76,9 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
                 if _is_timeseries_attribute(key, value, time_dimensional_attrs):
                     # Handle time-series data
                     if value is not None and len(value) > 0:
-                        ts_key = f"{class_name}.ts.{key}"
+                        ts_key = f"{slot_class_name}.ts.{key}"
                         if ts_key not in timeseries_data:
-                            timeseries_data[ts_key] = {'datetime': timeline}
+                            timeseries_data[ts_key] = {'datetime': pd.to_datetime(timeline)}
                         
                         # Use entity name for column name
                         timeseries_data[ts_key][entity_name] = value
@@ -79,26 +92,73 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         
         # Create class DataFrame
         if single_dim_data:
-            df = pd.DataFrame(single_dim_data)
+            if dimensions:
+                dim_names = [d['name'] for d in dimensions]
+                df = pd.DataFrame(single_dim_data).set_index(dim_names)
+            else:
+                df = pd.DataFrame(single_dim_data).set_index('name')
+                df.index.rename(slot_class_name, inplace=True)
             # Reorder columns: name first, id second, rest alphabetical
             cols = []
-            if 'name' in df.columns:
-                cols.append('name')
             if 'id' in df.columns:
                 cols.append('id')
             # Add remaining columns in alphabetical order
-            remaining_cols = sorted([col for col in df.columns if col not in ['name', 'id']])
+            remaining_cols = sorted([col for col in df.columns if col not in ['id']])
             cols.extend(remaining_cols)
-            result_dfs[f"{class_name}"] = df[cols]
+            result_dfs[f"{slot_class_name}"] = df[cols]
         
         # Create time-series DataFrames
         for ts_key, ts_dict in timeseries_data.items():
-            df = pd.DataFrame(ts_dict)
-            # Ensure datetime is first column
-            cols = ['datetime'] + [col for col in df.columns if col != 'datetime']
-            result_dfs[ts_key] = df[cols]
+            df = pd.DataFrame(ts_dict).set_index('datetime')
+            if dimensions:
+                df.columns = pd.MultiIndex.from_tuples(
+                    [tuple(col.split('.')) for col in df.columns]
+                )
+                dim_names = [d['name'] for d in dimensions]
+                df.columns.names = dim_names
+            result_dfs[ts_key] = df
+            if dimensions:
+                dim_names = [d['name'] for d in dimensions]
     
     return result_dfs
+
+def get_dimensions(schema, class_name: str):
+    """Get dimension info from schema"""
+    slots = schema.class_induced_slots(class_name)
+    dimensions = []
+    for slot in slots:
+        # Check for dimension annotation
+        if slot.annotations and slot.annotations._get('is_dimension'):
+            dimensions.append({
+                'name': slot.name,
+                'range': slot.range
+            })
+    return dimensions
+
+
+def get_class_from_field(root_class, field_name):
+    """Extract the actual class from a field's type hint"""
+    field = root_class.__dataclass_fields__[field_name]
+    field_type = field.type
+    
+    # Parse Union types to find the actual class
+    if hasattr(field_type, '__origin__'):
+        args = typing.get_args(field_type)
+        for arg in args:
+            if hasattr(arg, '__origin__'):  # dict, list
+                inner_args = typing.get_args(arg)
+                for inner in inner_args:
+                    # Check if it's a Union (the dict value)
+                    if hasattr(inner, '__origin__') and inner.__origin__ is typing.Union:
+                        union_args = typing.get_args(inner)
+                        for ua in union_args:
+                            if isinstance(ua, type) and hasattr(ua, '__dataclass_fields__'):
+                                return ua
+                    # Direct class reference
+                    elif isinstance(inner, type) and hasattr(inner, '__dataclass_fields__'):
+                        return inner
+    return None
+
 
 def _extract_time_dimensional_attrs(schema_path: str) -> set:
     """Extract attributes marked with time_dimensional: true from schema."""
@@ -151,7 +211,6 @@ def _entity_to_dict(entity) -> dict:
     # Keep 'name' and 'id' for entity identification
     skip_attrs = {
         'semantic_id', 'alternative_names', 'description',
-        'source', 'sink', 'source_name', 'sink_name', 'node_A', 'node_B',
         'node_type', '_inherited_slots', 'class_class_uri', 'class_class_curie',
         'class_name', 'class_model_uri'
     }
