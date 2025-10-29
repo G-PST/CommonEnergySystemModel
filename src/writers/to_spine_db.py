@@ -5,7 +5,7 @@ This module provides functions to write pandas DataFrames to a Spine database,
 handling entity classes, entities, parameters, and time series data.
 """
 
-from typing import Dict
+from typing import Dict, Union
 import pandas as pd
 from spinedb_api import DatabaseMapping
 from spinedb_api.exception import NothingToCommit
@@ -23,6 +23,8 @@ def dataframes_to_spine(
     
     Args:
         dataframes: Dict mapping dataframe names to DataFrames
+                   Entity names are in index (or MultiIndex for multi-dimensional)
+                   For time series, entity names are in columns
         db_url: Database URL (e.g., "sqlite:///path/to/database.sqlite")
         import_datetime: Datetime string for alternative name (format: yyyy-mm-dd_hh-mm)
                         If None, uses current datetime
@@ -54,23 +56,12 @@ def dataframes_to_spine(
         table_dfs = {}
 
         for name, df in dataframes.items():
-            if '.ts.' in name or '.table.' in name:
-                # Replace dot multi-dim naming convention with double underscore
-                for col_name, col in df.items():
-                    if '.' in col_name:
-                        df.rename(columns = {col_name: '__'.join(col_name.split('.'))}, inplace = True)
             if '.ts.' in name:
                 ts_dfs[name] = df
             elif '.table.' in name:
                 table_dfs[name] = df
             else:
                 entity_dfs[name] = df
-                # Replace dot multi-dim naming convention with double underscore
-                if not '.' in name:
-                    for (index, row) in df.iterrows():
-                        if '.' in row['name']:
-                            row['name'] = ('__'.join(row['name'].split('.')))
-
         
         # Phase 0: Add alternative
         print(f"Phase 0: Adding a scenario and an alternative '{alternative_name}'...")
@@ -104,7 +95,7 @@ def dataframes_to_spine(
         # Phase 3: Add time series parameters
         if ts_dfs:
             print("Phase 3: Adding time series parameters...")
-            _add_time_series(db_map, ts_dfs, dataframes["timeline"], alternative_name)
+            _add_time_series(db_map, ts_dfs, dataframes.get("timeline"), alternative_name)
             try:
                 db_map.commit_session("Added time series parameters")
             except NothingToCommit:
@@ -121,11 +112,26 @@ def dataframes_to_spine(
         
         print("Done!")
 
+
+def _get_entity_names_from_index(idx: Union[pd.Index, pd.MultiIndex]) -> list:
+    """
+    Extract entity names from index, converting MultiIndex tuples to strings with '__'.
+    For single Index, returns list of names as-is.
+    For MultiIndex, joins levels with '__'.
+    """
+    if isinstance(idx, pd.MultiIndex):
+        # Join multi-dimensional names with '__'
+        return ['__'.join(map(str, t)) for t in idx]
+    else:
+        return [str(name) for name in idx]
+
+
 def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame], alternative_name: str):
     """Add entity classes and their entities."""
 
     # List of entity_classes that require entity_alternative to be true
     ent_alt_classes = ['unit', 'node', 'connection', 'reserve__upDown__unit__node', 'reserve__upDown__connection__node']
+    
     # Sort: single-dimensional classes first (no dots), then multi-dimensional
     sorted_classes = sorted(entity_dfs.keys(), key=lambda x: ('.' in x, x))
     
@@ -135,7 +141,14 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
         # Determine if multi-dimensional
         if '.' in class_name:
             dimensions = class_name.split('.')
-            dimension_name_list = tuple(df.keys().tolist()[:len(dimensions)])
+            
+            # Get dimension names from index
+            if isinstance(df.index, pd.MultiIndex):
+                dimension_name_list = tuple(df.index.names)
+            else:
+                # Fallback if names not set
+                dimension_name_list = tuple(dimensions)
+            
             class_name = '__'.join(dimensions)
         else:
             dimension_name_list = None
@@ -152,31 +165,41 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
         
         # Add entities
         if dimension_name_list:
-            # Multi-dimensional: first N columns are dimensions
-            dimension_cols = list(dimension_name_list)
-            for _, row in df.iterrows():
-                element_name_list = tuple(str(row[dim]) for dim in dimension_cols)
-                try:
-                    db_map.add_entity(
-                        entity_class_name=class_name,
-                        element_name_list=element_name_list
-                    )
-                except Exception as e:
-                    pass  # Entity might already exist
-                
-                if class_name in ent_alt_classes:
+            # Multi-dimensional: index levels are dimensions
+            if isinstance(df.index, pd.MultiIndex):
+                for element_tuple in df.index.unique():
+                    element_name_list = tuple(str(elem) for elem in element_tuple)
                     try:
-                        db_map.add_entity_alternative(
+                        db_map.add_entity(
                             entity_class_name=class_name,
-                            element_name_list=element_name_list,
-                            alternative_name=alternative_name
+                            element_name_list=element_name_list
                         )
                     except Exception as e:
-                        pass  # Entity_alternative might already exist
+                        pass  # Entity might already exist
+                    
+                    if class_name in ent_alt_classes:
+                        try:
+                            db_map.add_entity_alternative(
+                                entity_class_name=class_name,
+                                element_name_list=element_name_list,
+                                alternative_name=alternative_name
+                            )
+                        except Exception as e:
+                            pass  # Entity_alternative might already exist
+            else:
+                # Single index but class name has dots - treat as single entity per row
+                for entity_name in df.index.unique():
+                    try:
+                        db_map.add_entity(
+                            entity_class_name=class_name,
+                            element_name_list=(str(entity_name),)
+                        )
+                    except Exception as e:
+                        pass
 
         else:
-            # Single-dimensional: 'name' column contains entity names
-            for entity_name in df['name'].unique():
+            # Single-dimensional: index contains entity names
+            for entity_name in df.index.unique():
                 try:
                     db_map.add_entity(
                         entity_class_name=class_name,
@@ -198,47 +221,45 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
 
 
 def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame], alternative_name: str):
-    """Add parameter definitions and values."""
+    """Add parameter definitions and constant values."""
+    
     for class_name, df in entity_dfs.items():
-        # Determine dimension columns
+        # Convert class name with dots to double underscore
         if '.' in class_name:
             dimensions = class_name.split('.')
-            dimension_cols = list(df.keys().tolist()[:len(dimensions)])
-            class_name = '__'.join(dimensions)
+            db_class_name = '__'.join(dimensions)
         else:
-            dimension_cols = ['name']
+            db_class_name = class_name
         
-        # Parameter columns are all columns except dimension/name columns
-        param_cols = [col for col in df.columns if col not in dimension_cols]
+        # Get parameter columns (all columns that aren't part of the structure)
+        param_cols = df.columns.tolist()
         
         # Add parameter definitions
-        # for param_name in param_cols:
-        #     try:
-        #         db_map.add_parameter_definition(
-        #             entity_class_name=class_name,
-        #             name=param_name
-        #         )
-        #         print(f"  Added parameter definition: {class_name}.{param_name}")
-        #     except Exception as e:
-        #         pass  # Parameter might already exist
+        for param_name in param_cols:
+            try:
+                db_map.add_parameter_definition(
+                    entity_class_name=db_class_name,
+                    name=param_name
+                )
+            except Exception:
+                pass  # Already exists
         
         # Add parameter values
-        for _, row in df.iterrows():
-            # Build entity_byname
-            if '__' in class_name:
-                entity_byname = tuple(str(row[dim]) for dim in dimension_cols)
-            else:
-                entity_byname = (str(row['name']),)
-            
-            # Add values for each parameter
-            for param_name in param_cols:
-                value = row[param_name]
-                
-                # Skip None/NaN values
+        for param_name in param_cols:
+            for idx, value in df[param_name].items():
+                # Skip if value is None or NaN
                 if pd.isna(value):
                     continue
                 
-                # Convert value to Spine format
+                # Build entity_byname tuple
+                if isinstance(idx, tuple):
+                    # MultiIndex - use tuple of strings
+                    entity_byname = tuple(str(elem) for elem in idx)
+                else:
+                    # Single index
+                    entity_byname = (str(idx),)
+                
+                # Parse value
                 if isinstance(value, (int, float)):
                     parsed_value = float(value)
                 elif isinstance(value, str):
@@ -248,14 +269,14 @@ def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]
                 
                 try:
                     db_map.add_parameter_value(
-                        entity_class_name=class_name,
+                        entity_class_name=db_class_name,
                         parameter_definition_name=param_name,
                         entity_byname=entity_byname,
                         alternative_name=alternative_name,
                         parsed_value=parsed_value
                     )
                 except Exception as e:
-                    print(f"  Warning: Could not add value for {class_name}.{param_name}: {e}")
+                    print(f"  Warning: Could not add value for {db_class_name}.{param_name}: {e}")
 
 
 def _add_time_series(
@@ -266,7 +287,9 @@ def _add_time_series(
 ):
     """Add time series parameter values."""
     # Extract start time from timeline
-    if timeline_df is not None and 'datetime' in timeline_df.columns:
+    if timeline_df is not None and timeline_df.index.name == 'datetime':
+        start_time = pd.to_datetime(timeline_df.index[0]).isoformat()
+    elif timeline_df is not None and 'datetime' in timeline_df.columns:
         start_time = pd.to_datetime(timeline_df['datetime'].iloc[0]).isoformat()
     else:
         start_time = None
@@ -281,24 +304,39 @@ def _add_time_series(
         class_name = parts[0]
         param_name = parts[1]
         
+        # Convert class name if multi-dimensional
+        if '.' in class_name:
+            db_class_name = '__'.join(class_name.split('.'))
+        else:
+            db_class_name = class_name
+        
         # Add parameter definition if needed
         try:
             db_map.add_parameter_definition(
-                entity_class_name=class_name,
+                entity_class_name=db_class_name,
                 name=param_name
             )
         except Exception:
             pass  # Already exists
         
-        # Entity names are columns (except 'datetime')
-        entity_cols = [col for col in df.columns if col != 'datetime']
+        # Entity names are in columns (for time series, index is datetime, columns are entities)
+        if isinstance(df.columns, pd.MultiIndex):
+            # Multi-dimensional columns: join with '__'
+            entity_names = ['__'.join(map(str, col)) for col in df.columns]
+        else:
+            entity_names = [str(col) for col in df.columns]
         
-        for entity_name in entity_cols:
+        for i, entity_name in enumerate(entity_names):
             # Extract time series data
-            values = df[entity_name].tolist()
+            if isinstance(df.columns, pd.MultiIndex):
+                col = df.columns[i]
+            else:
+                col = df.columns[i]
+            
+            values = df.iloc[:, i].tolist()
             
             # Build time series in Spine format
-            if start_time:
+            if start_time and df.index.name == 'datetime':
                 ts_value = {
                     "type": "time_series",
                     "data": values,
@@ -308,9 +346,9 @@ def _add_time_series(
                     }
                 }
             else:
-                # Use datetime column if available
-                if 'datetime' in df.columns:
-                    timestamps = pd.to_datetime(df['datetime']).dt.strftime('%Y-%m-%dT%H:%M:%S').tolist()
+                # Use datetime index if available
+                if df.index.name == 'datetime':
+                    timestamps = pd.to_datetime(df.index).strftime('%Y-%m-%dT%H:%M:%S').tolist()
                     ts_value = {
                         "type": "time_series",
                         "data": [[ts, val] for ts, val in zip(timestamps, values)]
@@ -327,21 +365,21 @@ def _add_time_series(
             
             try:
                 db_map.add_parameter_value(
-                    entity_class_name=class_name,
+                    entity_class_name=db_class_name,
                     parameter_definition_name=param_name,
                     entity_byname=(entity_name,),
                     alternative_name=alternative_name,
                     value=db_value,
                     type=value_type
                 )
-                print(f"  Added time series: {class_name}.{param_name} for {entity_name}")
+                print(f"  Added time series: {db_class_name}.{param_name} for {entity_name}")
             except Exception as e:
                 print(f"  Warning: Could not add time series for {entity_name}: {e}")
 
 
 def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alternative_name: str):
     """Add table (map) parameter values."""
-    from spinedb_api.parameter_value import Map, DateTime
+    from spinedb_api.parameter_value import Map
     
     for table_name, df in table_dfs.items():
         # Parse name: class_name.table.parameter_name
@@ -353,33 +391,42 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
         class_name = parts[0]
         param_name = parts[1]
         
+        # Convert class name if multi-dimensional
+        if '.' in class_name:
+            db_class_name = '__'.join(class_name.split('.'))
+        else:
+            db_class_name = class_name
+        
         # Add parameter definition if needed
         try:
             db_map.add_parameter_definition(
-                entity_class_name=class_name,
+                entity_class_name=db_class_name,
                 name=param_name
             )
         except Exception:
             pass  # Already exists
         
-        # Entity names are columns (except 'datetime')
-        entity_cols = [col for col in df.columns if col != 'datetime' and col != 'period']
+        # Entity names are in columns (for tables, index is datetime/period, columns are entities)
+        if isinstance(df.columns, pd.MultiIndex):
+            # Multi-dimensional columns: join with '__'
+            entity_names = ['__'.join(map(str, col)) for col in df.columns]
+        else:
+            entity_names = [str(col) for col in df.columns]
         
-        # Determine index type from datetime column
-        if 'datetime' in df.columns:
-            # Convert datetime strings to DateTime objects for indexes
-            indexes = df['datetime'].tolist()
+        # Determine index type
+        if df.index.name == 'datetime':
+            indexes = df.index.tolist()
             index_name = 'time'
-        elif 'period' in df.columns:
-            indexes = df['period'].tolist()
+        elif df.index.name == 'period':
+            indexes = df.index.tolist()
             index_name = 'period'
         else:
-            print(f"  Warning: No datetime or period column found in {table_name}")
+            print(f"  Warning: No datetime or period index found in {table_name}")
             continue
         
-        for entity_name in entity_cols:
+        for i, entity_name in enumerate(entity_names):
             # Extract values for this entity
-            values = df[entity_name].tolist()
+            values = df.iloc[:, i].tolist()
             
             # Create Map object
             map_value = Map(
@@ -393,49 +440,50 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
             
             try:
                 db_map.add_parameter_value(
-                    entity_class_name=class_name,
+                    entity_class_name=db_class_name,
                     parameter_definition_name=param_name,
                     entity_byname=(entity_name,),
                     alternative_name=alternative_name,
                     value=db_value,
                     type=value_type
                 )
-                print(f"  Added table map: {class_name}.{param_name} for {entity_name}")
+                print(f"  Added table map: {db_class_name}.{param_name} for {entity_name}")
             except Exception as e:
                 print(f"  Warning: Could not add table map for {entity_name}: {e}")
 
 
 # Example usage
 if __name__ == "__main__":
-    # Example: Create sample dataframes
+    # Example: Create sample dataframes with new index structure
     sample_dfs = {
         'node': pd.DataFrame({
-            'name': ['west', 'east', 'heat'],
             'annual_flow': [100000.0, 80000.0, None],
             'penalty_up': [10000.0, 10000.0, 10000.0]
-        }),
+        }, index=pd.Index(['west', 'east', 'heat'], name='node')),
+        
         'connection': pd.DataFrame({
-            'name': ['charger', 'pony1'],
             'efficiency': [0.90, 0.98],
             'capacity': [750.0, 500.0]
-        }),
+        }, index=pd.Index(['charger', 'pony1'], name='connection')),
+        
         'unit.outputNode': pd.DataFrame({
-            'unit': ['coal_plant', 'gas_plant'],
-            'outputNode': ['west', 'east'],
             'capacity': [100.0, 50.0],
             'efficiency': [0.9, 0.95]
-        }),
+        }, index=pd.MultiIndex.from_tuples(
+            [('coal_plant', 'west'), ('gas_plant', 'east')],
+            names=['unit', 'outputNode']
+        )),
+        
         'node.table.inflow': pd.DataFrame({
-            'datetime': pd.date_range('2023-01-01', periods=10, freq='H'),
             'west': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'east': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'heat': [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50]
-        })
+        }, index=pd.date_range('2023-01-01', periods=10, freq='H', name='datetime'))
     }
     
-    timeline = pd.DataFrame({
-        'datetime': pd.date_range('2023-01-01', periods=8760, freq='H')
-    })
+    timeline = pd.DataFrame(
+        index=pd.date_range('2023-01-01', periods=8760, freq='H', name='datetime')
+    )
     
     # Write to database
-    # dataframes_to_spine(sample_dfs, "sqlite:///test_flextool.sqlite", timeline, import_datetime='2025-10-02_15-30')
+    # dataframes_to_spine(sample_dfs, "sqlite:///test_flextool.sqlite", import_datetime='2025-10-02_15-30')

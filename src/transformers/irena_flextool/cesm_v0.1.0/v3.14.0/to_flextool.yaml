@@ -45,6 +45,12 @@ profile-entities:
       order: [[1, 2]]
   - unit.node.profile:
       order: [[1], [2], [1, 2]]
+link-entities:
+- link
+- - connection:
+      order: [[1, 2]]
+  - connection.node.node:
+      order: [[1, 2], [1], [2]]
 
 # Parameters
 # System
@@ -203,29 +209,37 @@ unit_to_node profile_limit_upper:
 link efficiency:
 - link: efficiency
 - connection: efficiency
+- order: [[1, 2]]
 transfer_method:
 - link: transfer_method
 - connection: transfer_method
+- order: [[1, 2]]
 - rename:
     regular_linear: regular
 link capacity:
 - link: capacity
 - connection: virtual_unitsize
+- order: [[1, 2]]
 link existing:
 - link: links_existing
 - connection: existing
+- order: [[1, 2]]
 link investment_cost:
 - link: investment_cost
 - connection: invest_cost
+- order: [[1, 2]]
 link investment_method:
 - link: investment_method
 - connection: invest_method
+- order: [[1, 2]]
 - rename:
     not_allowed: not_allowed
     no_limits: invest_no_limit
 link discount_rate:
 - link: discount_rate
 - connection: interest_rate
+- order: [[1, 2]]
 link payback_time:
 - link: payback_time
 - connection: lifetime
+- order: [[1, 2]]

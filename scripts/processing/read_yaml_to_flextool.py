@@ -11,36 +11,35 @@ def time_to_spine(flextool, cesm):
     """
     Add temporal data from cesm to flextool.
     """
+    # Create dataframe for timeline entity
+    flextool['timeline'] = pd.DataFrame(index = ['cesm_timeline'])
+
     # Create time resolution dataframe
-    dt_series = pd.to_datetime(cesm["timeline"])
+    dt_series = cesm["timeline"].index
     time_diffs = -dt_series.diff(-1).total_seconds() / 3600
     time_diffs = pd.Series(time_diffs)
     time_diffs.iloc[-1] = time_diffs.iloc[-2]
     
-    timeline = pd.DataFrame({
-        'datetime': cesm["timeline"],
-        'cesm_timeline': time_diffs
-    })
+    flextool['timeline.table.timestep_duration'] = pd.DataFrame({
+        'cesm_timeline': time_diffs.values},
+        index = cesm["timeline"].index,
+    )
 
-    flextool['timeline'] = pd.DataFrame({
-        'name': ['cesm_timeline']
-    })
-    flextool['timeline.table.timestep_duration'] = timeline
-
+    # Create timeset dataframe
+    flextool['timeset'] = pd.DataFrame({
+        'timeline': ['cesm_timeline']},
+        index = ['cesm_timeset']
+    )
+    
     # Create solve.table.period_timeset dataframe
     periods = set()
     periods.update(cesm['solve_pattern']['periods_realise_investments'].iloc[0])
     periods.update(cesm['solve_pattern']['periods_realise_operations'].iloc[0])
     periods.update(cesm['solve_pattern']['periods_additional_horizon'].iloc[0])
 
-    flextool['timeset'] = pd.DataFrame({
-        'name': ['cesm_timeset'],
-        'timeline': ['cesm_timeline']
-    })
     period_timeset = pd.DataFrame({'period': list(periods)})
-    for solve_name in flextool['solve']['name']:
+    for solve_name in flextool['solve'].index:
         period_timeset[solve_name] = 'cesm_timeset'
-    
     flextool['solve.table.period_timeset'] = period_timeset
 
     return flextool
@@ -53,7 +52,7 @@ cesm = yaml_to_df(database, schema_path="model/cesm.yaml")
 
 # Transform from CESM to FlexTool (using configuration file)
 flextool = transform_data(cesm, 
-    "transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml")
+    "src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml")
 
 # Process time parameters separately
 flextool = time_to_spine(flextool, cesm)
