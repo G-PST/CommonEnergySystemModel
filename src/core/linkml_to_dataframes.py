@@ -93,7 +93,7 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         # Create class DataFrame
         if single_dim_data:
             if dimensions:
-                dim_names = [d['name'] for d in dimensions]
+                dim_names = ['name'] + [d['name'] for d in dimensions]
                 df = pd.DataFrame(single_dim_data).set_index(dim_names)
             else:
                 df = pd.DataFrame(single_dim_data).set_index('name')
@@ -109,12 +109,12 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         
         # Create time-series DataFrames
         for ts_key, ts_dict in timeseries_data.items():
-            df = pd.DataFrame(ts_dict).set_index('datetime')
+            df = pd.DataFrame(ts_dict).set_index('datetime').astype('float64')
             if dimensions:
                 df.columns = pd.MultiIndex.from_tuples(
-                    [tuple(col.split('.')) for col in df.columns]
+                    [tuple([col] + col.split('.')) for col in df.columns]
                 )
-                dim_names = [d['name'] for d in dimensions]
+                dim_names = ['name'] + [d['name'] for d in dimensions]
                 df.columns.names = dim_names
             result_dfs[ts_key] = df
             if dimensions:

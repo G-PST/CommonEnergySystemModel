@@ -7,7 +7,7 @@ handling entity classes, entities, parameters, and time series data.
 
 from typing import Dict, Union
 import pandas as pd
-from spinedb_api import DatabaseMapping
+from spinedb_api import DatabaseMapping, parameter_value
 from spinedb_api.exception import NothingToCommit
 from spinedb_api.parameter_value import to_database
 
@@ -53,13 +53,13 @@ def dataframes_to_spine(
         # Separate dataframes by type
         entity_dfs = {}
         ts_dfs = {}
-        table_dfs = {}
+        str_dfs = {}
 
         for name, df in dataframes.items():
             if '.ts.' in name:
                 ts_dfs[name] = df
-            elif '.table.' in name:
-                table_dfs[name] = df
+            elif '.str.' in name:
+                str_dfs[name] = df
             else:
                 entity_dfs[name] = df
         
@@ -101,12 +101,12 @@ def dataframes_to_spine(
             except NothingToCommit:
                 print("No time series parameters to commit")
         
-        # Phase 4: Add table (map) parameters
-        if table_dfs:
-            print("Phase 4: Adding table (map) parameters...")
-            _add_tables(db_map, table_dfs, alternative_name)
+        # Phase 4: Add str (map) parameters
+        if str_dfs:
+            print("Phase 4: Adding str (map) parameters...")
+            _add_strs(db_map, str_dfs, alternative_name)
             try:
-                db_map.commit_session("Added table parameters")
+                db_map.commit_session("Added str parameters")
             except NothingToCommit:
                 print("No time series parameters to commit")
         
@@ -168,11 +168,12 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
             # Multi-dimensional: index levels are dimensions
             if isinstance(df.index, pd.MultiIndex):
                 for element_tuple in df.index.unique():
-                    element_name_list = tuple(str(elem) for elem in element_tuple)
+                    element_name_list = tuple(str(elem) for elem in element_tuple[1:])
                     try:
                         db_map.add_entity(
                             entity_class_name=class_name,
-                            element_name_list=element_name_list
+                            element_name_list=element_name_list,
+                            name=element_tuple[0]
                         )
                     except Exception as e:
                         pass  # Entity might already exist
@@ -254,7 +255,7 @@ def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]
                 # Build entity_byname tuple
                 if isinstance(idx, tuple):
                     # MultiIndex - use tuple of strings
-                    entity_byname = tuple(str(elem) for elem in idx)
+                    entity_byname = tuple(str(elem) for elem in idx[1:])
                 else:
                     # Single index
                     entity_byname = (str(idx),)
@@ -264,6 +265,11 @@ def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]
                     parsed_value = float(value)
                 elif isinstance(value, str):
                     parsed_value = value
+                elif isinstance(value, list):
+                    if isinstance(value[0], (int, float)):  # Assume there is only one type in the array
+                        parsed_value = parameter_value.Array(value, float, 'index')
+                    elif isinstance(value[0], (str)):
+                        parsed_value = parameter_value.Array(value, str, 'index')
                 else:
                     parsed_value = value
                 
@@ -377,15 +383,15 @@ def _add_time_series(
                 print(f"  Warning: Could not add time series for {entity_name}: {e}")
 
 
-def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alternative_name: str):
-    """Add table (map) parameter values."""
+def _add_strs(db_map: DatabaseMapping, str_dfs: Dict[str, pd.DataFrame], alternative_name: str):
+    """Add string indexed (map) parameter values."""
     from spinedb_api.parameter_value import Map
     
-    for table_name, df in table_dfs.items():
-        # Parse name: class_name.table.parameter_name
-        parts = table_name.split('.table.')
+    for str_name, df in str_dfs.items():
+        # Parse name: class_name.str.parameter_name
+        parts = str_name.split('.str.')
         if len(parts) != 2:
-            print(f"  Warning: Invalid table name format: {table_name}")
+            print(f"  Warning: Invalid str name format: {str_name}")
             continue
         
         class_name = parts[0]
@@ -406,7 +412,7 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
         except Exception:
             pass  # Already exists
         
-        # Entity names are in columns (for tables, index is datetime/period, columns are entities)
+        # Entity names are in columns (for strs, index is datetime/period, columns are entities)
         if isinstance(df.columns, pd.MultiIndex):
             # Multi-dimensional columns: join with '__'
             entity_names = ['__'.join(map(str, col)) for col in df.columns]
@@ -414,15 +420,8 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
             entity_names = [str(col) for col in df.columns]
         
         # Determine index type
-        if df.index.name == 'datetime':
-            indexes = df.index.tolist()
-            index_name = 'time'
-        elif df.index.name == 'period':
-            indexes = df.index.tolist()
-            index_name = 'period'
-        else:
-            print(f"  Warning: No datetime or period index found in {table_name}")
-            continue
+        indexes = df.index.astype(str).tolist() 
+        index_name = df.index.name
         
         for i, entity_name in enumerate(entity_names):
             # Extract values for this entity
@@ -447,9 +446,9 @@ def _add_tables(db_map: DatabaseMapping, table_dfs: Dict[str, pd.DataFrame], alt
                     value=db_value,
                     type=value_type
                 )
-                print(f"  Added table map: {db_class_name}.{param_name} for {entity_name}")
+                print(f"  Added str map: {db_class_name}.{param_name} for {entity_name}")
             except Exception as e:
-                print(f"  Warning: Could not add table map for {entity_name}: {e}")
+                print(f"  Warning: Could not add str map for {entity_name}: {e}")
 
 
 # Example usage
@@ -474,7 +473,7 @@ if __name__ == "__main__":
             names=['unit', 'outputNode']
         )),
         
-        'node.table.inflow': pd.DataFrame({
+        'node.str.inflow': pd.DataFrame({
             'west': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'east': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'heat': [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50]

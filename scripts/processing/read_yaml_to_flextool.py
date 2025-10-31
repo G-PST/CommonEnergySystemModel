@@ -20,10 +20,11 @@ def time_to_spine(flextool, cesm):
     time_diffs = pd.Series(time_diffs)
     time_diffs.iloc[-1] = time_diffs.iloc[-2]
     
-    flextool['timeline.table.timestep_duration'] = pd.DataFrame({
+    flextool['timeline.str.timestep_duration'] = pd.DataFrame({
         'cesm_timeline': time_diffs.values},
         index = cesm["timeline"].index,
     )
+    flextool['timeline.str.timestep_duration'].index.name = 'datetime'
 
     # Create timeset dataframe
     flextool['timeset'] = pd.DataFrame({
@@ -31,16 +32,21 @@ def time_to_spine(flextool, cesm):
         index = ['cesm_timeset']
     )
     
-    # Create solve.table.period_timeset dataframe
-    periods = set()
-    periods.update(cesm['solve_pattern']['periods_realise_investments'].iloc[0])
-    periods.update(cesm['solve_pattern']['periods_realise_operations'].iloc[0])
-    periods.update(cesm['solve_pattern']['periods_additional_horizon'].iloc[0])
+    # Create solve.str.period_timeset dataframe
+    solve_periods = {}
+    all_periods = []
+    for index, solve_pattern in cesm['solve_pattern'].iterrows():
+        periods = solve_pattern['periods_realise_investments'] + solve_pattern['periods_realise_operations'] + solve_pattern['periods_additional_horizon']
+        solve_periods[index] = list(set(periods))
+        for period in periods:
+            all_periods.append(period)
+    all_periods_unique = list(set(all_periods))
 
-    period_timeset = pd.DataFrame({'period': list(periods)})
-    for solve_name in flextool['solve'].index:
-        period_timeset[solve_name] = 'cesm_timeset'
-    flextool['solve.table.period_timeset'] = period_timeset
+    period_timeset = pd.DataFrame(index=all_periods_unique)
+    for solve_name, periods in solve_periods.items():
+        for period in periods:
+            period_timeset.loc[period, solve_name] = 'cesm_timeset' 
+    flextool['solve.str.period_timeset'] = period_timeset
 
     return flextool
 

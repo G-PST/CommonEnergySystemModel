@@ -29,48 +29,31 @@ def get_entity_index(df: pd.DataFrame) -> Union[pd.Index, pd.MultiIndex]:
 
 
 def set_entity_index(df: pd.DataFrame, new_index: Union[pd.Index, pd.MultiIndex], 
-                     is_ts: bool = False) -> pd.DataFrame:
+                     is_pivoted: bool = False) -> pd.DataFrame:
     """
     Set the entity index for a DataFrame.
     For time series: sets columns
     For regular data: sets index
     """
     result = df.copy()
-    if is_ts:
+    if is_pivoted:
         result.columns = new_index
     else:
         result.index = new_index
     return result
 
 
-def create_index_from_names(names: List[str]) -> Union[pd.Index, pd.MultiIndex]:
-    """
-    Create appropriate Index or MultiIndex from entity name strings.
-    Names with dots become MultiIndex levels.
-    """
-    if not names:
-        return pd.Index([])
-    
-    # Check if multi-dimensional
-    sample = names[0]
-    if '.' in sample:
-        # Multi-dimensional: split by dots
-        split_names = [name.split('.') for name in names]
-        return pd.MultiIndex.from_tuples([tuple(parts) for parts in split_names])
+def list_of_lists_to_index(data):
+    if len(data[0]) == 1:
+        return pd.Index([item[0] for item in data])
     else:
-        # Single dimensional
-        return pd.Index(names)
-
+        return pd.MultiIndex.from_tuples([tuple(item) for item in data])
 
 def index_to_names(idx: Union[pd.Index, pd.MultiIndex]) -> List[str]:
-    """
-    Convert Index or MultiIndex to list of dot-separated name strings.
-    """
     if isinstance(idx, pd.MultiIndex):
-        return ['.'.join(map(str, t)) for t in idx]
+        return [list(row) for row in idx]
     else:
-        return list(map(str, idx))
-
+        return [[item] for item in idx]
 
 def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, List, List]:
     """
@@ -119,7 +102,7 @@ def parse_spec(spec: Any) -> List[Dict]:
     elif isinstance(spec, dict):
         for key, value in spec.items():
             if isinstance(value, dict):
-                result.append({'class': key, 'attribute': None, 'config': value})
+                result.append({'class': key, 'attribute': None, 'rule': value})
             else:
                 result.append({'class': key, 'attribute': value})
     elif isinstance(spec, list):
@@ -152,53 +135,52 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
                  operations: List[Dict],
                  dimensions: List[str] = None) -> Dict[str, pd.DataFrame]:
     """Copy entities from source class to target class."""
-    source_class = source_specs[0]['class']
     target_class = target_spec['class']
-    
-    if source_class not in source_dfs:
-        return target_dfs
-    
-    source_df = source_dfs[source_class]
-    source_idx = get_entity_index(source_df)
-    source_names = index_to_names(source_idx)
-    
-    # Build target entities based on order specification
-    if 'config' in target_spec and 'order' in target_spec['config']:
-        order = target_spec['config']['order']
+    for source_spec in source_specs:
+        source_class = source_spec['class']
         
-        # Split source names into dimensions
-        source_parts = [name.split('.') for name in source_names]
+        if source_class not in source_dfs:
+            return target_dfs
         
-        # Build target names according to order spec
-        target_names = []
-        for parts in source_parts:
-            target_dims = []
-            for target_dim_spec in order:
-                # Combine source dimensions (1-indexed to 0-indexed)
-                dim_parts = [parts[idx - 1] for idx in target_dim_spec]
-                target_dims.append('__'.join(dim_parts))
-            target_names.append('.'.join(target_dims))
-    else:
-        target_names = source_names
-    
-    # Create entity index
-    target_idx = create_index_from_names(target_names)
-    
-    # Store or merge with existing target dataframe
-    if target_class not in target_dfs:
-        # Create new dataframe with just the index
-        target_dfs[target_class] = pd.DataFrame(index=target_idx)
-    else:
-        # Merge indices
-        existing_idx = target_dfs[target_class].index
-        combined = existing_idx.append(target_idx).unique()
-        target_dfs[target_class] = pd.DataFrame(index=combined)
-    if not dimensions:
-        dimensions = target_class.split('.')
-    if len(dimensions) > 1:
-        target_dfs[target_class].index.names = dimensions
-    elif len(dimensions) == 1:
-        target_dfs[target_class].index.name = dimensions[0]    
+        source_df = source_dfs[source_class]
+        source_idx = get_entity_index(source_df)
+        
+        # Build target entities based on order specification
+        if 'rule' in target_spec and 'order' in target_spec['rule']:
+            order = target_spec['rule']['order']
+            
+            # Build target names according to order spec
+            target_names = []
+            source_names = index_to_names(source_idx)
+            for parts in source_names:
+                target_dims = []
+                for target_dim_spec in order:
+                    # Combine source dimensions
+                    dim_parts = [parts[idx] for idx in target_dim_spec]
+                    target_dims.append('__'.join(dim_parts))
+                target_names.append(target_dims)
+            # Create entity index
+            target_idx = list_of_lists_to_index(target_names)
+        else:
+            target_idx = source_idx
+        
+        # Store or merge with existing target dataframe
+        if target_class not in target_dfs:
+            # Create new dataframe with just the index
+            target_dfs[target_class] = pd.DataFrame(index=target_idx)
+        else:
+            # Merge indices
+            existing_idx = target_dfs[target_class].index
+            combined = existing_idx.append(target_idx).unique()
+            target_dfs[target_class] = pd.DataFrame(index=combined)
+        if not dimensions:  # Take dimensions from target_class names if not provided in the spec
+            dimensions = target_class.split('.')
+        if len(dimensions) > 1:  # Multi-dimensional target classes need to have name index too
+            dimensions = ['name'] + dimensions
+        if len(dimensions) > 1:
+            target_dfs[target_class].index.names = dimensions
+        elif len(dimensions) == 1:
+            target_dfs[target_class].index.name = dimensions[0]    
     return target_dfs
 
 
@@ -208,48 +190,48 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
                     target_dfs: Dict[str, pd.DataFrame],
                     operations: List[Dict],
                     dimensions: List[str] = None) -> Dict[str, pd.DataFrame]:
-    """Create a parameter with value from config or source data."""
-    source_class = source_specs[0]['class']
+    """Create a parameter with value from configuration file or source data."""
     target_class = target_spec['class']
     target_attribute = target_spec['attribute']
+    for source_spec in source_specs:
+        source_class = source_spec['class']
 
-    source_df = source_dfs[source_class]
-    source_idx = get_entity_index(source_df)
-    entity_names = index_to_names(source_idx)
+        source_df = source_dfs[source_class]
+        source_idx = get_entity_index(source_df)
+        target_idx = source_idx  # Will be replaced if order is given
 
-    # Get the value from operations
-    for op_dict in operations:
-        if 'order' in op_dict:
-            entity_names = reorder_entity_names(entity_names, op_dict['order'])
+        # Get the value from operations
+        for op_dict in operations:
+            if 'order' in op_dict:
+                target_idx = reorder_entity_names(source_idx, op_dict['order'])
+            
+            if 'value' in op_dict:
+                new_parameter_value = op_dict['value']
+
+            # Apply rename if specified
+            if 'rename' in op_dict:
+                raise ValueError(f"There should be no renaming for parameters that are freshly created through _value_, target attribute: {target_attribute}")
+
+        # Create target index and dataframe
+        param_data = pd.DataFrame({target_attribute: new_parameter_value}, index=target_idx)
         
-        if 'value' in op_dict:
-            new_parameter_value = op_dict['value']
-
-        # Apply rename if specified
-        if 'rename' in op_dict:
-            raise ValueError(f"There should be no renaming for parameters that are freshly created through _value_, target attribute: {target_attribute}")
-
-    # Create target index and dataframe
-    target_idx = create_index_from_names(entity_names)
-    param_data = pd.DataFrame({target_attribute: new_parameter_value}, index=target_idx)
-    
-    # Store result in target class dataframe
-    if target_class not in target_dfs:
-        target_dfs[target_class] = param_data
-    else:
-        # Add column to existing dataframe
-        if target_attribute not in target_dfs[target_class].columns:
-            target_dfs[target_class][target_attribute] = None
-        
-        # Update values for matching indices
-        common_idx = target_dfs[target_class].index.intersection(param_data.index)
-        target_dfs[target_class].loc[common_idx, target_attribute] = param_data.loc[common_idx, target_attribute]
-        
-        # Add new indices
-        new_idx = param_data.index.difference(target_dfs[target_class].index)
-        if len(new_idx) > 0:
-            new_data = pd.DataFrame({target_attribute: param_data.loc[new_idx, target_attribute]}, index=new_idx)
-            target_dfs[target_class] = pd.concat([target_dfs[target_class], new_data])
+        # Store result in target class dataframe
+        if target_class not in target_dfs:
+            target_dfs[target_class] = param_data
+        else:
+            # Add column to existing dataframe
+            if target_attribute not in target_dfs[target_class].columns:
+                target_dfs[target_class][target_attribute] = None
+            
+            # Update values for matching indices
+            common_idx = target_dfs[target_class].index.intersection(param_data.index)
+            target_dfs[target_class].loc[common_idx, target_attribute] = param_data.loc[common_idx, target_attribute]
+            
+            # Add new indices
+            new_idx = param_data.index.difference(target_dfs[target_class].index)
+            if len(new_idx) > 0:
+                new_data = pd.DataFrame({target_attribute: param_data.loc[new_idx, target_attribute]}, index=new_idx)
+                target_dfs[target_class] = pd.concat([target_dfs[target_class], new_data])
     
     return target_dfs
 
@@ -263,122 +245,144 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
     """Transform parameters from source to target."""
     target_class = target_spec['class']
     target_attribute = target_spec['attribute']
-    
-    # Check if this is a time series operation
-    is_ts = any('.ts.' in spec['class'] for spec in source_specs)
+    is_pivoted = False
     
     # Gather source data
-    source_dfs_list = []
     for source_spec in source_specs:
         source_class = source_spec['class']
         source_attribute = source_spec.get('attribute')
-        
+
+        # List based attributes indicate that the dataframe is pivoted (usually for time series content) and contains only one attribute
+        if isinstance(source_attribute, list): 
+            is_pivoted = True
+            if len(source_attribute) == 2:
+                source_datatypes = source_attribute[1]
+                if not isinstance(target_attribute, list):
+                    raise ValueError(f"Source attribute is of list type (indicates pivoted data) and there is a datatype conversion (second item in the attribute list), but target attribute does not have a list with two items. {source_class} {source_attribute}")
+                if len(source_datatypes) != len(target_attribute[1]):
+                    raise ValueError(f"Source attribute is of list type (indicates pivoted data) and there is a datatype conversion, but target attribute does not have the same number of datatypes in the attribute list. {source_class} {source_attribute}")
+                source_class = source_class + '.' + '.'.join(source_attribute[1]) + '.' + source_attribute[0]
+                target_class = target_class + '.' + '.'.join(target_attribute[1]) + '.' + target_attribute[0]
+            else:
+                raise ValueError(f"Source attribute is of list type (indicates pivoted data) but the length of the list is not 2 (the list should have parameter name and data type list for the index columns). {source_class} {source_attribute}")
+
         # Check if source class exists
         if source_class not in source_dfs:
-            continue
+            raise ValueError(f"Could not find source dataframe {source_class}")
         
-        # Get the dataframe
-        source_df = source_dfs[source_class]
-        
-        # If attribute specified, extract that column
-        if source_attribute:
-            if source_attribute in source_df.columns:
-                # Create a dataframe with just this column
-                extracted = source_df[[source_attribute]].copy()
-                source_dfs_list.append(extracted)
-        else:
-            # Use entire dataframe
-            source_dfs_list.append(source_df.copy())
-    
-    if not source_dfs_list:
-        return target_dfs
-    
-    # Start with first source
-    result = source_dfs_list[0].copy()
-    
-    # Apply operations
-    for op_dict in operations:
-        if 'operation' in op_dict:
-            operation = op_dict['operation']
-            
-            if operation == 'multiply':
-                # Get multiply factor
-                with_value = op_dict.get('with')
-                if with_value is not None and not isinstance(with_value, list):
-                    # Multiply by constant
-                    for col in result.select_dtypes(include=[np.number]).columns:
-                        result[col] = result[col] * with_value
-                elif len(source_dfs_list) > 1:
-                    # Multiply with second dataframe
-                    result = multiply_dataframes(result, source_dfs_list[1], op_dict)
-                elif isinstance(with_value, list):
-                    # Need to fetch the 'with' data
-                    with_specs = parse_spec(with_value)
-                    for with_spec in with_specs:
-                        with_class = with_spec['class']
-                        with_attr = with_spec.get('attribute')
-                        
-                        if with_class in source_dfs:
-                            with_df = source_dfs[with_class]
-                            
-                            # Extract attribute if specified
-                            if with_attr and with_attr in with_df.columns:
-                                with_data = with_df[[with_attr]].copy()
-                            else:
-                                with_data = with_df.copy()
-                            
-                            result = multiply_dataframes(result, with_data, op_dict)
-            
-            elif operation == 'sum':
-                # Sum all source dataframes
-                for df in source_dfs_list[1:]:
-                    result = add_dataframes(result, df)
-        
-        if 'multiply' in op_dict and 'with' in op_dict:
-            # Multiply all numeric columns by constant
-            with_value = op_dict['with']
-            for col in result.select_dtypes(include=[np.number]).columns:
-                result[col] = result[col] * with_value
-        
-        if 'order' in op_dict:
-            # Check if order is nested (order: order: [[1]]) or direct (order: [[1]])
-            order_spec = op_dict['order']
-            if isinstance(order_spec, dict) and 'order' in order_spec:
-                order_list = order_spec['order']
-                aggregate = order_spec.get('aggregate')
+        if is_pivoted:
+            source_df = source_dfs[source_class]
+        else:                    
+            # If attribute specified, extract that column
+            if source_attribute in source_dfs[source_class].columns:
+                # Use the attribute column
+                source_df = source_dfs[source_class][[source_attribute]]
             else:
-                order_list = order_spec
-                aggregate = op_dict.get('aggregate')
+                # Use entire dataframe
+                source_df = source_dfs[source_class]
+    
+        # Copy the source as a starting point
+        result = source_df.copy()
+
+        # There is a datatype change operation that needs to be performed
+        if is_pivoted:
+            target_datatypes = target_attribute[1]
+            if isinstance(result.index, pd.MultiIndex):
+                for i, source_datatype in enumerate(source_datatypes):
+                    if source_datatype is not target_datatypes[i]:
+                        if target_datatypes[i] == "str":
+                            result.index = result.index.set_levels(
+                                result.index.levels[i].astype(str), level=i
+                            )
+                        if target_datatypes[i] == "ts":
+                            result.index = result.index.set_levels(
+                                pd.to_datetime(result.index.levels[i]), level=i
+                            )
+            else:
+                if source_datatypes[0] is not target_datatypes[0]:
+                    if target_datatypes[0] == "str":
+                        result.index = result.index.astype(str)
+                    elif target_datatypes[0] == "ts":
+                        result.index = pd.to_datetime(result.index)
+
+        
+        # Apply operations
+        for op_dict in operations:
+            if 'operation' in op_dict:
+                operation = op_dict['operation']
+                
+                if operation == 'multiply':
+                    # Get multiply factor
+                    with_value = op_dict.get('with')
+                    if with_value is not None and not isinstance(with_value, list):
+                        # Multiply by constant
+                        for col in result.select_dtypes(include=[np.number]).columns:
+                            result[col] = result[col] * with_value
+                    elif len(source_dfs_list) > 1:
+                        # Multiply with second dataframe
+                        result = multiply_dataframes(result, source_dfs_list[1], op_dict)
+                    elif isinstance(with_value, list):
+                        # Need to fetch the 'with' data
+                        with_specs = parse_spec(with_value)
+                        for with_spec in with_specs:
+                            with_class = with_spec['class']
+                            with_attr = with_spec.get('attribute')
+                            
+                            if with_class in source_dfs:
+                                with_df = source_dfs[with_class]
+                                
+                                # Extract attribute if specified
+                                if with_attr and with_attr in with_df.columns:
+                                    with_data = with_df[[with_attr]].copy()
+                                else:
+                                    with_data = with_df.copy()
+                                
+                                result = multiply_dataframes(result, with_data, op_dict)
+                
+                elif operation == 'sum':
+                    # Sum all source dataframes
+                    for df in source_dfs_list[1:]:
+                        result = add_dataframes(result, df)
             
-            result = reorder_dimensions(result, order_list, aggregate, is_ts)
+            if 'order' in op_dict:
+                # Check if order is nested (order: order: [[1]]) or direct (order: [[1]])
+                order_spec = op_dict['order']
+                if isinstance(order_spec, dict) and 'order' in order_spec:
+                    order_list = order_spec['order']
+                    aggregate = order_spec.get('aggregate')
+                else:
+                    order_list = order_spec
+                    aggregate = op_dict.get('aggregate')
+                
+                result = reorder_dimensions(result, order_list, aggregate, is_pivoted)
+            
+            if 'rename' in op_dict:
+                result = apply_rename(result, source_attribute, op_dict['rename'], is_pivoted)
         
-        if 'rename' in op_dict:
-            result = apply_rename(result, source_attribute, op_dict['rename'], is_ts)
-    
-    # Rename data column to target attribute if needed
-    if not is_ts and len(result.columns) == 1:
-        result.columns = [target_attribute]
-    
-    # Store result in target class dataframe
-    if target_class not in target_dfs:
-        target_dfs[target_class] = result
-    else:
-        # Add column to existing dataframe or update
-        if target_attribute not in target_dfs[target_class].columns:
-            # Add new column
+        # Rename data column to target attribute if needed
+        if not is_pivoted and (len(result.columns) == 1):
+            result.columns = [target_attribute]
+        
+        # Store result in target class dataframe
+        if target_class not in target_dfs:
+            target_dfs[target_class] = result
+        else:
+            # Add column to existing dataframe or update
+            if target_attribute not in target_dfs[target_class].columns:
+                # Add new column
+                for col in result.columns:
+                    target_dfs[target_class][col] = None
+            
+            # Update values for matching indices
+            common_idx = target_dfs[target_class].index.intersection(result.index)
             for col in result.columns:
-                target_dfs[target_class][col] = None
-        
-        # Update values for matching indices
-        common_idx = target_dfs[target_class].index.intersection(result.index)
-        for col in result.columns:
-            if col in target_dfs[target_class].columns:
-                target_dfs[target_class].loc[common_idx, col] = result.loc[common_idx, col]
-        
-        # Add new indices
-        new_idx = result.index.difference(target_dfs[target_class].index)
-        if len(new_idx) > 0:
-            target_dfs[target_class] = pd.concat([target_dfs[target_class], result.loc[new_idx]])
+                if col in target_dfs[target_class].columns:
+                    target_dfs[target_class].loc[common_idx, col] = result.loc[common_idx, col]
+            
+            # Add new indices
+            new_idx = result.index.difference(target_dfs[target_class].index)
+            if len(new_idx) > 0:
+                target_dfs[target_class] = pd.concat([target_dfs[target_class], result.loc[new_idx]])
     
     return target_dfs
 
@@ -446,59 +450,45 @@ def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
         return df1.multiply(df2, fill_value=1)
 
 
-def reorder_entity_names(names: List[str], order_spec: List[List[int]]) -> List[str]:
+def reorder_entity_names(source_idx: pd.Index, order: List[List[int]]) -> pd.Index:
     """
     Reorder entity name dimensions according to order specification.
     order_spec: [[source_dims for target_dim_0], [source_dims for target_dim_1], ...]
     Dimension indices are 1-based in config, convert to 0-based.
     """
-    new_names = []
-    
-    for name in names:
-        parts = name.split('.')
-        
-        new_parts = []
-        for target_dim_spec in order_spec:
-            # Get source dimension indices (convert from 1-based to 0-based)
-            source_indices = [i - 1 for i in target_dim_spec]
-            
-            if len(source_indices) == 1:
-                if source_indices[0] < len(parts):
-                    new_parts.append(parts[source_indices[0]])
-            else:
-                # Concatenate multiple source dimensions
-                concat = []
-                for idx in source_indices:
-                    if idx < len(parts):
-                        concat.append(parts[idx])
-                if concat:
-                    new_parts.append('__'.join(concat))
-        
-        if new_parts:
-            new_names.append('.'.join(new_parts))
-    
-    return new_names
+
+    # Build target names according to order spec
+    target_names = []
+    source_names = index_to_names(source_idx)
+    for parts in source_names:
+        target_dims = []
+        for target_dim_spec in order:
+            # Combine source dimensions
+            dim_parts = [parts[idx] for idx in target_dim_spec]
+            target_dims.append('__'.join(dim_parts))
+        target_names.append(target_dims)
+    # Create entity index
+    target_idx = list_of_lists_to_index(target_names)
+   
+    return target_idx
 
 
 def reorder_dimensions(df: pd.DataFrame, order_spec: List[List[int]], 
-                      aggregate: str = None, is_ts: bool = False) -> pd.DataFrame:
+                      aggregate: str = None, is_pivoted: bool = False) -> pd.DataFrame:
     """
     Reorder dimensions in DataFrame index/columns according to order specification.
     """
     entity_idx = get_entity_index(df)
-    entity_names = index_to_names(entity_idx)
+    # entity_names = index_to_names(entity_idx)
     
     # Reorder entity names
-    new_names = reorder_entity_names(entity_names, order_spec)
-    
-    # Create new index
-    new_idx = create_index_from_names(new_names)
+    new_idx = reorder_entity_names(entity_idx, order_spec)
     
     # If aggregating (collapsing dimensions), need to group
     if aggregate:
         # Create temporary dataframe with new index
         temp_df = df.copy()
-        if is_ts:
+        if is_pivoted:
             # For time series, transpose, set index, aggregate, transpose back
             temp_df = temp_df.T
             temp_df.index = new_idx
@@ -514,14 +504,14 @@ def reorder_dimensions(df: pd.DataFrame, order_spec: List[List[int]],
                 raise ValueError(f"Unsupported aggregation: {aggregate}")
     else:
         # Just reindex
-        result = set_entity_index(df, new_idx, is_ts)
+        result = set_entity_index(df, new_idx, is_pivoted)
     
     return result
 
 
-def apply_rename(df: pd.DataFrame, source_attribute: str, rename_map: Dict, is_ts: bool = False) -> pd.DataFrame:
+def apply_rename(df: pd.DataFrame, source_attribute: str, rename_map: Dict, is_pivoted: bool = False) -> pd.DataFrame:
     """Apply rename mapping to entity names in index or columns."""    """Apply rename mapping to column values."""
-    if is_ts:
+    if is_pivoted:
         raise ValueError(f"Unsupported renaming of values in a timeseries object for parameter: {target_attribute}")
     else:
         if source_attribute in df.columns:

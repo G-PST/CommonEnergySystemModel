@@ -6,7 +6,10 @@
 # name for the operation:
 # - source class: source paramater  OR - source class (used to copy entities or to create parameters based on entities in which case target entities will get a parameter from 'value')
 # - target class: target parameter  OR - target class (used to copy entities)
-# - - order: [optional list of lists for dimension positions: separate list for each dimension in the target - each target dimension can pick dimension names from multiple source dimensions]
+# - - order: [optional list of lists for dimension positions]:
+#       separate list for each dimension in the target - each target dimension can pick dimension names from multiple source dimensions.
+#       0 is for the source entity name and indexes 1, 2, etc. are for the source dimension entity names.
+#       target name will be based on the first inner list. target dimension names will follow (if multi-dimensional).
 #   - rename:
 #       source parameter value: target parameter value
 #   - algebra: programmatically interpreted algebraic formula between two or more source parameters
@@ -25,32 +28,38 @@ commodity-entities:
 - - node
   - commodity
   - commodity.node:
-      order: [[1], [1]]
+      order: [[0], [0], [0]]
 unit-entities:
 - unit
 - unit
 unit-to-node-entities:
 - unit_to_node
 - unit.outputNode:
-    order: [[1], [2]]
+    order: [[0], [1], [2]]
 - dimensions: [unit, node]
 node-to-unit-entities:
 - node_to_unit
 - unit.inputNode:
-    order: [[2], [1]]
+    order: [[0], [2], [1]]
 - dimensions: [unit, node]
 profile-entities:
 - unit_to_node
 - - profile:
-      order: [[1, 2]]
+      order: [[0]]
   - unit.node.profile:
-      order: [[1], [2], [1, 2]]
+      order: [[0], [1], [2], [0]]
 link-entities:
 - link
 - - connection:
-      order: [[1, 2]]
+      order: [[0]]
   - connection.node.node:
-      order: [[1, 2], [1], [2]]
+      order: [[0], [0], [1], [2]]
+
+
+flow_profile:
+- balance: [flow_profile, [ts]]
+  storage: [flow_profile, [ts]]
+- node: [inflow, [str]]
 
 # Parameters
 # System
@@ -67,9 +76,13 @@ solve_mode:
 - rename:
     single_solve: single_solve
 
+periods_realise_invested:
+- solve_pattern: periods_realise_investments
+- solve: realized_invest_periods
+
 periods_invested:
 - solve_pattern: periods_realise_investments
-- solve: realised_invest_periods
+- solve: invest_periods
 
 periods_realised:
 - solve_pattern: periods_realise_operations
@@ -81,12 +94,6 @@ annual_flow:
 - balance: flow_annual
   storage: flow_annual
 - node: annual_flow
-flow_profile:
-- balance: flow_profile
-  storage: flow_profile
-- node: inflow
-- to_datatype:
-    ts: table
 flow-scaling-method:
 - balance: flow_scaling_method
   storage: flow_scaling_method
@@ -106,8 +113,9 @@ storage capacity:
 storage invest-cost:
 - storage: investment_cost
 - node: invest_cost
-- multiply:
-    with: 0.001
+- operation:
+  - multiply:
+      with: 0.001
 storage_investment_method:
 - storage: investment_method
 - node: invest_method
@@ -139,7 +147,7 @@ has_storage:
 profile_method:
 - unit_to_node
 - unit.node.profile: profile_method
-- - order: [[1], [2], [1, 2]]
+- - order: [[0], [1], [2], [0]]
   - value: 'upper_limit'
 
 # Units
@@ -184,19 +192,17 @@ unit_to_node other_operational_cost:
 - unit_to_node: other_operational_cost
 - unit.outputNode: other_operational_cost
 - - dimensions: [unit, node]
-  - order: [[1], [2]]
+  - order: [[0], [1], [2]]
 node_to_unit other_operational_cost:
 - node_to_unit: other_operational_cost
 - unit.inputNode: other_operational_cost
 - - dimensions: [unit, node]
-  - order: [[2], [1]]
+  - order: [[0], [2], [1]]
 unit_to_node profile_limit_upper:
-- unit_to_node: profile_limit_upper
-- profile: profile
-- - order: [[1, 2]]
-  - to_datatype:
-      ts: table
-  - dimensions: [unit, node]
+- unit_to_node: [profile_limit_upper, [ts]]
+- profile: [profile, [str]]
+- - order: [[0]]
+
 #test-multiply:
 #- node_to_unit: other_operational_cost
 #  unit: efficiency
@@ -209,37 +215,37 @@ unit_to_node profile_limit_upper:
 link efficiency:
 - link: efficiency
 - connection: efficiency
-- order: [[1, 2]]
+- order: [[0]]
 transfer_method:
 - link: transfer_method
 - connection: transfer_method
-- order: [[1, 2]]
+- order: [[0]]
 - rename:
     regular_linear: regular
 link capacity:
 - link: capacity
 - connection: virtual_unitsize
-- order: [[1, 2]]
+- order: [[0]]
 link existing:
 - link: links_existing
 - connection: existing
-- order: [[1, 2]]
+- order: [[0]]
 link investment_cost:
 - link: investment_cost
 - connection: invest_cost
-- order: [[1, 2]]
+- order: [[0]]
 link investment_method:
 - link: investment_method
 - connection: invest_method
-- order: [[1, 2]]
+- order: [[0]]
 - rename:
     not_allowed: not_allowed
     no_limits: invest_no_limit
 link discount_rate:
 - link: discount_rate
 - connection: interest_rate
-- order: [[1, 2]]
+- order: [[0]]
 link payback_time:
 - link: payback_time
 - connection: lifetime
-- order: [[1, 2]]
+- order: [[0]]
