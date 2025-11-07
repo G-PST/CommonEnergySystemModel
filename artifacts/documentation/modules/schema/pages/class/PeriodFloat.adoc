@@ -1,0 +1,183 @@
+= `PeriodFloat`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`PeriodFloat`*
+
+
+== Slots
+
+
+
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+PeriodFloat {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Period {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+PeriodFloat -> Period: period
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<period,`period`>>
+//| [[slots_table.period]]<<period,`period`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| _n/a_
+| _n/a_
+
+| <<value,`value`>>
+//| [[slots_table.value]]<<value,`value`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#period]
+=== `period`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.period,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#value]
+=== `value`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.value,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

@@ -1,0 +1,758 @@
+= `Dataset`
+:toclevels: 4
+
+
++++Dataset properties and holder for classes available in the schema.+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+
+
+
+|===
+
+== Class hierarchy
+* *`Dataset`*
+
+
+== Slots
+
+
+
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+Dataset {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Balance {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Storage {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Commodity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Unit {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Node_to_unit {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Unit_to_node {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Link {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Group {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Constraint {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Group_entity {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Period {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+System {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Dataset -> Balance: balance
+
+
+Dataset -> Storage: storage
+
+
+Dataset -> Commodity: commodity
+
+
+Dataset -> Unit: unit
+
+
+Dataset -> Node_to_unit: node_to_unit
+
+
+Dataset -> Unit_to_node: unit_to_node
+
+
+Dataset -> Link: link
+
+
+Dataset -> Group: group
+
+
+Dataset -> Constraint: constraint
+
+
+Dataset -> Group_entity: group_entity
+
+
+Dataset -> Solve_pattern: solve_pattern
+
+
+Dataset -> Period: period
+
+
+Dataset -> System: system
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
+
+[cols="1,1,2,1",width=100%]
+|===
+| Name | Type | Description | Inherited from
+
+| <<balance,`balance`>>
+//| [[slots_table.balance]]<<balance,`balance`>>
+| 0..* +
+xref::class/Balance.adoc[`Balance`]
+| _n/a_
+| _n/a_
+
+| <<commodity,`commodity`>>
+//| [[slots_table.commodity]]<<commodity,`commodity`>>
+| 0..* +
+xref::class/Commodity.adoc[`Commodity`]
+| _n/a_
+| _n/a_
+
+| <<constraint,`constraint`>>
+//| [[slots_table.constraint]]<<constraint,`constraint`>>
+| 0..* +
+xref::class/Constraint.adoc[`Constraint`]
+| _n/a_
+| _n/a_
+
+| <<group,`group`>>
+//| [[slots_table.group]]<<group,`group`>>
+| 0..* +
+xref::class/Group.adoc[`Group`]
+| _n/a_
+| _n/a_
+
+| <<group_entity,`group_entity`>>
+//| [[slots_table.group_entity]]<<group_entity,`group_entity`>>
+| 0..* +
+xref::class/Group_entity.adoc[`Group_entity`]
+| _n/a_
+| _n/a_
+
+| <<id,`id`>>
+//| [[slots_table.id]]<<id,`id`>>
+| 0..* +
+https://w3id.org/linkml/Integer[`integer`]
+| +++Dataset level id to distuingish between dataset versions.+++
+| _n/a_
+
+| <<link,`link`>>
+//| [[slots_table.link]]<<link,`link`>>
+| 0..* +
+xref::class/Link.adoc[`Link`]
+| _n/a_
+| _n/a_
+
+| <<node_to_unit,`node_to_unit`>>
+//| [[slots_table.node_to_unit]]<<node_to_unit,`node_to_unit`>>
+| 0..* +
+xref::class/Node_to_unit.adoc[`Node_to_unit`]
+| _n/a_
+| _n/a_
+
+| <<period,`period`>>
+//| [[slots_table.period]]<<period,`period`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| _n/a_
+| _n/a_
+
+| <<solve_pattern,`solve_pattern`>>
+//| [[slots_table.solve_pattern]]<<solve_pattern,`solve_pattern`>>
+| 0..* +
+xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| _n/a_
+| _n/a_
+
+| <<storage,`storage`>>
+//| [[slots_table.storage]]<<storage,`storage`>>
+| 0..* +
+xref::class/Storage.adoc[`Storage`]
+| _n/a_
+| _n/a_
+
+| <<system,`system`>>
+//| [[slots_table.system]]<<system,`system`>>
+| 0..* +
+xref::class/System.adoc[`System`]
+| _n/a_
+| _n/a_
+
+| <<timeline,`timeline`>>
+//| [[slots_table.timeline]]<<timeline,`timeline`>>
+| 0..* +
+https://w3id.org/linkml/Datetime[`datetime`]
+| +++Time steps for which data can be entered in the dataset. Used to validate input data.+++
+| _n/a_
+
+| <<unit,`unit`>>
+//| [[slots_table.unit]]<<unit,`unit`>>
+| 0..* +
+xref::class/Unit.adoc[`Unit`]
+| _n/a_
+| _n/a_
+
+| <<unit_to_node,`unit_to_node`>>
+//| [[slots_table.unit_to_node]]<<unit_to_node,`unit_to_node`>>
+| 0..* +
+xref::class/Unit_to_node.adoc[`Unit_to_node`]
+| _n/a_
+| _n/a_
+|===
+
+'''
+
+
+//[discrete]
+[#balance]
+=== `balance`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Balance.adoc[`Balance`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.balance,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#commodity]
+=== `commodity`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Commodity.adoc[`Commodity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.commodity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#constraint]
+=== `constraint`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Constraint.adoc[`Constraint`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.constraint,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#group]
+=== `group`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Group.adoc[`Group`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.group,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#group_entity]
+=== `group_entity`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Group_entity.adoc[`Group_entity`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.group_entity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#id]
+=== `id`
++++Dataset level id to distuingish between dataset versions.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Integer[`integer`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#link]
+=== `link`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Link.adoc[`Link`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.link,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#node_to_unit]
+=== `node_to_unit`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Node_to_unit.adoc[`Node_to_unit`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.node_to_unit,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#period]
+=== `period`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.period,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#solve_pattern]
+=== `solve_pattern`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.solve_pattern,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#storage]
+=== `storage`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Storage.adoc[`Storage`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.storage,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#system]
+=== `system`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/System.adoc[`System`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.system,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#timeline]
+=== `timeline`
++++Time steps for which data can be entered in the dataset. Used to validate input data.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Datetime[`datetime`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.timeline,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#unit]
+=== `unit`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Unit.adoc[`Unit`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.unit,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#unit_to_node]
+=== `unit_to_node`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Unit_to_node.adoc[`Unit_to_node`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.unit_to_node,&#10548;>>
+--
+////
+
+
+
+
+
+== Used by
+
+
+This class is not used by any other classes as the range of a slot.

@@ -1,0 +1,49 @@
+= `InvestmentMethod`
+:toclevels: 4
+
+
++++Choice of investment method.+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `no_limits`
+| n/a
+| n/a
+
+| `not_allowed`
+| n/a
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/HasInvestments.adoc[`HasInvestments`] | xref::class/HasInvestments.adoc#investment_method[`investment_method`]
+
+
+|===
+

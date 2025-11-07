@@ -30,17 +30,24 @@
 |===
 | Name | Type | Description | Inherited from
 
+| <<commodity_type,`commodity_type`>>
+//| [[slots_table.commodity_type]]<<commodity_type,`commodity_type`>>
+| 1..* +
+xref::enumeration/CommodityType.adoc[`CommodityType`]
+| +++Type of a commodity+++
+| _n/a_
+
 | <<price_per_unit,`price_per_unit`>>
 //| [[slots_table.price_per_unit]]<<price_per_unit,`price_per_unit`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Price (in currency_year denomination) per unit of the product being bought or sold.+++
+https://w3id.org/linkml/String[`string`]
+| +++Price (in dataset currency using reference_year denomination) per unit of the product being bought or sold.+++
 | _n/a_
 
 | <<node_type,`node_type`>>
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
-xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+xref::enumeration/NodeType.adoc[`NodeType`]
 | +++Limits allowed types: Balance, Storage, Commodity+++
 | xref::class/Node.adoc[`Node`]
 
@@ -101,6 +108,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.alternative_names,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#commodity_type]
+=== `commodity_type`
++++Type of a commodity+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 1..*
+| Type
+| xref::enumeration/CommodityType.adoc[`CommodityType`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.commodity_type,&#10548;>>
 --
 ////
 
@@ -176,7 +209,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+| xref::enumeration/NodeType.adoc[`NodeType`]
 
 | Inherited from
 | xref::class/Node.adoc[`Node`]
@@ -195,7 +228,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#price_per_unit]
 === `price_per_unit`
-+++Price (in currency_year denomination) per unit of the product being bought or sold.+++
++++Price (in dataset currency using reference_year denomination) per unit of the product being bought or sold.+++
 
 
 [cols="h,4",width=65%]
@@ -205,7 +238,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -259,7 +292,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#commodity[`commodity`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#commodity[`commodity`]
 
 
 |===

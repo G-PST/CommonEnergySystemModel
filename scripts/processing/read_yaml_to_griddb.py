@@ -1,5 +1,5 @@
 import pandas as pd
-import generated.cesm as cesm  # This is the generated class
+from generated.cesm_pydantic import Dataset  # This is the generated class
 from linkml_runtime.loaders import yaml_loader
 from linkml_runtime.utils.introspection import package_schemaview
 from core.linkml_to_dataframes import yaml_to_df
@@ -12,10 +12,10 @@ griddb_sql_schema_path="src/transformers/griddb/cesm_v0.1.0/v0.1.0/schema.sql"
 output_db_path="griddb.sqlite"
 
 # Load your data
-database = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=cesm.Database)
+dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset)
 
 # Extract all DataFrames
-cesm_dfs = yaml_to_df(database, schema_path=schema_path)
+cesm_dfs = yaml_to_df(dataset, schema_path=schema_path)
 
 # Transform from CESM to something closer to Griddb (using configuration file)
 # griddb_partial = transform_data(cesm, 

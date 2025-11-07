@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Port :: Energy System Model</title>
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Port.html">
-    <link rel="prev" href="Node_to_unit.html">
+    <link rel="prev" href="PeriodFloat.html">
     <link rel="next" href="Solve_pattern.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
@@ -77,7 +77,10 @@
     <span class="nav-text">Classes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Database.html">Database (root)</a>
+    <a class="nav-link" href="Dataset.html">Dataset (root)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Any.html">Any</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Balance.html">Balance</a>
@@ -86,13 +89,19 @@
     <a class="nav-link" href="Commodity.html">Commodity</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Constraint.html">Constraint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="EfficiencyValue.html">EfficiencyValue</a>
+    <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Entity.html">Entity</a>
+    <a class="nav-link" href="Group.html">Group</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Group_entity.html">Group_entity</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
@@ -115,6 +124,12 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Period.html">Period</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="PeriodFloat.html">PeriodFloat</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="Port.html">Port</a>
   </li>
@@ -126,9 +141,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="System.html">System</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="TimeSeriesValues.html">TimeSeriesValues</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
@@ -143,22 +155,31 @@
     <span class="nav-text">Enumerations</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/conversion_method_enum.html">conversion_method_enum</a>
+    <a class="nav-link" href="../enumeration/CommodityType.html">CommodityType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/flow_scaling_method_enum.html">flow_scaling_method_enum</a>
+    <a class="nav-link" href="../enumeration/ConversionMethod.html">ConversionMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/investment_method_enum.html">investment_method_enum</a>
+    <a class="nav-link" href="../enumeration/Equality.html">Equality</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
+    <a class="nav-link" href="../enumeration/FlowScalingMethod.html">FlowScalingMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
+    <a class="nav-link" href="../enumeration/GroupType.html">GroupType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
+    <a class="nav-link" href="../enumeration/InvestmentMethod.html">InvestmentMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/NodeType.html">NodeType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
   </li>
 </ul>
   </li>
@@ -256,7 +277,7 @@
 <div class="sectionbody">
 <div class="imageblock kroki">
 <div class="content">
-<img src="http://fruit.ritger.nl:9000/d2/svg/eNrFUUFqwzAQvOcVi3tJDwbHoUmrQy8llB4K_UGQ5ZUt7EhmrTQNxX-vLNtJHFqSS6jAwjOrXc2MPjnVDL4nAGkcCqOlyjoIUPGUQRy5_2bSTD4MWV-o7b7E_ohUZckguBN-BZ6rc56aHQNLW-x73Vppq-z-Pwd0DsJn6CYxqM2WBK413-BvVaWLoVZihtqFEQTH-9lIgCWu64oTattJsGQKPOcb92Wk0pDMzqU-H6Aw5XajHRMPTMYrBrM2e42cGCTGWrMJSWV5O0ihWMyeFo9r12noIOxM2jGddIZLEQc9O4hLSi6KERfuVGpzd7NnG78PVORRjq2EHjanUix-OT54W714DFOXJFJFqsb7g7ycV20q7uiofRld6wSFkCK5oRMnZeRkGcH01T3JBQ_xPH641oOUMkF5Mw9eyomHFsP0nVOB9k8XzQ_NRh0y?theme=4" alt="Associated classes">
+<img src="http://fruit.ritger.nl:9000/d2/svg/eNrVUstqwzAQvOcrhHtJDwbHoUmrQ6GUUHoo9A-CLK9sYUcy682L4n-v_ErikNJcQqnARjO7K82sdiOw5OxrxFgc-tIapZMWMlaImLMwcPtqVI0-LVITKGmfQ5eidJ5z5t3JZnkNV6YitlvOCNfQ1bq1MKRp_5cHvJj_Wt323n9mbQ84K-0aJVwKaJOd0O5azrTZQEkrMLSUtqTzsNI7iC9GLKWAS1sACtLWiLzPyiEB42bD846m-MAVoTBlIdBd2voitBmc85X7EtSxj3brhnDaQ2nz9co4JuyZRBScTepRNCCQs8gS2ZWPOknrgzTI2eRp9ugE5hYPws6kHVseT2AuQ69je3FRLmQ24Pytjil1Nzds1fx7KmhQCrWEDlanUgh2jvfeF68NZmP3RoAF6hLuD_JSUdRdcamD8nlwrROQUsnohk6clIGTecDGb-5JfvEQTsOHaz0opSJQN_PQSDnxUGM2_hCYAf3oovoGK6Zq_Q==?theme=4" alt="Associated classes">
 </div>
 <div class="title">Figure 1. Associated classes</div>
 </div>
@@ -284,28 +305,42 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#investment_cost"><code>investment_cost</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#constraint_flow_coefficient"><code>constraint_flow_coefficient</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Price (in currency_year denomination) per kW.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiplier between constraints and the flow. Map of constraints and respective coefficients.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fixed_cost"><code>fixed_cost</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#investment_cost"><code>investment_cost</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overnight (in dataset currency using reference_year denomination) per kW.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#other_operational_cost"><code>other_operational_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cost (in currency_year denomination) per unit of the product flowing through</p></td>
+<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink_name"><code>sink_name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sink"><code>sink</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
 <a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the sink entity (Unit or Node).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source_name"><code>source_name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source"><code>source</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1..*<br>
 <a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the source entity (Unit or Node).</p></td>
@@ -399,6 +434,32 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="constraint_flow_coefficient"><a class="anchor" href="#constraint_flow_coefficient"></a><code>constraint_flow_coefficient</code></h3>
+<div class="paragraph">
+<p>Multiplier between constraints and the flow. Map of constraints and respective coefficients.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="description"><a class="anchor" href="#description"></a><code>description</code></h3>
 <div class="paragraph">
 <p>Description of the entity.</p>
@@ -429,9 +490,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="investment_cost"><a class="anchor" href="#investment_cost"></a><code>investment_cost</code></h3>
+<h3 id="fixed_cost"><a class="anchor" href="#fixed_cost"></a><code>fixed_cost</code></h3>
 <div class="paragraph">
-<p>Price (in currency_year denomination) per kW.</p>
+<p>Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -449,7 +510,33 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="investment_cost"><a class="anchor" href="#investment_cost"></a><code>investment_cost</code></h3>
+<div class="paragraph">
+<p>Overnight (in dataset currency using reference_year denomination) per kW.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -487,7 +574,7 @@
 <div class="sect2">
 <h3 id="other_operational_cost"><a class="anchor" href="#other_operational_cost"></a><code>other_operational_cost</code></h3>
 <div class="paragraph">
-<p>Cost (in currency_year denomination) per unit of the product flowing through</p>
+<p>Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -505,7 +592,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -541,7 +628,7 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="sink_name"><a class="anchor" href="#sink_name"></a><code>sink_name</code></h3>
+<h3 id="sink"><a class="anchor" href="#sink"></a><code>sink</code></h3>
 <div class="paragraph">
 <p>Name of the sink entity (Unit or Node).</p>
 </div>
@@ -567,7 +654,7 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="source_name"><a class="anchor" href="#source_name"></a><code>source_name</code></h3>
+<h3 id="source"><a class="anchor" href="#source"></a><code>source</code></h3>
 <div class="paragraph">
 <p>Name of the source entity (Unit or Node).</p>
 </div>
@@ -603,7 +690,7 @@
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="Node_to_unit.html">Node_to_unit</a></span>
+  <span class="prev"><a href="PeriodFloat.html">PeriodFloat</a></span>
   <span class="next"><a href="Solve_pattern.html">Solve_pattern</a></span>
 </nav>
 </article>

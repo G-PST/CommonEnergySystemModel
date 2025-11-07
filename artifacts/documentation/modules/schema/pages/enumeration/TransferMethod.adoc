@@ -1,0 +1,45 @@
+= `TransferMethod`
+:toclevels: 4
+
+
++++How to transfer between the two links.+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `regular_linear`
+| n/a
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Link.adoc[`Link`] | xref::class/Link.adoc#transfer_method[`transfer_method`]
+
+
+|===
+

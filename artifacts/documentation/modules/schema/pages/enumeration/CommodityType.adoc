@@ -1,0 +1,49 @@
+= `CommodityType`
+:toclevels: 4
+
+
++++Limits allowed commodity types+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `emission`
+| n/a
+| n/a
+
+| `fuel`
+| n/a
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Commodity.adoc[`Commodity`] | xref::class/Commodity.adoc#commodity_type[`commodity_type`]
+
+
+|===
+

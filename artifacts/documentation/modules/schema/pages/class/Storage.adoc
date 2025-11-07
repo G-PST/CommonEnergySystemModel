@@ -25,16 +25,113 @@
 
 
 
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+Storage {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Storage -> Any: investment_cost
+
+
+Storage -> Any: fixed_cost
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
 
 [cols="1,1,2,1",width=100%]
 |===
 | Name | Type | Description | Inherited from
 
+| <<fixed_cost,`fixed_cost`>>
+//| [[slots_table.fixed_cost]]<<fixed_cost,`fixed_cost`>>
+| 0..* +
+xref::class/Any.adoc[`Any`]
+| +++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kWh per year.+++
+| _n/a_
+
 | <<investment_cost,`investment_cost`>>
 //| [[slots_table.investment_cost]]<<investment_cost,`investment_cost`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Price (in currency_year denomination) per kWh.+++
+xref::class/Any.adoc[`Any`]
+| +++Overnight cost (in dataset currency using reference_year denomination) per kWh.+++
 | _n/a_
 
 | <<storage_capacity,`storage_capacity`>>
@@ -47,14 +144,14 @@ https://w3id.org/linkml/Float[`float`]
 | <<storages_existing,`storages_existing`>>
 //| [[slots_table.storages_existing]]<<storages_existing,`storages_existing`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+https://w3id.org/linkml/String[`string`]
 | +++Number of pre-existing storage assets at the model start.+++
 | _n/a_
 
 | <<node_type,`node_type`>>
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
-xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+xref::enumeration/NodeType.adoc[`NodeType`]
 | +++Limits allowed types: Balance, Storage, Commodity+++
 | xref::class/Node.adoc[`Node`]
 
@@ -149,9 +246,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#investment_cost]
-=== `investment_cost`
-+++Price (in currency_year denomination) per kWh.+++
+[#fixed_cost]
+=== `fixed_cost`
++++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kWh per year.+++
 
 
 [cols="h,4",width=65%]
@@ -161,7 +258,33 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| xref::class/Any.adoc[`Any`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.fixed_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#investment_cost]
+=== `investment_cost`
++++Overnight cost (in dataset currency using reference_year denomination) per kWh.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Any.adoc[`Any`]
 
 
 |===
@@ -216,7 +339,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+| xref::enumeration/NodeType.adoc[`NodeType`]
 
 | Inherited from
 | xref::class/Node.adoc[`Node`]
@@ -300,7 +423,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -325,7 +448,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#storage[`storage`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#storage[`storage`]
 
 
 |===

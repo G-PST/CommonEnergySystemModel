@@ -23,6 +23,84 @@
 
 
 
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+HasFlow {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+HasFlow -> Any: flow_profile
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
 
 [cols="1,1,2,1",width=100%]
 |===
@@ -38,14 +116,14 @@ https://w3id.org/linkml/Float[`float`]
 | <<flow_profile,`flow_profile`>>
 //| [[slots_table.flow_profile]]<<flow_profile,`flow_profile`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
+xref::class/Any.adoc[`Any`]
 | +++Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.+++
 | _n/a_
 
 | <<flow_scaling_method,`flow_scaling_method`>>
 //| [[slots_table.flow_scaling_method]]<<flow_scaling_method,`flow_scaling_method`>>
 | 0..* +
-xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
+xref::enumeration/FlowScalingMethod.adoc[`FlowScalingMethod`]
 | +++How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.+++
 | _n/a_
 |===
@@ -92,7 +170,7 @@ xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/String[`string`]
+| xref::class/Any.adoc[`Any`]
 
 
 |===
@@ -118,7 +196,7 @@ xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/flow_scaling_method_enum.adoc[`flow_scaling_method_enum`]
+| xref::enumeration/FlowScalingMethod.adoc[`FlowScalingMethod`]
 
 
 |===

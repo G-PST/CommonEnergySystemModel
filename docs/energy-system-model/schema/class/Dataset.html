@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dataset :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Dataset.html">
+    <link rel="prev" href="../index.html">
+    <link rel="next" href="Any.html">
+    <meta name="generator" content="Antora 3.1.9">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Information model</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../index.html">Index</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Classes</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="Dataset.html">Dataset (root)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Any.html">Any</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Balance.html">Balance</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Commodity.html">Commodity</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Constraint.html">Constraint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Entity.html">Entity</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Group.html">Group</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Group_entity.html">Group_entity</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="HasFlow.html">HasFlow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="HasInvestments.html">HasInvestments</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="HasPenalty.html">HasPenalty</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="HasProfiles.html">HasProfiles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Link.html">Link</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Node.html">Node</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Period.html">Period</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="PeriodFloat.html">PeriodFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Port.html">Port</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Solve_pattern.html">Solve_pattern</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Storage.html">Storage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="System.html">System</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Unit.html">Unit</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Unit_to_node.html">Unit_to_node</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Enumerations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/CommodityType.html">CommodityType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/ConversionMethod.html">ConversionMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/Equality.html">Equality</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/FlowScalingMethod.html">FlowScalingMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/GroupType.html">GroupType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/InvestmentMethod.html">InvestmentMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/NodeType.html">NodeType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Energy System Model</a></li>
+    <li>Information model</li>
+    <li>Classes</li>
+    <li><a href="Dataset.html">Dataset (root)</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/Dataset.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page"><code>Dataset</code></h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dataset properties and holder for classes available in the schema.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_class_hierarchy"><a class="anchor" href="#_class_hierarchy"></a>Class hierarchy</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Dataset</code></strong></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
+<div class="sectionbody">
+<div class="imageblock kroki">
+<div class="content">
+<img src="http://fruit.ritger.nl:9000/d2/svg/eNq1VE1r3DAQve-vEO5lezDsOjTb6NBD0xAKbSmEno1WHttiZcnI2myX4v_ekWxvLLchARGDbc3TzPObD_mRmY6SPytCiizlWpWiGkxCWlZQkm1w3a_61RdmWQfW73X2LGH0KoWUlCTvuL8Sj3U1K_SJEmuOMIbj9ZlJpjhEMDxYbVgVw3Crm0YXwp4jOH4pEVOGH7qA3Or8GEfjVDgahXQRNN-EOkSE3xt9bKP6oTprmFA2VkQOysb19UHLR8hbZi0YFcHzE4zQRYyQc2ehiSC4HNb0ExlPHSX7YRHujieK4of8Ity9nBZK-LQMPdwUUuJGOcTnQ06Jmln_xk9TPPBMVujnxpQSic8Q962npHKvpfZpspz4af2f6HFwRpLRWlRpPhlYq7kZeg69p6T17wWLbyuG-zfuSahAoXOSPPWaBs1G0aprmUFRQ7ut0QdY4j3elRFFavQJf-ZXk8m1PDYKkWxCKobF2rpfugJmcCa0tbpJjahqRySAX29vrj_mGKnNRdhC2tMkFlvY8SwZ0UncXjJ-CLD0JApb45c92vvnBG28VYOTMJr9XIqF34gnX-9uvU3WdwrL3hrRwfuLvJq1riroGoTvNq_NBDgv-f4NM0EpQSa7DVnfY0teyCG7yj68NoeyLPdQvlkOXsosB2eT9XdmDmCfzaL_CzW_aZM=?theme=4" alt="Associated classes">
+</div>
+<div class="title">Figure 1. Associated classes</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Inherited from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#balance"><code>balance</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Balance.html" class="xref page"><code>Balance</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#commodity"><code>commodity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Commodity.html" class="xref page"><code>Commodity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#constraint"><code>constraint</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Constraint.html" class="xref page"><code>Constraint</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#group"><code>group</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Group.html" class="xref page"><code>Group</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#group_entity"><code>group_entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Group_entity.html" class="xref page"><code>Group_entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id"><code>id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dataset level id to distuingish between dataset versions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#link"><code>link</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Link.html" class="xref page"><code>Link</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#node_to_unit"><code>node_to_unit</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Node_to_unit.html" class="xref page"><code>Node_to_unit</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#period"><code>period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#solve_pattern"><code>solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#storage"><code>storage</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Storage.html" class="xref page"><code>Storage</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#system"><code>system</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="System.html" class="xref page"><code>System</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#timeline"><code>timeline</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Datetime"><code>datetime</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time steps for which data can be entered in the dataset. Used to validate input data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#unit"><code>unit</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Unit.html" class="xref page"><code>Unit</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#unit_to_node"><code>unit_to_node</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Unit_to_node.html" class="xref page"><code>Unit_to_node</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sect2">
+<h3 id="balance"><a class="anchor" href="#balance"></a><code>balance</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Balance.html" class="xref page"><code>Balance</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="commodity"><a class="anchor" href="#commodity"></a><code>commodity</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Commodity.html" class="xref page"><code>Commodity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="constraint"><a class="anchor" href="#constraint"></a><code>constraint</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Constraint.html" class="xref page"><code>Constraint</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="group"><a class="anchor" href="#group"></a><code>group</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Group.html" class="xref page"><code>Group</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="group_entity"><a class="anchor" href="#group_entity"></a><code>group_entity</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Group_entity.html" class="xref page"><code>Group_entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="id"><a class="anchor" href="#id"></a><code>id</code></h3>
+<div class="paragraph">
+<p>Dataset level id to distuingish between dataset versions.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="link"><a class="anchor" href="#link"></a><code>link</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Link.html" class="xref page"><code>Link</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="node_to_unit"><a class="anchor" href="#node_to_unit"></a><code>node_to_unit</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Node_to_unit.html" class="xref page"><code>Node_to_unit</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="period"><a class="anchor" href="#period"></a><code>period</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="solve_pattern"><a class="anchor" href="#solve_pattern"></a><code>solve_pattern</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="storage"><a class="anchor" href="#storage"></a><code>storage</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Storage.html" class="xref page"><code>Storage</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="system"><a class="anchor" href="#system"></a><code>system</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="System.html" class="xref page"><code>System</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="timeline"><a class="anchor" href="#timeline"></a><code>timeline</code></h3>
+<div class="paragraph">
+<p>Time steps for which data can be entered in the dataset. Used to validate input data.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Datetime"><code>datetime</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="unit"><a class="anchor" href="#unit"></a><code>unit</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Unit.html" class="xref page"><code>Unit</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="unit_to_node"><a class="anchor" href="#unit_to_node"></a><code>unit_to_node</code></h3>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Unit_to_node.html" class="xref page"><code>Unit_to_node</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_used_by"><a class="anchor" href="#_used_by"></a>Used by</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This class is not used by any other classes as the range of a slot.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../index.html">Index</a></span>
+  <span class="next"><a href="Any.html">Any</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

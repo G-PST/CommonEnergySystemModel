@@ -60,11 +60,47 @@ Entity {
 
 
 
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
 
-Node_to_unit -> Entity: source_name
 
 
-Node_to_unit -> Entity: sink_name
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Node_to_unit -> Entity: source
+
+
+Node_to_unit -> Entity: sink
+
+
+Node_to_unit -> Any: investment_cost
+
+
+Node_to_unit -> Any: fixed_cost
+
+
+Node_to_unit -> Any: other_operational_cost
 
 
 legend: "" {
@@ -127,29 +163,43 @@ https://w3id.org/linkml/Float[`float`]
 | +++Capacity of the port for a single unit.+++
 | xref::class/Port.adoc[`Port`]
 
+| <<constraint_flow_coefficient,`constraint_flow_coefficient`>>
+//| [[slots_table.constraint_flow_coefficient]]<<constraint_flow_coefficient,`constraint_flow_coefficient`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Multiplier between constraints and the flow. Map of constraints and respective coefficients.+++
+| xref::class/Port.adoc[`Port`]
+
+| <<fixed_cost,`fixed_cost`>>
+//| [[slots_table.fixed_cost]]<<fixed_cost,`fixed_cost`>>
+| 0..* +
+xref::class/Any.adoc[`Any`]
+| +++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.+++
+| xref::class/Port.adoc[`Port`]
+
 | <<investment_cost,`investment_cost`>>
 //| [[slots_table.investment_cost]]<<investment_cost,`investment_cost`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Price (in currency_year denomination) per kW.+++
+xref::class/Any.adoc[`Any`]
+| +++Overnight (in dataset currency using reference_year denomination) per kW.+++
 | xref::class/Port.adoc[`Port`]
 
 | <<other_operational_cost,`other_operational_cost`>>
 //| [[slots_table.other_operational_cost]]<<other_operational_cost,`other_operational_cost`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Cost (in currency_year denomination) per unit of the product flowing through+++
+xref::class/Any.adoc[`Any`]
+| +++Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.+++
 | xref::class/Port.adoc[`Port`]
 
-| <<sink_name,`sink_name`>>
-//| [[slots_table.sink_name]]<<sink_name,`sink_name`>>
+| <<sink,`sink`>>
+//| [[slots_table.sink]]<<sink,`sink`>>
 | 1..* +
 xref::class/Entity.adoc[`Entity`]
 | +++Name of the sink entity (Unit or Node).+++
 | xref::class/Port.adoc[`Port`]
 
-| <<source_name,`source_name`>>
-//| [[slots_table.source_name]]<<source_name,`source_name`>>
+| <<source,`source`>>
+//| [[slots_table.source]]<<source,`source`>>
 | 1..* +
 xref::class/Entity.adoc[`Entity`]
 | +++Name of the source entity (Unit or Node).+++
@@ -246,6 +296,35 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
+[#constraint_flow_coefficient]
+=== `constraint_flow_coefficient`
++++Multiplier between constraints and the flow. Map of constraints and respective coefficients.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.constraint_flow_coefficient,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#description]
 === `description`
 +++Description of the entity.+++
@@ -275,9 +354,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#investment_cost]
-=== `investment_cost`
-+++Price (in currency_year denomination) per kW.+++
+[#fixed_cost]
+=== `fixed_cost`
++++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.+++
 
 
 [cols="h,4",width=65%]
@@ -287,7 +366,36 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| xref::class/Any.adoc[`Any`]
+
+| Inherited from
+| xref::class/Port.adoc[`Port`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.fixed_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#investment_cost]
+=== `investment_cost`
++++Overnight (in dataset currency using reference_year denomination) per kW.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Any.adoc[`Any`]
 
 | Inherited from
 | xref::class/Port.adoc[`Port`]
@@ -335,7 +443,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#other_operational_cost]
 === `other_operational_cost`
-+++Cost (in currency_year denomination) per unit of the product flowing through+++
++++Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.+++
 
 
 [cols="h,4",width=65%]
@@ -345,7 +453,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| xref::class/Any.adoc[`Any`]
 
 | Inherited from
 | xref::class/Port.adoc[`Port`]
@@ -391,8 +499,8 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#sink_name]
-=== `sink_name`
+[#sink]
+=== `sink`
 +++Name of the sink entity (Unit or Node).+++
 
 
@@ -414,14 +522,14 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.sink_name,&#10548;>>
+<<slots_table.sink,&#10548;>>
 --
 ////
 
 
 //[discrete]
-[#source_name]
-=== `source_name`
+[#source]
+=== `source`
 +++Name of the source entity (Unit or Node).+++
 
 
@@ -443,7 +551,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.source_name,&#10548;>>
+<<slots_table.source,&#10548;>>
 --
 ////
 
@@ -460,7 +568,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#node_to_unit[`node_to_unit`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#node_to_unit[`node_to_unit`]
 
 
 |===

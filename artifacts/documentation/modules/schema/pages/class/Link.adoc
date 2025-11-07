@@ -59,11 +59,47 @@ Node {
 
 
 
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Any {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
 
 Link -> Node: node_A
 
 
 Link -> Node: node_B
+
+
+Link -> Any: investment_cost
+
+
+Link -> Any: fixed_cost
+
+
+Link -> Any: operational_cost
 
 
 legend: "" {
@@ -126,17 +162,24 @@ https://w3id.org/linkml/Float[`float`]
 | +++Capacity of a single asset (flow or link).+++
 | _n/a_
 
+| <<fixed_cost,`fixed_cost`>>
+//| [[slots_table.fixed_cost]]<<fixed_cost,`fixed_cost`>>
+| 0..* +
+xref::class/Any.adoc[`Any`]
+| +++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.+++
+| _n/a_
+
 | <<investment_cost,`investment_cost`>>
 //| [[slots_table.investment_cost]]<<investment_cost,`investment_cost`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Price (in currency_year denomination) per kW.+++
+xref::class/Any.adoc[`Any`]
+| +++Price (in dataset currency using reference_year denomination) per kW.+++
 | _n/a_
 
 | <<links_existing,`links_existing`>>
 //| [[slots_table.links_existing]]<<links_existing,`links_existing`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+https://w3id.org/linkml/String[`string`]
 | +++Number of pre-existing links at the model start+++
 | _n/a_
 
@@ -154,10 +197,17 @@ xref::class/Node.adoc[`Node`]
 | +++Second node of a bidirectional link+++
 | _n/a_
 
+| <<operational_cost,`operational_cost`>>
+//| [[slots_table.operational_cost]]<<operational_cost,`operational_cost`>>
+| 0..* +
+xref::class/Any.adoc[`Any`]
+| +++Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.+++
+| _n/a_
+
 | <<transfer_method,`transfer_method`>>
 //| [[slots_table.transfer_method]]<<transfer_method,`transfer_method`>>
 | 0..* +
-xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
+xref::enumeration/TransferMethod.adoc[`TransferMethod`]
 | +++How to transfer between the two links.+++
 | _n/a_
 
@@ -278,9 +328,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#investment_cost]
-=== `investment_cost`
-+++Price (in currency_year denomination) per kW.+++
+[#fixed_cost]
+=== `fixed_cost`
++++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.+++
 
 
 [cols="h,4",width=65%]
@@ -290,7 +340,33 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| xref::class/Any.adoc[`Any`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.fixed_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#investment_cost]
+=== `investment_cost`
++++Price (in dataset currency using reference_year denomination) per kW.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Any.adoc[`Any`]
 
 
 |===
@@ -316,7 +392,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -411,6 +487,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
+[#operational_cost]
+=== `operational_cost`
++++Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Any.adoc[`Any`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.operational_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#semantic_id]
 === `semantic_id`
 +++Optional id for semantic web integration.+++
@@ -452,7 +554,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/transfer_method_enum.adoc[`transfer_method_enum`]
+| xref::enumeration/TransferMethod.adoc[`TransferMethod`]
 
 
 |===
@@ -477,7 +579,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#link[`link`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#link[`link`]
 
 
 |===

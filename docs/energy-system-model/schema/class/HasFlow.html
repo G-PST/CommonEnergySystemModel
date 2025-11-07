@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>HasFlow :: Energy System Model</title>
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/HasFlow.html">
-    <link rel="prev" href="Entity.html">
+    <link rel="prev" href="Group_entity.html">
     <link rel="next" href="HasInvestments.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../../_/css/site.css">
@@ -77,7 +77,10 @@
     <span class="nav-text">Classes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Database.html">Database (root)</a>
+    <a class="nav-link" href="Dataset.html">Dataset (root)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Any.html">Any</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Balance.html">Balance</a>
@@ -86,13 +89,19 @@
     <a class="nav-link" href="Commodity.html">Commodity</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Constraint.html">Constraint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="EfficiencyValue.html">EfficiencyValue</a>
+    <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Entity.html">Entity</a>
+    <a class="nav-link" href="Group.html">Group</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Group_entity.html">Group_entity</a>
   </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
@@ -116,6 +125,12 @@
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Period.html">Period</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="PeriodFloat.html">PeriodFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -126,9 +141,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="System.html">System</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="TimeSeriesValues.html">TimeSeriesValues</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
@@ -143,22 +155,31 @@
     <span class="nav-text">Enumerations</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/conversion_method_enum.html">conversion_method_enum</a>
+    <a class="nav-link" href="../enumeration/CommodityType.html">CommodityType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/flow_scaling_method_enum.html">flow_scaling_method_enum</a>
+    <a class="nav-link" href="../enumeration/ConversionMethod.html">ConversionMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/investment_method_enum.html">investment_method_enum</a>
+    <a class="nav-link" href="../enumeration/Equality.html">Equality</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
+    <a class="nav-link" href="../enumeration/FlowScalingMethod.html">FlowScalingMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
+    <a class="nav-link" href="../enumeration/GroupType.html">GroupType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
+    <a class="nav-link" href="../enumeration/InvestmentMethod.html">InvestmentMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/NodeType.html">NodeType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
   </li>
 </ul>
   </li>
@@ -237,6 +258,12 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
+<div class="imageblock kroki">
+<div class="content">
+<img src="http://fruit.ritger.nl:9000/d2/svg/eNq1kd9qgzAUxu_7FAd3010I1rJ2y8VgjO7PxZ6hxHiiQZtITOfK8N13TLWthbHCaEDx-5KT8_uOn9zWDL4nAGkcCqOlyvYSoOIpgzii73bSTt54_VKaxu_Vbldif0qqsmQQ3Ai_Au_VOU9Nw8DZLfbltJ707h_VB4DwEegmBpLEurKGrkDaLjFDTcBBcGzCRl2c5bquuEXt9n2cNQWe-y09mVVpaE1Dk5kPUphyu9HkxIOT8YrBrJuPRm4ZJMY5swmtyvLuIoViMXtY3K-p0tgD2BnacQTpDJciDnp3gEtKLoqRFzYqdTl19m7r34MVeZVjh9DL9hTF4Rf5wfvq2WuYrrRDW1lV4-0BL-dVNxU6OipfRpcmQSGkSK6YhFBGSZYRTF_pl_yRIZ7Hd5dmkFImKK-WwaOcZOg0TD-4LdD9mqL9AYdPAhE=?theme=4" alt="Associated classes">
+</div>
+<div class="title">Figure 1. Associated classes</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -263,14 +290,14 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#flow_profile"><code>flow_profile</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#flow_scaling_method"><code>flow_scaling_method</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="../enumeration/flow_scaling_method_enum.html" class="xref page"><code>flow_scaling_method_enum</code></a></p></td>
+<a href="../enumeration/FlowScalingMethod.html" class="xref page"><code>FlowScalingMethod</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
@@ -324,7 +351,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -350,7 +377,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/flow_scaling_method_enum.html" class="xref page"><code>flow_scaling_method_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/FlowScalingMethod.html" class="xref page"><code>FlowScalingMethod</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -366,7 +393,7 @@
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="Entity.html">Entity</a></span>
+  <span class="prev"><a href="Group_entity.html">Group_entity</a></span>
   <span class="next"><a href="HasInvestments.html">HasInvestments</a></span>
 </nav>
 </article>

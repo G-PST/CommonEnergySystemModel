@@ -2,7 +2,7 @@
 :toclevels: 4
 
 
-+++Defines a sequence of solves and the properties of each solve.+++
++++Defines the properties of each solve pattern.+++
 
 
 [cols="h,3",width=65%]
@@ -24,30 +24,191 @@
 
 
 
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Period {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Period {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Period {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+Solve_pattern -> Period: periods_realise_investments
+
+
+Solve_pattern -> Period: periods_realise_operations
+
+
+Solve_pattern -> Period: periods_additional_horizon
+
+
+Solve_pattern -> Solve_pattern: next_solve
+
+
+Solve_pattern -> Solve_pattern: contains_solve
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
 
 [cols="1,1,2,1",width=100%]
 |===
 | Name | Type | Description | Inherited from
 
+| <<contains_solve,`contains_solve`>>
+//| [[slots_table.contains_solve]]<<contains_solve,`contains_solve`>>
+| 0..* +
+xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| +++A child solve_pattern to be executed inside of the parent solve_pattern.+++
+| _n/a_
+
 | <<duration,`duration`>>
 //| [[slots_table.duration]]<<duration,`duration`>>
 | 0..* +
 https://w3id.org/linkml/Integer[`integer`]
-| +++Duration of the solve in time steps.+++
+| +++Duration of the solve in time steps. Defaults to full timeline.+++
+| _n/a_
+
+| <<next_solve,`next_solve`>>
+//| [[slots_table.next_solve]]<<next_solve,`next_solve`>>
+| 0..* +
+xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| +++The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.+++
+| _n/a_
+
+| <<periods_additional_horizon,`periods_additional_horizon`>>
+//| [[slots_table.periods_additional_horizon]]<<periods_additional_horizon,`periods_additional_horizon`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| +++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+| _n/a_
+
+| <<periods_realise_investments,`periods_realise_investments`>>
+//| [[slots_table.periods_realise_investments]]<<periods_realise_investments,`periods_realise_investments`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| +++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+| _n/a_
+
+| <<periods_realise_operations,`periods_realise_operations`>>
+//| [[slots_table.periods_realise_operations]]<<periods_realise_operations,`periods_realise_operations`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| +++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
 | _n/a_
 
 | <<solve_mode,`solve_mode`>>
 //| [[slots_table.solve_mode]]<<solve_mode,`solve_mode`>>
 | 0..* +
-xref::enumeration/solve_mode_enum.adoc[`solve_mode_enum`]
+xref::enumeration/SolveMode.adoc[`SolveMode`]
 | +++Choice of solve process handled within the model.+++
 | _n/a_
 
 | <<start_time,`start_time`>>
 //| [[slots_table.start_time]]<<start_time,`start_time`>>
 | 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Start time of the solve - needs to match a value in the timeline.+++
+https://w3id.org/linkml/String[`string`]
+| +++Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.+++
 | _n/a_
 
 | <<time_resolution,`time_resolution`>>
@@ -119,6 +280,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
+[#contains_solve]
+=== `contains_solve`
++++A child solve_pattern to be executed inside of the parent solve_pattern.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.contains_solve,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#description]
 === `description`
 +++Description of the entity.+++
@@ -150,7 +337,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#duration]
 === `duration`
-+++Duration of the solve in time steps.+++
++++Duration of the solve in time steps. Defaults to full timeline.+++
 
 
 [cols="h,4",width=65%]
@@ -203,6 +390,110 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
+[#next_solve]
+=== `next_solve`
++++The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.next_solve,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#periods_additional_horizon]
+=== `periods_additional_horizon`
++++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.periods_additional_horizon,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#periods_realise_investments]
+=== `periods_realise_investments`
++++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.periods_realise_investments,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#periods_realise_operations]
+=== `periods_realise_operations`
++++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.periods_realise_operations,&#10548;>>
+--
+////
+
+
+//[discrete]
 [#semantic_id]
 === `semantic_id`
 +++Optional id for semantic web integration.+++
@@ -244,7 +535,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/solve_mode_enum.adoc[`solve_mode_enum`]
+| xref::enumeration/SolveMode.adoc[`SolveMode`]
 
 
 |===
@@ -260,7 +551,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#start_time]
 === `start_time`
-+++Start time of the solve - needs to match a value in the timeline.+++
++++Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.+++
 
 
 [cols="h,4",width=65%]
@@ -270,7 +561,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Integer[`integer`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -321,7 +612,15 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#solve_pattern[`solve_pattern`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#solve_pattern[`solve_pattern`]
+
+
+
+| xref::class/Solve_pattern.adoc[`Solve_pattern`] | xref::class/Solve_pattern.adoc#contains_solve[`contains_solve`]
+
+
+
+| xref::class/System.adoc[`System`] | xref::class/System.adoc#solve_order[`solve_order`]
 
 
 |===

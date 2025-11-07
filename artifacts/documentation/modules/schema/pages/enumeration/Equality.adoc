@@ -1,0 +1,51 @@
+= `Equality`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `equal`
+| n/a
+| n/a
+
+| `greater_than`
+| n/a
+| n/a
+
+| `less_than`
+| n/a
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Constraint.adoc[`Constraint`] | xref::class/Constraint.adoc#sense[`sense`]
+
+
+|===
+

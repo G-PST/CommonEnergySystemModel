@@ -31,14 +31,14 @@
 | <<profile_limit_lower,`profile_limit_lower`>>
 //| [[slots_table.profile_limit_lower]]<<profile_limit_lower,`profile_limit_lower`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
+https://w3id.org/linkml/Float[`float`]
 | _n/a_
 | _n/a_
 
 | <<profile_limit_upper,`profile_limit_upper`>>
 //| [[slots_table.profile_limit_upper]]<<profile_limit_upper,`profile_limit_upper`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
+https://w3id.org/linkml/Float[`float`]
 | _n/a_
 | _n/a_
 |===
@@ -59,7 +59,7 @@ https://w3id.org/linkml/String[`string`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/String[`string`]
+| https://w3id.org/linkml/Float[`float`]
 
 
 |===
@@ -85,7 +85,7 @@ https://w3id.org/linkml/String[`string`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/String[`string`]
+| https://w3id.org/linkml/Float[`float`]
 
 
 |===

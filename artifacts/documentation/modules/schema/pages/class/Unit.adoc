@@ -32,14 +32,14 @@
 | <<conversion_method,`conversion_method`>>
 //| [[slots_table.conversion_method]]<<conversion_method,`conversion_method`>>
 | 0..* +
-xref::enumeration/conversion_method_enum.adoc[`conversion_method_enum`]
+xref::enumeration/ConversionMethod.adoc[`ConversionMethod`]
 | +++Choose how the unit converts inputs to outputs+++
 | _n/a_
 
 | <<units_existing,`units_existing`>>
 //| [[slots_table.units_existing]]<<units_existing,`units_existing`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+https://w3id.org/linkml/String[`string`]
 | +++Number of pre-existing conversion units at the model start.+++
 | _n/a_
 
@@ -117,7 +117,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/conversion_method_enum.adoc[`conversion_method_enum`]
+| xref::enumeration/ConversionMethod.adoc[`ConversionMethod`]
 
 
 |===
@@ -230,7 +230,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -255,7 +255,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#unit[`unit`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#unit[`unit`]
 
 
 |===

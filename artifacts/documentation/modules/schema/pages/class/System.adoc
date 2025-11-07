@@ -24,6 +24,84 @@
 
 
 
+.Associated classes
+[d2,svg,theme=4]
+----
+vars: {
+  d2-config: {
+    pad: 20
+  }
+}
+System {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+Solve_pattern {
+  style {
+    fill: "#cccccc"
+    shadow: true
+  }
+}
+
+
+
+
+System -> Solve_pattern: solve_order
+
+
+legend: "" {
+  style: {
+    fill: transparent
+    stroke: transparent
+  }
+  grid-rows: 3
+  grid-columns: 2
+  grid-gap: 10
+  near: bottom-right
+  iec61968_color: "" {
+    style: {
+      fill: "#d1e7c2"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61968_text: "IEC61968 (Enterprise)" {
+    shape: text
+  }
+  iec61970_color: "" {
+    style: {
+      fill: "#eccfcb"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec61970_text: "IEC61970 (Grid)" {
+    shape: text
+  }
+  iec62325_color: "" {
+    style: {
+      fill: "#fffbef"
+      stroke: black
+      stroke-width: 1
+    }
+    width: 10
+    height: 10
+  }
+  iec62325_text: "IEC62325 (Market)" {
+    shape: text
+  }
+}
+----
+
 
 [cols="1,1,2,1",width=100%]
 |===
@@ -32,8 +110,15 @@
 | <<inflation_rate,`inflation_rate`>>
 //| [[slots_table.inflation_rate]]<<inflation_rate,`inflation_rate`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
-| +++Rate of inflation from the currency_year of the database.+++
+https://w3id.org/linkml/String[`string`]
+| +++Rate of inflation for the currency_year of the dataset.+++
+| _n/a_
+
+| <<solve_order,`solve_order`>>
+//| [[slots_table.solve_order]]<<solve_order,`solve_order`>>
+| 0..* +
+xref::class/Solve_pattern.adoc[`Solve_pattern`]
+| _n/a_
 | _n/a_
 
 | <<alternative_names,`alternative_names`>>
@@ -129,7 +214,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#inflation_rate]
 === `inflation_rate`
-+++Rate of inflation from the currency_year of the database.+++
++++Rate of inflation for the currency_year of the dataset.+++
 
 
 [cols="h,4",width=65%]
@@ -139,7 +224,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -210,6 +295,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 
 
+//[discrete]
+[#solve_order]
+=== `solve_order`
+
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Solve_pattern.adoc[`Solve_pattern`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.solve_order,&#10548;>>
+--
+////
+
+
 
 
 
@@ -222,7 +333,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#system[`system`]
+| xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#system[`system`]
 
 
 |===

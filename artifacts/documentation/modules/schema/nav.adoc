@@ -2,7 +2,11 @@
 * Information model
 ** xref::index.adoc[Index]
 ** Classes
-*** xref::class/Database.adoc[Database (root)]
+*** xref::class/Dataset.adoc[Dataset (root)]
+
+*** xref::class/Any.adoc[Any]
+
+
 
 *** xref::class/Balance.adoc[Balance]
 
@@ -12,16 +16,24 @@
 
 
 
+*** xref::class/Constraint.adoc[Constraint]
+
+
+
 
 *** xref::class/DirectionalValue.adoc[DirectionalValue]
 
 
 
-*** xref::class/EfficiencyValue.adoc[EfficiencyValue]
-
-
-
 *** xref::class/Entity.adoc[Entity]
+
+
+
+*** xref::class/Group.adoc[Group]
+
+
+
+*** xref::class/Group_entity.adoc[Group_entity]
 
 
 
@@ -53,6 +65,14 @@
 
 
 
+*** xref::class/Period.adoc[Period]
+
+
+
+*** xref::class/PeriodFloat.adoc[PeriodFloat]
+
+
+
 *** xref::class/Port.adoc[Port]
 
 
@@ -69,10 +89,6 @@
 
 
 
-*** xref::class/TimeSeriesValues.adoc[TimeSeriesValues]
-
-
-
 *** xref::class/Unit.adoc[Unit]
 
 
@@ -83,9 +99,12 @@
 
 
 ** Enumerations
-*** xref::enumeration/conversion_method_enum.adoc[conversion_method_enum]
-*** xref::enumeration/flow_scaling_method_enum.adoc[flow_scaling_method_enum]
-*** xref::enumeration/investment_method_enum.adoc[investment_method_enum]
-*** xref::enumeration/node_type_enum.adoc[node_type_enum]
-*** xref::enumeration/solve_mode_enum.adoc[solve_mode_enum]
-*** xref::enumeration/transfer_method_enum.adoc[transfer_method_enum]
+*** xref::enumeration/CommodityType.adoc[CommodityType]
+*** xref::enumeration/ConversionMethod.adoc[ConversionMethod]
+*** xref::enumeration/Equality.adoc[Equality]
+*** xref::enumeration/FlowScalingMethod.adoc[FlowScalingMethod]
+*** xref::enumeration/GroupType.adoc[GroupType]
+*** xref::enumeration/InvestmentMethod.adoc[InvestmentMethod]
+*** xref::enumeration/NodeType.adoc[NodeType]
+*** xref::enumeration/SolveMode.adoc[SolveMode]
+*** xref::enumeration/TransferMethod.adoc[TransferMethod]

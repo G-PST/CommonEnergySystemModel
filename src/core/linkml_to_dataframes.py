@@ -1,19 +1,20 @@
 import pandas as pd
+import numpy as np
 import inspect
 from typing import Dict, List, Any, Tuple
 import dataclasses
 import yaml
 import typing
 from linkml_runtime.utils.schemaview import SchemaView
+from linkml_runtime.utils.yamlutils import extended_float, extended_int
 from linkml_runtime.loaders import yaml_loader
-import generated.cesm as cesm
 
-def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
+def yaml_to_df(dataset, schema_path: str = None) -> Dict[str, pd.DataFrame]:
     """
-    Extract DataFrames from a LinkML-generated database object.
+    Extract DataFrames from a LinkML-generated dataset object.
     
     Args:
-        database: The database object (generated from LinkML schema)
+        dataset: The dataset object (generated from LinkML schema)
         schema_path: Optional path to schema YAML for time_dimensional annotation detection
     
     Returns:
@@ -23,29 +24,26 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
     """
     
     # Load schema to identify time_dimensional attributes
-    time_dimensional_attrs = set()
     schema = SchemaView(schema_path)
-    if schema_path:
-        time_dimensional_attrs = _extract_time_dimensional_attrs(schema_path)
     
-    # Get timeline from database
-    timeline = getattr(database, 'timeline', None)
+    # Get timeline from dataset
+    timeline = getattr(dataset, 'timeline', None)
     if timeline is None:
-        raise ValueError("Database must have a 'timeline' attribute")
+        raise ValueError("Dataset must have a 'timeline' attribute")
 
     result_dfs = {}
     result_dfs['timeline'] = df = pd.DataFrame(index=pd.to_datetime(timeline))
     
-    # Get all collection attributes from database (excluding 'timeline', 'id', etc.)
-    collection_attrs = _get_collection_attributes(database)
+    # Get all collection attributes from dataset (excluding 'timeline', 'id', etc.)
+    collection_attrs = _get_collection_attributes(dataset)
     
     for attr_name in collection_attrs:
-        collection = getattr(database, attr_name, [])
+        collection = getattr(dataset, attr_name, [])
         if not collection:
             continue
             
         slot_class_name = attr_name  # e.g., 'balance', 'storage'
-        slot = schema.induced_slot(slot_class_name, "Database")        
+        slot = schema.induced_slot(slot_class_name, "Dataset")        
         class_name = slot.range
         dimensions = get_dimensions(schema, class_name)
 
@@ -56,6 +54,8 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
         # Extract single-dimensional and time-series data separately
         single_dim_data = []
         timeseries_data = {}
+        period_data = {}
+        array_data = {}
         
         for entity in collection:
             entity_dict = _entity_to_dict(entity)
@@ -73,15 +73,27 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
                 single_dim_row['id'] = entity_dict['id']
             
             for key, value in entity_dict.items():
-                if _is_timeseries_attribute(key, value, time_dimensional_attrs):
+                datatype = detect_datatype(value)
+                if datatype == "list_of_floats":
                     # Handle time-series data
-                    if value is not None and len(value) > 0:
-                        ts_key = f"{slot_class_name}.ts.{key}"
-                        if ts_key not in timeseries_data:
-                            timeseries_data[ts_key] = {'datetime': pd.to_datetime(timeline)}
-                        
-                        # Use entity name for column name
-                        timeseries_data[ts_key][entity_name] = value
+                    ts_key = f"{slot_class_name}.ts.{key}"
+                    if ts_key not in timeseries_data:
+                        timeseries_data[ts_key] = {'datetime': pd.to_datetime(timeline)}
+                    
+                    # Use entity name for column name
+                    timeseries_data[ts_key][entity_name] = np.array(value, dtype=float)
+                elif datatype == "list_of_strings":
+                    array_key = f"{slot_class_name}.array.{key}"
+                    if array_key not in array_data:
+                        array_data[array_key] = {}
+                    array_data[array_key][entity_name] = np.array(value, dtype=str)
+                elif datatype == "lists_of_strings_and_floats":
+                    map_key = f"{slot_class_name}.map.{key}"
+                    if map_key not in period_data:
+                        period_data[map_key] = {'period': value[0]}
+                    period_data[map_key][entity_name] = pd.to_numeric(value[1])
+                elif datatype == None:
+                    single_dim_row[key] = None
                 else:
                     # Handle single-dimensional data (skip name/id as already added)
                     if key not in ['name', 'id']:
@@ -119,8 +131,46 @@ def yaml_to_df(database, schema_path: str = None) -> Dict[str, pd.DataFrame]:
             result_dfs[ts_key] = df
             if dimensions:
                 dim_names = [d['name'] for d in dimensions]
+        
+        for array_key, array_dict in array_data.items():
+            df = pd.DataFrame(array_dict)
+            if dimensions:
+                df.columns = pd.MultiIndex.from_tuples(
+                    [tuple([col] + col.split('.')) for col in df.columns]
+                )
+                dim_names = ['name'] + [d['name'] for d in dimensions]
+                df.columns.names = dim_names
+            result_dfs[array_key] = df
+            if dimensions:
+                dim_names = [d['name'] for d in dimensions]
     
     return result_dfs
+
+def detect_datatype(value):
+    if isinstance(value, str):
+        return "string"
+    
+    if isinstance(value, (float, int, extended_float, extended_int)):
+        return "float"
+    
+    if isinstance(value, list):
+        # Check for [floats]
+        if isinstance(value[0], (float, int, extended_float, extended_int)):
+            return "list_of_floats"
+        
+        # Check for [strings]
+        if isinstance(value[0], str):
+            return "list_of_strings"
+        
+        # Check for [[strings], [floats]]
+        if (len(value) == 2 and 
+            isinstance(value[0], list) and 
+            isinstance(value[1], list) and
+            isinstance(value[0][0], (str)) and
+            isinstance(value[1][0], (float, int, extended_float, extended_int))):
+            return "lists_of_strings_and_floats"
+    
+    return None  # No match
 
 def get_dimensions(schema, class_name: str):
     """Get dimension info from schema"""
@@ -160,46 +210,18 @@ def get_class_from_field(root_class, field_name):
     return None
 
 
-def _extract_time_dimensional_attrs(schema_path: str) -> set:
-    """Extract attributes marked with time_dimensional: true from schema."""
-    time_dimensional = set()
-    
-    try:
-        with open(schema_path, 'r') as f:
-            schema = yaml.safe_load(f)
-        
-        def check_attributes(obj_dict):
-            if isinstance(obj_dict, dict):
-                if 'attributes' in obj_dict:
-                    for attr_name, attr_def in obj_dict['attributes'].items():
-                        if isinstance(attr_def, dict) and 'annotations' in attr_def:
-                            annotations = attr_def['annotations']
-                            if annotations and 'time_dimensional' in annotations:
-                                time_dimensional.add(attr_name)
-                
-                # Recursively check nested objects
-                for value in obj_dict.values():
-                    check_attributes(value)
-        
-        check_attributes(schema)
-        
-    except Exception as e:
-        print(f"Warning: Could not parse schema file: {e}")
-    
-    return time_dimensional
-
-def _get_collection_attributes(database) -> List[str]:
-    """Get all collection attributes from database object."""
+def _get_collection_attributes(dataset) -> List[str]:
+    """Get all collection attributes from dataset object."""
     collection_attrs = []
     
     # Get all attributes that are lists/collections (excluding special ones)
-    for attr_name in dir(database):
+    for attr_name in dir(dataset):
         if attr_name.startswith('_'):
             continue
         if attr_name in ['timeline', 'id', 'currency_year']:
             continue
             
-        attr_value = getattr(database, attr_name, None)
+        attr_value = getattr(dataset, attr_name, None)
         if isinstance(attr_value, list):
             collection_attrs.append(attr_name)
     
@@ -212,7 +234,7 @@ def _entity_to_dict(entity) -> dict:
     skip_attrs = {
         'semantic_id', 'alternative_names', 'description',
         'node_type', '_inherited_slots', 'class_class_uri', 'class_class_curie',
-        'class_name', 'class_model_uri'
+        'class_name', 'class_model_uri', 'linkml_meta'
     }
     
     entity_dict = {}
@@ -221,6 +243,9 @@ def _entity_to_dict(entity) -> dict:
         if attr_name.startswith('_'):
             continue
         
+        if attr_name.startswith('model_'):
+            continue
+
         # Skip metadata attributes
         if attr_name in skip_attrs:
             continue
@@ -261,7 +286,7 @@ def _is_timeseries_attribute(attr_name: str, value: Any, time_dimensional_attrs:
         return True
     
     # Check if it's a list of numbers (heuristic)
-    if isinstance(value, list) and len(value) > 0:
+    if isinstance(value, list) and len(value) > 1:
         # Check if first few elements are numeric
         sample = value[:min(3, len(value))]
         if all(isinstance(x, (int, float)) for x in sample):
@@ -275,13 +300,13 @@ def example_usage():
     Example of how to use the extractor function.
     """
     from linkml_runtime.loaders import yaml_loader
-    # from your_generated_module import Database  # Import your generated class
+    # from your_generated_module import dataset  # Import your generated class
     
     # Load your data
-    # database = yaml_loader.load("your_data.yaml", target_class=Database)
+    # dataset = yaml_loader.load("your_data.yaml", target_class=dataset)
     
     # Extract DataFrames
-    # dfs = extract_dataframes_from_database(database, schema_path="cesm.yaml")
+    # dfs = extract_dataframes_from_dataset(dataset, schema_path="cesm.yaml")
     
     # Access the results
     # balances_df = dfs.get('balances')

@@ -6,7 +6,7 @@
     <title>Index :: Energy System Model</title>
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html">
     <link rel="prev" href="../index.html">
-    <link rel="next" href="class/Database.html">
+    <link rel="next" href="class/Dataset.html">
     <meta name="generator" content="Antora 3.1.9">
     <link rel="stylesheet" href="../../_/css/site.css">
   </head>
@@ -77,7 +77,10 @@
     <span class="nav-text">Classes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="class/Database.html">Database (root)</a>
+    <a class="nav-link" href="class/Dataset.html">Dataset (root)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="class/Any.html">Any</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/Balance.html">Balance</a>
@@ -86,13 +89,19 @@
     <a class="nav-link" href="class/Commodity.html">Commodity</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="class/Constraint.html">Constraint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="class/EfficiencyValue.html">EfficiencyValue</a>
+    <a class="nav-link" href="class/Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="class/Entity.html">Entity</a>
+    <a class="nav-link" href="class/Group.html">Group</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="class/Group_entity.html">Group_entity</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/HasFlow.html">HasFlow</a>
@@ -116,6 +125,12 @@
     <a class="nav-link" href="class/Node_to_unit.html">Node_to_unit</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="class/Period.html">Period</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="class/PeriodFloat.html">PeriodFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/Port.html">Port</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -126,9 +141,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/System.html">System</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="class/TimeSeriesValues.html">TimeSeriesValues</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="class/Unit.html">Unit</a>
@@ -143,22 +155,31 @@
     <span class="nav-text">Enumerations</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/conversion_method_enum.html">conversion_method_enum</a>
+    <a class="nav-link" href="enumeration/CommodityType.html">CommodityType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/flow_scaling_method_enum.html">flow_scaling_method_enum</a>
+    <a class="nav-link" href="enumeration/ConversionMethod.html">ConversionMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/investment_method_enum.html">investment_method_enum</a>
+    <a class="nav-link" href="enumeration/Equality.html">Equality</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/node_type_enum.html">node_type_enum</a>
+    <a class="nav-link" href="enumeration/FlowScalingMethod.html">FlowScalingMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/solve_mode_enum.html">solve_mode_enum</a>
+    <a class="nav-link" href="enumeration/GroupType.html">GroupType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="enumeration/transfer_method_enum.html">transfer_method_enum</a>
+    <a class="nav-link" href="enumeration/InvestmentMethod.html">InvestmentMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="enumeration/NodeType.html">NodeType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="enumeration/TransferMethod.html">TransferMethod</a>
   </li>
 </ul>
   </li>
@@ -218,6 +239,10 @@
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Balance.html" class="xref page"><code>Balance</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Nodes that maintain a balance between inputs and outputs in each time step, but do not have a storage.</p></td>
 </tr>
@@ -226,20 +251,28 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Nodes where the model can buy and sell commodities against an exogenous price.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Database.html" class="xref page"><code>Database</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database properties and holder for classes available in the schema.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Constraint.html" class="xref page"><code>Constraint</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constraints define constraints on multiple variables at once</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Dataset.html" class="xref page"><code>Dataset</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dataset properties and holder for classes available in the schema.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/DirectionalValue.html" class="xref page"><code>DirectionalValue</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To which direction the parameter value is applied for in a link.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/EfficiencyValue.html" class="xref page"><code>EfficiencyValue</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Valid formats for the efficiency parameter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Entity.html" class="xref page"><code>Entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Abstract top-level class that contains all other classes (except Dataset).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Entity.html" class="xref page"><code>Entity</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Abstract top-level class that contains all other classes (except Database).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Group.html" class="xref page"><code>Group</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groups define constraints on multiple entities at once</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Group_entity.html" class="xref page"><code>Group_entity</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Makes an entity to be a member of a group</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/HasFlow.html" class="xref page"><code>HasFlow</code></a></p></td>
@@ -270,12 +303,20 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">An input port from a node to a unit.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The properties of the periods available for the model.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/PeriodFloat.html" class="xref page"><code>PeriodFloat</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Port.html" class="xref page"><code>Port</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ports designates an input or an output between a unit and a node.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines a sequence of solves and the properties of each solve.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines the properties of each solve pattern.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Storage.html" class="xref page"><code>Storage</code></a></p></td>
@@ -284,10 +325,6 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/System.html" class="xref page"><code>System</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameters related to the whole system to be modelled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/TimeSeriesValues.html" class="xref page"><code>TimeSeriesValues</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Array of values indexed by Database.timeline</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="class/Unit.html" class="xref page"><code>Unit</code></a></p></td>
@@ -325,27 +362,39 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/conversion_method_enum.html" class="xref page"><code>conversion_method_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/CommodityType.html" class="xref page"><code>CommodityType</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limits allowed commodity types</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/ConversionMethod.html" class="xref page"><code>ConversionMethod</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Choose how the unit converts inputs to outputs</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/flow_scaling_method_enum.html" class="xref page"><code>flow_scaling_method_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/Equality.html" class="xref page"><code>Equality</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/FlowScalingMethod.html" class="xref page"><code>FlowScalingMethod</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">How to use flow_profile and flow_annual.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/investment_method_enum.html" class="xref page"><code>investment_method_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/GroupType.html" class="xref page"><code>GroupType</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Limits allowed group types</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/InvestmentMethod.html" class="xref page"><code>InvestmentMethod</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Choice of investment method.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/node_type_enum.html" class="xref page"><code>node_type_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/NodeType.html" class="xref page"><code>NodeType</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Limits allowed node types: Balance, Storage, Commodity</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/solve_mode_enum.html" class="xref page"><code>solve_mode_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/SolveMode.html" class="xref page"><code>SolveMode</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Choice of solve process handled within the model.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/transfer_method_enum.html" class="xref page"><code>transfer_method_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="enumeration/TransferMethod.html" class="xref page"><code>TransferMethod</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">How to transfer between the two links.</p></td>
 </tr>
 </tbody>
@@ -354,7 +403,7 @@
 </div>
 <nav class="pagination">
   <span class="prev"><a href="../index.html">Energy System Model</a></span>
-  <span class="next"><a href="class/Database.html">Database (root)</a></span>
+  <span class="next"><a href="class/Dataset.html">Dataset (root)</a></span>
 </nav>
 </article>
   </div>

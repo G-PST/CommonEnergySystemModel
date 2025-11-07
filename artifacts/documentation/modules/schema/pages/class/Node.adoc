@@ -35,7 +35,7 @@
 | <<node_type,`node_type`>>
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
-xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+xref::enumeration/NodeType.adoc[`NodeType`]
 | +++Limits allowed types: Balance, Storage, Commodity+++
 | _n/a_
 
@@ -171,7 +171,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/node_type_enum.adoc[`node_type_enum`]
+| xref::enumeration/NodeType.adoc[`NodeType`]
 
 
 |===

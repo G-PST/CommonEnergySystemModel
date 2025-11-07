@@ -1,5 +1,5 @@
 import pandas as pd
-from generated.cesm import Database  # This is the generated class
+from generated.cesm_pydantic import Dataset  # This is the generated class
 from linkml_runtime.loaders import yaml_loader
 from core.linkml_to_dataframes import yaml_to_df
 from core.transform_parameters import transform_data
@@ -36,7 +36,8 @@ def time_to_spine(flextool, cesm):
     solve_periods = {}
     all_periods = []
     for index, solve_pattern in cesm['solve_pattern'].iterrows():
-        periods = solve_pattern['periods_realise_investments'] + solve_pattern['periods_realise_operations'] + solve_pattern['periods_additional_horizon']
+        periods = list(cesm["solve_pattern.array.periods_realise_investments"][index]) \
+                  + list(cesm["solve_pattern.array.periods_realise_operations"][index])
         solve_periods[index] = list(set(periods))
         for period in periods:
             all_periods.append(period)
@@ -51,10 +52,10 @@ def time_to_spine(flextool, cesm):
     return flextool
 
 # Load your data
-database = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Database)
+Dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset)
 
 # Extract all DataFrames
-cesm = yaml_to_df(database, schema_path="model/cesm.yaml")
+cesm = yaml_to_df(Dataset, schema_path="model/cesm.yaml")
 
 # Transform from CESM to FlexTool (using configuration file)
 flextool = transform_data(cesm, 

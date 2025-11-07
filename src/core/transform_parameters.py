@@ -268,7 +268,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
 
         # Check if source class exists
         if source_class not in source_dfs:
-            raise ValueError(f"Could not find source dataframe {source_class}")
+            if is_pivoted:
+                if source_attribute[1][0] == 'ts':
+                    source_dfs[source_class] = source_dfs['timeline']
+            else:
+                raise ValueError(f"Could not find source dataframe {source_class}")
         
         if is_pivoted:
             source_df = source_dfs[source_class]

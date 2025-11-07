@@ -30,14 +30,14 @@
 
 | <<forward,`forward`>>
 //| [[slots_table.forward]]<<forward,`forward`>>
-| 1..* +
+| 0..* +
 https://w3id.org/linkml/Float[`float`]
 | +++The parameter is applied to the forward direction (Node_A --> Node_B).+++
 | _n/a_
 
 | <<reverse,`reverse`>>
 //| [[slots_table.reverse]]<<reverse,`reverse`>>
-| 1..* +
+| 0..* +
 https://w3id.org/linkml/Float[`float`]
 | +++The parameter is applied to the backward direction (Node_B --> Node_A).+++
 | _n/a_
@@ -57,7 +57,7 @@ https://w3id.org/linkml/Float[`float`]
 | URI
 | _n/a_
 | Cardinality
-| 1..*
+| 0..*
 | Type
 | https://w3id.org/linkml/Float[`float`]
 
@@ -83,7 +83,7 @@ https://w3id.org/linkml/Float[`float`]
 | URI
 | _n/a_
 | Cardinality
-| 1..*
+| 0..*
 | Type
 | https://w3id.org/linkml/Float[`float`]
 

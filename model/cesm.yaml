@@ -1,39 +1,42 @@
 id: file:///cesm.yaml
 name: cesm
+description: Common Energy System Model schema
+license: https://creativecommons.org/publicdomain/zero/1.0/
 default_prefix: cesm
 prefixes:
   cesm: file:///cesm.yaml
   linkml: https://w3id.org/linkml/
-  # qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
+  qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)
   # qkind: http://qudt.org/vocab/quantitykind/   # Quantity kinds (Energy, Length, Mass, etc.)
 imports:
   - linkml:types
-default_range: string
-
-# annotations:
-  # time_dimensional:
-    # tag: value
-    # description: "Indicates this parameter has a time dimension aligned with the database timeline"
+default_range: float
 
 classes:
+  Any:
+    class_uri: linkml:Any
+
   Entity:
     abstract: true
-    description: "Abstract top-level class that contains all other classes (except Database)."
+    description: "Abstract top-level class that contains all other classes (except Dataset)."
     attributes:
-        name:
-            identifier: true
-            required: true
-            description: "User-facing unique name identifier."
-            multivalued: false
-        semantic_id:
-            range: uriorcurie
-            description: "Optional id for semantic web integration."
-        alternative_names:
-            multivalued: true
-            description: "List of alternative names and aliases."
-        description:
-            description: "Description of the entity."
+      name:
+        range: string
+        identifier: true
+        required: true
+        description: "User-facing unique name identifier."
+        multivalued: false
+      semantic_id:
+        range: uriorcurie
+        description: "Optional id for semantic web integration."
+      alternative_names:
+        range: string
+        multivalued: true
+        description: "List of alternative names and aliases."
+      description:
+        range: string
+        description: "Description of the entity."
 
   Node:
     is_a: Entity
@@ -42,7 +45,7 @@ classes:
     attributes:
       node_type:
         # designates_type: true
-        range: node_type_enum
+        range: NodeType
         description: "Limits allowed types: Balance, Storage, Commodity"
 
   Balance:
@@ -59,49 +62,67 @@ classes:
       - HasFlow
       - HasPenalty
       - HasInvestments
+    slots:
+      - availability
     attributes:
       storage_capacity:
         range: float
         description: "Capacity of a single storage asset."
         annotations:
+          qudt.ucum_code: "[MW.h]"
           qudt_unit: "unit:MegaW-HR"
       storages_existing:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Number of pre-existing storage assets at the model start."
         annotations:
+          qudt.ucum_code: "[1]"
           qudt_unit: "unit:UNITLESS"
       investment_cost:
-        range: float
-        description: "Price (in currency_year denomination) per kWh."
+        is_a: currency_per_kilowatt-hour
+        range: Any
+        description: "Overnight cost (in dataset currency using reference_year denomination) per kWh."
+      fixed_cost:
+        is_a: currency_per_kilowatt-hour_per_year
+        range: Any
+        description: "Cost of maintaining the asset (in dataset currency using reference_year denomination) per kWh per year."
 
   Commodity:
     is_a: Node
     description: "Nodes where the model can buy and sell commodities against an exogenous price."
     attributes:
       commodity_type:
-        range: commodity_type_enum
+        range: CommodityType
         required: true
         description: "Type of a commodity"
       price_per_unit:
-        range: float
-        description: "Price (in currency_year denomination) per unit of the product being bought or sold."
+        is_a: currency_per_megawatt-hour
+        any_of:
+          - range: float
+          - range: PeriodFloat
+        description: "Price (in dataset currency using reference_year denomination) per unit of the product being bought or sold."
 
   Unit:
     is_a: Entity
     description: "Units convert input(s) to output(s) using a ratio multiplier."
     mixins:
       - HasInvestments
-    attributes:
-      conversion_method:
-        range: conversion_method_enum
-        description: "Choose how the unit converts inputs to outputs"
-      units_existing:
-        range: float
-        description: "Number of pre-existing conversion units at the model start."
-        annotations:
-          qudt_unit: "unit:UNITLESS"
     slots:
       - efficiency
+      - availability
+    attributes:
+      conversion_method:
+        range: ConversionMethod
+        description: "Choose how the unit converts inputs to outputs"
+      units_existing:
+        any_of:
+          - range: float
+          - range: PeriodFloat
+        description: "Number of pre-existing conversion units at the model start."
+        annotations:
+          qudt.ucum_code: "[1]"
+          qudt_unit: "unit:UNITLESS"
 
   Port:
     is_a: Entity
@@ -109,30 +130,46 @@ classes:
     abstract: true
     mixins:
       - HasProfiles
+    slots:
+      - availability
     attributes:
       source:
         range: Entity  # Will be overriden in the sub-class
         required: true
         description: "Name of the source entity (Unit or Node)."
         annotations:
-            is_dimension: true
+          is_dimension: true
       sink:
         range: Entity  # Will be overriden in the sub-class
         required: true
         description: "Name of the sink entity (Unit or Node)."
         annotations:
-            is_dimension: true
+          is_dimension: true
       capacity:
         range: float
         description: "Capacity of the port for a single unit."
         annotations:
+          qudt.ucum_code: "[MW]"
           qudt_unit: "unit:MegaW"
       investment_cost:
-        range: float
-        description: "Price (in currency_year denomination) per kW."
+        is_a: currency_per_kilowatt
+        range: Any
+        description: "Overnight (in dataset currency using reference_year denomination) per kW."
+      fixed_cost:
+        is_a: currency_per_kilowatt_per_year
+        range: Any
+        description: "Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year."
       other_operational_cost:
+        is_a: currency_per_megawatt-hour
+        range: Any
+        description: "Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh."
+      constraint_flow_coefficient:
         range: float
-        description: "Cost (in currency_year denomination) per unit of the product flowing through"
+        multivalued: true
+        description: Multiplier between constraints and the flow. Map of constraints and respective coefficients.
+        annotations:
+          qudt.ucum_code: "[1]"
+          qudt_unit: "unit:UNITLESS"
     # unique_keys:
     #   source_sink:
     #     unique_key_slots:
@@ -150,7 +187,6 @@ classes:
         range: Node
         description: "Sink node of the unit_to_node port."
 
-
   Node_to_unit:
     is_a: Port
     description: "An input port from a node to a unit."
@@ -167,13 +203,15 @@ classes:
     description: "Connects two nodes."
     mixins:
       - HasInvestments
+    slots:
+      - efficiency
     slot_usage:
       efficiency:
         any_of:
           - range: float
-          - range: EfficiencyValue
-    slots:
-      - efficiency
+          - range: float
+            multivalued: true
+          - range: DirectionalValue
     attributes:
       node_A:
         range: Node
@@ -188,21 +226,34 @@ classes:
         annotations:
             is_dimension: true
       transfer_method:
-        range: transfer_method_enum
+        range: TransferMethod
         description: "How to transfer between the two links."
       capacity:
         range: float
         description: "Capacity of a single asset (flow or link)."
         annotations:
+          qudt.ucum_code: "[MW]"
           qudt_unit: "unit:MegaW"
       links_existing:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Number of pre-existing links at the model start"
         annotations:
+          qudt.ucum_code: "[1]"
           qudt_unit: "unit:UNITLESS"
       investment_cost:
-        range: float
-        description: "Price (in currency_year denomination) per kW."
+        is_a: currency_per_kilowatt
+        range: Any
+        description: "Price (in dataset currency using reference_year denomination) per kW."
+      fixed_cost:
+        is_a: currency_per_kilowatt_per_year
+        range: Any
+        description: "Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year."
+      operational_cost:
+        is_a: currency_per_megawatt-hour
+        range: Any
+        description: "Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh."
 
   Period:
     is_a: Entity
@@ -214,12 +265,18 @@ classes:
 
   Group:
     is_a: Entity
-    description: "Groups allow to define constraints that affect multiple entities at once"
+    description: "Groups define constraints on multiple entities at once"
     attributes:
-      group_type: 
-        range: group_type_enum
+      group_type:
+        range: GroupType
         required: true
         description: "Choice of group type"
+      invest_max_total:
+        range: float
+        description: "Maximum investment to the aggregated capacity of set member flows (unit__to_node, node__to_unit, link) and storage capacity. Applies as a sum over all periods. Constant."
+        annotations:
+          qudt.ucum_code: "[MW]"
+          qudt_unit: "unit:MegaW"
 
   Group_entity:
     is_a: Entity
@@ -238,12 +295,24 @@ classes:
         annotations:
             is_dimension: true
 
+  Constraint:
+    is_a: Entity
+    description: "Constraints define constraints on multiple variables at once"
+    attributes:
+      constant:
+        range: float
+        multivalued: true
+        description: "Right hand side of the constraint."
+      sense:
+        range: Equality
+        description: "Is the sense of the constraint equal to, greater than or less than."
+
   Solve_pattern:
     is_a: Entity
     description: "Defines the properties of each solve pattern."
     attributes:
       solve_mode:
-        range: solve_mode_enum
+        range: SolveMode
         description: "Choice of solve process handled within the model."
       periods_realise_investments:
         range: Period
@@ -265,11 +334,13 @@ classes:
         description: "Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline."
         comments:
           - "String to keep the sample simple for now. Will be made to use ISO 8601 format datetime."
+          - "In future, add multiple start-times to allow for representative periods."
       duration:
         range: integer
         description:  "Duration of the solve in time steps. Defaults to full timeline."
         comments:
           - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
+          - "In future, add multiple durations to allow for representative periods."
         # range: string
         # pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
         # description: "Duration of the solve in ISO 8601 format"
@@ -295,9 +366,12 @@ classes:
         multivalued: true
         list_elements_ordered: true
       inflation_rate:
-        description: "Rate of inflation for the currency_year of the database."
-        range: float
+        description: "Rate of inflation for the currency_year of the dataset."
+        any_of:
+          - range: float
+          - range: PeriodFloat
         annotations:
+          qudt.ucum_code: "[10*-2]"
           qudt_unit: "unit:PERCENT"
 
   HasFlow:
@@ -307,19 +381,17 @@ classes:
       flow_annual:
         range: float
         annotations:
+          qudt.ucum_code: "[MW.h]"
           qudt_unit: "unit:MegaW-HR"
         description: "Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction."
       flow_profile:
-        any_of:
-          - range: float
-          - range: TimeSeriesValues
-        multivalued: true
+        range: Any
         annotations:
+          qudt.ucum_code: "[10*-2]"
           qudt_unit: "unit:PERCENT"
-          time_dimensional: true
         description: "Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node."
       flow_scaling_method:
-        range: flow_scaling_method_enum
+        range: FlowScalingMethod
         description: How to use flow_profile and flow_annual. Options are use_profile_directly, scale_to_annual.
 
   HasPenalty:
@@ -327,10 +399,14 @@ classes:
     description: "Mixin for penalty related attributes (penalty_upward, penalty_downward)."
     attributes:
       penalty_upward:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff."
       penalty_downward:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Destroys the commodity into nothingness using a slack variable that causes a penalty of currency_year per unit of destroyed stuff."
 
   HasInvestments:
@@ -338,64 +414,76 @@ classes:
     description: "Mixin for investment related attributes."
     attributes:
       investment_method:
-        range: investment_method_enum
+        range: InvestmentMethod
         description: Choice of investment method.
       discount_rate:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: Discount rate of the investment.
+        annotations:
+          qudt.ucum_code: "[10*-2]"
+          qudt_unit: "unit:PERCENT"
       payback_time:
-        range: float
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: Economic payback time of the investment. Used to annualize investments.
+        annotations:
+          qudt.ucum_code: "[a]"
+          qudt_unit: "unit:YR"
+
 
   HasProfiles:
     mixin: true
     description: "Mixin for profile related attributes."
     attributes:
       profile_limit_upper:
-        any_of:
-          - range: float
-          - range: TimeSeriesValues
+        range: float
         multivalued: true
         annotations:
-          time_dimensional: true
+          qudt.ucum_code: "[1]"
+          qudt_unit: "unit:UNITLESS"
       profile_limit_lower:
-        any_of:
-          - range: float
-          - range: TimeSeriesValues
+        range: float
         multivalued: true
         annotations:
-          time_dimensional: true
+          qudt.ucum_code: "[1]"
+          qudt_unit: "unit:UNITLESS"
 
   DirectionalValue:
     attributes:
       forward:
         range: float
-        required: true
+        multivalued: true
         description: The parameter is applied to the forward direction (Node_A --> Node_B).
       reverse:
         range: float
-        required: true
+        multivalued: true
         description: The parameter is applied to the backward direction (Node_B --> Node_A).
     description: To which direction the parameter value is applied for in a link.
 
-  EfficiencyValue:
-    union_of:
-      - float
-      - DirectionalValue
-    description: "Valid formats for the efficiency parameter."
+  PeriodFloat:
+    attributes:
+      period:
+        range: Period
+        multivalued: true
+      value:
+        range: float
+        multivalued: true
 
-  Database:
+  Dataset:
     tree_root: true
-    description: "Database properties and holder for classes available in the schema."
+    description: "Dataset properties and holder for classes available in the schema."
     attributes:
       id:
         identifier: true
         range: integer
-        description: "Database level id to distuingish between database versions."
+        description: "Dataset level id to distuingish between dataset versions."
       timeline:
         range: datetime
         multivalued: true
-        description: "Time steps for which data can be entered in the database. Used to validate input data."
+        description: "Time steps for which data can be entered in the dataset. Used to validate input data."
       # entity:
       #   range: Entity
       #   multivalued: true
@@ -441,6 +529,11 @@ classes:
         multivalued: true
         inlined_as_list: true
         required: false
+      constraint:
+        range: Constraint
+        multivalued: true
+        inlined_as_list: true
+        required: false
       group_entity:
         range: Group_entity
         multivalued: true
@@ -451,39 +544,132 @@ classes:
         multivalued: true
         inlined_as_list: true
         required: false
+      period:
+        range: Period
+        multivalued: true
+        inlined_as_list: true
+        required: false
       system:
         range: System
         multivalued: true
         inlined_as_list: true
         required: false
     slots:
-      - currency_year
+      - currency
+      - reference_year
       - entity
 
-  TimeSeriesValues:
-    description: "Array of values indexed by Database.timeline"
 
 slots:
   entity:
     range: Entity
     multivalued: true
-    description: "All entities in this database"
-  currency_year:
-    pattern: "^cur:[A-Z]{3}_\\d{4}$"  # e.g., "cur:USD_2023"
-    description: "QUDT currency and reference year for all monetary values in the dataset"
+    description: "All entities in this dataset"
+
+  currency:
+    range: string
+    pattern: "^[A-Z]{3}$"  # e.g., "USD"
+    description: "QUDT currency for all monetary values in the dataset"
+    multivalued: false
+    required: true
+    annotations:
+      qudt.ucum_code: "[currency]"
+      qudt.unit: unit:CCY
     comments:
       - "Currency codes must exist in http://qudt.org/vocab/currency/"
       - "Validation requires external QUDT vocabulary check"
-      - "Maybe LinkML could validate against external vocabulary, but perhaps not well supported yet."
-  efficiency:
-    range: float
-    description: "Multiplier for turning inputs to outputs."
+
+  reference_year:
+    pattern: "^d{4}$"
+    description: "QUDT year for all monetary values in the dataset - real (as opposed to nominal) value for this year"
+    multivalued: false
+    required: true
     annotations:
+      qudt.ucum_code: "[a]"
+      qudt.unit: unit:YR
+
+  currency_per_megawatt:
+    range : Any
+    description: "Monetary value per megawatt of power capacity. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.MW-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:MegaW, exponent: -1
+      meaning: cesm:CCY-PER-MegaW
+
+  currency_per_kilowatt:
+    range: Any
+    description: "Monetary value per kilowatt of power capacity. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.kW-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:KiloW, exponent: -1
+      meaning: cesm:CCY-PER-KiloW
+
+  currency_per_kilowatt_per_year:
+    range: Any
+    description: "Monetary value per kilowatt of energy capacity per year. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.kW-1.a-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:KiloW, exponent: -1
+        - hasUnit: unit:YR, exponent: -1
+      meaning: cesm:CCY-PER-KiloW-YR
+
+  currency_per_megawatt-hour:
+    range: Any
+    description: "Monetary value per megawatt-hour of energy capacity. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.MW-1.h-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:MegaW-HR, exponent: -1
+      meaning: cesm:CCY-PER-MegaW-HR
+
+  currency_per_kilowatt-hour:
+    range: Any
+    description: "Monetary value per kilowatt-hour of energy capacity. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.kW-1.h-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:KiloW-HR, exponent: -1
+      meaning: cesm:CCY-PER-KiloW-HR
+
+  currency_per_kilowatt-hour_per_year:
+    range: Any
+    description: "Monetary value per kilowatt-hour of energy capacity per year. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency.kW-1.h-1.a-1]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+        - hasUnit: unit:KiloW-HR, exponent: -1
+        - hasUnit: unit:YR, exponent: -1
+      meaning: cesm:CCY-PER-KiloW-HR-YR
+
+  efficiency:
+    any_of:
+      - range: float
+      - range: float
+        multivalued: true
+    description: "Multiplier for turning inputs to outputs or for transferring between nodes."
+    annotations:
+      qudt.ucum_code: "[10*-2]"
       qudt_unit: "unit:PERCENT"
 
+  availability:
+    range: float
+    multivalued: true
+    description: "Time series for availability (to represent forced outages)."
+    annotations:
+      qudt.ucum_code: "[10*-2]"
+      qudt_unit: "unit:PERCENT"
 
 enums:
-  flow_scaling_method_enum:
+  FlowScalingMethod:
     permissible_values:
       use_profile_directly:
         text: use_profile_directly
@@ -491,25 +677,25 @@ enums:
         text: scale_to_annual
     description: How to use flow_profile and flow_annual.
 
-  conversion_method_enum:
+  ConversionMethod:
     permissible_values:
       constant_efficiency:
         text: constant_efficiency
     description: "Choose how the unit converts inputs to outputs"
 
-  transfer_method_enum:
+  TransferMethod:
     permissible_values:
       regular_linear:
         text: regular_linear
     description: "How to transfer between the two links."
 
-  solve_mode_enum:
+  SolveMode:
     permissible_values:
       single_solve:
         text: single_solve
     description: "Choice of solve process handled within the model."
 
-  investment_method_enum:
+  InvestmentMethod:
     permissible_values:
       not_allowed:
         text: not_allowed
@@ -517,7 +703,7 @@ enums:
         text: no_limits
     description: Choice of investment method.
 
-  node_type_enum:
+  NodeType:
     permissible_values:
       Balance:
         meaning: cesm:Balance
@@ -527,7 +713,7 @@ enums:
         meaning: cesm:Commodity
     description: "Limits allowed node types: Balance, Storage, Commodity"
 
-  commodity_type_enum:
+  CommodityType:
     permissible_values:
       fuel:
         text: fuel
@@ -535,7 +721,7 @@ enums:
         text: emission
     description: "Limits allowed commodity types"
 
-  group_type_enum:
+  GroupType:
     permissible_values:
       node:
         description: Defines a group of nodes that have shared constraints.
@@ -544,3 +730,12 @@ enums:
       link:
         description: Defines a group of links that have shared constraints.
     description: "Limits allowed group types"
+
+  Equality:
+    permissible_values:
+      equal:
+        description: Left hand side must equal right hand side
+      greater_than:
+        description: Left hand side must be greater than right hand side
+      less_than:
+        description: Left hand side must be less than right hand side

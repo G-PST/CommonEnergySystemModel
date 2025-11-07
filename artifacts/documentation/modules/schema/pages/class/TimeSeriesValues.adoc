@@ -2,7 +2,7 @@
 :toclevels: 4
 
 
-+++Array of values indexed by Database.timeline+++
++++Array of values indexed by Dataset.timeline+++
 
 
 [cols="h,3",width=65%]

@@ -77,7 +77,10 @@
     <span class="nav-text">Classes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Database.html">Database (root)</a>
+    <a class="nav-link" href="Dataset.html">Dataset (root)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Any.html">Any</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Balance.html">Balance</a>
@@ -86,13 +89,19 @@
     <a class="nav-link" href="Commodity.html">Commodity</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Constraint.html">Constraint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="EfficiencyValue.html">EfficiencyValue</a>
+    <a class="nav-link" href="Entity.html">Entity</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Entity.html">Entity</a>
+    <a class="nav-link" href="Group.html">Group</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Group_entity.html">Group_entity</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="HasFlow.html">HasFlow</a>
@@ -116,6 +125,12 @@
     <a class="nav-link" href="Node_to_unit.html">Node_to_unit</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Period.html">Period</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="PeriodFloat.html">PeriodFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Port.html">Port</a>
   </li>
   <li class="nav-item is-current-page" data-depth="3">
@@ -126,9 +141,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="System.html">System</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="TimeSeriesValues.html">TimeSeriesValues</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
@@ -143,22 +155,31 @@
     <span class="nav-text">Enumerations</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/conversion_method_enum.html">conversion_method_enum</a>
+    <a class="nav-link" href="../enumeration/CommodityType.html">CommodityType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/flow_scaling_method_enum.html">flow_scaling_method_enum</a>
+    <a class="nav-link" href="../enumeration/ConversionMethod.html">ConversionMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/investment_method_enum.html">investment_method_enum</a>
+    <a class="nav-link" href="../enumeration/Equality.html">Equality</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/node_type_enum.html">node_type_enum</a>
+    <a class="nav-link" href="../enumeration/FlowScalingMethod.html">FlowScalingMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/solve_mode_enum.html">solve_mode_enum</a>
+    <a class="nav-link" href="../enumeration/GroupType.html">GroupType</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../enumeration/transfer_method_enum.html">transfer_method_enum</a>
+    <a class="nav-link" href="../enumeration/InvestmentMethod.html">InvestmentMethod</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/NodeType.html">NodeType</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
   </li>
 </ul>
   </li>
@@ -206,7 +227,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Defines a sequence of solves and the properties of each solve.</p>
+<p>Defines the properties of each solve pattern.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -244,6 +265,12 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
+<div class="imageblock kroki">
+<div class="content">
+<img src="http://fruit.ritger.nl:9000/d2/svg/eNrVU8tqwzAQvOcrhHtJDwbHoUmrQy8llB4KhX6AUaS1LaJIRlKSPvC_d604D4eWupAcKvBjh93VzKy0ZtZR8jkgRKQxNzqXxTYkpGKCkjTB_3pQD16NWkNWMe_B6pDh_LuCNjeXSlESXfGwooC5kgmzocTbFbRNcL2AlUb86wbnsuJcfU4axfdkK5GSKnxdZoEp6SCTeg3OL0F795cygwDz0uheVUwI2SQzlZXGyg-jv6vqAJRoePOZa7AeyXhOPZPa7QsUFKCRQhQdbKQdH71l2lXMovStk96aBZziNT6FlSK2ZoPXYrwLuVGrpUYk3SEFqygZNZdDA7OUzI33ZhlbWZRNIwl8Mrqb3GZYaeye2Am1w5DFCKY8jVp0R26uGF90sHgjhS9x54DW4b2DkhCV0FBow_qYikeLca-n2UOIyXCm0c7K4oSv9_RKVjWuYGqnfJr0VQKc53x-QSVIpaNkmpDhI47kFw3pOL3pqyHP8znkF9MQqBxpaGIyfGZ2Af5HFfUXMnenuQ==?theme=4" alt="Associated classes">
+</div>
+<div class="title">Figure 1. Associated classes</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -261,24 +288,59 @@
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve"><code>contains_solve</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A child solve_pattern to be executed inside of the parent solve_pattern.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#duration"><code>duration</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Duration of the solve in time steps.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration of the solve in time steps. Defaults to full timeline.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#next_solve"><code>next_solve</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_additional_horizon"><code>periods_additional_horizon</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods from which the model will report investment results and possibly pass to the next solve.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_realise_investments"><code>periods_realise_investments</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods from which the model will report investment results and possibly pass to the next solve.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_realise_operations"><code>periods_realise_operations</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods from which the model will report investment results and possibly pass to the next solve.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#solve_mode"><code>solve_mode</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="../enumeration/solve_mode_enum.html" class="xref page"><code>solve_mode_enum</code></a></p></td>
+<a href="../enumeration/SolveMode.html" class="xref page"><code>SolveMode</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Choice of solve process handled within the model.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#start_time"><code>start_time</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Start time of the solve - needs to match a value in the timeline.</p></td>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
@@ -350,6 +412,32 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="contains_solve"><a class="anchor" href="#contains_solve"></a><code>contains_solve</code></h3>
+<div class="paragraph">
+<p>A child solve_pattern to be executed inside of the parent solve_pattern.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="description"><a class="anchor" href="#description"></a><code>description</code></h3>
 <div class="paragraph">
 <p>Description of the entity.</p>
@@ -382,7 +470,7 @@
 <div class="sect2">
 <h3 id="duration"><a class="anchor" href="#duration"></a><code>duration</code></h3>
 <div class="paragraph">
-<p>Duration of the solve in time steps.</p>
+<p>Duration of the solve in time steps. Defaults to full timeline.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -431,6 +519,110 @@
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Inherited from</p></th>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Entity.html" class="xref page"><code>Entity</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="next_solve"><a class="anchor" href="#next_solve"></a><code>next_solve</code></h3>
+<div class="paragraph">
+<p>The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="periods_additional_horizon"><a class="anchor" href="#periods_additional_horizon"></a><code>periods_additional_horizon</code></h3>
+<div class="paragraph">
+<p>A list of periods from which the model will report investment results and possibly pass to the next solve.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="periods_realise_investments"><a class="anchor" href="#periods_realise_investments"></a><code>periods_realise_investments</code></h3>
+<div class="paragraph">
+<p>A list of periods from which the model will report investment results and possibly pass to the next solve.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="periods_realise_operations"><a class="anchor" href="#periods_realise_operations"></a><code>periods_realise_operations</code></h3>
+<div class="paragraph">
+<p>A list of periods from which the model will report investment results and possibly pass to the next solve.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -486,7 +678,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/solve_mode_enum.html" class="xref page"><code>solve_mode_enum</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../enumeration/SolveMode.html" class="xref page"><code>SolveMode</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -494,7 +686,7 @@
 <div class="sect2">
 <h3 id="start_time"><a class="anchor" href="#start_time"></a><code>start_time</code></h3>
 <div class="paragraph">
-<p>Start time of the solve - needs to match a value in the timeline.</p>
+<p>Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -512,7 +704,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -561,8 +753,16 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Database.html" class="xref page"><code>Database</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Database.html#solve_pattern" class="xref page"><code>solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Dataset.html" class="xref page"><code>Dataset</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Dataset.html#solve_pattern" class="xref page"><code>solve_pattern</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve"><code>contains_solve</code></a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="System.html" class="xref page"><code>System</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="System.html#solve_order" class="xref page"><code>solve_order</code></a></p></td>
 </tr>
 </tbody>
 </table>

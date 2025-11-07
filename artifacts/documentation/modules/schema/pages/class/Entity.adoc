@@ -2,7 +2,7 @@
 :toclevels: 4
 
 
-+++Abstract top-level class that contains all other classes (except Database).+++
++++Abstract top-level class that contains all other classes (except Dataset).+++
 
 
 [cols="h,3",width=65%]
@@ -17,8 +17,12 @@
 
 == Class hierarchy
 * *`Entity`*
+ ** xref::class/Constraint.adoc[`Constraint`]
+ ** xref::class/Group.adoc[`Group`]
+ ** xref::class/Group_entity.adoc[`Group_entity`]
  ** xref::class/Link.adoc[`Link`]
  ** xref::class/Node.adoc[`Node`]
+ ** xref::class/Period.adoc[`Period`]
  ** xref::class/Port.adoc[`Port`]
  ** xref::class/Solve_pattern.adoc[`Solve_pattern`]
  ** xref::class/System.adoc[`System`]
@@ -182,11 +186,11 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Database.adoc[`Database`] | xref::class/Database.adoc#entitie[`entitie`]
+| xref::class/Group_entity.adoc[`Group_entity`] | xref::class/Group_entity.adoc#entity[`entity`]
 
 
 
-| xref::class/Port.adoc[`Port`] | xref::class/Port.adoc#sink_name[`sink_name`]
+| xref::class/Port.adoc[`Port`] | xref::class/Port.adoc#sink[`sink`]
 
 
 |===

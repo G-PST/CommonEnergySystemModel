@@ -1,0 +1,54 @@
+= `Any`
+:toclevels: 4
+
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Class
+
+| URI
+| https://w3id.org/linkml/Any[`linkml:Any`]
+
+
+
+
+|===
+
+== Class hierarchy
+* *`Any`*
+
+
+== Slots
+
+
+This class has no slots.
+
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/HasFlow.adoc[`HasFlow`] | xref::class/HasFlow.adoc#flow_profile[`flow_profile`]
+
+
+
+| xref::class/Link.adoc[`Link`] | xref::class/Link.adoc#operational_cost[`operational_cost`]
+
+
+
+| xref::class/Port.adoc[`Port`] | xref::class/Port.adoc#other_operational_cost[`other_operational_cost`]
+
+
+
+| xref::class/Storage.adoc[`Storage`] | xref::class/Storage.adoc#fixed_cost[`fixed_cost`]
+
+
+|===
+

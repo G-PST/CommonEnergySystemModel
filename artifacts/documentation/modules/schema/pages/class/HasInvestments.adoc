@@ -31,21 +31,21 @@
 | <<discount_rate,`discount_rate`>>
 //| [[slots_table.discount_rate]]<<discount_rate,`discount_rate`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+https://w3id.org/linkml/String[`string`]
 | +++Discount rate of the investment.+++
 | _n/a_
 
 | <<investment_method,`investment_method`>>
 //| [[slots_table.investment_method]]<<investment_method,`investment_method`>>
 | 0..* +
-xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
+xref::enumeration/InvestmentMethod.adoc[`InvestmentMethod`]
 | +++Choice of investment method.+++
 | _n/a_
 
 | <<payback_time,`payback_time`>>
 //| [[slots_table.payback_time]]<<payback_time,`payback_time`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+https://w3id.org/linkml/String[`string`]
 | +++Economic payback time of the investment. Used to annualize investments.+++
 | _n/a_
 |===
@@ -66,7 +66,7 @@ https://w3id.org/linkml/Float[`float`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -92,7 +92,7 @@ https://w3id.org/linkml/Float[`float`]
 | Cardinality
 | 0..*
 | Type
-| xref::enumeration/investment_method_enum.adoc[`investment_method_enum`]
+| xref::enumeration/InvestmentMethod.adoc[`InvestmentMethod`]
 
 
 |===
@@ -118,7 +118,7 @@ https://w3id.org/linkml/Float[`float`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===

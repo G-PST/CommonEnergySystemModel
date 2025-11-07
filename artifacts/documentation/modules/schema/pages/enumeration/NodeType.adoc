@@ -1,0 +1,53 @@
+= `NodeType`
+:toclevels: 4
+
+
++++Limits allowed node types: Balance, Storage, Commodity+++
+
+
+[cols="h,3",width=65%]
+|===
+| Type
+| Enumeration
+
+
+| CIM standard (perspective)
+| IEC61970 (Grid)
+
+
+
+|===
+
+== Values
+
+[cols="1,1,5",width=100%]
+|===
+| Value | URI | Description
+
+| `Balance`
+| file:///cesm.yamlBalance[`cesm:Balance`]
+| n/a
+
+| `Commodity`
+| file:///cesm.yamlCommodity[`cesm:Commodity`]
+| n/a
+
+| `Storage`
+| file:///cesm.yamlStorage[`cesm:Storage`]
+| n/a
+|===
+
+== Used by
+
+
+[cols="1,1",width=65%]
+|===
+| Source class | Slot name
+
+
+
+| xref::class/Node.adoc[`Node`] | xref::class/Node.adoc#node_type[`node_type`]
+
+
+|===
+
