@@ -17,11 +17,7 @@ dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset
 # Extract all DataFrames
 cesm_dfs = yaml_to_df(dataset, schema_path=schema_path)
 
-# Transform from CESM to something closer to Griddb (using configuration file)
-# griddb_partial = transform_data(cesm, 
-#    "transformers/griddb/cesm_v0.1.0/v0.1.0/to_griddb.yaml")
-
-# Process the rest of it
+# Process the transformation
 griddb_dfs = to_griddb("cesm_v0.1.0", "v0.1.0", cesm_dfs)
 
 # Write FlexTool dataset to SQLite (GridDB format)

@@ -133,9 +133,16 @@ def identify_power_grid_nodes(source: Dict[str, pd.DataFrame], errors: Transform
     # Find all entities in these groups
     group_entities = source['group_entity']
     for group in power_grid_groups:
-        if group in group_entities.index.get_level_values('group'):
-            entities = group_entities.loc[group].index.tolist()
+        try:
+            # Access using xs() for multi-level index
+            group_data = group_entities.xs(group, level='group')
+            # Extract entity names from the 'entity' level of the index
+            entities = group_data.index.get_level_values('entity').tolist()
             power_grid_nodes.update(entities)
+        except KeyError:
+            # Group not found in group_entities
+            errors.add_warning(f"Power grid group '{group}' has no entities in group_entity table")
+            continue
     
     return power_grid_nodes
 
@@ -206,7 +213,13 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
         links = source['link']
         arc_pairs = set()
         for idx in links.index:
-            node_a, node_b = idx if isinstance(idx, tuple) else (idx, None)
+            # Link index is always a 3-tuple: (name, node_a, node_b)
+            if isinstance(idx, tuple) and len(idx) == 3:
+                _, node_a, node_b = idx
+            else:
+                errors.add_warning(f"Unexpected link index format (expected 3-tuple): {idx}")
+                continue
+
             if node_b and (node_a, node_b) not in arc_pairs and (node_b, node_a) not in arc_pairs:
                 arc_pairs.add((node_a, node_b))
                 arc_key = f"{node_a}_{node_b}"
@@ -242,10 +255,14 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
     if 'group' in source and 'group_entity' in source:
         group_entities = source['group_entity']
         for group_name in group_entities.index.get_level_values('group').unique():
-            entities = group_entities.loc[group_name]
-            # Check if members are links (simplification: assume they are if not in balance)
-            key = f"interchange_{group_name}"
-            add_entity('transmission_interchanges', 'Arc', key, f"Interchange {group_name}")
+            # Access using xs() for multi-level index
+            try:
+                entities = group_entities.xs(group_name, level='group')
+                # Check if members are links (simplification: assume they are if not in balance)
+                key = f"interchange_{group_name}"
+                add_entity('transmission_interchanges', 'Arc', key, f"Interchange {group_name}")
+            except KeyError:
+                continue
     
     if not entities_data:
         errors.add_error("No entities created from source data")
@@ -331,10 +348,15 @@ def transform_balancing_topologies(source: Dict[str, pd.DataFrame],
             
             for group_name in groups[groups['group_type'] == 'node'].index:
                 if group_name in group_entities.index.get_level_values('group'):
-                    entities = group_entities.loc[group_name].index.tolist()
-                    if balance_name in entities:
-                        area_id = id_gen.get('planning_regions', group_name)
-                        break
+                    try:
+                        # Access using xs() for multi-level index
+                        entities_data = group_entities.xs(group_name, level='group')
+                        entities = entities_data.index.get_level_values('entity').tolist()
+                        if balance_name in entities:
+                            area_id = id_gen.get('planning_regions', group_name)
+                            break
+                    except KeyError:
+                        continue
         
         topologies_data.append({
             'id': topo_id,
@@ -357,10 +379,11 @@ def transform_arcs(source: Dict[str, pd.DataFrame],
     arcs_data = []
     
     for idx in links.index:
-        if isinstance(idx, tuple) and len(idx) == 2:
-            node_a, node_b = idx
+        # Link index is always a 3-tuple: (name, node_a, node_b)
+        if isinstance(idx, tuple) and len(idx) == 3:
+            _, node_a, node_b = idx
         else:
-            errors.add_warning(f"Link index {idx} is not a 2-tuple, skipping")
+            errors.add_warning(f"Link index {idx} is not a 3-tuple, skipping")
             continue
         
         # Deduplicate bidirectional arcs
@@ -410,8 +433,9 @@ def transform_transmission_lines(source: Dict[str, pd.DataFrame],
         line_id = id_gen.get('transmission_lines', link_key)
         
         # Get arc_id
-        if isinstance(idx, tuple) and len(idx) == 2:
-            node_a, node_b = idx
+        # Link index is always a 3-tuple: (name, node_a, node_b)
+        if isinstance(idx, tuple) and len(idx) == 3:
+            _, node_a, node_b = idx
             arc_key = f"{node_a}_{node_b}"
             try:
                 arc_id = id_gen.get('arcs', arc_key)
@@ -424,7 +448,7 @@ def transform_transmission_lines(source: Dict[str, pd.DataFrame],
                     errors.add_warning(f"Arc not found for link {idx}")
                     continue
         else:
-            errors.add_warning(f"Link index {idx} format unexpected")
+            errors.add_warning(f"Link index {idx} format unexpected (expected 3-tuple)")
             continue
         
         # Calculate continuous_rating
@@ -477,7 +501,12 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
         # Filter to power_grid nodes only
         power_grid_connections = []
         for idx in unit_to_nodes.index:
-            source_node, sink_node = idx
+            # unit_to_node index is a 3-tuple: (name, source, sink)
+            if isinstance(idx, tuple) and len(idx) == 3:
+                _, source_node, sink_node = idx
+            else:
+                errors.add_warning(f"unit_to_node index {idx} is not a 3-tuple, skipping")
+                continue
             if sink_node in power_grid_nodes:
                 power_grid_connections.append((idx, sink_node))
         
@@ -506,7 +535,8 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
             
             unit_inputs = node_to_unit[node_to_unit.index.get_level_values('sink') == unit_name]
             for input_idx in unit_inputs.index:
-                input_node, _ = input_idx
+               # node_to_unit index is a 3-tuple: (name, source, sink)
+                _, input_node, _ = input_idx
                 if input_node in commodities.index:
                     if safe_get(commodities, input_node, 'commodity_type') == 'fuel':
                         try:
@@ -551,8 +581,9 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
         # Find link connecting this storage to a balance node
         storage_links = []
         for link_idx in links.index:
-            if isinstance(link_idx, tuple) and len(link_idx) == 2:
-                node_a, node_b = link_idx
+            # Link index is always a 3-tuple: (name, node_a, node_b)
+            if isinstance(link_idx, tuple) and len(link_idx) == 3:
+                _, node_a, node_b = link_idx
                 if node_a == storage_name and node_b in power_grid_nodes:
                     storage_links.append((link_idx, node_b))
                 elif node_b == storage_name and node_a in power_grid_nodes:
