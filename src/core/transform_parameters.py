@@ -146,21 +146,38 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
         source_idx = get_entity_index(source_df)
         
         # Build target entities based on order specification
-        if 'rule' in target_spec and 'order' in target_spec['rule']:
-            order = target_spec['rule']['order']
-            
-            # Build target names according to order spec
-            target_names = []
-            source_names = index_to_names(source_idx)
-            for parts in source_names:
-                target_dims = []
-                for target_dim_spec in order:
-                    # Combine source dimensions
-                    dim_parts = [parts[idx] for idx in target_dim_spec]
-                    target_dims.append('__'.join(dim_parts))
-                target_names.append(target_dims)
-            # Create entity index
-            target_idx = list_of_lists_to_index(target_names)
+        if 'rule' in target_spec:
+            source_names = index_to_names(source_idx).copy()
+            if 'if_parameter' in target_spec['rule']:
+                filtered_source_names = []
+                if_parameters = target_spec['rule']['if_parameter']
+                for if_param in if_parameters:
+                    splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
+                    long_keys = [x for x in splitted_keys if len(x)>2]
+                    df_keys_found = ['.'.join(x) for x in long_keys if x[0] == source_class and x[2] == if_param]
+                    for df_key_found in df_keys_found:
+                        for item in source_names:
+                            if tuple(item) in source_dfs[df_key_found].columns:
+                                filtered_source_names.append(item)
+                    for item in source_names:
+                        if pd.notna(source_df.loc[*item][if_param]):
+                            filtered_source_names.append(item)
+                source_names = filtered_source_names
+            if 'order' in target_spec['rule']:
+                order = target_spec['rule']['order']
+                
+                # Build target names according to order spec
+                target_names = []
+                for parts in source_names:
+                    target_dims = []
+                    for target_dim_spec in order:
+                        # Combine source dimensions
+                        dim_parts = [parts[idx] for idx in target_dim_spec]
+                        target_dims.append('__'.join(dim_parts))
+                    target_names.append(target_dims)
+                # Create entity index
+                target_idx = list_of_lists_to_index(target_names)
+                    
         else:
             target_idx = source_idx
         
@@ -282,8 +299,7 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                 # Use the attribute column
                 source_df = source_dfs[source_class][[source_attribute]]
             else:
-                # Use entire dataframe
-                source_df = source_dfs[source_class]
+                raise ValueError(f"Could not find source parameter {source_attribute} from {source_class}")
     
         # Copy the source as a starting point
         result = source_df.copy()
@@ -308,6 +324,8 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                         result.index = result.index.astype(str)
                     elif target_datatypes[0] == "ts":
                         result.index = pd.to_datetime(result.index)
+                    elif target_datatypes[0] == "array":
+                        result.index = result.index.astype(str)
 
         
         # Apply operations

@@ -3,24 +3,24 @@ timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z", "2023-01-01T02:00:00Z
 balance:
   - name: west
     flow_scaling_method: scale_to_annual
-    flow_annual: 100000.0
-    flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
+    flow_annual: 20000000.0
+    flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
     penalty_upward: 10000.0
   - name: east
     flow_scaling_method: scale_to_annual
-    flow_annual: 80000
+    flow_annual: 15000000
     flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
     penalty_upward: 10000
-  - name: heat
+  - name: north
     flow_scaling_method: use_profile_directly
-    flow_profile: [-30, -40, -50, -60, -70, -80, -90, -100, -120, -150]
+    flow_profile: [-600, -700, -800, -900, -1000, -1100, -1200, -1100, -1050, -900]
     penalty_upward: 10000
 storage:
   - name: battery
     storage_capacity: 750
     storages_existing: 2
     investment_method: no_limits
-    investment_cost: [[y2030], [600.0]]
+    investment_cost: 600.0
     discount_rate: 0.07
     payback_time: 12
     flow_scaling_method: use_profile_directly
@@ -29,7 +29,7 @@ storage:
 commodity:
   - name: biomass
     commodity_type: fuel
-    price_per_unit: 20
+    price_per_unit: 30
   - name: natural_gas
     commodity_type: fuel
     price_per_unit: 25
@@ -62,13 +62,6 @@ unit:
     investment_method: no_limits
     discount_rate: 0.06
     payback_time: 25
-  - name: bio_chp
-    conversion_method: constant_efficiency
-    units_existing: 1
-    efficiency: 0.94
-    investment_method: no_limits
-    discount_rate: 0.06
-    payback_time: 30
   - name: heatpump
     conversion_method: constant_efficiency
     units_existing: 1
@@ -168,7 +161,9 @@ solve_pattern:
     periods_realise_operations: ['y2030']
 period:
   - name: y2030
-    years_represented: 1.0
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
 system:
   - name: test_system
     inflation_rate: 0.03

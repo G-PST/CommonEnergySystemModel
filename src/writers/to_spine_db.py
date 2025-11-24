@@ -54,12 +54,15 @@ def dataframes_to_spine(
         entity_dfs = {}
         ts_dfs = {}
         str_dfs = {}
+        array_dfs = {}
 
         for name, df in dataframes.items():
             if '.ts.' in name:
                 ts_dfs[name] = df
             elif '.str.' in name:
                 str_dfs[name] = df
+            elif '.array.' in name:
+                array_dfs[name] = df
             else:
                 entity_dfs[name] = df
         
@@ -105,6 +108,14 @@ def dataframes_to_spine(
         if str_dfs:
             print("Phase 4: Adding str (map) parameters...")
             _add_strs(db_map, str_dfs, alternative_name)
+            try:
+                db_map.commit_session("Added str parameters")
+            except NothingToCommit:
+                print("No time series parameters to commit")
+        
+        if array_dfs:
+            print("Phase 5: Adding array parameters...")
+            _add_arrays(db_map, array_dfs, alternative_name)
             try:
                 db_map.commit_session("Added str parameters")
             except NothingToCommit:
@@ -450,7 +461,73 @@ def _add_strs(db_map: DatabaseMapping, str_dfs: Dict[str, pd.DataFrame], alterna
             except Exception as e:
                 print(f"  Warning: Could not add str map for {entity_name}: {e}")
 
+def _add_arrays(db_map: DatabaseMapping, array_dfs: Dict[str, pd.DataFrame], alternative_name: str):
+    """Add array parameter values."""
+    from spinedb_api.parameter_value import Array
+    
+    for array_name, df in array_dfs.items():
+        # Parse name: class_name.array.parameter_name
+        parts = array_name.split('.array.')
+        if len(parts) != 2:
+            print(f"  Warning: Invalid array name format: {array_name}")
+            continue
+        
+        class_name = parts[0]
+        param_name = parts[1]
+        
+        # Convert class name if multi-dimensional
+        if '.' in class_name:
+            db_class_name = '__'.join(class_name.split('.'))
+        else:
+            db_class_name = class_name
+        
+        # Add parameter definition if needed
+        try:
+            db_map.add_parameter_definition(
+                entity_class_name=db_class_name,
+                name=param_name
+            )
+        except Exception:
+            pass  # Already exists
+        
+        # Entity names are in columns (for arrays, index is datetime/period, columns are entities)
+        if isinstance(df.columns, pd.MultiIndex):
+            # Multi-dimensional columns: join with '__'
+            entity_names = ['__'.join(map(array, col)) for col in df.columns]
+        else:
+            entity_names = [str(col) for col in df.columns]
+        
+        # Determine index type
+        indexes = df.index.astype(str).tolist() 
+        index_name = df.index.name
+        
+        for i, entity_name in enumerate(entity_names):
+            # Extract values for this entity
+            values = df.iloc[:, i].tolist()
+            
+            # Create Map object
+            map_value = Array(
+                values=values,
+                index_name=index_name
+            )
+            
+            # Convert to database format
+            db_value, value_type = to_database(map_value)
+            
+            try:
+                db_map.add_parameter_value(
+                    entity_class_name=db_class_name,
+                    parameter_definition_name=param_name,
+                    entity_byname=(entity_name,),
+                    alternative_name=alternative_name,
+                    value=db_value,
+                    type=value_type
+                )
+                print(f"  Added array: {db_class_name}.{param_name} for {entity_name}")
+            except Exception as e:
+                print(f"  Warning: Could not add array for {entity_name}: {e}")
 
+                
 # Example usage
 if __name__ == "__main__":
     # Example: Create sample dataframes with new index structure

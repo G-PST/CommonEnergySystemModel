@@ -6,93 +6,93 @@
 --      3. User friendly over peformance, but consider performance always,
 -- WARNING: This script should only be used while testing the schema and should not
 -- be applied to existing dataset since it drops all the information it has.
-
--- Drop all tables in correct order
-DROP TABLE IF EXISTS static_time_series_data;
-DROP TABLE IF EXISTS deterministic_forecast_data;
-DROP TABLE IF EXISTS scenario_time_series_data;
-DROP TABLE IF EXISTS probabilistic_time_series_data;
-DROP TABLE IF EXISTS static_time_series;
-DROP TABLE IF EXISTS loads;
-DROP TABLE IF EXISTS time_series_associations;
-DROP TABLE IF EXISTS supplemental_attributes_association;
-DROP TABLE IF EXISTS supplemental_attributes;
-DROP TABLE IF EXISTS attributes;
-DROP TABLE IF EXISTS operational_data;
-DROP TABLE IF EXISTS hydro_reservoir_connections;
-DROP TABLE IF EXISTS hydro_reservoir;
-DROP TABLE IF EXISTS storage_units;
 DROP TABLE IF EXISTS generation_units;
-DROP TABLE IF EXISTS transport_technologies;
-DROP TABLE IF EXISTS supply_technologies;
-DROP TABLE IF EXISTS storage_technologies;
-DROP TABLE IF EXISTS transmission_interchanges;
-DROP TABLE IF EXISTS transmission_lines;
-DROP TABLE IF EXISTS arcs;
-DROP TABLE IF EXISTS balancing_topologies;
-DROP TABLE IF EXISTS planning_regions;
-DROP TABLE IF EXISTS entities;
-DROP TABLE IF EXISTS entity_types;
-DROP TABLE IF EXISTS fuels;
+
+DROP TABLE IF EXISTS storage_units;
+
 DROP TABLE IF EXISTS prime_mover_types;
 
--- Simplified entity system without categories
-CREATE TABLE entity_types (
-    name text PRIMARY KEY,
-    description text NULL
-);
+DROP TABLE IF EXISTS balancing_topologies;
 
--- Pre-populate entity types
-INSERT INTO entity_types VALUES
-    ('PrimeMovers', 'Prime mover classifications'),
-    ('ThermalFuels', 'Thermal fuel classifications'),
-    ('Area', 'Planning regions and areas'),
-    ('LoadZone', 'Load zones and balancing areas'),
-    ('ACBus', 'AC bus nodes'),
-    ('ThermalStandard', 'Standard thermal generation units'),
-    ('HydroDispatch', 'Dispatchable hydro generation units'),
-    ('RenewableNonDispatch', 'Non-dispatchable renewable units'),
-    ('HydroPumpedStorage', 'Pumped hydro storage units'),
-    ('Arc', 'Network arcs and connections'),
-    ('Line', 'AC transmission lines'),
-    ('SupplementalData', 'Supplemental data attributes'),
-    ('PowerLoad', 'Power load components');
+DROP TABLE IF EXISTS supply_technologies;
 
+DROP TABLE IF EXISTS storage_technologies;
+
+DROP TABLE IF EXISTS transmission_lines;
+
+DROP TABLE IF EXISTS planning_regions;
+
+DROP TABLE IF EXISTS transmission_interchanges;
+
+DROP TABLE IF EXISTS entities;
+
+DROP TABLE IF EXISTS time_series_associations;
+
+DROP TABLE IF EXISTS operational_data;
+
+DROP TABLE IF EXISTS attributes;
+
+DROP TABLE IF EXISTS supplemental_attributes;
+
+DROP TABLE IF EXISTS attributes_associations;
+
+DROP TABLE IF EXISTS arcs;
+
+DROP TABLE IF EXISTS hydro_reservoir;
+
+DROP TABLE IF EXISTS hydro_reservoir_connections;
+
+DROP TABLE IF EXISTS fuels;
+
+DROP TABLE IF EXISTS supplemental_attributes_association;
+
+DROP TABLE IF EXISTS transport_technologies;
+
+-- NOTE: This table should not be interacted directly since it gets populated
+-- automatically.
+-- Table of certain entities of griddb schema.
 CREATE TABLE entities (
     id integer PRIMARY KEY,
+    entity_table text NOT NULL,
     entity_type text NOT NULL,
-    source_table text NOT NULL, -- Which table the entity data comes from
-    name text NULL, -- Common name field
-    description text NULL, -- Optional description field
-    user_data json NULL, -- Application-specific interpretation data
     FOREIGN KEY (entity_type) REFERENCES entity_types (name)
 );
+
+-- Table of possible entity types
+CREATE TABLE entity_types (name text PRIMARY KEY);
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
 -- have a `prime_mover` and `fuel` to classify generators/storage units.
 -- However, users could use any combination of `prime_mover` and `fuel` for
--- their own application.
+-- their own application. The only constraint is that the uniqueness is enforced
+-- by the combination of (prime_mover, fuel)
 -- Categories to classify generating units and supply technologies
 CREATE TABLE prime_mover_types (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    description text NULL
+    id integer PRIMARY KEY,
+    name text NOT NULL,
+    description text NULL,
+    UNIQUE(name)
 );
 
 CREATE TABLE fuels(
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    description text NULL
+    id integer PRIMARY KEY,
+    name text NOT NULL,
+    description text NULL,
+    UNIQUE (name)
 );
 
 -- Investment regions
 CREATE TABLE planning_regions (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     description text NULL
 );
 
 -- Balancing topologies for the system. Could be either buses, or larger
 -- aggregated regions.
 CREATE TABLE balancing_topologies (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     area integer NULL REFERENCES planning_regions (id),
     description text NULL
 );
@@ -102,16 +102,17 @@ CREATE TABLE balancing_topologies (
 -- transmission interchanges, etc.).
 -- Physical connection between entities.
 CREATE TABLE arcs (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    from_id integer NOT NULL,
-    to_id integer NOT NULL,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    from_id integer,
+    to_id integer,
     FOREIGN KEY (from_id) REFERENCES entities (id),
     FOREIGN KEY (to_id) REFERENCES entities (id)
 );
 
 -- Existing transmission lines
 CREATE TABLE transmission_lines (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     arc_id integer,
     continuous_rating real NULL CHECK (continuous_rating >= 0),
     ste_rating real NULL CHECK (ste_rating >= 0),
@@ -126,7 +127,8 @@ CREATE TABLE transmission_lines (
 -- markets.
 -- Transmission interchanges between two balancing topologies or areas
 CREATE TABLE transmission_interchanges (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     arc_id int REFERENCES arcs(id),
     max_flow_from real NOT NULL,
     max_flow_to real NOT NULL
@@ -135,22 +137,25 @@ CREATE TABLE transmission_interchanges (
 -- NOTE: The purpose of this table is to capture data of **existing units only**.
 -- Table of generation units
 CREATE TABLE generation_units (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    prime_mover integer NOT NULL REFERENCES prime_mover_types(id),
-    fuel integer NULL REFERENCES fuels(id),
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL,
+    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
+    fuel text NULL REFERENCES fuels(name),
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     rating real NOT NULL CHECK (rating >= 0),
-    base_power real NOT NULL CHECK (base_power > 0)
-    --CHECK (base_power >= rating)
+    base_power real NOT NULL CHECK (base_power > 0),
+    --CHECK (base_power >= rating),
+    UNIQUE (name)
 ) strict;
 
 -- NOTE: The purpose of this table is to capture data of **existing storage units only**.
 -- Table of energy storage units (including PHES or other kinds),
 CREATE TABLE storage_units (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    prime_mover integer NOT NULL REFERENCES prime_mover_types(id),
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL,
+    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL CHECK (max_capacity > 0),
+    max_capacity real NOT NULL,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -162,15 +167,18 @@ CREATE TABLE storage_units (
     ) DEFAULT 1.0,
     rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating)
+    --CHECK (base_power >= rating),
+    UNIQUE(name)
 ) strict;
 
 CREATE TABLE hydro_reservoir(
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL,
+    UNIQUE(name)
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES generation_units(id),
+    turbine_id integer NOT NULL REFERENCES entities(id),
     reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
 );
 
@@ -178,31 +186,20 @@ CREATE TABLE hydro_reservoir_connections(
 -- investment for expansion problems.
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    prime_mover integer NOT NULL REFERENCES prime_mover_types(id),
-    fuel integer NULL REFERENCES fuels(id),
-    area integer NULL REFERENCES planning_regions (id),
-    balancing_topology integer NULL REFERENCES balancing_topologies (id),
+    id integer PRIMARY KEY REFERENCES entities (id),
+    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
+    fuel text NULL REFERENCES fuels(name),
+    area text NULL REFERENCES planning_regions (name),
+    balancing_topology text NULL REFERENCES balancing_topologies (name),
     scenario text NULL,
     UNIQUE(prime_mover, fuel, scenario)
 );
 
--- Add missing storage technologies table
-CREATE TABLE storage_technologies (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    prime_mover integer NOT NULL REFERENCES prime_mover_types(id),
-    storage_technology_type text NULL,
-    area integer NULL REFERENCES planning_regions (id),
-    balancing_topology integer NULL REFERENCES balancing_topologies (id),
-    scenario text NULL,
-    UNIQUE(prime_mover, storage_technology_type, scenario)
-);
-
 CREATE TABLE transport_technologies(
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
     arc_id integer NULL REFERENCES arcs(id),
     scenario text NULL,
-    UNIQUE(arc_id, scenario)
+    UNIQUE(id, arc_id, scenario)
 );
 
 -- NOTE: The purpose of this table is to link operational parameters to multiple
@@ -221,8 +218,9 @@ CREATE TABLE operational_data (
     operational_cost json NULL,
     -- We can add what type of operational cost it is or other parameters (e.g., variable)
     operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+    FOREIGN KEY (entity_id) REFERENCES entities(id)
 );
+
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
@@ -238,7 +236,7 @@ CREATE TABLE attributes (
     name text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type(value)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE
+    FOREIGN KEY (entity_id) REFERENCES entities (id)
 );
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
@@ -246,7 +244,7 @@ CREATE TABLE attributes (
 -- but that could or could not be used for modeling. not `text`. Examples of
 -- this field are geolocation (e.g., lat, long), outages, etc.)
 CREATE TABLE supplemental_attributes (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
     TYPE text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type (value)) virtual
@@ -255,56 +253,50 @@ CREATE TABLE supplemental_attributes (
 CREATE TABLE supplemental_attributes_association (
     attribute_id integer NOT NULL,
     entity_id integer NOT NULL,
-    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
-    FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id) ON DELETE CASCADE,
-    PRIMARY KEY (attribute_id, entity_id)
+    FOREIGN KEY (entity_id) REFERENCES entities (id),
+    FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id)
 ) strict;
 
--- Updated time series schema with flexible typing and multiple owners
-CREATE TABLE time_series_associations (
+CREATE TABLE time_series_associations(
     id INTEGER PRIMARY KEY,
-    time_series_uuid TEXT NOT NULL UNIQUE,
-    time_series_type TEXT NOT NULL, -- interpretation-based: 'static', 'deterministic_forecast', 'scenario', etc.
-    initial_timestamp TEXT,
-    resolution TEXT NULL, -- ISO 8601 duration format (e.g., 'PT1H' for hourly)
+    time_series_uuid TEXT NOT NULL,
+    time_series_type TEXT NOT NULL,
+    initial_timestamp TEXT NOT NULL,
+    resolution TEXT NOT NULL,
     horizon TEXT,
-    interval TEXT,
+    "interval" TEXT,
     window_count INTEGER,
     length INTEGER,
     name TEXT NOT NULL,
-    owner_uuid TEXT NOT NULL,
+    owner_id INTEGER NOT NULL REFERENCES entities(id),
     owner_type TEXT NOT NULL,
     owner_category TEXT NOT NULL,
     features TEXT NOT NULL,
     scaling_factor_multiplier TEXT NULL,
-    metadata_uuid TEXT NULL,
+    metadata_uuid TEXT NOT NULL,
     units TEXT NULL
 );
-
--- Static time series data - single column of historical/deterministic data
-CREATE TABLE static_time_series_data (
-    id integer PRIMARY KEY,
-    time_series_id integer NOT NULL,
-    timestamp TEXT NOT NULL, -- ISO 8601 format
-    value real NOT NULL,
-    FOREIGN KEY (time_series_id) REFERENCES time_series_associations (id) ON DELETE CASCADE,
-    UNIQUE(time_series_id, timestamp)
+CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
+    "owner_id",
+    "time_series_type",
+    "name",
+    "resolution",
+    "features"
 );
+CREATE INDEX "by_ts_uuid" ON "time_series_associations" ("time_series_uuid");
 
--- Deterministic forecast time series - forecast data with horizon
-CREATE TABLE deterministic_forecast_data (
-    id integer PRIMARY KEY,
-    time_series_id integer NOT NULL,
-    timestamp TEXT NOT NULL, -- when the forecast was made
-    forecast_values json NOT NULL, -- JSON array of forecast values for each horizon step
-    FOREIGN KEY (time_series_id) REFERENCES time_series_associations (id) ON DELETE CASCADE,
-    UNIQUE(time_series_id, timestamp),
-    CHECK (json_type(forecast_values) = 'array')
-);
 
 CREATE TABLE loads (
-    id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
     balancing_topology INTEGER NOT NULL,
-    base_power REAL,
+    base_power DOUBLE,
     FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
+);
+
+CREATE TABLE static_time_series (
+    id integer PRIMARY KEY,
+    uuid text NULL,
+    idx integer NOT NULL,
+    value real NOT NULL
 );

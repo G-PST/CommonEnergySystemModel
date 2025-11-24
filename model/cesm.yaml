@@ -205,6 +205,7 @@ classes:
       - HasInvestments
     slots:
       - efficiency
+      - availability
     slot_usage:
       efficiency:
         any_of:

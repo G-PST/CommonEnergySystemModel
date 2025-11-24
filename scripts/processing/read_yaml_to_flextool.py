@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 from generated.cesm_pydantic import Dataset  # This is the generated class
 from linkml_runtime.loaders import yaml_loader
@@ -36,8 +37,8 @@ def time_to_spine(flextool, cesm):
     solve_periods = {}
     all_periods = []
     for index, solve_pattern in cesm['solve_pattern'].iterrows():
-        periods = list(cesm["solve_pattern.array.periods_realise_investments"][index]) \
-                  + list(cesm["solve_pattern.array.periods_realise_operations"][index])
+        periods = list(cesm["solve_pattern.array.periods_realise_operations"][index]) \
+                  + list(cesm["solve_pattern.array.periods_realise_investments"][index])
         solve_periods[index] = list(set(periods))
         for period in periods:
             all_periods.append(period)
@@ -49,22 +50,50 @@ def time_to_spine(flextool, cesm):
             period_timeset.loc[period, solve_name] = 'cesm_timeset' 
     flextool['solve.str.period_timeset'] = period_timeset
 
+    solve_years_represented = pd.DataFrame(index=all_periods_unique)
+    for solve_name, periods in solve_periods.items():
+        for period in periods:
+            for cesm_period, years in cesm['period']['years_represented'].items():
+                solve_years_represented.loc[cesm_period, solve_name] = years
+    flextool['solve.str.years_represented'] = solve_years_represented
+
+
     return flextool
 
-# Load your data
-Dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset)
 
-# Extract all DataFrames
-cesm = yaml_to_df(Dataset, schema_path="model/cesm.yaml")
+def main():
+    """Main function to convert CESM YAML data to FlexTool Spine database."""
+    parser = argparse.ArgumentParser(
+        description="Convert CESM YAML data to FlexTool Spine database format"
+    )
+    parser.add_argument(
+        "--database",
+        "-d",
+        type=str,
+        default="sqlite:///input_data.sqlite",
+        help="Database file url (default: sqlite:///input_data.sqlite)"
+    )
 
-# Transform from CESM to FlexTool (using configuration file)
-flextool = transform_data(cesm, 
-    "src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml")
+    args = parser.parse_args()
 
-# Process time parameters separately
-flextool = time_to_spine(flextool, cesm)
+    # Load your data
+    dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset)
 
-# Write FlexTool dataset to Spine DB (FlexTool format)
-dataframes_to_spine(flextool, "sqlite:///input_data_test.sqlite")
+    # Extract all DataFrames
+    cesm = yaml_to_df(dataset, schema_path="model/cesm.yaml")
 
-print("foo")
+    # Transform from CESM to FlexTool (using configuration file)
+    flextool = transform_data(cesm,
+        "src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml")
+
+    # Process time parameters separately
+    flextool = time_to_spine(flextool, cesm)
+
+    # Write FlexTool dataset to Spine DB (FlexTool format)
+    dataframes_to_spine(flextool, args.database)
+
+    print(f"Data successfully written to {args.database}")
+
+
+if __name__ == "__main__":
+    main()

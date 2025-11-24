@@ -46,8 +46,10 @@ profile-entities:
 - unit_to_node
 - - profile:
       order: [[0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]
   - unit.node.profile:
       order: [[0], [1], [2], [0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]
 link-entities:
 - link
 - - connection:
@@ -77,16 +79,15 @@ solve_mode:
     single_solve: single_solve
 
 periods_realise_invested:
-- solve_pattern: periods_realise_investments
-- solve: realized_invest_periods
-
+- solve_pattern: [periods_realise_investments, [array]]
+- solve: [realized_invest_periods, [array]]
 periods_invested:
-- solve_pattern: periods_realise_investments
-- solve: invest_periods
+- solve_pattern: [periods_realise_investments, [array]]
+- solve: [invest_periods, [array]]
 
 periods_realised:
-- solve_pattern: periods_realise_operations
-- solve: realized_periods
+- solve_pattern: [periods_realise_operations, [array]]
+- solve: [realized_periods, [array]]
 
 
 # Nodes
@@ -105,7 +106,7 @@ price_per_unit:
 - commodity: price_per_unit
 - commodity: price
 storage existing:
-- storage: storage_existing
+- storage: storages_existing
 - node: existing
 storage capacity:
 - storage: storage_capacity
@@ -220,6 +221,10 @@ unit_to_node profile_limit_upper:
 - unit_to_node: [profile_limit_upper, [ts]]
 - profile: [profile, [str]]
 - - order: [[0]]
+#unit_to_node profile_limit_lower:
+#- unit_to_node: [profile_limit_lower, [ts]]
+#- profile: [profile, [str]]
+#- - order: [[0]]
 
 #test-multiply:
 #- node_to_unit: other_operational_cost
