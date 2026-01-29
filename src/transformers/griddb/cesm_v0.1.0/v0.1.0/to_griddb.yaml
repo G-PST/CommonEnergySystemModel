@@ -1,0 +1,35 @@
+# Configuration file to perform data transformation between two data formats.
+# For each operation, first list tells the source or sources, second list target(s)
+# and third list defines special operations. There can be multiple special operations performed in list order.
+#
+# Structure of each operation:
+# name for the operation:
+# - source class: source parameter  OR - source class (used to copy entities or to create parameters based on entities in which case target entities will get a parameter from 'value')
+# - target class: target parameter  OR - target class (used to copy entities)
+# - - order: [optional list of lists for dimension positions: separate list for each dimension in the target - each target dimension can pick dimension names from multiple source dimensions]
+#   - rename:
+#       source parameter value: target parameter value
+#   - algebra: programmatically interpreted algebraic formula between two or more source parameters
+#   - [multiply, divide, add or subtract]:
+#       with: float
+
+# Entities
+entities:
+- entity
+- entities
+balance-entities:
+- balance
+- "balancing topologies"
+commodity-entities:
+- commodity
+- fuels
+    if: 
+
+unit-entities:
+- unit
+- "generation units"
+
+groups:
+- group
+- planning_regions:
+    if: ['group_type', 'equal', 'node']

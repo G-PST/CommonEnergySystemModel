@@ -11,51 +11,103 @@ from pathlib import Path
 from typing import Dict
 
 
-def write_to_sqlite(schema_path: str, 
-                   target_dataframes: Dict[str, pd.DataFrame], 
-                   output_db_path: str) -> None:
+def _insert_or_replace(conn: sqlite3.Connection, table_name: str, df: pd.DataFrame) -> None:
+    """
+    Insert or replace rows in an existing table.
+
+    Uses INSERT OR REPLACE to update existing rows (matched by primary key)
+    or insert new ones. This is used for incremental updates.
+
+    Args:
+        conn: SQLite connection
+        table_name: Name of the table to insert into
+        df: DataFrame with data to insert/replace
+    """
+    if df.empty:
+        return
+
+    columns = df.columns.tolist()
+    placeholders = ', '.join(['?' for _ in columns])
+    column_names = ', '.join([f'"{col}"' for col in columns])
+
+    sql = f'INSERT OR REPLACE INTO "{table_name}" ({column_names}) VALUES ({placeholders})'
+
+    # Convert DataFrame to list of tuples for executemany
+    # Handle None/NaN conversion
+    data = []
+    for row in df.itertuples(index=False):
+        row_data = []
+        for val in row:
+            if pd.isna(val):
+                row_data.append(None)
+            else:
+                row_data.append(val)
+        data.append(tuple(row_data))
+
+    cursor = conn.cursor()
+    cursor.executemany(sql, data)
+    conn.commit()
+
+
+def write_to_sqlite(schema_path: str,
+                   target_dataframes: Dict[str, pd.DataFrame],
+                   output_db_path: str,
+                   clear_existing: bool = True) -> None:
     """
     Create SQLite database from schema and populate with dataframes.
-    
+
     Args:
         schema_path: Path to schema.sql file
         target_dataframes: Dictionary of dataframes matching schema tables
         output_db_path: Path for output SQLite database file
-        
+        clear_existing: If True, delete existing database and create fresh.
+                       If False, add/replace data in existing database.
+                       Default: True.
+
     Raises:
         FileNotFoundError: If schema file doesn't exist
         sqlite3.Error: If database operations fail
     """
-    
+
     # Validate schema file exists
     schema_file = Path(schema_path)
     if not schema_file.exists():
         raise FileNotFoundError(f"Schema file not found: {schema_path}")
-    
+
     # Read schema SQL
     print(f"Reading schema from: {schema_path}")
     with open(schema_path, 'r', encoding='utf-8') as f:
         schema_sql = f.read()
-    
-    # Create/overwrite database
+
+    # Create/overwrite database based on clear_existing flag
     output_path = Path(output_db_path)
-    if output_path.exists():
-        print(f"Removing existing database: {output_db_path}")
-        output_path.unlink()
-    
-    print(f"Creating database: {output_db_path}")
+    if clear_existing:
+        if output_path.exists():
+            print(f"Removing existing database: {output_db_path}")
+            output_path.unlink()
+        print(f"Creating database: {output_db_path}")
+    else:
+        if output_path.exists():
+            print(f"Updating existing database: {output_db_path}")
+        else:
+            print(f"Creating new database: {output_db_path}")
+            # If database doesn't exist, we need to create schema
+            clear_existing = True  # Force schema creation for new database
     
     # Connect and initialize schema
     conn = sqlite3.connect(output_db_path)
     cursor = conn.cursor()
-    
+
     try:
-        # Execute schema using executescript
-        # This handles multiple statements including DROP, CREATE, and INSERT
-        print("Initializing schema...")
-        cursor.executescript(schema_sql)
-        conn.commit()
-        print("Schema initialized successfully")
+        if clear_existing:
+            # Execute schema using executescript
+            # This handles multiple statements including DROP, CREATE, and INSERT
+            print("Initializing schema...")
+            cursor.executescript(schema_sql)
+            conn.commit()
+            print("Schema initialized successfully")
+        else:
+            print("Skipping schema initialization (incremental update mode)")
         
         # Define table insertion order (respecting foreign keys)
         # Tables must be inserted in dependency order
@@ -91,24 +143,29 @@ def write_to_sqlite(schema_path: str,
         for table_name in table_order:
             if table_name in target_dataframes:
                 df = target_dataframes[table_name]
-                
+
                 if df is not None and not df.empty:
                     # Convert DataFrame to SQL
-                    # Note: Generated columns (like operational_cost_type, json_type) 
+                    # Note: Generated columns (like operational_cost_type, json_type)
                     # should not be in dataframes - they're computed by SQLite
-                    # Use if_exists='append' since schema already created tables
                     try:
                         # Replace NaN with None for proper NULL insertion
                         df = df.where(pd.notna(df), None)
-                        
-                        df.to_sql(
-                            table_name, 
-                            conn, 
-                            if_exists='append',
-                            index=False,
-                            method='multi',  # Faster bulk insert
-                            chunksize=1000   # Process in chunks for large datasets
-                        )
+
+                        if clear_existing:
+                            # Fresh database: use append mode
+                            df.to_sql(
+                                table_name,
+                                conn,
+                                if_exists='append',
+                                index=False,
+                                method='multi',  # Faster bulk insert
+                                chunksize=1000   # Process in chunks for large datasets
+                            )
+                        else:
+                            # Incremental update: use INSERT OR REPLACE
+                            _insert_or_replace(conn, table_name, df)
+
                         print(f"  ✓ {table_name}: {len(df)} rows")
                     except Exception as e:
                         print(f"  ✗ {table_name}: Error - {str(e)}")

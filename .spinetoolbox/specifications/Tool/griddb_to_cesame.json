@@ -1,0 +1,13 @@
+{
+    "name": "GridDB to CESAME",
+    "tooltype": "python",
+    "includes": [
+        "scripts/processing/griddb_to_cesm.py"
+    ],
+    "description": "",
+    "inputfiles": [],
+    "inputfiles_opt": [],
+    "outputfiles": [],
+    "cmdline_args": [],
+    "includes_main_path": "../../.."
+}

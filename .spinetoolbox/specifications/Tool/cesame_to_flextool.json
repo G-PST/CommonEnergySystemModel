@@ -1,0 +1,13 @@
+{
+    "name": "CESAME to FlexTool",
+    "tooltype": "python",
+    "includes": [
+        "scripts/processing/cesm_to_flextool.py"
+    ],
+    "description": "",
+    "inputfiles": [],
+    "inputfiles_opt": [],
+    "outputfiles": [],
+    "cmdline_args": [],
+    "includes_main_path": "../../.."
+}

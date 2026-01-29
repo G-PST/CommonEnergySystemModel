@@ -5,11 +5,35 @@ This module provides functions to write pandas DataFrames to a Spine database,
 handling entity classes, entities, parameters, and time series data.
 """
 
-from typing import Dict, Union
+from typing import Dict, Union, List
 import pandas as pd
 from spinedb_api import DatabaseMapping, parameter_value
 from spinedb_api.exception import NothingToCommit
 from spinedb_api.parameter_value import to_database
+
+
+def _format_datetime_index(index: pd.Index) -> List[str]:
+    """
+    Format an index as strings, with consistent datetime formatting.
+
+    For DatetimeIndex:
+    - Converts timezone-aware timestamps to UTC
+    - Uses ISO 8601 format with 'T' separator: '2023-01-01T00:00:00'
+
+    For other index types:
+    - Uses default string conversion
+
+    This ensures all timestamps in the output are UTC and consistently formatted.
+    """
+    if isinstance(index, pd.DatetimeIndex):
+        # Convert to UTC if timezone-aware
+        if index.tz is not None:
+            index = index.tz_convert('UTC').tz_localize(None)
+        # Format with 'T' separator, no 'Z' suffix (FlexTool compatibility)
+        return index.strftime('%Y-%m-%dT%H:%M:%S').tolist()
+    else:
+        # Default string conversion for non-datetime indexes
+        return index.astype(str).tolist()
 
 
 def dataframes_to_spine(
@@ -303,11 +327,11 @@ def _add_time_series(
     alternative_name: str
 ):
     """Add time series parameter values."""
-    # Extract start time from timeline
+    # Extract start time from timeline (formatted consistently as UTC)
     if timeline_df is not None and timeline_df.index.name == 'datetime':
-        start_time = pd.to_datetime(timeline_df.index[0]).isoformat()
+        start_time = _format_datetime_index(timeline_df.index[:1])[0]
     elif timeline_df is not None and 'datetime' in timeline_df.columns:
-        start_time = pd.to_datetime(timeline_df['datetime'].iloc[0]).isoformat()
+        start_time = _format_datetime_index(pd.DatetimeIndex([timeline_df['datetime'].iloc[0]]))[0]
     else:
         start_time = None
     
@@ -365,7 +389,7 @@ def _add_time_series(
             else:
                 # Use datetime index if available
                 if df.index.name == 'datetime':
-                    timestamps = pd.to_datetime(df.index).strftime('%Y-%m-%dT%H:%M:%S').tolist()
+                    timestamps = _format_datetime_index(df.index)
                     ts_value = {
                         "type": "time_series",
                         "data": [[ts, val] for ts, val in zip(timestamps, values)]
@@ -430,14 +454,14 @@ def _add_strs(db_map: DatabaseMapping, str_dfs: Dict[str, pd.DataFrame], alterna
         else:
             entity_names = [str(col) for col in df.columns]
         
-        # Determine index type
-        indexes = df.index.astype(str).tolist() 
+        # Format index consistently (handles datetime conversion to UTC)
+        indexes = _format_datetime_index(df.index)
         index_name = df.index.name
-        
+
         for i, entity_name in enumerate(entity_names):
             # Extract values for this entity
             values = df.iloc[:, i].tolist()
-            
+
             # Create Map object
             map_value = Map(
                 indexes=indexes,
@@ -493,12 +517,12 @@ def _add_arrays(db_map: DatabaseMapping, array_dfs: Dict[str, pd.DataFrame], alt
         # Entity names are in columns (for arrays, index is datetime/period, columns are entities)
         if isinstance(df.columns, pd.MultiIndex):
             # Multi-dimensional columns: join with '__'
-            entity_names = ['__'.join(map(array, col)) for col in df.columns]
+            entity_names = ['__'.join(map(str, col)) for col in df.columns]
         else:
             entity_names = [str(col) for col in df.columns]
-        
-        # Determine index type
-        indexes = df.index.astype(str).tolist() 
+
+        # Format index consistently (handles datetime conversion to UTC)
+        indexes = _format_datetime_index(df.index)
         index_name = df.index.name
         
         for i, entity_name in enumerate(entity_names):
@@ -554,11 +578,11 @@ if __name__ == "__main__":
             'west': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'east': [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800],
             'heat': [-30, -40, -50, -60, -50, -50, -50, -50, -50, -50]
-        }, index=pd.date_range('2023-01-01', periods=10, freq='H', name='datetime'))
+        }, index=pd.date_range('2023-01-01', periods=10, freq='h', name='datetime'))
     }
     
     timeline = pd.DataFrame(
-        index=pd.date_range('2023-01-01', periods=8760, freq='H', name='datetime')
+        index=pd.date_range('2023-01-01', periods=8760, freq='h', name='datetime')
     )
     
     # Write to database

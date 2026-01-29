@@ -1,0 +1,588 @@
+{
+    "project": {
+        "version": 13,
+        "description": "",
+        "settings": {
+            "enable_execute_all": true,
+            "store_external_paths_as_relative": false
+        },
+        "specifications": {
+            "Tool": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/from_yaml_to_cesm.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/cesame_to_flextool.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/cesame_to_griddb.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/griddb_to_cesame.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/cesame_to_spine_db.json"
+                },
+                {
+                    "type": "path",
+                    "relative": false,
+                    "path": "/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
+                }
+            ]
+        },
+        "connections": [
+            {
+                "name": "from CESAME sample to yaml to CESAME",
+                "from": [
+                    "CESAME sample",
+                    "right"
+                ],
+                "to": [
+                    "yaml to CESAME",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from yaml to CESAME to CESAME-db",
+                "from": [
+                    "yaml to CESAME",
+                    "right"
+                ],
+                "to": [
+                    "CESAME-db",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from flextool input to FlexTool3",
+                "from": [
+                    "flextool input",
+                    "right"
+                ],
+                "to": [
+                    "FlexTool3",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME-db to CESAME to FlexTool",
+                "from": [
+                    "CESAME-db",
+                    "right"
+                ],
+                "to": [
+                    "CESAME to FlexTool",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME to FlexTool to flextool input",
+                "from": [
+                    "CESAME to FlexTool",
+                    "right"
+                ],
+                "to": [
+                    "flextool input",
+                    "left"
+                ],
+                "options": {
+                    "purge_before_writing": false
+                },
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from FlexTool3 to output info",
+                "from": [
+                    "FlexTool3",
+                    "right"
+                ],
+                "to": [
+                    "output info",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME-db to CESAME to GridDB",
+                "from": [
+                    "CESAME-db",
+                    "right"
+                ],
+                "to": [
+                    "CESAME to GridDB",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME to GridDB to GridDB sqlite",
+                "from": [
+                    "CESAME to GridDB",
+                    "right"
+                ],
+                "to": [
+                    "GridDB sqlite",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from GridDB sqlite2 to GridDB to CESAME",
+                "from": [
+                    "GridDB sqlite2",
+                    "right"
+                ],
+                "to": [
+                    "GridDB to CESAME",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from GridDB to CESAME to CESAME-db",
+                "from": [
+                    "GridDB to CESAME",
+                    "right"
+                ],
+                "to": [
+                    "CESAME-db",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME-db to CESAME to Spine DB",
+                "from": [
+                    "CESAME-db",
+                    "bottom"
+                ],
+                "to": [
+                    "CESAME to Spine DB",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME to Spine DB to CESAME in Spine DB",
+                "from": [
+                    "CESAME to Spine DB",
+                    "right"
+                ],
+                "to": [
+                    "CESAME in Spine DB",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from GridDB extras to GridDB extras to CESAME",
+                "from": [
+                    "GridDB extras",
+                    "right"
+                ],
+                "to": [
+                    "GridDB extras to CESAME",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from GridDB extras to CESAME to CESAME-db",
+                "from": [
+                    "GridDB extras to CESAME",
+                    "right"
+                ],
+                "to": [
+                    "CESAME-db",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            }
+        ],
+        "jumps": []
+    },
+    "items": {
+        "CESAME-db": {
+            "type": "Data Connection",
+            "description": "",
+            "x": -140.8914823254538,
+            "y": -271.0886460100927,
+            "file_references": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/cesm.duckdb"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/cesm_sample.duckdb"
+                }
+            ],
+            "file_patterns": [],
+            "directory_references": [],
+            "db_references": []
+        },
+        "yaml to CESAME": {
+            "type": "Tool",
+            "description": "",
+            "x": -303.8592439140124,
+            "y": -355.63736637417236,
+            "specification": "yaml to CESAME",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/samples/cesm-sample.yaml"
+                },
+                {
+                    "type": "literal",
+                    "arg": "data/cesm_sample.duckdb"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--clear-target-db"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "FlexTool3": {
+            "type": "Tool",
+            "description": "",
+            "x": 310.8994395876545,
+            "y": -353.504377035789,
+            "specification": "FlexTool3",
+            "execute_in_work": true,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "db_url@flextool input"
+                },
+                {
+                    "type": "resource",
+                    "arg": "db_url@output info"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "CESAME to FlexTool": {
+            "type": "Tool",
+            "description": "",
+            "x": 12.304805499506175,
+            "y": -355.60616438286496,
+            "specification": "CESAME to FlexTool",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/cesm_sample.duckdb"
+                },
+                {
+                    "type": "resource",
+                    "arg": "db_url@flextool input"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "output info": {
+            "type": "Data Store",
+            "description": "",
+            "x": 460.545891757495,
+            "y": -351.56113020405945,
+            "url": {
+                "dialect": "sqlite",
+                "host": "",
+                "port": null,
+                "database": {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/output_info.sqlite"
+                },
+                "schema": ""
+            }
+        },
+        "CESAME to GridDB": {
+            "type": "Tool",
+            "description": "",
+            "x": 11.025591975136297,
+            "y": -209.22586032705692,
+            "specification": "CESAME to GridDB",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/cesm.duckdb"
+                },
+                {
+                    "type": "literal",
+                    "arg": "data/griddb.sqlite"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "GridDB sqlite": {
+            "type": "Data Connection",
+            "description": "",
+            "x": 147.0751461697497,
+            "y": -208.21810126413027,
+            "file_references": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/griddb.sqlite"
+                }
+            ],
+            "file_patterns": [],
+            "directory_references": [],
+            "db_references": []
+        },
+        "GridDB sqlite2": {
+            "type": "Data Connection",
+            "description": "",
+            "x": -503.6176548655055,
+            "y": -210.77744519259926,
+            "file_references": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/samples/rts_psy5.sqlite"
+                }
+            ],
+            "file_patterns": [],
+            "directory_references": [],
+            "db_references": []
+        },
+        "GridDB to CESAME": {
+            "type": "Tool",
+            "description": "",
+            "x": -360.5019236667529,
+            "y": -213.59431894196973,
+            "specification": "GridDB to CESAME",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/samples/rts_psy5.sqlite"
+                },
+                {
+                    "type": "literal",
+                    "arg": "data/cesm.duckdb"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--clear-target-db"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "CESAME to Spine DB": {
+            "type": "Tool",
+            "description": "",
+            "x": -54.85606925221394,
+            "y": -55.88361325437985,
+            "specification": "CESAME to Spine DB",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/cesm.duckdb"
+                },
+                {
+                    "type": "resource",
+                    "arg": "db_url@CESAME in Spine DB"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "CESAME sample": {
+            "type": "Data Connection",
+            "description": "",
+            "x": -443.37920045667147,
+            "y": -354.87121351792456,
+            "file_references": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/samples/cesm-sample.yaml"
+                }
+            ],
+            "file_patterns": [],
+            "directory_references": [],
+            "db_references": []
+        },
+        "flextool input": {
+            "type": "Data Store",
+            "description": "",
+            "x": 161.01138043174404,
+            "y": -350.9871449016971,
+            "url": {
+                "dialect": "sqlite",
+                "host": "",
+                "port": null,
+                "database": {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/flextool_input.sqlite"
+                },
+                "schema": ""
+            }
+        },
+        "CESAME in Spine DB": {
+            "type": "Data Store",
+            "description": "",
+            "x": 76.80852527372858,
+            "y": -54.281049432870454,
+            "url": {
+                "dialect": "sqlite",
+                "host": "",
+                "port": null,
+                "database": {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/CESAME in Spine.sqlite"
+                },
+                "schema": ""
+            }
+        },
+        "GridDB extras to CESAME": {
+            "type": "Tool",
+            "description": "",
+            "x": -362.2590364394994,
+            "y": -82.19322675518055,
+            "specification": "yaml to CESAME",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/samples/rts_psy5_additional.yaml"
+                },
+                {
+                    "type": "literal",
+                    "arg": "data/cesm.duckdb"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "GridDB extras": {
+            "type": "Data Connection",
+            "description": "",
+            "x": -507.3655972542007,
+            "y": -83.20795794968896,
+            "file_references": [
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/samples/rts_psy5_additional.yaml"
+                }
+            ],
+            "file_patterns": [],
+            "directory_references": [],
+            "db_references": []
+        }
+    }
+}

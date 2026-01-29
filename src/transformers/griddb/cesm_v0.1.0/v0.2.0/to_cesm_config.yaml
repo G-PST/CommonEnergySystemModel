@@ -1,0 +1,156 @@
+# Configuration for GridDB to CESM transformation
+# v0.2.0
+
+# Heatrate to efficiency conversion factor (MMBTU/MWh)
+# efficiency = heatrate_conversion_factor / heatrate
+heatrate_conversion_factor: 3.412
+
+# Default efficiencies for technologies without heatrate data
+# Used when no heatrate time series exists for the technology
+default_efficiencies:
+  Nuclear: 0.35
+  Coal: 0.40
+  Hydro: 1.0
+  Wind: 1.0
+  PV: 1.0
+  CSP: 1.0
+  Battery: 0.90
+
+# EIA Prime mover code descriptions
+prime_mover_descriptions:
+  BA: Battery Energy Storage
+  BT: Binary Cycle Turbine
+  CA: Compressed Air Energy Storage
+  CC: Combined Cycle
+  CE: Reciprocating Engine
+  CP: Concentrated Solar Power
+  CS: Combined Cycle Steam
+  CT: Combustion (Gas) Turbine
+  ES: Energy Storage
+  FC: Fuel Cell
+  FW: Flywheel Energy Storage
+  GT: Gas Turbine
+  HA: Hydro Francis
+  HB: Hydro Bulb
+  HK: Hydro Kaplan
+  HY: Hydro
+  IC: Internal Combustion Engine
+  OT: Other
+  PS: Pumped Storage
+  PVe: Photovoltaic
+  ST: Steam Turbine
+  WS: Wind Offshore
+  WT: Wind Onshore
+
+# Reverse fuel name mapping (GridDB standardized -> CESM common names)
+fuel_name_reverse_map:
+  COAL: coal
+  NATURAL_GAS: natural_gas
+  GAS: gas
+  OIL: oil
+  NUCLEAR: nuclear
+  HYDRO: hydro
+  WIND: wind
+  SOLAR: solar
+  BIOMASS: biomass
+  GEOTHERMAL: geothermal
+  WASTE: waste
+  DISTILLATE_FUEL_OIL: distillate_fuel_oil
+  RESIDUAL_FUEL_OIL: residual_fuel_oil
+  OTHER: other
+
+# Mapping from (prime_mover, fuel) to time series owner_type name
+# This allows looking up heatrate and other technology-specific time series
+# Format: "prime_mover:fuel" -> owner_type (fuel can be "null" for NULL values)
+# The script will try to look up data for all mappings; missing data uses defaults
+prime_mover_fuel_to_ts_owner:
+  # Battery and storage
+  BA:null: Battery
+  BA:OTHER: Battery
+  ES:null: Battery
+  ES:OTHER: Battery
+  CA:null: Battery
+  CA:OTHER: Battery
+  FW:null: Battery
+  FW:OTHER: Battery
+
+  # Solar
+  PVe:null: PV
+  PVe:OTHER: PV
+  CP:null: CSP
+  CP:OTHER: CSP
+
+  # Wind
+  WT:null: Wind
+  WT:OTHER: Wind
+  WS:null: Wind
+  WS:OTHER: Wind
+
+  # Hydro - all hydro types
+  HY:null: Hydro
+  HY:OTHER: Hydro
+  HA:null: Hydro
+  HA:OTHER: Hydro
+  HB:null: Hydro
+  HB:OTHER: Hydro
+  HK:null: Hydro
+  HK:OTHER: Hydro
+  PS:null: Hydro
+  PS:OTHER: Hydro
+
+  # Gas turbines
+  CT:NATURAL_GAS: NGCT
+  CT:DISTILLATE_FUEL_OIL: OGS
+  CT:OTHER: NGCT
+  CT:null: NGCT
+  GT:NATURAL_GAS: NGCT
+  GT:OTHER: NGCT
+  GT:null: NGCT
+
+  # Combined cycle
+  CC:NATURAL_GAS: NGCC
+  CC:OTHER: NGCC
+  CC:null: NGCC
+  CS:NATURAL_GAS: NGCC
+  CS:OTHER: NGCC
+  CS:null: NGCC
+
+  # Steam turbine - specific fuels
+  ST:COAL: Coal
+  ST:DISTILLATE_FUEL_OIL: OGS
+  ST:NUCLEAR: Nuclear
+  ST:BIOMASS: Coal
+  ST:OTHER: Coal
+  ST:null: Coal  # Default, but see unit_name_fuel_hints below
+
+  # Internal combustion / reciprocating
+  IC:DISTILLATE_FUEL_OIL: OGS
+  IC:NATURAL_GAS: NGCT
+  IC:OTHER: OGS
+  IC:null: OGS
+  CE:DISTILLATE_FUEL_OIL: OGS
+  CE:NATURAL_GAS: NGCT
+  CE:OTHER: OGS
+  CE:null: OGS
+
+  # Other / specialty
+  FC:null: NGCC
+  FC:OTHER: NGCC
+  BT:null: CSP
+  BT:OTHER: CSP
+  OT:null: Coal
+  OT:OTHER: Coal
+
+# Unit name patterns to infer fuel type when fuel column is NULL
+# These patterns are checked against unit names (case-insensitive)
+# Used to override the default mapping when fuel is NULL
+unit_name_fuel_hints:
+  NUCLEAR: Nuclear
+  NUC: Nuclear
+  COAL: Coal
+  GAS: NGCT
+  WIND: Wind
+  SOLAR: PV
+  PV: PV
+  HYDRO: Hydro
+  BATTERY: Battery

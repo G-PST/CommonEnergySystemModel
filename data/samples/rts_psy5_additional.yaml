@@ -1,0 +1,16 @@
+id: 0
+solve_pattern:
+  - name: solve_once
+    solve_mode: single_solve
+    start_time: '2020-01-01T00:00:00.00'
+    duration: 72
+    periods_realise_investments: ['2010']
+    periods_realise_operations: ['2010']
+# period:
+#   - name: y2030
+#     years_represented: 5.0
+system:
+  - name: test_system
+    inflation_rate: 0.03
+currency: USD
+reference_year: 2020

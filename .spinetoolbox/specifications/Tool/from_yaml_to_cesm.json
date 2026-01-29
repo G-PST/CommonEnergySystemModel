@@ -1,0 +1,14 @@
+{
+    "name": "yaml to CESAME",
+    "tooltype": "python",
+    "includes": [
+        "src/readers/from_yaml.py",
+        "src/generated/cesm_pydantic.py"
+    ],
+    "description": "",
+    "inputfiles": [],
+    "inputfiles_opt": [],
+    "outputfiles": [],
+    "cmdline_args": [],
+    "includes_main_path": "../../.."
+}

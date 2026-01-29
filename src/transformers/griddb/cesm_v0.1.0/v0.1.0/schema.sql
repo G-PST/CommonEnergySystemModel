@@ -61,6 +61,17 @@ CREATE TABLE entities (
 -- Table of possible entity types
 CREATE TABLE entity_types (name text PRIMARY KEY);
 
+-- Populate entity types with PowerSystems.jl component types
+INSERT INTO entity_types VALUES
+    ('ThermalStandard'),
+    ('RenewableDispatch'),
+    ('HydroPumpedStorage'),
+    ('LoadZone'),
+    ('Area'),
+    ('Line'),
+    ('Arc'),
+    ('PowerLoad');
+
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
 -- have a `prime_mover` and `fuel` to classify generators/storage units.
 -- However, users could use any combination of `prime_mover` and `fuel` for
@@ -73,6 +84,13 @@ CREATE TABLE prime_mover_types (
     description text NULL,
     UNIQUE(name)
 );
+
+-- Populate prime mover types with intermediate classifications
+-- These map to PowerSystems.jl types via db_parser.jl
+INSERT INTO prime_mover_types VALUES
+    (1, 'STEAM', 'Steam turbine thermal generation (fuel-based)'),
+    (2, 'ROR', 'Run-of-river renewable generation (non-fuel based)'),
+    (3, 'STORAGE', 'Battery or pumped hydro storage');
 
 CREATE TABLE fuels(
     id integer PRIMARY KEY,
@@ -193,6 +211,17 @@ CREATE TABLE supply_technologies (
     balancing_topology text NULL REFERENCES balancing_topologies (name),
     scenario text NULL,
     UNIQUE(prime_mover, fuel, scenario)
+);
+
+-- Storage investment technology options
+CREATE TABLE storage_technologies (
+    id integer PRIMARY KEY REFERENCES entities (id),
+    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
+    storage_technology_type text NULL,
+    area text NULL REFERENCES planning_regions (name),
+    balancing_topology text NULL REFERENCES balancing_topologies (name),
+    scenario text NULL,
+    UNIQUE(prime_mover, storage_technology_type, scenario)
 );
 
 CREATE TABLE transport_technologies(

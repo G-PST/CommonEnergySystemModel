@@ -4,6 +4,29 @@ from typing import Dict, List, Any, Tuple, Union
 import numpy as np
 
 
+def _datetime_index_to_str(index: pd.Index) -> pd.Index:
+    """
+    Convert a DatetimeIndex to string Index with consistent UTC formatting.
+
+    For DatetimeIndex:
+    - Converts timezone-aware timestamps to UTC
+    - Uses ISO 8601 format with 'T' separator: '2023-01-01T00:00:00'
+
+    For other index types:
+    - Uses default string conversion
+
+    This ensures all timestamps are UTC and consistently formatted.
+    """
+    if isinstance(index, pd.DatetimeIndex):
+        # Convert to UTC if timezone-aware
+        if index.tz is not None:
+            index = index.tz_convert('UTC').tz_localize(None)
+        # Format with 'T' separator, no 'Z' suffix
+        return pd.Index(index.strftime('%Y-%m-%dT%H:%M:%S'), name=index.name)
+    else:
+        return index.astype(str)
+
+
 def load_config(config_path: str) -> Dict:
     """Load the YAML configuration file."""
     with open(config_path, 'r') as f:
@@ -215,6 +238,34 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
 
         source_df = source_dfs[source_class]
         source_idx = get_entity_index(source_df)
+        source_names = index_to_names(source_idx)
+
+        # Check for if_parameter filter in operations
+        for op_dict in operations:
+            if 'if_parameter' in op_dict:
+                filtered_source_names = []
+                if_parameters = op_dict['if_parameter']
+                for if_param in if_parameters:
+                    # Check in pivoted dataframes (time series)
+                    splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
+                    long_keys = [x for x in splitted_keys if len(x) > 2]
+                    df_keys_found = ['.'.join(x) for x in long_keys if x[0] == source_class and x[2] == if_param]
+                    for df_key_found in df_keys_found:
+                        for item in source_names:
+                            if tuple(item) in source_dfs[df_key_found].columns and item not in filtered_source_names:
+                                filtered_source_names.append(item)
+                    # Check in regular dataframes
+                    for item in source_names:
+                        if if_param in source_df.columns and pd.notna(source_df.loc[tuple(item) if len(item) > 1 else item[0], if_param]):
+                            if item not in filtered_source_names:
+                                filtered_source_names.append(item)
+                source_names = filtered_source_names
+                source_idx = list_of_lists_to_index(source_names) if source_names else pd.Index([])
+
+        # Skip if no matching entities after filtering
+        if len(source_idx) == 0:
+            continue
+
         target_idx = source_idx  # Will be replaced if order is given
 
         # Get the value from operations
@@ -263,14 +314,18 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
     target_class = target_spec['class']
     target_attribute = target_spec['attribute']
     is_pivoted = False
-    
+
+    # Compute target class name once before the loop if target_attribute indicates pivoted data
+    if isinstance(target_attribute, list) and len(target_attribute) == 2:
+        target_class = target_class + '.' + '.'.join(target_attribute[1]) + '.' + target_attribute[0]
+
     # Gather source data
     for source_spec in source_specs:
         source_class = source_spec['class']
         source_attribute = source_spec.get('attribute')
 
         # List based attributes indicate that the dataframe is pivoted (usually for time series content) and contains only one attribute
-        if isinstance(source_attribute, list): 
+        if isinstance(source_attribute, list):
             is_pivoted = True
             if len(source_attribute) == 2:
                 source_datatypes = source_attribute[1]
@@ -279,7 +334,6 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                 if len(source_datatypes) != len(target_attribute[1]):
                     raise ValueError(f"Source attribute is of list type (indicates pivoted data) and there is a datatype conversion, but target attribute does not have the same number of datatypes in the attribute list. {source_class} {source_attribute}")
                 source_class = source_class + '.' + '.'.join(source_attribute[1]) + '.' + source_attribute[0]
-                target_class = target_class + '.' + '.'.join(target_attribute[1]) + '.' + target_attribute[0]
             else:
                 raise ValueError(f"Source attribute is of list type (indicates pivoted data) but the length of the list is not 2 (the list should have parameter name and data type list for the index columns). {source_class} {source_attribute}")
 
@@ -311,8 +365,10 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                 for i, source_datatype in enumerate(source_datatypes):
                     if source_datatype is not target_datatypes[i]:
                         if target_datatypes[i] == "str":
+                            # Use consistent UTC formatting for datetime levels
+                            level_index = result.index.levels[i]
                             result.index = result.index.set_levels(
-                                result.index.levels[i].astype(str), level=i
+                                _datetime_index_to_str(level_index), level=i
                             )
                         if target_datatypes[i] == "ts":
                             result.index = result.index.set_levels(
@@ -321,11 +377,13 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
             else:
                 if source_datatypes[0] is not target_datatypes[0]:
                     if target_datatypes[0] == "str":
-                        result.index = result.index.astype(str)
+                        # Use consistent UTC formatting for datetime index
+                        result.index = _datetime_index_to_str(result.index)
                     elif target_datatypes[0] == "ts":
                         result.index = pd.to_datetime(result.index)
                     elif target_datatypes[0] == "array":
-                        result.index = result.index.astype(str)
+                        # Use consistent UTC formatting for datetime index
+                        result.index = _datetime_index_to_str(result.index)
 
         
         # Apply operations
@@ -390,17 +448,23 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
             target_dfs[target_class] = result
         else:
             # Add column to existing dataframe or update
-            if target_attribute not in target_dfs[target_class].columns:
-                # Add new column
+            if is_pivoted:
+                # For pivoted data (time series), add any new entity columns
                 for col in result.columns:
-                    target_dfs[target_class][col] = None
-            
+                    if col not in target_dfs[target_class].columns:
+                        target_dfs[target_class][col] = None
+            else:
+                if target_attribute not in target_dfs[target_class].columns:
+                    # Add new column
+                    for col in result.columns:
+                        target_dfs[target_class][col] = None
+
             # Update values for matching indices
             common_idx = target_dfs[target_class].index.intersection(result.index)
             for col in result.columns:
                 if col in target_dfs[target_class].columns:
                     target_dfs[target_class].loc[common_idx, col] = result.loc[common_idx, col]
-            
+
             # Add new indices
             new_idx = result.index.difference(target_dfs[target_class].index)
             if len(new_idx) > 0:

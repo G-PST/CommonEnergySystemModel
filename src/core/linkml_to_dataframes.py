@@ -9,30 +9,37 @@ from linkml_runtime.utils.schemaview import SchemaView
 from linkml_runtime.utils.yamlutils import extended_float, extended_int
 from linkml_runtime.loaders import yaml_loader
 
-def yaml_to_df(dataset, schema_path: str = None) -> Dict[str, pd.DataFrame]:
+def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[str, pd.DataFrame]:
     """
     Extract DataFrames from a LinkML-generated dataset object.
-    
+
     Args:
         dataset: The dataset object (generated from LinkML schema)
         schema_path: Optional path to schema YAML for time_dimensional annotation detection
-    
+        strict: If True, require timeline attribute. If False, timeline is optional
+                (for incremental updates where timeline may already exist in database).
+                Default: True.
+
     Returns:
         Dictionary with keys as table names and values as DataFrames
         - Class DataFrames: {class_name} (e.g., 'balances')
         - Time-series DataFrames: {class_name}.ts.{attribute} (e.g., 'balances.ts.flow_profile')
     """
-    
+
     # Load schema to identify time_dimensional attributes
     schema = SchemaView(schema_path)
-    
+
     # Get timeline from dataset
     timeline = getattr(dataset, 'timeline', None)
     if timeline is None:
-        raise ValueError("Dataset must have a 'timeline' attribute")
+        if strict:
+            raise ValueError("Dataset must have a 'timeline' attribute")
+        else:
+            print("Warning: No timeline in dataset. Time-series data will be skipped.")
 
     result_dfs = {}
-    result_dfs['timeline'] = df = pd.DataFrame(index=pd.to_datetime(timeline))
+    if timeline is not None:
+        result_dfs['timeline'] = df = pd.DataFrame(index=pd.to_datetime(timeline))
     
     # Get all collection attributes from dataset (excluding 'timeline', 'id', etc.)
     collection_attrs = _get_collection_attributes(dataset)
@@ -75,13 +82,14 @@ def yaml_to_df(dataset, schema_path: str = None) -> Dict[str, pd.DataFrame]:
             for key, value in entity_dict.items():
                 datatype = detect_datatype(value)
                 if datatype == "list_of_floats":
-                    # Handle time-series data
-                    ts_key = f"{slot_class_name}.ts.{key}"
-                    if ts_key not in timeseries_data:
-                        timeseries_data[ts_key] = {'datetime': pd.to_datetime(timeline)}
-                    
-                    # Use entity name for column name
-                    timeseries_data[ts_key][entity_name] = np.array(value, dtype=float)
+                    # Handle time-series data (skip if no timeline)
+                    if timeline is not None:
+                        ts_key = f"{slot_class_name}.ts.{key}"
+                        if ts_key not in timeseries_data:
+                            timeseries_data[ts_key] = {'datetime': pd.to_datetime(timeline)}
+
+                        # Use entity name for column name
+                        timeseries_data[ts_key][entity_name] = np.array(value, dtype=float)
                 elif datatype == "list_of_strings":
                     array_key = f"{slot_class_name}.array.{key}"
                     if array_key not in array_data:

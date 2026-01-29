@@ -159,6 +159,7 @@ profile_method:
 - unit.node.profile: profile_method
 - - order: [[0], [1], [2], [0]]
   - value: 'upper_limit'
+  - if_parameter: [profile_limit_upper, profile_limit_lower]
 
 # Units
 conversion_method:

@@ -1,3 +1,10 @@
 *.egg-info/
 __pycache__/
+.vscode/*
+.spinetoolbox/items/*
+.spinetoolbox/local/*
+dev_files/*
 src/generated/*
+data/*
+!data/samples/
+!data/samples/**

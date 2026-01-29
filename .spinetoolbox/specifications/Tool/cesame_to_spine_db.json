@@ -1,0 +1,13 @@
+{
+    "name": "CESAME to Spine DB",
+    "tooltype": "python",
+    "includes": [
+        "scripts/processing/cesm_to_spine_db.py"
+    ],
+    "description": "",
+    "inputfiles": [],
+    "inputfiles_opt": [],
+    "outputfiles": [],
+    "cmdline_args": [],
+    "includes_main_path": "../../.."
+}

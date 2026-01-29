@@ -62,13 +62,6 @@ unit:
     investment_method: no_limits
     discount_rate: 0.06
     payback_time: 25
-  - name: heatpump
-    conversion_method: constant_efficiency
-    units_existing: 1
-    efficiency: 2.5
-    investment_method: no_limits
-    discount_rate: 0.06
-    payback_time: 30
 node_to_unit:
   - name: natural_gas.ocgt
     source: natural_gas
@@ -76,12 +69,6 @@ node_to_unit:
   - name: natural_gas.ccgt
     source: natural_gas
     sink: ccgt
-  - name: biomass.bio_chp
-    source: biomass
-    sink: bio_chp
-  - name: west.heatpump
-    source: west
-    sink: heatpump
 unit_to_node:
   - name: ocgt.west
     source: ocgt
