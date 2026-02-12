@@ -137,6 +137,7 @@ def dataframes_to_spine(
             except NothingToCommit:
                 print("No time series parameters to commit")
         
+        # Phase 5: Add array parameters
         if array_dfs:
             print("Phase 5: Adding array parameters...")
             _add_arrays(db_map, array_dfs, alternative_name)
@@ -196,7 +197,8 @@ def _add_entity_classes_and_entities(db_map: DatabaseMapping, entity_dfs: Dict[s
             )
             print(f"  Added entity class: {class_name}")
         except Exception as e:
-            print(f"  Entity class {class_name} already exists or error: {e}")
+            pass
+            # print(f"  Entity class {class_name} already exists or error: {e}")
         
         # Add entities
         if dimension_name_list:
@@ -298,6 +300,9 @@ def _add_parameters(db_map: DatabaseMapping, entity_dfs: Dict[str, pd.DataFrame]
                 # Parse value
                 if isinstance(value, (int, float)):
                     parsed_value = float(value)
+                elif isinstance(value, pd.Timedelta):
+                    # Convert Timedelta to hours
+                    parsed_value = value.total_seconds() / 3600
                 elif isinstance(value, str):
                     parsed_value = value
                 elif isinstance(value, list):
@@ -362,10 +367,10 @@ def _add_time_series(
         
         # Entity names are in columns (for time series, index is datetime, columns are entities)
         if isinstance(df.columns, pd.MultiIndex):
-            # Multi-dimensional columns: join with '__'
-            entity_names = ['__'.join(map(str, col)) for col in df.columns]
+            # Multi-dimensional columns: drop name dimension for entity_byname
+            entity_names = [col[1:] for col in df.columns]
         else:
-            entity_names = [str(col) for col in df.columns]
+            entity_names = [(str(col),) for col in df.columns]
         
         for i, entity_name in enumerate(entity_names):
             # Extract time series data
@@ -408,7 +413,7 @@ def _add_time_series(
                 db_map.add_parameter_value(
                     entity_class_name=db_class_name,
                     parameter_definition_name=param_name,
-                    entity_byname=(entity_name,),
+                    entity_byname=entity_name,
                     alternative_name=alternative_name,
                     value=db_value,
                     type=value_type
@@ -449,23 +454,27 @@ def _add_strs(db_map: DatabaseMapping, str_dfs: Dict[str, pd.DataFrame], alterna
         
         # Entity names are in columns (for strs, index is datetime/period, columns are entities)
         if isinstance(df.columns, pd.MultiIndex):
-            # Multi-dimensional columns: join with '__'
-            entity_names = ['__'.join(map(str, col)) for col in df.columns]
+            # Multi-dimensional columns: drop name dimension for entity_byname
+            entity_names = [col[1:] for col in df.columns]
         else:
-            entity_names = [str(col) for col in df.columns]
+            entity_names = [(str(col),) for col in df.columns]
         
         # Format index consistently (handles datetime conversion to UTC)
-        indexes = _format_datetime_index(df.index)
+        df.index = _format_datetime_index(df.index)
         index_name = df.index.name
 
         for i, entity_name in enumerate(entity_names):
-            # Extract values for this entity
-            values = df.iloc[:, i].tolist()
+            # Extract values for this entity, filtering out NaN values
+            col_data = df.iloc[:, i].dropna().copy()
+
+            # Skip if no valid values
+            if not col_data.tolist():
+                continue
 
             # Create Map object
             map_value = Map(
-                indexes=indexes,
-                values=values,
+                indexes=col_data.index.tolist(),
+                values=col_data.tolist(),
                 index_name=index_name
             )
             
@@ -476,12 +485,12 @@ def _add_strs(db_map: DatabaseMapping, str_dfs: Dict[str, pd.DataFrame], alterna
                 db_map.add_parameter_value(
                     entity_class_name=db_class_name,
                     parameter_definition_name=param_name,
-                    entity_byname=(entity_name,),
+                    entity_byname=entity_name,
                     alternative_name=alternative_name,
                     value=db_value,
                     type=value_type
                 )
-                print(f"  Added str map: {db_class_name}.{param_name} for {entity_name}")
+                # print(f"  Added str map: {db_class_name}.{param_name} for {entity_name}")
             except Exception as e:
                 print(f"  Warning: Could not add str map for {entity_name}: {e}")
 
@@ -495,7 +504,7 @@ def _add_arrays(db_map: DatabaseMapping, array_dfs: Dict[str, pd.DataFrame], alt
         if len(parts) != 2:
             print(f"  Warning: Invalid array name format: {array_name}")
             continue
-        
+
         class_name = parts[0]
         param_name = parts[1]
         
@@ -516,38 +525,42 @@ def _add_arrays(db_map: DatabaseMapping, array_dfs: Dict[str, pd.DataFrame], alt
         
         # Entity names are in columns (for arrays, index is datetime/period, columns are entities)
         if isinstance(df.columns, pd.MultiIndex):
-            # Multi-dimensional columns: join with '__'
-            entity_names = ['__'.join(map(str, col)) for col in df.columns]
+            # Multi-dimensional columns: drop name dimension for entity_byname
+            entity_names = [col[1:] for col in df.columns]
         else:
-            entity_names = [str(col) for col in df.columns]
+            entity_names = [(str(col),) for col in df.columns]
 
         # Format index consistently (handles datetime conversion to UTC)
-        indexes = _format_datetime_index(df.index)
+        df.index = _format_datetime_index(df.index)
         index_name = df.index.name
         
         for i, entity_name in enumerate(entity_names):
-            # Extract values for this entity
-            values = df.iloc[:, i].tolist()
-            
-            # Create Map object
-            map_value = Array(
-                values=values,
+            # Extract values for this entity, filtering out NaN values
+            col_data = df.iloc[:, i].dropna().tolist()
+
+            # Skip if no valid values
+            if not col_data:
+                continue
+
+            # Create Array object
+            array_value = Array(
+                values=col_data,
                 index_name=index_name
             )
             
             # Convert to database format
-            db_value, value_type = to_database(map_value)
+            db_value, value_type = to_database(array_value)
             
             try:
                 db_map.add_parameter_value(
                     entity_class_name=db_class_name,
                     parameter_definition_name=param_name,
-                    entity_byname=(entity_name,),
+                    entity_byname=entity_name,
                     alternative_name=alternative_name,
                     value=db_value,
                     type=value_type
                 )
-                print(f"  Added array: {db_class_name}.{param_name} for {entity_name}")
+                # print(f"  Added array: {db_class_name}.{param_name} for {entity_name}")
             except Exception as e:
                 print(f"  Warning: Could not add array for {entity_name}: {e}")
 

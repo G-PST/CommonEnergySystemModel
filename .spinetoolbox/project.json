@@ -37,6 +37,11 @@
                     "type": "path",
                     "relative": false,
                     "path": "/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/flextool_to_cesame.json"
                 }
             ]
         },
@@ -295,6 +300,78 @@
                         "scenario_filter": true
                     }
                 }
+            },
+            {
+                "name": "from flextool input2 to flextool to CESAME",
+                "from": [
+                    "flextool input2",
+                    "right"
+                ],
+                "to": [
+                    "flextool to CESAME",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from flextool to CESAME to CESAME-db",
+                "from": [
+                    "flextool to CESAME",
+                    "right"
+                ],
+                "to": [
+                    "CESAME-db",
+                    "left"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from flextool input2 to FlexTool3_test",
+                "from": [
+                    "flextool input2",
+                    "left"
+                ],
+                "to": [
+                    "FlexTool3_test",
+                    "right"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from FlexTool3_test to output info test",
+                "from": [
+                    "FlexTool3_test",
+                    "left"
+                ],
+                "to": [
+                    "output info test",
+                    "right"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
             }
         ],
         "jumps": []
@@ -315,6 +392,11 @@
                     "type": "path",
                     "relative": true,
                     "path": "data/cesm_sample.duckdb"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/cesm_flextool.duckdb"
                 }
             ],
             "file_patterns": [],
@@ -324,8 +406,8 @@
         "yaml to CESAME": {
             "type": "Tool",
             "description": "",
-            "x": -303.8592439140124,
-            "y": -355.63736637417236,
+            "x": -327.085558450078,
+            "y": -454.60166309306055,
             "specification": "yaml to CESAME",
             "execute_in_work": false,
             "cmd_line_args": [
@@ -348,10 +430,10 @@
         "FlexTool3": {
             "type": "Tool",
             "description": "",
-            "x": 310.8994395876545,
-            "y": -353.504377035789,
+            "x": 307.8731908236936,
+            "y": -357.5393753877369,
             "specification": "FlexTool3",
-            "execute_in_work": true,
+            "execute_in_work": false,
             "cmd_line_args": [
                 {
                     "type": "resource",
@@ -360,6 +442,22 @@
                 {
                     "type": "resource",
                     "arg": "db_url@output info"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--write-methods"
+                },
+                {
+                    "type": "literal",
+                    "arg": "parquet"
+                },
+                {
+                    "type": "literal",
+                    "arg": "csv"
+                },
+                {
+                    "type": "literal",
+                    "arg": "plot"
                 }
             ],
             "kill_completed_processes": false,
@@ -368,14 +466,14 @@
         "CESAME to FlexTool": {
             "type": "Tool",
             "description": "",
-            "x": 12.304805499506175,
-            "y": -355.60616438286496,
+            "x": 12.304805499506177,
+            "y": -356.61627410524454,
             "specification": "CESAME to FlexTool",
             "execute_in_work": false,
             "cmd_line_args": [
                 {
                     "type": "resource",
-                    "arg": "<project>/data/cesm_sample.duckdb"
+                    "arg": "<project>/data/cesm_flextool.duckdb"
                 },
                 {
                     "type": "resource",
@@ -388,8 +486,8 @@
         "output info": {
             "type": "Data Store",
             "description": "",
-            "x": 460.545891757495,
-            "y": -351.56113020405945,
+            "x": 454.4933942295732,
+            "y": -356.6048781439943,
             "url": {
                 "dialect": "sqlite",
                 "host": "",
@@ -441,8 +539,8 @@
         "GridDB sqlite2": {
             "type": "Data Connection",
             "description": "",
-            "x": -503.6176548655055,
-            "y": -210.77744519259926,
+            "x": -491.4995777162539,
+            "y": -165.33465588290568,
             "file_references": [
                 {
                     "type": "path",
@@ -457,8 +555,8 @@
         "GridDB to CESAME": {
             "type": "Tool",
             "description": "",
-            "x": -360.5019236667529,
-            "y": -213.59431894196973,
+            "x": -348.38384651750124,
+            "y": -168.15152963227615,
             "specification": "GridDB to CESAME",
             "execute_in_work": false,
             "cmd_line_args": [
@@ -501,8 +599,8 @@
         "CESAME sample": {
             "type": "Data Connection",
             "description": "",
-            "x": -443.37920045667147,
-            "y": -354.87121351792456,
+            "x": -484.78263071661434,
+            "y": -457.87486928656324,
             "file_references": [
                 {
                     "type": "path",
@@ -517,8 +615,8 @@
         "flextool input": {
             "type": "Data Store",
             "description": "",
-            "x": 161.01138043174404,
-            "y": -350.9871449016971,
+            "x": 163.028879607718,
+            "y": -356.03089284163207,
             "url": {
                 "dialect": "sqlite",
                 "host": "",
@@ -551,8 +649,8 @@
         "GridDB extras to CESAME": {
             "type": "Tool",
             "description": "",
-            "x": -362.2590364394994,
-            "y": -82.19322675518055,
+            "x": -350.14095929024774,
+            "y": -36.75043744548697,
             "specification": "yaml to CESAME",
             "execute_in_work": false,
             "cmd_line_args": [
@@ -571,8 +669,8 @@
         "GridDB extras": {
             "type": "Data Connection",
             "description": "",
-            "x": -507.3655972542007,
-            "y": -83.20795794968896,
+            "x": -495.24752010494916,
+            "y": -37.76516863999539,
             "file_references": [
                 {
                     "type": "path",
@@ -583,6 +681,124 @@
             "file_patterns": [],
             "directory_references": [],
             "db_references": []
+        },
+        "flextool input2": {
+            "type": "Data Store",
+            "description": "",
+            "x": -489.7722847822529,
+            "y": -310.0176567067253,
+            "url": {
+                "dialect": "sqlite",
+                "host": "",
+                "port": null,
+                "database": {
+                    "type": "path",
+                    "relative": true,
+                    "path": "data/samples/flextool_examples.sqlite"
+                },
+                "schema": ""
+            }
+        },
+        "flextool to CESAME": {
+            "type": "Tool",
+            "description": "",
+            "x": -344.3553589912336,
+            "y": -311.03064683079157,
+            "specification": "flextool to CESAME",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "db_url@flextool input2"
+                },
+                {
+                    "type": "literal",
+                    "arg": "network_all_tech"
+                },
+                {
+                    "type": "literal",
+                    "arg": "data/cesm_flextool.duckdb"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--cesm-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "cesm_v0.1.0"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--flextool-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "v3.14.0"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--start-time"
+                },
+                {
+                    "type": "literal",
+                    "arg": "2023-01-01 00:00:00"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "FlexTool3_test": {
+            "type": "Tool",
+            "description": "",
+            "x": -677.7836237167483,
+            "y": -294.9520389348593,
+            "specification": "FlexTool3",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "db_url@flextool input2"
+                },
+                {
+                    "type": "resource",
+                    "arg": "db_url@output info test"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--write-methods"
+                },
+                {
+                    "type": "literal",
+                    "arg": "parquet"
+                },
+                {
+                    "type": "literal",
+                    "arg": "csv"
+                },
+                {
+                    "type": "literal",
+                    "arg": "plot"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
+        },
+        "output info test": {
+            "type": "Data Store",
+            "description": "",
+            "x": -846.4719473541506,
+            "y": -280.8105028215441,
+            "url": {
+                "dialect": "sqlite",
+                "host": "",
+                "port": null,
+                "database": {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/items/output_info_test/output_info.sqlite"
+                },
+                "schema": ""
+            }
         }
     }
 }

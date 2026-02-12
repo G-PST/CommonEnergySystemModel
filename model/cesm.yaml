@@ -13,6 +13,16 @@ imports:
   - linkml:types
 default_range: float
 
+types:
+  Duration:
+    uri: xsd:duration
+    base: str
+    repr: str
+    description:  >-
+      An ISO 8601 duration string (e.g. "PT5M30S" for 5 minutes 30 seconds).
+      When loaded into Dataframes, this should be converted to pa.duration("us") or similar.
+    pattern: "^-?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
+
 classes:
   Any:
     class_uri: linkml:Any
@@ -87,6 +97,12 @@ classes:
         is_a: currency_per_kilowatt-hour_per_year
         range: Any
         description: "Cost of maintaining the asset (in dataset currency using reference_year denomination) per kWh per year."
+      storage_loss_from_stored_energy:
+        range: float
+        description: "Loss of stored energy over one hour as a fraction of the energy stored."
+        annotations:
+          qudt.ucum_code:  "[10*-2]"
+          qudt_unit: "unit:PERCENT"
 
   Commodity:
     is_a: Node
@@ -109,12 +125,15 @@ classes:
     mixins:
       - HasInvestments
     slots:
-      - efficiency
+      - conversion_rates
       - availability
     attributes:
       conversion_method:
         range: ConversionMethod
-        description: "Choose how the unit converts inputs to outputs"
+        description: "Choose how the unit converts inputs to outputs."
+      startup_method:
+        range: StartupMethod
+        description: Choose how the unit startups are treated in the model.
       units_existing:
         any_of:
           - range: float
@@ -123,6 +142,10 @@ classes:
         annotations:
           qudt.ucum_code: "[1]"
           qudt_unit: "unit:UNITLESS"
+      startup_cost:
+        is_a: currency_per_unit
+        range: float
+        description: Cost of one full startup for one unit.
 
   Port:
     is_a: Entity
@@ -134,13 +157,13 @@ classes:
       - availability
     attributes:
       source:
-        range: Entity  # Will be overriden in the sub-class
+        range: Entity  # Will be overridden in the sub-class
         required: true
         description: "Name of the source entity (Unit or Node)."
         annotations:
           is_dimension: true
       sink:
-        range: Entity  # Will be overriden in the sub-class
+        range: Entity  # Will be overridden in the sub-class
         required: true
         description: "Name of the sink entity (Unit or Node)."
         annotations:
@@ -153,23 +176,36 @@ classes:
           qudt_unit: "unit:MegaW"
       investment_cost:
         is_a: currency_per_kilowatt
-        range: Any
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Overnight (in dataset currency using reference_year denomination) per kW."
       fixed_cost:
         is_a: currency_per_kilowatt_per_year
-        range: Any
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year."
       other_operational_cost:
         is_a: currency_per_megawatt-hour
-        range: Any
+        any_of:
+          - range: float
+          - range: PeriodFloat
         description: "Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh."
       constraint_flow_coefficient:
-        range: float
-        multivalued: true
+        range: ConstraintFloat
         description: Multiplier between constraints and the flow. Map of constraints and respective coefficients.
         annotations:
           qudt.ucum_code: "[1]"
           qudt_unit: "unit:UNITLESS"
+      inertia_constant:
+        range: float
+        description: Inertia constant for a synchronously connected unit to this node.
+        annotations:
+          qudt.ucum_code: "[MWs/MW]"
+          qudt.hasFactorUnit: |
+            - hasUnit: unit:MegaW-s, exponent: 1
+            - hasUnit: unit:MegaW, exponent: -1
     # unique_keys:
     #   source_sink:
     #     unique_key_slots:
@@ -204,7 +240,7 @@ classes:
     mixins:
       - HasInvestments
     slots:
-      - efficiency
+      - conversion_rates
       - availability
     slot_usage:
       efficiency:
@@ -315,52 +351,55 @@ classes:
       solve_mode:
         range: SolveMode
         description: "Choice of solve process handled within the model."
+      periods_realise_operations:
+        any_of:
+        range: Period
+        multivalued: true
+        list_elements_ordered: true
+        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
       periods_realise_investments:
         range: Period
         multivalued: true
         list_elements_ordered: true
         description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
-      periods_realise_operations:
+      periods_pass_storage_data:
         range: Period
         multivalued: true
         list_elements_ordered: true
-        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
-      periods_additional_horizon:
+        description: "A list of periods from which the model will pass storage level information to the next solve or to the child solves."
+      periods_additional_operations_horizon:
         range: Period
         multivalued: true
         list_elements_ordered: true
-        description: "A list of periods from which the model will report investment results and possibly pass to the next solve."
-      start_time:
-        range: string
-        description: "Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline."
-        comments:
-          - "String to keep the sample simple for now. Will be made to use ISO 8601 format datetime."
-          - "In future, add multiple start-times to allow for representative periods."
-      duration:
-        range: integer
-        description:  "Duration of the solve in time steps. Defaults to full timeline."
-        comments:
-          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
-          - "In future, add multiple durations to allow for representative periods."
-        # range: string
-        # pattern: "^P(?!$)((\\d+Y)|(\\d+\\.\\d+Y$))?((\\d+M)|(\\d+\\.\\d+M$))?((\\d+W)|(\\d+\\.\\d+W$))?((\\d+D)|(\\d+\\.\\d+D$))?(T(?=\\d)((\\d+H)|(\\d+\\.\\d+H$))?((\\d+M)|(\\d+\\.\\d+M$))?(\\d+(\\.\\d+)?S)?)??$"
-        # description: "Duration of the solve in ISO 8601 format"
+        description: "A list of periods that will be included in dispatch optimisation but are not part of results reporting (they may be solved again in a later solve)."
+      periods_additional_investments_horizon:
+        range: Period
+        multivalued: true
+        list_elements_ordered: true
+        description: "A list of periods that will be included in invest optimisation but are not part of results reporting (they may be solved again in a later solve)."
+      start_time_durations:
+        range: Timeset
+        multivalued: true
+        list_elements_ordered: true
+        description: "Contains pairs of start time and duration to define what part of the timeline is to be solved. Start times need to match a value in the timeline. Defaults to the start of the timeline and full timeline duration. Can be a list of timesets to define representative periods."
+      rolling_jump:
+        range: Duration
+        description: "How much each roll jumps forward in time."
+      rolling_additional_horizon:
+        range: Duration
+        description: "How much rolling solves have additional horizon beyond the rolling_jump duration."
       time_resolution:
-        range: integer
-        description: "Time resolution the model should use. Multiples of the time resolution of the original data."
+        range: Duration
+        description: "Time resolution the model should use. Has to be integer multiples of the time resolution of the original data."
         comments:
-          - "Integer to keep the sample simple for now. Will be made to use ISO 8601 format duration."
           - "Variable time resolution to be added later."
-      next_solve:
-        range: Solve_pattern
-        description: "The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern."
-      contains_solve:
+      contains_solve_pattern:
         range: Solve_pattern
         description: "A child solve_pattern to be executed inside of the parent solve_pattern."
 
   System:
     is_a: Entity
-    description: "Parameters related to the whole system to be modelled. "
+    description: "Parameters related to the whole system to be modelled."
     attributes:
       solve_order:
         range: Solve_pattern
@@ -388,8 +427,8 @@ classes:
       flow_profile:
         range: Any
         annotations:
-          qudt.ucum_code: "[10*-2]"
-          qudt_unit: "unit:PERCENT"
+          qudt.ucum_code: "[1]"
+          qudt_unit: "unit:UNITLESS"
         description: "Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node."
       flow_scaling_method:
         range: FlowScalingMethod
@@ -473,6 +512,29 @@ classes:
         range: float
         multivalued: true
 
+  ConstraintFloat:
+    attributes:
+      constraint:
+        range: Constraint
+        multivalued: true
+      value:
+        range: float
+        multivalued: true
+
+  ConversionRatesFloatFloat:
+    attributes:
+      operating_point:
+        range: float
+      conversion_rate:
+        range: float
+
+  Timeset:
+    attributes:
+      start_time:
+        range: datetime
+      duration:
+        range: Duration
+
   Dataset:
     tree_root: true
     description: "Dataset properties and holder for classes available in the schema."
@@ -484,6 +546,7 @@ classes:
       timeline:
         range: datetime
         multivalued: true
+        list_elements_ordered: true
         description: "Time steps for which data can be entered in the dataset. Used to validate input data."
       # entity:
       #   range: Entity
@@ -651,19 +714,48 @@ slots:
         - hasUnit: unit:YR, exponent: -1
       meaning: cesm:CCY-PER-KiloW-HR-YR
 
-  efficiency:
+  currency_per_unit:
+    range: Any
+    description: "Monetary value per one full unit. Monetary value is to be given in the dataset currency in real terms for the reference_year of the dataset."
+    annotations:
+      ucum_code: "[currency]"
+      qudt.hasFactorUnit: |
+        - hasUnit: unit:CCY, exponent: 1
+      meaning: cesm:CCY-PER-Unit
+
+  conversion_rates:
     any_of:
       - range: float
-      - range: float
+      - range: ConversionRatesFloatFloat
         multivalued: true
-    description: "Multiplier for turning inputs to outputs or for transferring between nodes."
+    description: "Multiplier(s) for turning inputs to outputs or for transferring between nodes. Can be given as single float (constant efficiency) or as a list of tuples where first value is for operating point and second value is for efficiency. The list must have decreasing values for the operating points - starting from 100%."
     annotations:
       qudt.ucum_code: "[10*-2]"
       qudt_unit: "unit:PERCENT"
 
+  # minimum_operating_point:
+  #   range: float
+  #   description: "Minimum stable operation level for a unit."
+  #   annotations:
+  #     qudt.ucum_code: "[10*-2]"
+  #     qued_unit: "unit:PERCENT"
+  #   comments: |
+  #     Perhaps it would be best to just have 'efficiency' that holds all efficiencies and operating points
+  #
+  # efficiency_at_minimum_operating_point:
+  #   range: float
+  #   description: "Efficiency at the minimum stable operation level for a unit."
+  #   annotations:
+  #     qudt.ucum_code: "[10*-2]"
+  #     qued_unit: "unit:PERCENT"
+  #   comments: |
+  #     Perhaps it would be best to just have 'efficiency' that holds all efficiencies and operating points
+
   availability:
-    range: float
-    multivalued: true
+    any_of:
+      - range: float
+      - range: float
+        multivalued: true
     description: "Time series for availability (to represent forced outages)."
     annotations:
       qudt.ucum_code: "[10*-2]"
@@ -682,7 +774,17 @@ enums:
     permissible_values:
       constant_efficiency:
         text: constant_efficiency
+      two_point_efficiency:
+        text: two_point_efficiency
     description: "Choose how the unit converts inputs to outputs"
+
+  StartupMethod:
+    permissible_values:
+      linear:
+        text: Online variable is continuous
+      integer:
+        text: Online variable is discrete
+    description: "Choose how the unit startup methods are treated"
 
   TransferMethod:
     permissible_values:
@@ -694,6 +796,8 @@ enums:
     permissible_values:
       single_solve:
         text: single_solve
+      rolling_solve:
+        text: rolling_solve
     description: "Choice of solve process handled within the model."
 
   InvestmentMethod:

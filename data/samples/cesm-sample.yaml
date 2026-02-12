@@ -5,23 +5,23 @@ balance:
     flow_scaling_method: scale_to_annual
     flow_annual: 20000000.0
     flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
-    penalty_upward: 10000.0
+    penalty_upward: 1000
   - name: east
     flow_scaling_method: scale_to_annual
     flow_annual: 15000000
     flow_profile: [-1002.1, -980.7, -968, -969.1, -971.9, -957.8, -975.2, -975.1, -973.2, -800]
-    penalty_upward: 10000
+    penalty_upward: 1000
   - name: north
     flow_scaling_method: use_profile_directly
     flow_profile: [-600, -700, -800, -900, -1000, -1100, -1200, -1100, -1050, -900]
-    penalty_upward: 10000
+    penalty_upward: 1000
 storage:
   - name: battery
     storage_capacity: 750
     storages_existing: 2
     investment_method: no_limits
     investment_cost: 600.0
-    discount_rate: 0.07
+    discount_rate: 7.0
     payback_time: 12
     flow_scaling_method: use_profile_directly
     flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
@@ -37,30 +37,30 @@ unit:
   - name: ocgt
     conversion_method: constant_efficiency
     units_existing: 2
-    efficiency: 0.38
+    efficiency: 38.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 25
   - name: ccgt
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 0.58
+    efficiency: 58.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 30
   - name: nuclear
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 0.34
+    efficiency: 34.0
     investment_method: no_limits
-    discount_rate: 0.08
+    discount_rate: 8.0
     payback_time: 40
   - name: wind
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 1
+    efficiency: 100.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 25
 node_to_unit:
   - name: natural_gas.ocgt
@@ -86,9 +86,9 @@ unit_to_node:
     capacity: 800
     other_operational_cost: 12
     investment_cost: 5500
-  - name: wind.west
+  - name: wind.north
     source: wind
-    sink: west
+    sink: north
     capacity: 1500
     investment_cost: 1000
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
@@ -113,21 +113,37 @@ link:
     transfer_method: regular_linear
     capacity: 500
     links_existing: 1
-    efficiency: 0.98
+    efficiency: 98.0
     investment_method: no_limits
     investment_cost: 1600
-    discount_rate: 0.04
+    discount_rate: 4.0
     payback_time: 50
+  - name: nor_easter
+    node_A: east
+    node_B: north
+    transfer_method: regular_linear
+    capacity: 250
+    links_existing: 2
+    efficiency: 95.0
+    investment_method: not_allowed
+  - name: west_north
+    node_A: west
+    node_B: north
+    transfer_method: regular_linear
+    capacity: 200
+    links_existing: 1
+    efficiency: 90.0
+    investment_method: not_allowed
   - name: charger
     node_A: east
     node_B: battery
     transfer_method: regular_linear
     capacity: 750
     links_existing: 1
-    efficiency: 0.9
+    efficiency: 90.0
     investment_method: no_limits
     investment_cost: 10
-    discount_rate: 0.07
+    discount_rate: 7.0
     payback_time: 12
 group:
   - name: elec_nodes
@@ -140,12 +156,28 @@ group_entity:
     group: elec_nodes
     entity: east
 solve_pattern:
-  - name: solve_once
+  - name: solve_2030
     solve_mode: single_solve
-    start_time: '2023-01-01T00:00'
-    duration: 10
-    periods_realise_investments: ['y2030', 'y2035']
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
     periods_realise_operations: ['y2030']
+    periods_realise_investments: ['y2030']
+    periods_additional_investments_horizon: ['y2035']
+  - name: solve_2035_invest
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    periods_realise_investments: ['y2035']
+  - name: solve_2035_rolling_dispatch
+    solve_mode: rolling_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    rolling_jump: PT2H
+    rolling_additional_horizon: PT2H
+    periods_realise_operations: ['y2035']
 period:
   - name: y2030
     years_represented: 5.0
@@ -153,6 +185,7 @@ period:
     years_represented: 5.0
 system:
   - name: test_system
-    inflation_rate: 0.03
+    solve_order: ['solve_2030', 'solve_2035_invest', 'solve_2035_rolling_dispatch']
+    inflation_rate: 3.0
 currency: EUR
 reference_year: 2025

@@ -1,13 +1,38 @@
 import pandas as pd
 import numpy as np
-import inspect
-from typing import Dict, List, Any, Tuple
-import dataclasses
-import yaml
+import re
+from typing import Dict, List, Any
 import typing
 from linkml_runtime.utils.schemaview import SchemaView
 from linkml_runtime.utils.yamlutils import extended_float, extended_int
-from linkml_runtime.loaders import yaml_loader
+from generated.cesm_pydantic import Timeset
+
+
+def is_iso_duration(value) -> bool:
+    """Check if a value is an ISO 8601 duration string.
+
+    ISO 8601 durations start with 'P' and can contain:
+    - P[n]Y[n]M[n]DT[n]H[n]M[n]S (e.g., P1Y2M3DT4H5M6S)
+    - PT[n]H[n]M[n]S for time-only (e.g., PT2H, PT1H30M)
+    - P[n]W for weeks (e.g., P2W)
+    """
+    if not isinstance(value, str):
+        return False
+    # ISO 8601 duration pattern
+    pattern = r'^P(?:\d+Y)?(?:\d+M)?(?:\d+W)?(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d+)?S)?)?$'
+    return bool(re.match(pattern, value)) and value != 'P'
+
+
+def parse_iso_duration(value: str) -> pd.Timedelta:
+    """Parse an ISO 8601 duration string to pandas Timedelta.
+
+    Args:
+        value: ISO 8601 duration string (e.g., 'PT2H', 'P1DT12H', 'PT1H30M')
+
+    Returns:
+        pandas Timedelta
+    """
+    return pd.Timedelta(value)
 
 def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[str, pd.DataFrame]:
     """
@@ -54,15 +79,16 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
         class_name = slot.range
         dimensions = get_dimensions(schema, class_name)
 
-        if schema.get_class(slot.range):
-            range_class_name = slot.range
-
+        # Apparently not used:
+        # if schema.get_class(slot.range):
+        #     range_class_name = slot.range
 
         # Extract single-dimensional and time-series data separately
         single_dim_data = []
         timeseries_data = {}
         period_data = {}
         array_data = {}
+        datetime_data = {}
         
         for entity in collection:
             entity_dict = _entity_to_dict(entity)
@@ -95,12 +121,28 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
                     if array_key not in array_data:
                         array_data[array_key] = {}
                     array_data[array_key][entity_name] = np.array(value, dtype=str)
+                elif datatype == "list_of_timedeltas":
+                    array_key = f"{slot_class_name}.array.{key}"
+                    if array_key not in array_data:
+                        array_data[array_key] = {}
+                    array_data[array_key][entity_name] = pd.array(value, dtype='timedelta64[ns]')
                 elif datatype == "lists_of_strings_and_floats":
                     map_key = f"{slot_class_name}.map.{key}"
                     if map_key not in period_data:
                         period_data[map_key] = {'period': value[0]}
                     period_data[map_key][entity_name] = pd.to_numeric(value[1])
-                elif datatype == None:
+                elif datatype == "list_of_timesets":
+                    map_key = f"{slot_class_name}.map.{key}"
+                    if map_key not in datetime_data:
+                        datetime_data[map_key] = {}
+                    # Iterate through all timesets (multiple start_time_durations)
+                    for timeset in value:
+                        start_time = pd.to_datetime(timeset.start_time)
+                        duration = parse_iso_duration(timeset.duration)
+                        if start_time not in datetime_data[map_key]:
+                            datetime_data[map_key][start_time] = {}
+                        datetime_data[map_key][start_time][entity_name] = duration
+                elif datatype is None:
                     single_dim_row[key] = None
                 else:
                     # Handle single-dimensional data (skip name/id as already added)
@@ -151,33 +193,62 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
             result_dfs[array_key] = df
             if dimensions:
                 dim_names = [d['name'] for d in dimensions]
-    
+
+        # Create period DataFrames
+        for period_key, period_dict in period_data.items():
+            # period_dict has 'period' key with index values, rest are entity columns
+            periods = period_dict.pop('period')
+            df = pd.DataFrame(period_dict, index=periods)
+            df.index.name = 'period'
+            result_dfs[period_key] = df
+
+        # Create datetime/timeset DataFrames
+        for dt_key, dt_dict in datetime_data.items():
+            # dt_dict is {datetime: {entity: duration, ...}, ...}
+            df = pd.DataFrame(dt_dict).T  # Transpose: rows=datetimes, cols=entities
+            df.index = pd.to_datetime(df.index)
+            df.index.name = 'datetime'
+            df = df.sort_index()
+            result_dfs[dt_key] = df
+
     return result_dfs
 
 def detect_datatype(value):
     if isinstance(value, str):
         return "string"
-    
+
     if isinstance(value, (float, int, extended_float, extended_int)):
         return "float"
-    
+
+    if isinstance(value, pd.Timedelta):
+        return "timedelta"
+
     if isinstance(value, list):
         # Check for [floats]
+        if not value:
+            return "nothing"
         if isinstance(value[0], (float, int, extended_float, extended_int)):
             return "list_of_floats"
-        
+
         # Check for [strings]
         if isinstance(value[0], str):
             return "list_of_strings"
-        
+
+        # Check for [timedeltas] (ISO duration strings converted to Timedelta)
+        if isinstance(value[0], pd.Timedelta):
+            return "list_of_timedeltas"
+
+        if isinstance(value[0], Timeset):
+            return "list_of_timesets"
+
         # Check for [[strings], [floats]]
-        if (len(value) == 2 and 
-            isinstance(value[0], list) and 
+        if (len(value) == 2 and
+            isinstance(value[0], list) and
             isinstance(value[1], list) and
             isinstance(value[0][0], (str)) and
             isinstance(value[1][0], (float, int, extended_float, extended_int))):
             return "lists_of_strings_and_floats"
-    
+
     return None  # No match
 
 def get_dimensions(schema, class_name: str):
@@ -268,12 +339,20 @@ def _entity_to_dict(entity) -> dict:
             # Handle None values
             if value is None:
                 entity_dict[attr_name] = None
+            # Handle ISO 8601 duration strings - convert to Timedelta
+            elif isinstance(value, str) and is_iso_duration(value):
+                entity_dict[attr_name] = parse_iso_duration(value)
             # Handle simple types
             elif isinstance(value, (str, int, float, bool)):
                 entity_dict[attr_name] = value
-            # Handle lists (potential time-series)
+            # Handle lists (potential time-series) - skip empty lists
             elif isinstance(value, list):
-                entity_dict[attr_name] = value
+                if value:  # Only include non-empty lists
+                    # Check if list contains ISO duration strings - convert them
+                    if isinstance(value[0], str) and is_iso_duration(value[0]):
+                        entity_dict[attr_name] = [parse_iso_duration(v) for v in value]
+                    else:
+                        entity_dict[attr_name] = value
             # Handle enum values
             elif hasattr(value, 'text'):
                 entity_dict[attr_name] = value.text
@@ -302,25 +381,5 @@ def _is_timeseries_attribute(attr_name: str, value: Any, time_dimensional_attrs:
     
     return False
 
-# Example usage:
-def example_usage():
-    """
-    Example of how to use the extractor function.
-    """
-    from linkml_runtime.loaders import yaml_loader
-    # from your_generated_module import dataset  # Import your generated class
-    
-    # Load your data
-    # dataset = yaml_loader.load("your_data.yaml", target_class=dataset)
-    
-    # Extract DataFrames
-    # dfs = extract_dataframes_from_dataset(dataset, schema_path="cesm.yaml")
-    
-    # Access the results
-    # balances_df = dfs.get('balances')
-    # flow_profile_ts = dfs.get('balances.ts.flow_profile')
-    
-    print("Function ready to use!")
-
 if __name__ == "__main__":
-    example_usage()
+    print('Needs to be called programatically. Entry fuction is yaml_to_df')

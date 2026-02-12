@@ -1,86 +1,73 @@
 # Configuration file to perform data transformation between two data formats.
-# For each operation, first list tells the source or sources, second list target(s)
-# and third list defines special operations. There can be multiple special operations performed in list order.
+# For each operation, first list tells the source(s), second list target(s),
+# and third list defines special operations (performed in list order).
+# If third list is not given, then it is an entity copy (no parameters copied).
 #
-# Structure of each operation:
-# name for the operation:
-# - source class: source paramater  OR - source class (used to copy entities or to create parameters based on entities in which case target entities will get a parameter from 'value')
-# - target class: target parameter  OR - target class (used to copy entities)
-# - - order: [optional list of lists for dimension positions]:
-#       separate list for each dimension in the target - each target dimension can pick dimension names from multiple source dimensions.
-#       0 is for the source entity name and indexes 1, 2, etc. are for the source dimension entity names.
-#       target name will be based on the first inner list. target dimension names will follow (if multi-dimensional).
-#   - rename:
-#       source parameter value: target parameter value
-#   - algebra: programmatically interpreted algebraic formula between two or more source parameters
-#   - [multiply, divide, add or subtract]:
-#       with: float
+# Entity copy rules:
+#   name-entities:
+#   - source class(es)
+#   - target class(es):
+#       order: reorder dimensions [[0, 1], [0]] - list per target dimension
+#       if_parameter: conditional on parameter existence/value
+#       if_not_parameter: conditional on parameter not existing/matching
+#
+# Parameter copy rules:
+#   name:
+#   - source class: source parameter
+#   - target class: target parameter
+#   - - order: [[...]]
+#       aggregate: sum|average|max|min|first (when reducing dimensions)
+#     - if_parameter: conditional copy
+#     - if_not_parameter: conditional copy
+#     - rename:
+#         source_value: target_value
+#     - value: constant or dimension-based [0, 1, ...]
+#     - operation:
+#       - multiply|divide|add|subtract:
+#           with: constant
+#     - algebra: "1*2" (formula between sources)
+#       match: [0, 1] (dimension indexes to align)
 
-# Entities
-balance-entities:
-- balance
-- node
-storage-entities:
-- storage
-- node
-commodity-entities:
-- commodity
-- - node
-  - commodity
-  - commodity.node:
-      order: [[0], [0], [0]]
-unit-entities:
-- unit
-- unit
-unit-to-node-entities:
-- unit_to_node
-- unit.outputNode:
-    order: [[0], [1], [2]]
-- dimensions: [unit, node]
-node-to-unit-entities:
-- node_to_unit
-- unit.inputNode:
-    order: [[0], [2], [1]]
-- dimensions: [unit, node]
-profile-entities:
-- unit_to_node
-- - profile:
-      order: [[0]]
-      if_parameter: [profile_limit_upper, profile_limit_lower]
-  - unit.node.profile:
-      order: [[0], [1], [2], [0]]
-      if_parameter: [profile_limit_upper, profile_limit_lower]
-link-entities:
-- link
-- - connection:
-      order: [[0]]
-  - connection.node.node:
-      order: [[0], [0], [1], [2]]
+# =============================================================================
+# SYSTEM
+# =============================================================================
+model-entities:
+- system
+- model
 
-
-flow_profile:
-- balance: [flow_profile, [ts]]
-  storage: [flow_profile, [ts]]
-- node: [inflow, [str]]
-
-# Parameters
-# System
 inflation_rate:
 - system: inflation_rate
 - model: discount_rate
+- operation:
+  - multiply:
+      with: 0.01
 
-# timeline: in function
+solve_order:
+- system: [solve_order, [array]]
+- model: [solves, [array]]
 
-# Solve pattern
+# =============================================================================
+# SOLVE_PATTERN
+# =============================================================================
+rolling_jump:
+- solve_pattern: rolling_jump
+- solve: rolling_solve_jump
+
+rolling_horizon:
+- solve_pattern: rolling_additional_horizon
+- solve: rolling_solve_horizon
+
 solve_mode:
 - solve_pattern: solve_mode
 - solve: solve_mode
 - rename:
     single_solve: single_solve
+    rolling_solve: rolling_window
 
 periods_realise_invested:
 - solve_pattern: [periods_realise_investments, [array]]
 - solve: [realized_invest_periods, [array]]
+
 periods_invested:
 - solve_pattern: [periods_realise_investments, [array]]
 - solve: [invest_periods, [array]]
@@ -89,71 +76,256 @@ periods_realised:
 - solve_pattern: [periods_realise_operations, [array]]
 - solve: [realized_periods, [array]]
 
+# =============================================================================
+# BALANCE
+# =============================================================================
+balance-entities:
+- balance
+- node
 
-# Nodes
-annual_flow:
+node-balance-flow_profile:
+- balance: [flow_profile, [ts]]
+- node: [inflow, [str]]
+
+node-balance-flow_profile_constant:
+- balance: flow_profile
+- node: inflow
+
+balance-annual_flow:
 - balance: flow_annual
-  storage: flow_annual
 - node: annual_flow
-flow-scaling-method:
+
+balance-penalty_upward:
+- balance: penalty_upward
+- node: penalty_up
+
+balance-penalty_downward:
+- balance: penalty_downward
+- node: penalty_down
+
+balance-flow-scaling-method:
 - balance: flow_scaling_method
-  storage: flow_scaling_method
 - node: inflow_method
 - rename:
     use_profile_directly: use_original
     scale_to_annual: scale_to_annual_flow
-price_per_unit:
-- commodity: price_per_unit
-- commodity: price
+
+balance-has_balance:
+- balance
+- node: has_balance
+- value: 'yes'
+
+# =============================================================================
+# STORAGE
+# =============================================================================
+storage-entities:
+- storage
+- node
+
+node-storage-flow_profile:
+- storage: [flow_profile, [ts]]
+- node: [inflow, [str]]
+
+node-storage-flow_profile_constant:
+- storage: flow_profile
+- node: inflow
+
+storage-annual_flow:
+- storage: flow_annual
+- node: annual_flow
+
+storage-flow-scaling-method:
+- storage: flow_scaling_method
+- node: inflow_method
+- rename:
+    use_profile_directly: use_original
+    scale_to_annual: scale_to_annual_flow
+
 storage existing:
 - storage: storages_existing
 - node: existing
+
 storage capacity:
 - storage: storage_capacity
 - node: virtual_unitsize
+
 storage availability:
 - storage: availability
 - node: availability
+
 storage invest-cost:
 - storage: investment_cost
 - node: invest_cost
 - operation:
   - multiply:
       with: 0.001
+
 storage fixed-cost:
 - storage: fixed_cost
 - node: fixed_cost
 - operation:
   - multiply:
       with: 0.001
+
 storage_investment_method:
 - storage: investment_method
 - node: invest_method
 - rename:
     not_allowed: not_allowed
     no_limits: invest_no_limit
+
 storage_discount_rate:
 - storage: discount_rate
 - node: interest_rate
+- operation:
+  - multiply:
+      with: 0.01
+
 storage_payback_time:
 - storage: payback_time
 - node: lifetime
-penalty_upward:
+
+storage-penalty_upward:
 - storage: penalty_upward
-  balance: penalty_upward
 - node: penalty_up
-penalty_downward:
+
+storage-penalty_downward:
 - storage: penalty_downward
-  balance: penalty_downward
 - node: penalty_down
-has_balance:
-- [balance, storage]
+
+storage-has_balance:
+- storage
 - node: has_balance
 - value: 'yes'
-has_storage:
+
+storage-has_storage:
 - storage
 - node: has_storage
 - value: 'yes'
+
+# =============================================================================
+# COMMODITY
+# =============================================================================
+commodity-entities:
+- commodity
+- - node
+  - commodity
+  - commodity.node:
+      order: [[0], [0], [0]]
+
+price_per_unit:
+- commodity: price_per_unit
+- commodity: price
+
+# =============================================================================
+# UNIT
+# =============================================================================
+unit-entities:
+- unit
+- unit
+
+units conversion_method:
+- unit: conversion_method
+- unit: conversion_method
+- rename:
+    constant_efficiency: constant_efficiency
+    two_point_efficiency: min_load_efficiency
+
+units startup_method:
+- unit: startup_method
+- unit: startup_method
+- rename:
+    linear: linear
+    integer: binary
+
+units startup_cost:
+- unit: startup_cost
+- unit: startup_cost
+
+units_existing:
+- unit: units_existing
+- unit: existing
+
+unit_availability:
+- unit: availability
+- unit: availability
+
+unit investment_method:
+- unit: investment_method
+- unit: invest_method
+- rename:
+    not_allowed: not_allowed
+    no_limits: invest_no_limit
+
+unit discount_rate:
+- unit: discount_rate
+- unit: interest_rate
+- operation:
+  - multiply:
+      with: 0.01
+
+unit payback_time:
+- unit: payback_time
+- unit: lifetime
+
+# =============================================================================
+# UNIT_TO_NODE
+# =============================================================================
+unit-to-node-entities:
+- unit_to_node
+- unit.outputNode:
+    order: [[0], [1], [2]]
+- dimensions: [unit, node]
+
+profile-entities:
+- unit_to_node
+- - profile:
+      order: [[0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]
+  - unit.node.profile:
+      order: [[0], [1], [2], [0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]
+
+units_capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: max
+
+unit_to_node investment_cost:
+- unit_to_node: investment_cost
+- unit: invest_cost
+- - order: [[1]]
+    aggregate: sum
+
+unit_to_node fixed_cost:
+- unit_to_node: fixed_cost
+- unit: fixed_cost
+- - order: [[1]]
+    aggregate: sum
+
+unit_to_node other_operational_cost:
+- unit_to_node: other_operational_cost
+- unit.outputNode: other_operational_cost
+- - dimensions: [unit, node]
+  - order: [[0], [1], [2]]
+
+unit_to_node-inertia_constant:
+- unit_to_node: inertia_constant
+- unit.outputNode: inertia_constant
+- - dimensions: [unit, node]
+  - order: [[0], [1], [2]]
+
+unit_to_node profile_limit_upper:
+- unit_to_node: [profile_limit_upper, [ts]]
+- profile: [profile, [str]]
+- - order: [[0]]
+
+unit_to_node-constraint_flow_coefficient:
+- unit_to_node: [constraint_flow_coefficient, [str]]
+- unit.outputNode: [constraint_flow_coefficient, [str]]
+- - order: [[0], [1], [2]]
+
 profile_method:
 - unit_to_node
 - unit.node.profile: profile_method
@@ -161,115 +333,74 @@ profile_method:
   - value: 'upper_limit'
   - if_parameter: [profile_limit_upper, profile_limit_lower]
 
-# Units
-conversion_method:
-- unit: conversion_method
-- unit: conversion_method
-- rename:
-    constant_efficiency: constant_efficiency
-units_existing:
-- unit: units_existing
-- unit: existing
-unit_efficiency:
-- unit: efficiency
-- unit: efficiency
-unit_availability:
-- unit: availability
-- unit: availability
-unit investment_method:
-- unit: investment_method
-- unit: invest_method
-- rename:
-    not_allowed: not_allowed
-    no_limits: invest_no_limit
-unit discount_rate:
-- unit: discount_rate
-- unit: interest_rate
-unit payback_time:
-- unit: payback_time
-- unit: lifetime
+# =============================================================================
+# NODE_TO_UNIT
+# =============================================================================
+node-to-unit-entities:
+- node_to_unit
+- unit.inputNode:
+    order: [[0], [2], [1]]
+- dimensions: [unit, node]
 
-# to from units
-unit_to_node capacity:
-- unit_to_node: capacity
-- unit: virtual_unitsize
-- - order:
-      order: [[1]]
-      aggregate: sum
-unit_to_node investment_cost:
-- unit_to_node: investment_cost
-- unit: invest_cost
-- - order:
-      order: [[1]]
-      aggregate: sum
-unit_to_node fixed_cost:
-- unit_to_node: fixed_cost
-- unit: fixed_cost
-- - order:
-      order: [[1]]
-      aggregate: sum
-unit_to_node other_operational_cost:
-- unit_to_node: other_operational_cost
-- unit.outputNode: other_operational_cost
-- - dimensions: [unit, node]
-  - order: [[0], [1], [2]]
 node_to_unit other_operational_cost:
 - node_to_unit: other_operational_cost
 - unit.inputNode: other_operational_cost
 - - dimensions: [unit, node]
   - order: [[0], [2], [1]]
-unit_to_node profile_limit_upper:
-- unit_to_node: [profile_limit_upper, [ts]]
-- profile: [profile, [str]]
-- - order: [[0]]
-#unit_to_node profile_limit_lower:
-#- unit_to_node: [profile_limit_lower, [ts]]
-#- profile: [profile, [str]]
-#- - order: [[0]]
 
-#test-multiply:
-#- node_to_unit: other_operational_cost
-#  unit: efficiency
-#- unit.inputNode: test
-#- - algebra: "1*2"
-#    match: [[2], [1]]
-#  - order: [[2], [1]]
+node_to_unit-inertia_constant:
+- node_to_unit: inertia_constant
+- unit.inputNode: inertia_constant
+- - dimensions: [unit, node]
+  - order: [[0], [2], [1]]
 
-# Link
-link efficiency:
-- link: efficiency
-- connection: efficiency
-- order: [[0]]
+# =============================================================================
+# LINK
+# =============================================================================
+link-entities:
+- link
+- - connection:
+      order: [[0]]
+  - connection.node.node:
+      order: [[0], [0], [1], [2]]
+
 transfer_method:
 - link: transfer_method
 - connection: transfer_method
 - order: [[0]]
 - rename:
     regular_linear: regular
+
 link capacity:
 - link: capacity
 - connection: virtual_unitsize
 - order: [[0]]
+
 link existing:
 - link: links_existing
 - connection: existing
 - order: [[0]]
+
 link availability:
 - link: availability
 - connection: availability
 - order: [[0]]
+
 link investment_cost:
 - link: investment_cost
 - connection: invest_cost
 - order: [[0]]
+
 link fixed_cost:
 - link: fixed_cost
 - connection: fixed_cost
 - order: [[0]]
+
 link operational_cost:
 - link: operational_cost
 - connection: other_operational_cost
 - order: [[0]]
+
 link investment_method:
 - link: investment_method
 - connection: invest_method
@@ -277,11 +408,31 @@ link investment_method:
 - rename:
     not_allowed: not_allowed
     no_limits: invest_no_limit
+
 link discount_rate:
 - link: discount_rate
 - connection: interest_rate
-- order: [[0]]
+- - order: [[0]]
+  - - operation:
+      - multiply:
+          with: 0.01
+
 link payback_time:
 - link: payback_time
 - connection: lifetime
 - order: [[0]]
+
+# =============================================================================
+# CONSTRAINT
+# =============================================================================
+constraint:
+- constraint
+- constraint
+
+constraint-sense:
+- constraint: sense
+- constraint: sense
+
+constraint-constant:
+- constraint: constant
+- constraint: constant

@@ -47,7 +47,7 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - 'src/core/' - Functions to perform data conversions
 - 'src/readers/' - Functions to read from files to memory
 - 'src/writers/' - Functions to write from memory to files
-- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-python --validate  model/cesm.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
+- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-pydantic model/cesm.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
 
 ## Getting Started
 

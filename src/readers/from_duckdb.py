@@ -5,7 +5,13 @@ Reads a DuckDB database file created by writers/to_duckdb.py and
 reconstructs the original DataFrame structures including:
 - Single and MultiIndex row indexes
 - DatetimeIndex for time series
-- MultiIndex columns
+- MultiIndex columns (encoded with :: separator: "region::north::heat")
+
+Metadata schema:
+- index_type: 'single', 'datetime', or 'multi'
+- index_count: number of index columns (first N columns in table)
+- columns_multiindex: boolean indicating if columns are MultiIndex
+- columns_levels: JSON array of level names if MultiIndex columns
 
 Usage:
     from readers.from_duckdb import dataframes_from_duckdb
@@ -16,61 +22,71 @@ import duckdb
 import pandas as pd
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Optional, List
 
 
-def _reconstruct_index(df: pd.DataFrame, index_meta: Dict[str, Any]) -> pd.DataFrame:
-    """Reconstruct the original index structure from metadata."""
-    index_type = index_meta['type']
-    index_names = index_meta['names']
-    nlevels = index_meta['nlevels']
+def _decode_multiindex_column(col_name: str) -> tuple:
+    """
+    Decode a ::-separated column name back to a tuple.
 
-    if index_type == 'multiindex':
-        # Set multiple columns as index
-        df = df.set_index(index_names)
+    "region::north::heat" -> ("region", "north", "heat")
+    """
+    return tuple(col_name.split('::'))
+
+
+def _reconstruct_index(df: pd.DataFrame, index_type: str, index_count: int) -> pd.DataFrame:
+    """
+    Reconstruct the original index structure from metadata.
+
+    Index columns are stored as the first N columns in the table.
+
+    Args:
+        df: DataFrame with index columns as first columns
+        index_type: 'single', 'datetime', or 'multi'
+        index_count: number of index columns
+
+    Returns:
+        DataFrame with proper index set
+    """
+    # Get the first index_count columns as index columns
+    index_cols = df.columns[:index_count].tolist()
+
+    if index_type == 'multi':
+        # Set multiple columns as MultiIndex
+        df = df.set_index(index_cols)
     elif index_type == 'datetime':
         # Convert column to DatetimeIndex
-        index_col = index_names[0] if index_names[0] else df.columns[0]
+        index_col = index_cols[0]
         df[index_col] = pd.to_datetime(df[index_col])
         df = df.set_index(index_col)
-        df.index.name = index_names[0]
     elif index_type == 'single':
-        index_col = index_names[0]
-        if index_col and index_col in df.columns:
-            df = df.set_index(index_col)
-        elif index_col is None and 'index' in df.columns:
+        index_col = index_cols[0]
+        if index_col == 'index':
             # Handle unnamed index stored as 'index'
-            df = df.set_index('index')
+            df = df.set_index(index_col)
             df.index.name = None
+        else:
+            df = df.set_index(index_col)
 
     return df
 
 
-def _reconstruct_columns(df: pd.DataFrame, columns_meta: Dict[str, Any]) -> pd.DataFrame:
-    """Reconstruct the original column structure from metadata."""
-    columns_type = columns_meta['type']
+def _reconstruct_columns(df: pd.DataFrame, columns_levels: Optional[List[str]]) -> pd.DataFrame:
+    """
+    Reconstruct MultiIndex columns from dot-encoded column names.
 
-    if columns_type == 'multiindex':
-        # Decode JSON-encoded column tuples
-        tuples = columns_meta['tuples']
-        names = columns_meta['names']
+    Args:
+        df: DataFrame with dot-encoded column names
+        columns_levels: list of level names for the MultiIndex
 
-        # Current columns are JSON-encoded strings
-        # Map them back to the original tuples
-        current_cols = df.columns.tolist()
-        new_columns = []
+    Returns:
+        DataFrame with MultiIndex columns
+    """
+    # Decode dot-encoded column names to tuples
+    current_cols = df.columns.tolist()
+    new_columns = [_decode_multiindex_column(col) for col in current_cols]
 
-        for col in current_cols:
-            try:
-                # Try to decode as JSON tuple
-                decoded = json.loads(col)
-                new_columns.append(tuple(decoded))
-            except (json.JSONDecodeError, TypeError):
-                # Not a JSON-encoded tuple, keep as-is (likely an index column)
-                # This shouldn't happen after index reconstruction
-                new_columns.append((col,) * len(names))
-
-        df.columns = pd.MultiIndex.from_tuples(new_columns, names=names)
+    df.columns = pd.MultiIndex.from_tuples(new_columns, names=columns_levels)
 
     return df
 
@@ -123,19 +139,21 @@ def dataframes_from_duckdb(
 
             print(f"  Reading table: {table_name}")
 
-            # Parse metadata
-            index_meta = json.loads(row['index_metadata'])
-            columns_meta = json.loads(row['columns_metadata'])
+            # Read simplified metadata
+            index_type = row['index_type']
+            index_count = row['index_count']
+            columns_multiindex = row['columns_multiindex']
+            columns_levels = json.loads(row['columns_levels']) if row['columns_levels'] else None
 
             # Read the table
             df = conn.execute(f'SELECT * FROM "{sql_table_name}"').fetchdf()
 
-            # Reconstruct index
-            df = _reconstruct_index(df, index_meta)
+            # Reconstruct index (first N columns become index)
+            df = _reconstruct_index(df, index_type, index_count)
 
-            # Reconstruct columns (for MultiIndex columns)
-            if columns_meta['type'] == 'multiindex':
-                df = _reconstruct_columns(df, columns_meta)
+            # Reconstruct MultiIndex columns if needed
+            if columns_multiindex:
+                df = _reconstruct_columns(df, columns_levels)
 
             dataframes[table_name] = df
 

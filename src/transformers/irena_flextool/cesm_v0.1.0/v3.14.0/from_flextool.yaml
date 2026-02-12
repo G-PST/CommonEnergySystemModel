@@ -1,0 +1,432 @@
+# Configuration file to transform FlexTool data to CESM format.
+# This is the reverse of to_flextool.yaml.
+#
+# Entity copy rules:
+#   name-entities:
+#   - source class(es)
+#   - target class(es):
+#       order: reorder dimensions [[0, 1], [0]] - list per target dimension
+#       if_parameter: conditional on parameter existence/value
+#       if_not_parameter: conditional on parameter not existing/matching
+#
+# Parameter copy rules:
+#   name:
+#   - source class: source parameter
+#   - target class: target parameter
+#   - - order: [[...]]
+#     - if_parameter: conditional copy
+#     - if_not_parameter: conditional copy
+#     - match_by: dimension indexes to match entities
+#     - rename:
+#         source_value: target_value
+#     - operation:
+#       - multiply|divide|add|subtract:
+#           with: constant
+
+# =============================================================================
+# MODEL
+# =============================================================================
+system-entities:
+- model
+- system
+
+parameter solve-order:
+- model: [solves, [array]]
+- system: [solve_order, [array]]
+
+inflation_rate:
+- model: discount_rate
+- system: inflation_rate
+- operation:
+  - multiply:
+      with: 100
+
+# =============================================================================
+# SOLVE
+# =============================================================================
+solve-entities:
+- solve
+- solve_pattern
+
+solve_mode:
+- solve: solve_mode
+- solve_pattern: solve_mode
+- rename:
+    single_solve: single_solve
+    rolling_window: rolling_solve
+
+solve_rolling_jump:
+- solve: rolling_solve_jump
+- solve_pattern: rolling_solve
+
+solve_rolling_window:
+- solve: rolling_solve_horizon
+- solve_pattern: rolling_additional_horizon
+
+solve_contains_solves:
+- solve: contains_solves
+- solve_pattern: contains_solve_pattern
+
+solve-periods_realise_invested:
+- solve: [realized_invest_periods, [array]]
+- solve_pattern: [periods_realise_investments, [array]]
+
+solve-periods_invested_additional:
+- solve: [invest_periods, [array]]
+- solve_pattern: [periods_additional_investments_horizon, [array]]
+
+solve-periods_realised:
+- solve: [realized_periods, [array]]
+- solve_pattern: [periods_realise_operations, [array]]
+
+# =============================================================================
+# NODE → BALANCE
+# Nodes with has_balance=yes but NOT has_storage
+# =============================================================================
+balance-entities:
+- node
+- balance
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+balance_inflow:
+- node: [inflow, [str]]
+- balance: [flow_profile, [ts]]
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+balance_flow_annual:
+- node: annual_flow
+- balance: flow_annual
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+balance_inflow_constant:
+- node: inflow
+- balance: flow_profile
+- - if_parameter: has_balance
+  - if_not_parameter: has_not_storage
+
+balance_inflow_ts:
+- node: [inflow, [str]]
+- balance: [flow_profile, [ts]]
+- - if_parameter: has_balance
+  - if_not_parameter: has_not_storage
+
+balance_penalty_upward:
+- node: penalty_up
+- balance: penalty_upward
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+balance_penalty_downward:
+- node: penalty_down
+- balance: penalty_downward
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+balance_flow_scaling_method:
+- node: inflow_method
+- balance: flow_scaling_method
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+  - rename:
+      use_original: use_profile_directly
+      scale_to_annual_flow: scale_to_annual
+
+# =============================================================================
+# NODE → STORAGE
+# Nodes with has_storage=yes
+# =============================================================================
+storage-entities:
+- node
+- storage:
+    if_parameter: has_storage
+
+storage_inflow:
+- node: inflow
+- storage: flow_profile
+- - if_parameter: has_storage
+
+storage_inflow_ts:
+- node: [inflow, [str]]
+- storage: [flow_profile, [ts]]
+- - if_parameter: has_storage
+
+storage_flow_annual:
+- node: annual_flow
+- storage: flow_annual
+- - if_parameter: has_storage
+
+storage_availability:
+- node: availability
+- storage: availability
+- - if_parameter: has_storage
+
+storage_storages_existing:
+- node: existing
+- storage: storages_existing
+- - if_parameter: has_storage
+
+storage_capacity:
+- node: virtual_unitsize
+- storage: storage_capacity
+- - if_parameter: has_storage
+
+storage_self_discharge_loss:
+- node: self_discharge_loss
+- storage: storage_capacity
+- - if_parameter: has_storage
+
+storage_investment_cost:
+- node: invest_cost
+- storage: investment_cost
+- - if_parameter: has_storage
+  - operation: multiply
+    with: 1000
+
+storage_fixed_cost:
+- node: fixed_cost
+- storage: fixed_cost
+- - if_parameter: has_storage
+  - operation: multiply
+    with: 1000
+
+storage_investment_method:
+- node: invest_method
+- storage: investment_method
+- - if_parameter: has_storage
+  - rename:
+      not_allowed: not_allowed
+      invest_no_limit: no_limits
+
+storage_discount_rate:
+- node: interest_rate
+- storage: discount_rate
+- - if_parameter: has_storage
+  - operation:
+    - multiply:
+        with: 100
+
+storage_payback_time:
+- node: lifetime
+- storage: payback_time
+- - if_parameter: has_storage
+
+storage_penalty_upward:
+- node: penalty_up
+- storage: penalty_upward
+- - if_parameter: has_storage
+
+storage_penalty_downward:
+- node: penalty_down
+- storage: penalty_downward
+- - if_parameter: has_storage
+
+storage_flow_scaling_method:
+- node: inflow_method
+- storage: flow_scaling_method
+- - if_parameter: has_storage
+  - rename:
+      use_original: use_profile_directly
+      scale_to_annual_flow: scale_to_annual
+
+# =============================================================================
+# COMMODITY
+# =============================================================================
+commodity-entities:
+- commodity
+- commodity
+
+commodity_price:
+- commodity: price
+- commodity: price_per_unit
+
+# =============================================================================
+# UNIT
+# =============================================================================
+unit-entities:
+- unit
+- unit
+
+conversion_method:
+- unit: conversion_method
+- unit: conversion_method
+- rename:
+    constant_efficiency: constant_efficiency
+    min_load_efficiency: two_point_efficiency
+
+units startup_method:
+- unit: startup_method
+- unit: startup_method
+- rename:
+    linear: linear
+    binary: integer
+
+units startup_cost:
+- unit: startup_cost
+- unit: startup_cost
+
+units_existing:
+- unit: existing
+- unit: units_existing
+
+unit_availability:
+- unit: availability
+- unit: availability
+
+unit_investment_method:
+- unit: invest_method
+- unit: investment_method
+- rename:
+    not_allowed: not_allowed
+    invest_no_limit: no_limits
+
+unit_discount_rate:
+- unit: interest_rate
+- unit: discount_rate
+- operation:
+  - multiply:
+      with: 100
+
+unit_payback_time:
+- unit: lifetime
+- unit: payback_time
+
+# =============================================================================
+# UNIT.OUTPUTNODE → UNIT_TO_NODE
+# =============================================================================
+unit_to_node-entities:
+- unit.outputNode
+- unit_to_node:
+    order: [[0], [1], [2]]
+- dimensions: [source, sink]
+
+unit_to_node-inertia_constant:
+- unit.outputNode: inertia_constant
+- unit_to_node: inertia_constant
+
+unit_to_node-other_operational_cost:
+- unit.outputNode: other_operational_cost
+- unit_to_node: other_operational_cost
+
+unit_to_node-constraint_flow_coefficient:
+- unit.outputNode: [constraint_flow_coefficient, [str]]
+- unit_to_node: [constraint_flow_coefficient, [str]]
+- - order: [[0], [1], [2]]
+  - dimensions: [source, sink]
+
+# =============================================================================
+# UNIT.INPUTNODE → NODE_TO_UNIT
+# =============================================================================
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]
+- dimensions: [source, sink]
+
+node_to_unit-inertia_constant:
+- unit.inputNode: inertia_constant
+- node_to_unit: inertia_constant
+
+node_to_unit-other_operational_cost:
+- unit.inputNode: other_operational_cost
+- node_to_unit: other_operational_cost
+
+node_to_unit-constraint_flow_coefficient:
+- unit.inputNode: [constraint_flow_coefficient, [str]]
+- node_to_unit: [constraint_flow_coefficient, [str]]
+- - order: [[0], [1], [2]]
+  - dimensions: [source, sink]
+
+# =============================================================================
+# CONNECTION → LINK
+# =============================================================================
+link-entities:
+- connection.node.node
+- link:
+    order: [[0], [2], [3]]
+- dimensions: [node_A, node_B]
+
+transfer_method:
+- connection: transfer_method
+- link: transfer_method
+- - order: [[0]]
+  - match_by: [0]
+  - rename:
+      regular: regular_linear
+
+link capacity:
+- connection: virtual_unitsize
+- link: capacity
+- - order: [[0]]
+  - match_by: [0]
+
+link existing:
+- connection: existing
+- link: links_existing
+- - order: [[0]]
+  - match_by: [0]
+
+link availability:
+- connection: availability
+- link: availability
+- - order: [[0]]
+  - match_by: [0]
+
+link investment_cost:
+- connection: invest_cost
+- link: investment_cost
+- - order: [[0]]
+  - match_by: [0]
+
+link fixed_cost:
+- connection: fixed_cost
+- link: fixed_cost
+- - order: [[0]]
+  - match_by: [0]
+
+link operational_cost:
+- connection: other_operational_cost
+- link: operational_cost
+- - order: [[0]]
+  - match_by: [0]
+
+link investment_method:
+- connection: invest_method
+- link: investment_method
+- - order: [[0]]
+  - match_by: [0]
+  - rename:
+      not_allowed: not_allowed
+      invest_no_limit: no_limits
+
+link discount_rate:
+- connection: interest_rate
+- link: discount_rate
+- - order: [[0]]
+  - match_by: [0]
+  - operation:
+    - multiply:
+        with: 100
+
+link payback_time:
+- connection: lifetime
+- link: payback_time
+- - order: [[0]]
+  - match_by: [0]
+
+# =============================================================================
+# CONSTRAINT
+# =============================================================================
+constraint-entities:
+- constraint
+- constraint
+
+constraint-sense:
+- constraint: sense
+- constraint: sense
+
+constraint-constant:
+- constraint: constant
+- constraint: constant
