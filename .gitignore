@@ -6,5 +6,6 @@ __pycache__/
 dev_files/*
 src/generated/*
 data/*
+specs/*
 !data/samples/
 !data/samples/**

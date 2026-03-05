@@ -750,8 +750,8 @@
         "FlexTool3_test": {
             "type": "Tool",
             "description": "",
-            "x": -677.7836237167483,
-            "y": -294.9520389348593,
+            "x": -634.9700576168775,
+            "y": -311.8179892166267,
             "specification": "FlexTool3",
             "execute_in_work": false,
             "cmd_line_args": [
@@ -786,8 +786,8 @@
         "output info test": {
             "type": "Data Store",
             "description": "",
-            "x": -846.4719473541506,
-            "y": -280.8105028215441,
+            "x": -779.0081462270814,
+            "y": -310.65026101236333,
             "url": {
                 "dialect": "sqlite",
                 "host": "",
