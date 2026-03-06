@@ -91,7 +91,7 @@ Load the sample data into DuckDB:
 python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb
 ```
 
-See the [schema documentation](docs/energy-system-model/schema/index.html) for detailed class and enumeration reference.
+See the [schema documentation](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html) for detailed class and enumeration reference.
 
 ## Getting Started
 
@@ -105,9 +105,8 @@ See the [schema documentation](docs/energy-system-model/schema/index.html) for d
 2. **Sample Data**: The sample file shows how to structure data according to the model. It has examples for all the classes and forms a small test system.
 
 3. **Documentation**:
-   - [Schema Reference](docs/energy-system-model/schema/index.html) -- auto-generated class and enumeration documentation
+   - [Schema Reference](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html) -- auto-generated class and enumeration documentation
    - [Transformer Developer Guide](transformer-developer-guide.md) -- architecture, DataFrame conventions, YAML syntax, and how to add new formats
-   - [Documentation Plan](specs/documentation.md) -- planned documentation (quickstart, unit conventions, methods reference, etc.)
 
 ## Development Environment
 
