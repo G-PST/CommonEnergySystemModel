@@ -91,7 +91,7 @@ Load the sample data into DuckDB:
 python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb
 ```
 
-See [docs/getting-started/quickstart.md](docs/getting-started/quickstart.md) for more usage examples.
+See the [schema documentation](docs/energy-system-model/schema/index.html) for detailed class and enumeration reference.
 
 ## Getting Started
 
@@ -105,10 +105,9 @@ See [docs/getting-started/quickstart.md](docs/getting-started/quickstart.md) for
 2. **Sample Data**: The sample file shows how to structure data according to the model. It has examples for all the classes and forms a small test system.
 
 3. **Documentation**:
-   - [Quickstart](docs/getting-started/quickstart.md) -- run your first transformation
-   - [Unit Conventions](docs/specification/unit-conventions.md) -- physical units, percentages vs fractions
-   - [Methods Reference](docs/specification/methods.md) -- method-parameter relationships
+   - [Schema Reference](docs/energy-system-model/schema/index.html) -- auto-generated class and enumeration documentation
    - [Transformer Developer Guide](transformer-developer-guide.md) -- architecture, DataFrame conventions, YAML syntax, and how to add new formats
+   - [Documentation Plan](specs/documentation.md) -- planned documentation (quickstart, unit conventions, methods reference, etc.)
 
 ## Development Environment
 
