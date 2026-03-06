@@ -1,5 +1,5 @@
 import pandas as pd
-import generated.cesm as cesm  # This is the generated class
+
 
 def to_griddb(cesm):
     """
@@ -10,7 +10,7 @@ def to_griddb(cesm):
     time_diffs = -dt_series.diff(-1).total_seconds() / 3600
     time_diffs = pd.Series(time_diffs)
     time_diffs.iloc[-1] = time_diffs.iloc[-2]
-    
+
     timeline = pd.DataFrame({
         'datetime': cesm["timeline"],
         'cesm_timeline': time_diffs
@@ -34,7 +34,7 @@ def to_griddb(cesm):
     period_timeset = pd.DataFrame({'period': list(periods)})
     for solve_name in flextool['solve']['name']:
         period_timeset[solve_name] = 'cesm_timeset'
-    
+
     flextool['solve.table.period_timeset'] = period_timeset
 
     return flextool

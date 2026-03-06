@@ -5,23 +5,23 @@ This module converts dict of source dataframes to target dataframes matching SQL
 Uses vectorized operations and multi-index alignment for efficiency.
 """
 
-import pandas as pd
-import numpy as np
-import uuid
 import json
-from typing import Dict, List, Tuple
+import uuid
 from dataclasses import dataclass, field
+from typing import Dict, List, Tuple
+
+import pandas as pd
 from linkml_runtime.utils.schemaview import SchemaView
 
 
 def safe_filter(df: pd.DataFrame, col: str) -> pd.Series:
     """
     Safely check if column exists and return boolean mask.
-    
+
     Args:
         df: DataFrame to check
         col: Column name
-        
+
     Returns:
         Boolean series with True where column exists and is not null,
         False for all rows if column doesn't exist
@@ -32,13 +32,13 @@ def safe_filter(df: pd.DataFrame, col: str) -> pd.Series:
 def safe_get(df: pd.DataFrame, idx, col: str, default=None):
     """
     Safely get a value from dataframe with fallback.
-    
+
     Args:
         df: DataFrame
         idx: Row index
         col: Column name
         default: Default value if column doesn't exist
-        
+
     Returns:
         Value at df.loc[idx, col] or default
     """
@@ -53,16 +53,16 @@ class TransformationErrors:
     errors: List[str] = field(default_factory=list)
     missing_transformations: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
-    
+
     def add_error(self, message: str):
         self.errors.append(message)
-    
+
     def add_missing(self, message: str):
         self.missing_transformations.append(message)
-    
+
     def add_warning(self, message: str):
         self.warnings.append(message)
-    
+
     def report(self):
         """Print all collected errors and warnings."""
         if self.errors:
@@ -71,14 +71,14 @@ class TransformationErrors:
             print("="*80)
             for err in self.errors:
                 print(f"  • {err}")
-        
+
         if self.warnings:
             print("\n" + "="*80)
             print("TRANSFORMATION WARNINGS:")
             print("="*80)
             for warn in self.warnings:
                 print(f"  • {warn}")
-        
+
         if self.missing_transformations:
             print("\n" + "="*80)
             print("MISSING TRANSFORMATIONS (source→target):")
@@ -199,19 +199,19 @@ def determine_prime_mover(source: Dict[str, pd.DataFrame], unit_name: str) -> st
 def identify_power_grid_nodes(source: Dict[str, pd.DataFrame], errors: TransformationErrors) -> set:
     """Identify balance nodes that are part of power_grid groups."""
     power_grid_nodes = set()
-    
+
     if 'group' not in source or 'group_entity' not in source:
         errors.add_warning("No group or group_entity data - cannot identify power_grid nodes")
         return power_grid_nodes
-    
+
     # Find groups with group_type == 'power_grid'
     groups = source['group']
     power_grid_groups = groups[groups['group_type'] == 'power_grid'].index.tolist()
-    
+
     if not power_grid_groups:
         errors.add_warning("No power_grid groups found")
         return power_grid_nodes
-    
+
     # Find all entities in these groups
     group_entities = source['group_entity']
     for group in power_grid_groups:
@@ -225,7 +225,7 @@ def identify_power_grid_nodes(source: Dict[str, pd.DataFrame], errors: Transform
             # Group not found in group_entities
             errors.add_warning(f"Power grid group '{group}' has no entities in group_entity table")
             continue
-    
+
     return power_grid_nodes
 
 
@@ -247,7 +247,7 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
             # Removed: name, description, user_data fields
         })
         return entity_id
-    
+
     # 1. Prime mover types (STEAM, ROR, STORAGE will be created by transform_prime_mover_types)
     # No need to create placeholder here - schema now has INSERT statements
 
@@ -369,11 +369,11 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
                 add_entity('transmission_interchanges', 'Arc', key, key)
             except KeyError:
                 continue
-    
+
     if not entities_data:
         errors.add_error("No entities created from source data")
         return pd.DataFrame()
-    
+
     return pd.DataFrame(entities_data)
 
 
@@ -492,11 +492,11 @@ def transform_arcs(source: Dict[str, pd.DataFrame],
     """Create arcs table from links."""
     if 'link' not in source:
         return pd.DataFrame(columns=['id', 'from_id', 'to_id'])
-    
+
     links = source['link']
     arc_pairs = set()
     arcs_data = []
-    
+
     for idx in links.index:
         # Link index is always a 3-tuple: (name, node_a, node_b)
         if isinstance(idx, tuple) and len(idx) == 3:
@@ -504,34 +504,34 @@ def transform_arcs(source: Dict[str, pd.DataFrame],
         else:
             errors.add_warning(f"Link index {idx} is not a 3-tuple, skipping")
             continue
-        
+
         # Deduplicate bidirectional arcs
         if (node_a, node_b) in arc_pairs or (node_b, node_a) in arc_pairs:
             continue
-        
+
         arc_pairs.add((node_a, node_b))
         arc_key = f"{node_a}_{node_b}"
         arc_id = id_gen.get('arcs', arc_key)
-        
+
         # Get node IDs (try balancing topologies first)
         try:
             from_id = id_gen.get('balancing_topologies', node_a)
         except KeyError:
             errors.add_warning(f"Node {node_a} not found in balancing_topologies")
             continue
-        
+
         try:
             to_id = id_gen.get('balancing_topologies', node_b)
         except KeyError:
             errors.add_warning(f"Node {node_b} not found in balancing_topologies")
             continue
-        
+
         arcs_data.append({
             'id': arc_id,
             'from_id': from_id,
             'to_id': to_id
         })
-    
+
     return pd.DataFrame(arcs_data)
 
 
@@ -598,7 +598,7 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
     if 'unit' not in source or 'unit_to_node' not in source:
         return pd.DataFrame(columns=['id', 'name', 'prime_mover', 'fuel', 'balancing_topology',
                                      'rating', 'base_power'])
-    
+
     units = source['unit']
     existing_units = units[safe_filter(units, 'units_existing') & (units['units_existing'] > 0)].copy()
     unit_to_node = source['unit_to_node']
@@ -679,7 +679,7 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
             'rating': rating,
             'base_power': base_power
         })
-    
+
     return pd.DataFrame(gen_units_data)
 
 
@@ -690,7 +690,7 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
     if 'storage' not in source or 'link' not in source:
         return pd.DataFrame(columns=['id', 'name', 'prime_mover', 'max_capacity', 'balancing_topology',
                                      'efficiency_up', 'efficiency_down', 'rating', 'base_power'])
-    
+
     storages = source['storage']
     existing_storages = storages[safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)].copy()
     links = source['link']
@@ -748,9 +748,9 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
             'rating': rating,
             'base_power': base_power
         })
-    
+
     errors.add_missing("storage efficiency parameters not fully mapped (using link efficiency as proxy)")
-    
+
     return pd.DataFrame(storage_units_data)
 
 
@@ -1100,13 +1100,13 @@ def transform_operational_data(source: Dict[str, pd.DataFrame],
     """Create operational_data table."""
     if 'unit' not in source:
         return pd.DataFrame(columns=['id', 'entity_id', 'active_power_limit_min', 'must_run',
-                                     'uptime', 'downtime', 'ramp_up', 'ramp_down', 
+                                     'uptime', 'downtime', 'ramp_up', 'ramp_down',
                                      'operational_cost'])
-    
+
     units = source['unit']
     operational_data = []
     op_id = 0
-    
+
     for unit_name in units.index:
         # Create operational data for all units
         try:
@@ -1117,12 +1117,12 @@ def transform_operational_data(source: Dict[str, pd.DataFrame],
                 entity_id = id_gen.get('supply_technologies', f"supply_tech_{unit_name}")
             except KeyError:
                 continue
-        
+
         op_id += 1
-        
+
         # Get efficiency if available (simplified for now)
         efficiency = safe_get(units, unit_name, 'efficiency')
-        
+
         operational_data.append({
             'id': op_id,
             'entity_id': entity_id,
@@ -1135,10 +1135,10 @@ def transform_operational_data(source: Dict[str, pd.DataFrame],
             'operational_cost': None
             # Note: operational_cost_type is a generated column in schema, exclude from insert
         })
-    
+
     errors.add_missing("operational_data.active_power_limit_min - no clear source mapping")
     errors.add_missing("operational_data fields from unit.efficiency - complex cases not handled")
-    
+
     return pd.DataFrame(operational_data)
 
 
@@ -1656,22 +1656,22 @@ def transform_time_series(source: Dict[str, pd.DataFrame],
 def to_griddb(source: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
     """
     Main transformation function.
-    
+
     Args:
         source: Dictionary of source dataframes
-        
+
     Returns:
         Dictionary of target dataframes matching SQL schema
     """
     errors = TransformationErrors()
     id_gen = IDGenerator()
     target = {}
-    
+
     try:
         # Phase 1: Create entities and populate ID mappings
         print("Phase 1: Creating entities and ID mappings...")
         target['entities'] = transform_entities_and_ids(source, id_gen, errors)
-        
+
         # Phase 2: Create all other tables
         print("Phase 2: Creating target tables...")
         target['prime_mover_types'] = transform_prime_mover_types(id_gen, errors)
@@ -1687,7 +1687,7 @@ def to_griddb(source: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
         target['storage_technologies'] = transform_storage_technologies(source, id_gen, errors)
         target['transport_technologies'] = transform_transport_technologies(source, id_gen, errors)
         target['operational_data'] = transform_operational_data(source, id_gen, errors)
-        
+
         # Phase 3: Time series
         print("Phase 3: Creating time series data...")
         target['time_series_associations'], target['static_time_series'] = \
@@ -1707,13 +1707,13 @@ def to_griddb(source: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
 
         errors.add_missing("hydro_reservoir and hydro_reservoir_connections - not processed")
         errors.add_missing("loads - cannot generate from flexible source units (no clear base_power)")
-        
+
     except Exception as e:
         errors.add_error(f"Critical transformation error: {str(e)}")
         import traceback
         errors.add_error(traceback.format_exc())
-    
+
     # Report all errors and warnings
     errors.report()
-    
+
     return target

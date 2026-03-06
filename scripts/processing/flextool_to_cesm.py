@@ -8,10 +8,11 @@ to a DuckDB file.
 
 import argparse
 import importlib.util
-from pathlib import Path
 from datetime import datetime
-from readers.from_spine_db import spine_to_dataframes, list_scenarios
+from pathlib import Path
+
 from core.transform_parameters import transform_data
+from readers.from_spine_db import list_scenarios, spine_to_dataframes
 from writers.to_duckdb import dataframes_to_duckdb
 
 

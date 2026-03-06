@@ -25,96 +25,6 @@
 
 
 
-.Associated classes
-[d2,svg,theme=4]
-----
-vars: {
-  d2-config: {
-    pad: 20
-  }
-}
-Storage {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Any {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Any {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-
-Storage -> Any: investment_cost
-
-
-Storage -> Any: fixed_cost
-
-
-legend: "" {
-  style: {
-    fill: transparent
-    stroke: transparent
-  }
-  grid-rows: 3
-  grid-columns: 2
-  grid-gap: 10
-  near: bottom-right
-  iec61968_color: "" {
-    style: {
-      fill: "#d1e7c2"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61968_text: "IEC61968 (Enterprise)" {
-    shape: text
-  }
-  iec61970_color: "" {
-    style: {
-      fill: "#eccfcb"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61970_text: "IEC61970 (Grid)" {
-    shape: text
-  }
-  iec62325_color: "" {
-    style: {
-      fill: "#fffbef"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec62325_text: "IEC62325 (Market)" {
-    shape: text
-  }
-}
-----
-
 
 [cols="1,1,2,1",width=100%]
 |===
@@ -139,6 +49,13 @@ xref::class/Any.adoc[`Any`]
 | 0..* +
 https://w3id.org/linkml/Float[`float`]
 | +++Capacity of a single storage asset.+++
+| _n/a_
+
+| <<storage_loss_from_stored_energy,`storage_loss_from_stored_energy`>>
+//| [[slots_table.storage_loss_from_stored_energy]]<<storage_loss_from_stored_energy,`storage_loss_from_stored_energy`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Loss of stored energy over one hour as a fraction of the energy stored.+++
 | _n/a_
 
 | <<storages_existing,`storages_existing`>>
@@ -406,6 +323,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.storage_capacity,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#storage_loss_from_stored_energy]
+=== `storage_loss_from_stored_energy`
++++Loss of stored energy over one hour as a fraction of the energy stored.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.storage_loss_from_stored_energy,&#10548;>>
 --
 ////
 

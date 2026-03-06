@@ -27,6 +27,10 @@
 | `constant_efficiency`
 | n/a
 | n/a
+
+| `two_point_efficiency`
+| n/a
+| n/a
 |===
 
 == Used by

@@ -2,8 +2,9 @@ id: 0
 solve_pattern:
   - name: solve_once
     solve_mode: single_solve
-    start_time: '2020-01-01T00:00:00.00'
-    duration: 72
+    start_time_durations:
+      - start_time: '2020-01-01T00:00:00.00'
+        duration: PT72H
     periods_realise_investments: ['2010']
     periods_realise_operations: ['2010']
 # period:

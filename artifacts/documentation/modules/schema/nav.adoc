@@ -20,6 +20,14 @@
 
 
 
+*** xref::class/ConstraintFloat.adoc[ConstraintFloat]
+
+
+
+*** xref::class/ConversionRatesFloatFloat.adoc[ConversionRatesFloatFloat]
+
+
+
 
 *** xref::class/DirectionalValue.adoc[DirectionalValue]
 
@@ -89,6 +97,10 @@
 
 
 
+*** xref::class/Timeset.adoc[Timeset]
+
+
+
 *** xref::class/Unit.adoc[Unit]
 
 
@@ -107,4 +119,5 @@
 *** xref::enumeration/InvestmentMethod.adoc[InvestmentMethod]
 *** xref::enumeration/NodeType.adoc[NodeType]
 *** xref::enumeration/SolveMode.adoc[SolveMode]
+*** xref::enumeration/StartupMethod.adoc[StartupMethod]
 *** xref::enumeration/TransferMethod.adoc[TransferMethod]

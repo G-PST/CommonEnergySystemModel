@@ -7,6 +7,7 @@ directly to a Spine database.
 
 import argparse
 from pathlib import Path
+
 from readers.from_duckdb import dataframes_from_duckdb
 from writers.to_spine_db import dataframes_to_spine
 

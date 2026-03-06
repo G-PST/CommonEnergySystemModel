@@ -57,7 +57,7 @@ solve_mode:
 
 solve_rolling_jump:
 - solve: rolling_solve_jump
-- solve_pattern: rolling_solve
+- solve_pattern: rolling_jump
 
 solve_rolling_window:
 - solve: rolling_solve_horizon
@@ -66,6 +66,10 @@ solve_rolling_window:
 solve_contains_solves:
 - solve: contains_solves
 - solve_pattern: contains_solve_pattern
+
+solve_fix_storage_periods:
+- solve: [fix_storage_periods, [array]]
+- solve_pattern: [periods_pass_storage_data, [array]]
 
 solve-periods_realise_invested:
 - solve: [realized_invest_periods, [array]]
@@ -328,15 +332,19 @@ node_to_unit-entities:
 node_to_unit-inertia_constant:
 - unit.inputNode: inertia_constant
 - node_to_unit: inertia_constant
+- - order: [[0], [2], [1]]
+  - dimensions: [source, sink]
 
 node_to_unit-other_operational_cost:
 - unit.inputNode: other_operational_cost
 - node_to_unit: other_operational_cost
+- - order: [[0], [2], [1]]
+  - dimensions: [source, sink]
 
 node_to_unit-constraint_flow_coefficient:
 - unit.inputNode: [constraint_flow_coefficient, [str]]
 - node_to_unit: [constraint_flow_coefficient, [str]]
-- - order: [[0], [1], [2]]
+- - order: [[0], [2], [1]]
   - dimensions: [source, sink]
 
 # =============================================================================

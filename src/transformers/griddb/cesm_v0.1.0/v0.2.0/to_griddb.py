@@ -12,14 +12,14 @@ v0.2.0 Changes:
 - Updated hydro_reservoir_connections columns to source_id/sink_id
 """
 
-import pandas as pd
-import numpy as np
-import uuid
 import json
-from typing import Dict, List, Tuple, Optional
+import uuid
 from dataclasses import dataclass, field
-from linkml_runtime.utils.schemaview import SchemaView
+from typing import Dict, List, Optional, Tuple
 
+import numpy as np
+import pandas as pd
+from linkml_runtime.utils.schemaview import SchemaView
 
 # =============================================================================
 # v0.2.0 MAPPINGS
@@ -405,11 +405,11 @@ def map_fuel_name(cesm_fuel_name: str) -> str:
 def safe_filter(df: pd.DataFrame, col: str) -> pd.Series:
     """
     Safely check if column exists and return boolean mask.
-    
+
     Args:
         df: DataFrame to check
         col: Column name
-        
+
     Returns:
         Boolean series with True where column exists and is not null,
         False for all rows if column doesn't exist
@@ -420,13 +420,13 @@ def safe_filter(df: pd.DataFrame, col: str) -> pd.Series:
 def safe_get(df: pd.DataFrame, idx, col: str, default=None):
     """
     Safely get a value from dataframe with fallback.
-    
+
     Args:
         df: DataFrame
         idx: Row index
         col: Column name
         default: Default value if column doesn't exist
-        
+
     Returns:
         Value at df.loc[idx, col] or default
     """
@@ -725,19 +725,19 @@ def determine_storage_prime_mover(
 def identify_power_grid_nodes(source: Dict[str, pd.DataFrame], errors: TransformationErrors) -> set:
     """Identify balance nodes that are part of power_grid groups."""
     power_grid_nodes = set()
-    
+
     if 'group' not in source or 'group_entity' not in source:
         errors.add_warning("No group or group_entity data - cannot identify power_grid nodes")
         return power_grid_nodes
-    
+
     # Find groups with group_type == 'power_grid'
     groups = source['group']
     power_grid_groups = groups[groups['group_type'] == 'power_grid'].index.tolist()
-    
+
     if not power_grid_groups:
         errors.add_warning("No power_grid groups found")
         return power_grid_nodes
-    
+
     # Find all entities in these groups
     group_entities = source['group_entity']
     for group in power_grid_groups:
@@ -751,7 +751,7 @@ def identify_power_grid_nodes(source: Dict[str, pd.DataFrame], errors: Transform
             # Group not found in group_entities
             errors.add_warning(f"Power grid group '{group}' has no entities in group_entity table")
             continue
-    
+
     return power_grid_nodes
 
 
@@ -774,7 +774,7 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
             # Removed: name, description, user_data fields
         })
         return entity_id
-    
+
     # 1. Prime mover types (STEAM, ROR, STORAGE will be created by transform_prime_mover_types)
     # No need to create placeholder here - schema now has INSERT statements
 
@@ -893,11 +893,11 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
                 add_entity('transmission_interchanges', 'SiennaOpenAPIModels.AreaInterchange', key, key)
             except KeyError:
                 continue
-    
+
     if not entities_data:
         errors.add_error("No entities created from source data")
         return pd.DataFrame()
-    
+
     return pd.DataFrame(entities_data)
 
 
@@ -1020,11 +1020,11 @@ def transform_arcs(source: Dict[str, pd.DataFrame],
     """Create arcs table from links."""
     if 'link' not in source:
         return pd.DataFrame(columns=['id', 'from_id', 'to_id'])
-    
+
     links = source['link']
     arc_pairs = set()
     arcs_data = []
-    
+
     for idx in links.index:
         # Link index is always a 3-tuple: (name, node_a, node_b)
         if isinstance(idx, tuple) and len(idx) == 3:
@@ -1032,34 +1032,34 @@ def transform_arcs(source: Dict[str, pd.DataFrame],
         else:
             errors.add_warning(f"Link index {idx} is not a 3-tuple, skipping")
             continue
-        
+
         # Deduplicate bidirectional arcs
         if (node_a, node_b) in arc_pairs or (node_b, node_a) in arc_pairs:
             continue
-        
+
         arc_pairs.add((node_a, node_b))
         arc_key = f"{node_a}_{node_b}"
         arc_id = id_gen.get('arcs', arc_key)
-        
+
         # Get node IDs (try balancing topologies first)
         try:
             from_id = id_gen.get('balancing_topologies', node_a)
         except KeyError:
             errors.add_warning(f"Node {node_a} not found in balancing_topologies")
             continue
-        
+
         try:
             to_id = id_gen.get('balancing_topologies', node_b)
         except KeyError:
             errors.add_warning(f"Node {node_b} not found in balancing_topologies")
             continue
-        
+
         arcs_data.append({
             'id': arc_id,
             'from_id': from_id,
             'to_id': to_id
         })
-    
+
     return pd.DataFrame(arcs_data)
 
 
@@ -1127,7 +1127,7 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
     if 'unit' not in source or 'unit_to_node' not in source:
         return pd.DataFrame(columns=['id', 'name', 'prime_mover', 'fuel', 'balancing_topology',
                                      'rating', 'base_power'])
-    
+
     units = source['unit']
     existing_units = units[safe_filter(units, 'units_existing') & (units['units_existing'] > 0)].copy()
     unit_to_node = source['unit_to_node']
@@ -1211,7 +1211,7 @@ def transform_generation_units(source: Dict[str, pd.DataFrame],
             'rating': rating,
             'base_power': base_power
         })
-    
+
     return pd.DataFrame(gen_units_data)
 
 
@@ -1223,7 +1223,7 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
     if 'storage' not in source or 'link' not in source:
         return pd.DataFrame(columns=['id', 'name', 'prime_mover', 'max_capacity', 'balancing_topology',
                                      'efficiency_up', 'efficiency_down', 'rating', 'base_power'])
-    
+
     storages = source['storage']
     existing_storages = storages[safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)].copy()
     links = source['link']
@@ -1284,9 +1284,9 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
             'rating': rating,
             'base_power': base_power
         })
-    
+
     errors.add_missing("storage efficiency parameters not fully mapped (using link efficiency as proxy)")
-    
+
     return pd.DataFrame(storage_units_data)
 
 

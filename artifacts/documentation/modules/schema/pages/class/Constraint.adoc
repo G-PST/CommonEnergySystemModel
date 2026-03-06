@@ -255,6 +255,10 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
+| xref::class/ConstraintFloat.adoc[`ConstraintFloat`] | xref::class/ConstraintFloat.adoc#constraint[`constraint`]
+
+
+
 | xref::class/Dataset.adoc[`Dataset`] | xref::class/Dataset.adoc#constraint[`constraint`]
 
 

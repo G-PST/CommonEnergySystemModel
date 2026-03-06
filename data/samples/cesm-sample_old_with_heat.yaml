@@ -21,7 +21,7 @@ storage:
     storages_existing: 2
     investment_method: no_limits
     investment_cost: 600.0
-    discount_rate: 0.07
+    discount_rate: 7.0
     payback_time: 12
     flow_scaling_method: use_profile_directly
     flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
@@ -37,44 +37,44 @@ unit:
   - name: ocgt
     conversion_method: constant_efficiency
     units_existing: 2
-    efficiency: 0.38
+    efficiency: 38.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 25
   - name: ccgt
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 0.58
+    efficiency: 58.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 30
   - name: nuclear
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 0.34
+    efficiency: 34.0
     investment_method: no_limits
-    discount_rate: 0.08
+    discount_rate: 8.0
     payback_time: 40
   - name: wind
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 1
+    efficiency: 100.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 25
   - name: bio_chp
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 0.5
+    efficiency: 50.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 30
   - name: heatpump
     conversion_method: constant_efficiency
     units_existing: 1
-    efficiency: 2.5
+    efficiency: 250.0
     investment_method: no_limits
-    discount_rate: 0.06
+    discount_rate: 6.0
     payback_time: 30
 node_to_unit:
   - name: natural_gas.ocgt
@@ -133,10 +133,10 @@ link:
     transfer_method: regular_linear
     capacity: 500
     links_existing: 1
-    efficiency: 0.98
+    efficiency: 98.0
     investment_method: no_limits
     investment_cost: 1600
-    discount_rate: 0.04
+    discount_rate: 4.0
     payback_time: 50
   - name: charger
     node_A: east
@@ -144,10 +144,10 @@ link:
     transfer_method: regular_linear
     capacity: 750
     links_existing: 1
-    efficiency: 0.9
+    efficiency: 90.0
     investment_method: no_limits
     investment_cost: 10
-    discount_rate: 0.07
+    discount_rate: 7.0
     payback_time: 12
 group:
   - name: elec_nodes
@@ -173,6 +173,6 @@ period:
     years_represented: 5.0
 system:
   - name: test_system
-    inflation_rate: 0.03
+    inflation_rate: 3.0
 currency: EUR
 reference_year: 2025

@@ -6,9 +6,10 @@ using the provided SQL schema for initialization.
 """
 
 import sqlite3
-import pandas as pd
 from pathlib import Path
 from typing import Dict
+
+import pandas as pd
 
 
 def _insert_or_replace(conn: sqlite3.Connection, table_name: str, df: pd.DataFrame) -> None:
@@ -93,7 +94,7 @@ def write_to_sqlite(schema_path: str,
             print(f"Creating new database: {output_db_path}")
             # If database doesn't exist, we need to create schema
             clear_existing = True  # Force schema creation for new database
-    
+
     # Connect and initialize schema
     conn = sqlite3.connect(output_db_path)
     cursor = conn.cursor()
@@ -108,7 +109,7 @@ def write_to_sqlite(schema_path: str,
             print("Schema initialized successfully")
         else:
             print("Skipping schema initialization (incremental update mode)")
-        
+
         # Define table insertion order (respecting foreign keys)
         # Tables must be inserted in dependency order
         table_order = [
@@ -137,7 +138,7 @@ def write_to_sqlite(schema_path: str,
             'deterministic_forecast_data',
             'loads'
         ]
-        
+
         # Insert data for each table
         print("\nInserting data into tables...")
         for table_name in table_order:
@@ -174,16 +175,16 @@ def write_to_sqlite(schema_path: str,
                     print(f"  ○ {table_name}: Empty (skipped)")
             else:
                 print(f"  ○ {table_name}: Not in dataframes (skipped)")
-        
+
         # Commit all changes
         conn.commit()
         print(f"\n✓ Database created successfully: {output_db_path}")
-        
+
         # Print summary statistics
         print("\n" + "="*60)
         print("DATABASE SUMMARY")
         print("="*60)
-        
+
         for table_name in table_order:
             try:
                 cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
@@ -193,46 +194,46 @@ def write_to_sqlite(schema_path: str,
             except sqlite3.OperationalError:
                 # Table might not exist
                 pass
-        
+
         print("="*60)
-        
+
     except sqlite3.Error as e:
         print(f"\n✗ Database error: {str(e)}")
         conn.rollback()
         raise
-    
+
     except Exception as e:
         print(f"\n✗ Unexpected error: {str(e)}")
         conn.rollback()
         raise
-    
+
     finally:
         conn.close()
-        print(f"\nDatabase connection closed")
+        print("\nDatabase connection closed")
 
 
 def verify_database(db_path: str) -> Dict[str, int]:
     """
     Verify database integrity and return row counts.
-    
+
     Args:
         db_path: Path to SQLite database
-        
+
     Returns:
         Dictionary mapping table names to row counts
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    
+
     # Get all table names
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
     tables = [row[0] for row in cursor.fetchall()]
-    
+
     row_counts = {}
     for table in tables:
         cursor.execute(f"SELECT COUNT(*) FROM {table}")
         row_counts[table] = cursor.fetchone()[0]
-    
+
     conn.close()
     return row_counts
 
@@ -240,7 +241,7 @@ def verify_database(db_path: str) -> Dict[str, int]:
 def export_table_to_csv(db_path: str, table_name: str, output_csv: str) -> None:
     """
     Export a single table from SQLite to CSV.
-    
+
     Args:
         db_path: Path to SQLite database
         table_name: Name of table to export
@@ -256,16 +257,16 @@ def export_table_to_csv(db_path: str, table_name: str, output_csv: str) -> None:
 if __name__ == "__main__":
     # Example usage
     import sys
-    
+
     if len(sys.argv) != 4:
         print("Usage: python dumper.py <schema.sql> <output.db> <verify_only>")
         print("  verify_only: 'true' to only verify existing database, 'false' to create new")
         sys.exit(1)
-    
+
     schema_path = sys.argv[1]
     db_path = sys.argv[2]
     verify_only = sys.argv[3].lower() == 'true'
-    
+
     if verify_only:
         print(f"Verifying database: {db_path}")
         row_counts = verify_database(db_path)

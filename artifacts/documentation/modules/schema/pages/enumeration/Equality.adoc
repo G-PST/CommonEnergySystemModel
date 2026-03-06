@@ -24,15 +24,15 @@
 
 | `equal`
 | n/a
-| n/a
+| +++Left hand side must equal right hand side+++
 
 | `greater_than`
 | n/a
-| n/a
+| +++Left hand side must be greater than right hand side+++
 
 | `less_than`
 | n/a
-| n/a
+| +++Left hand side must be less than right hand side+++
 |===
 
 == Used by

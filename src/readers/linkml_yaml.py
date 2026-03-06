@@ -2,12 +2,13 @@
 LinkML YAML reader implementation.
 """
 from pathlib import Path
+
 from linkml_runtime.loaders.yaml_loader import YAMLLoader
-from core.interfaces import DataReader
+
 from generated.cesm import Database
 
 
-class LinkMLYAMLReader(DataReader):
+class LinkMLYAMLReader:
     """Reader for LinkML YAML format files."""
 
     def __init__(self):

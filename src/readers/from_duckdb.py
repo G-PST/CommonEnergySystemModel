@@ -18,11 +18,12 @@ Usage:
     dataframes = dataframes_from_duckdb("input.duckdb")
 """
 
-import duckdb
-import pandas as pd
 import json
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Dict, List, Optional
+
+import duckdb
+import pandas as pd
 
 
 def _decode_multiindex_column(col_name: str) -> tuple:
@@ -143,7 +144,12 @@ def dataframes_from_duckdb(
             index_type = row['index_type']
             index_count = row['index_count']
             columns_multiindex = row['columns_multiindex']
-            columns_levels = json.loads(row['columns_levels']) if row['columns_levels'] else None
+            columns_levels_raw = row['columns_levels']
+            columns_levels = (
+                json.loads(columns_levels_raw)
+                if pd.notna(columns_levels_raw) and columns_levels_raw
+                else None
+            )
 
             # Read the table
             df = conn.execute(f'SELECT * FROM "{sql_table_name}"').fetchdf()

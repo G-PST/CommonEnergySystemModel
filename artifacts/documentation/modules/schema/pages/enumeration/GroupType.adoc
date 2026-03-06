@@ -26,15 +26,15 @@
 
 | `link`
 | n/a
-| n/a
+| +++Defines a group of links that have shared constraints.+++
 
 | `node`
 | n/a
-| n/a
+| +++Defines a group of nodes that have shared constraints.+++
 
 | `power_grid`
 | n/a
-| n/a
+| +++Defines a group of balance nodes that form a synchronous power grid (these nodes can also have shared constraints).+++
 |===
 
 == Used by

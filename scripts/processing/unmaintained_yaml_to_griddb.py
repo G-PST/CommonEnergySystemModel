@@ -10,16 +10,17 @@ Usage:
 """
 
 import argparse
-import pandas as pd
-from generated.cesm_pydantic import Dataset
+import sys
+from os import path
+
 from linkml_runtime.loaders import yaml_loader
+
 from core.linkml_to_dataframes import yaml_to_df
+from generated.cesm_pydantic import Dataset
 from transformers.griddb import to_griddb
 from transformers.griddb.to_sqlite import write_to_sqlite
-from os import path
-import sys
+
 sys.path.append(path.abspath('scripts'))
-from helpers.print_dataframe_structures import print_dataframes_structure
 
 
 def parse_args():

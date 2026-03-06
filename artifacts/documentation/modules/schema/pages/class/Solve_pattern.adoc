@@ -24,163 +24,37 @@
 
 
 
-.Associated classes
-[d2,svg,theme=4]
-----
-vars: {
-  d2-config: {
-    pad: 20
-  }
-}
-Solve_pattern {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Period {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Period {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Period {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Solve_pattern {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Solve_pattern {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-
-Solve_pattern -> Period: periods_realise_investments
-
-
-Solve_pattern -> Period: periods_realise_operations
-
-
-Solve_pattern -> Period: periods_additional_horizon
-
-
-Solve_pattern -> Solve_pattern: next_solve
-
-
-Solve_pattern -> Solve_pattern: contains_solve
-
-
-legend: "" {
-  style: {
-    fill: transparent
-    stroke: transparent
-  }
-  grid-rows: 3
-  grid-columns: 2
-  grid-gap: 10
-  near: bottom-right
-  iec61968_color: "" {
-    style: {
-      fill: "#d1e7c2"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61968_text: "IEC61968 (Enterprise)" {
-    shape: text
-  }
-  iec61970_color: "" {
-    style: {
-      fill: "#eccfcb"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61970_text: "IEC61970 (Grid)" {
-    shape: text
-  }
-  iec62325_color: "" {
-    style: {
-      fill: "#fffbef"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec62325_text: "IEC62325 (Market)" {
-    shape: text
-  }
-}
-----
-
 
 [cols="1,1,2,1",width=100%]
 |===
 | Name | Type | Description | Inherited from
 
-| <<contains_solve,`contains_solve`>>
-//| [[slots_table.contains_solve]]<<contains_solve,`contains_solve`>>
+| <<contains_solve_pattern,`contains_solve_pattern`>>
+//| [[slots_table.contains_solve_pattern]]<<contains_solve_pattern,`contains_solve_pattern`>>
 | 0..* +
 xref::class/Solve_pattern.adoc[`Solve_pattern`]
 | +++A child solve_pattern to be executed inside of the parent solve_pattern.+++
 | _n/a_
 
-| <<duration,`duration`>>
-//| [[slots_table.duration]]<<duration,`duration`>>
-| 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Duration of the solve in time steps. Defaults to full timeline.+++
-| _n/a_
-
-| <<next_solve,`next_solve`>>
-//| [[slots_table.next_solve]]<<next_solve,`next_solve`>>
-| 0..* +
-xref::class/Solve_pattern.adoc[`Solve_pattern`]
-| +++The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.+++
-| _n/a_
-
-| <<periods_additional_horizon,`periods_additional_horizon`>>
-//| [[slots_table.periods_additional_horizon]]<<periods_additional_horizon,`periods_additional_horizon`>>
+| <<periods_additional_investments_horizon,`periods_additional_investments_horizon`>>
+//| [[slots_table.periods_additional_investments_horizon]]<<periods_additional_investments_horizon,`periods_additional_investments_horizon`>>
 | 0..* +
 xref::class/Period.adoc[`Period`]
-| +++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+| +++A list of periods that will be included in invest optimisation but are not part of results reporting (they may be solved...+++
+| _n/a_
+
+| <<periods_additional_operations_horizon,`periods_additional_operations_horizon`>>
+//| [[slots_table.periods_additional_operations_horizon]]<<periods_additional_operations_horizon,`periods_additional_operations_horizon`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| +++A list of periods that will be included in dispatch optimisation but are not part of results reporting (they may be solved...+++
+| _n/a_
+
+| <<periods_pass_storage_data,`periods_pass_storage_data`>>
+//| [[slots_table.periods_pass_storage_data]]<<periods_pass_storage_data,`periods_pass_storage_data`>>
+| 0..* +
+xref::class/Period.adoc[`Period`]
+| +++A list of periods from which the model will pass storage level information to the next solve or to the child solves.+++
 | _n/a_
 
 | <<periods_realise_investments,`periods_realise_investments`>>
@@ -197,6 +71,20 @@ xref::class/Period.adoc[`Period`]
 | +++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
 | _n/a_
 
+| <<rolling_additional_horizon,`rolling_additional_horizon`>>
+//| [[slots_table.rolling_additional_horizon]]<<rolling_additional_horizon,`rolling_additional_horizon`>>
+| 0..* +
+xref::enumeration/Duration.adoc[`Duration`]
+| +++How much rolling solves have additional horizon beyond the rolling_jump duration.+++
+| _n/a_
+
+| <<rolling_jump,`rolling_jump`>>
+//| [[slots_table.rolling_jump]]<<rolling_jump,`rolling_jump`>>
+| 0..* +
+xref::enumeration/Duration.adoc[`Duration`]
+| +++How much each roll jumps forward in time.+++
+| _n/a_
+
 | <<solve_mode,`solve_mode`>>
 //| [[slots_table.solve_mode]]<<solve_mode,`solve_mode`>>
 | 0..* +
@@ -204,18 +92,18 @@ xref::enumeration/SolveMode.adoc[`SolveMode`]
 | +++Choice of solve process handled within the model.+++
 | _n/a_
 
-| <<start_time,`start_time`>>
-//| [[slots_table.start_time]]<<start_time,`start_time`>>
+| <<start_time_durations,`start_time_durations`>>
+//| [[slots_table.start_time_durations]]<<start_time_durations,`start_time_durations`>>
 | 0..* +
-https://w3id.org/linkml/String[`string`]
-| +++Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.+++
+xref::class/Timeset.adoc[`Timeset`]
+| +++Contains pairs of start time and duration to define what part of the timeline is to be solved. Start times need to match a...+++
 | _n/a_
 
 | <<time_resolution,`time_resolution`>>
 //| [[slots_table.time_resolution]]<<time_resolution,`time_resolution`>>
 | 0..* +
-https://w3id.org/linkml/Integer[`integer`]
-| +++Time resolution the model should use. Multiples of the time resolution of the original data.+++
+xref::enumeration/Duration.adoc[`Duration`]
+| +++Time resolution the model should use. Has to be integer multiples of the time resolution of the original data.+++
 | _n/a_
 
 | <<alternative_names,`alternative_names`>>
@@ -280,8 +168,8 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#contains_solve]
-=== `contains_solve`
+[#contains_solve_pattern]
+=== `contains_solve_pattern`
 +++A child solve_pattern to be executed inside of the parent solve_pattern.+++
 
 
@@ -300,7 +188,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.contains_solve,&#10548;>>
+<<slots_table.contains_solve_pattern,&#10548;>>
 --
 ////
 
@@ -335,32 +223,6 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#duration]
-=== `duration`
-+++Duration of the solve in time steps. Defaults to full timeline.+++
-
-
-[cols="h,4",width=65%]
-|===
-| URI
-| _n/a_
-| Cardinality
-| 0..*
-| Type
-| https://w3id.org/linkml/Integer[`integer`]
-
-
-|===
-
-////
-[.text-left]
---
-<<slots_table.duration,&#10548;>>
---
-////
-
-
-//[discrete]
 [#name]
 === `name`
 +++User-facing unique name identifier.+++
@@ -390,35 +252,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#next_solve]
-=== `next_solve`
-+++The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.+++
-
-
-[cols="h,4",width=65%]
-|===
-| URI
-| _n/a_
-| Cardinality
-| 0..*
-| Type
-| xref::class/Solve_pattern.adoc[`Solve_pattern`]
-
-
-|===
-
-////
-[.text-left]
---
-<<slots_table.next_solve,&#10548;>>
---
-////
-
-
-//[discrete]
-[#periods_additional_horizon]
-=== `periods_additional_horizon`
-+++A list of periods from which the model will report investment results and possibly pass to the next solve.+++
+[#periods_additional_investments_horizon]
+=== `periods_additional_investments_horizon`
++++A list of periods that will be included in invest optimisation but are not part of results reporting (they may be solved again in a later solve).+++
 
 
 [cols="h,4",width=65%]
@@ -436,7 +272,59 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.periods_additional_horizon,&#10548;>>
+<<slots_table.periods_additional_investments_horizon,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#periods_additional_operations_horizon]
+=== `periods_additional_operations_horizon`
++++A list of periods that will be included in dispatch optimisation but are not part of results reporting (they may be solved again in a later solve).+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.periods_additional_operations_horizon,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#periods_pass_storage_data]
+=== `periods_pass_storage_data`
++++A list of periods from which the model will pass storage level information to the next solve or to the child solves.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::class/Period.adoc[`Period`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.periods_pass_storage_data,&#10548;>>
 --
 ////
 
@@ -489,6 +377,58 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.periods_realise_operations,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#rolling_additional_horizon]
+=== `rolling_additional_horizon`
++++How much rolling solves have additional horizon beyond the rolling_jump duration.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/Duration.adoc[`Duration`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.rolling_additional_horizon,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#rolling_jump]
+=== `rolling_jump`
++++How much each roll jumps forward in time.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/Duration.adoc[`Duration`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.rolling_jump,&#10548;>>
 --
 ////
 
@@ -549,9 +489,9 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 //[discrete]
-[#start_time]
-=== `start_time`
-+++Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.+++
+[#start_time_durations]
+=== `start_time_durations`
++++Contains pairs of start time and duration to define what part of the timeline is to be solved. Start times need to match a value in the timeline. Defaults to the start of the timeline and full timeline duration. Can be a list of timesets to define representative periods.+++
 
 
 [cols="h,4",width=65%]
@@ -561,7 +501,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/String[`string`]
+| xref::class/Timeset.adoc[`Timeset`]
 
 
 |===
@@ -569,7 +509,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 ////
 [.text-left]
 --
-<<slots_table.start_time,&#10548;>>
+<<slots_table.start_time_durations,&#10548;>>
 --
 ////
 
@@ -577,7 +517,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#time_resolution]
 === `time_resolution`
-+++Time resolution the model should use. Multiples of the time resolution of the original data.+++
++++Time resolution the model should use. Has to be integer multiples of the time resolution of the original data.+++
 
 
 [cols="h,4",width=65%]
@@ -587,7 +527,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Integer[`integer`]
+| xref::enumeration/Duration.adoc[`Duration`]
 
 
 |===
@@ -616,7 +556,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 
 
 
-| xref::class/Solve_pattern.adoc[`Solve_pattern`] | xref::class/Solve_pattern.adoc#contains_solve[`contains_solve`]
+| xref::class/Solve_pattern.adoc[`Solve_pattern`] | xref::class/Solve_pattern.adoc#contains_solve_pattern[`contains_solve_pattern`]
 
 
 

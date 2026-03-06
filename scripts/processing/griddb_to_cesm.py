@@ -20,8 +20,8 @@ from os import path
 sys.path.insert(0, path.abspath('src'))
 sys.path.insert(0, path.abspath('scripts'))
 
+
 from transformers.griddb import to_cesm
-from helpers.print_dataframe_structures import print_dataframes_structure
 from writers.to_duckdb import dataframes_to_duckdb
 
 

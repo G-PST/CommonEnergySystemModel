@@ -1,43 +1,70 @@
 # Transformer Developer Guide
 
-This guide covers the full data transformation pipeline for creating transformers that convert between energy system model formats using CESM (Central Energy System Model) as the interchange format.
+This guide covers the full data transformation pipeline for creating transformers that convert between energy system model formats using CESM (Common Energy System Model) as the interchange format.
 
 ## Table of Contents
 
-1. [Overview](#1-overview)
+1. [Architecture](#1-architecture)
 2. [DataFrame Conventions](#2-dataframe-conventions)
 3. [YAML Transformer Syntax](#3-yaml-transformer-syntax)
 4. [Python Transformer Functions](#4-python-transformer-functions)
 5. [DuckDB Storage Format](#5-duckdb-storage-format)
 6. [Readers and Writers](#6-readers-and-writers)
 7. [Creating a New Transformer](#7-creating-a-new-transformer)
+8. [Quick Reference](#8-quick-reference)
 
 ---
 
-## 1. Overview
+## 1. Architecture
 
-### Purpose
-
-The transformation pipeline enables bidirectional data conversion between different energy system modeling tools. Rather than creating direct converters between every pair of formats (N×N converters), the system uses CESM as a central interchange format, requiring only N import + N export transformers.
-
-### Full Data Flow from model to model
+CESM uses a hub-and-spoke architecture. Instead of N x N direct converters between
+every pair of tools, each tool only needs one import + one export transformer.
 
 ```
-Source Model (e.g., FlexTool Spine DB)
-    ↓ Reader (from_spine_db.py)
-Source DataFrames
-    ↓ YAML Transformer (from_flextool.yaml)
-    ↓ Python Transformer (to_cesm.py)
-CESM DataFrames
-    ↓ Writer (to_duckdb.py)
-DuckDB Storage
-    ↓ Reader (from_duckdb.py)
-CESM DataFrames
-    ↓ YAML Transformer (to_flextool.yaml)
-    ↓ Python Transformer (to_flextool.py)
-Target DataFrames
-    ↓ Writer (to_spine_db.py, to_yaml.py, etc.)
-Target Model Format
+ +------------------------------- CESM ----------------------------------+
+ |                                                                       |
+ |   CESM spec (LinkML) ----gen-python----> Python class                 |
+ |        |                                     |                        |
+ |        v                                     v                        |
+ |   CESM sample (YAML) --linkml-runtime--> validation                   |
+ |                                              |                        |
+ |                                              v                        |
+ |                                    CESM DataFrames (in-memory)        |
+ |                                         |        |                    |
+ |                                    writer        reader               |
+ |                                         |        |                    |
+ |                                         v        v                    |
+ |                                   CESM DuckDB (on-disk)              |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+        |          |                                    |          |
+     writer     reader                              writer     reader
+        |          |                                    |          |
+   Model X format (e.g. Spine DB)              Model Y format (e.g. SQLite)
+        |          |                                    |          |
+     reader     writer                              reader     writer
+        |          |                                    |          |
+ +------+----------+------+                    +-------+----------+------+
+ | Transformer script     |                    | Transformer script      |
+ | - Config (YAML):       |                    | - Config (YAML):        |
+ |   from-CESM / to-CESM  |                    |   from-CESM / to-CESM   |
+ | - CESM core functions   |                   | - CESM core functions    |
+ | - Purpose-built funcs  |                    | - Purpose-built funcs   |
+ +-------------------------+                    +-------------------------+
+```
+
+### Data Flow
+
+Each conversion pipeline has up to five components:
+
+```
+Source DB --> Reader --> Source DataFrames --> YAML Transformer --> Python Transformer --> CESM DataFrames --> DuckDB Writer
+```
+
+And the reverse for export:
+
+```
+CESM DuckDB --> DuckDB Reader --> CESM DataFrames --> YAML Transformer --> Python Transformer --> Target DataFrames --> Writer --> Target DB
 ```
 
 ### CESM as Central Interchange Format
@@ -49,17 +76,40 @@ CESM (stored in DuckDB and defined by [LinkML schema](model/cesm.yaml)) serves a
 - **Validation**: Central format enables schema validation
 - **Storage**: DuckDB provides efficient columnar storage with metadata preservation
 
+### Components Overview
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| Reader | `src/readers/from_{format}.py` | Reads source format into DataFrames |
+| YAML Transformer | `src/transformers/{tool}/cesm_v{ver}/{src_ver}/from_{tool}.yaml` | Declarative entity/parameter mappings |
+| Python Transformer | `src/transformers/{tool}/cesm_v{ver}/{src_ver}/to_cesm.py` | Complex logic YAML can't handle |
+| Writer | `src/writers/to_{format}.py` | Writes DataFrames to target format |
+| Processing Script | `scripts/processing/{format}_to_cesm.py` | Orchestrates the full pipeline |
+
+### Existing Examples
+
+- **FlexTool**: `src/transformers/irena_flextool/`, `scripts/processing/flextool_to_cesm.py`
+- **GridDB**: `src/transformers/griddb/`, `scripts/processing/griddb_to_cesm.py`
+
 ---
 
 ## 2. DataFrame Conventions
 
-The pipeline uses pandas DataFrames to perform data transformations with specific conventions for entity data, time series, and indexed maps.
+The pipeline uses pandas DataFrames as the universal intermediate representation with specific naming and structure conventions.
+
+### DataFrame Naming
+
+| Pattern | Index type | Example |
+|---------|-----------|---------|
+| `{class}` | Entity names | `unit`, `balance` |
+| `{class}.ts.{param}` | DatetimeIndex | `unit.ts.availability` |
+| `{class}.str.{param}` | String keys | `unit.str.virtual_unitsize` |
+| `{class}.array.{param}` | Integer position | `system.array.solve_order` |
 
 ### Entity DataFrames
 
 Entity DataFrames store entities and their scalar parameter values.
 
-**Structure:**
 - **Index**: Entity names (single Index or MultiIndex for dimensional entities)
 - **Columns**: Parameter values (scalars)
 - **Naming**: `{class_name}` (e.g., `unit`, `balance`, `unit_to_node`)
@@ -67,9 +117,6 @@ Entity DataFrames store entities and their scalar parameter values.
 **Example: Single-dimensional entity**
 ```python
 # DataFrame name: 'unit'
-#   Index: unit names
-#   Columns: scalar parameters
-
 unit_df = pd.DataFrame({
     'efficiency': [0.45, 0.55, 0.38],
     'units_existing': [2, 1, 3],
@@ -80,9 +127,6 @@ unit_df = pd.DataFrame({
 **Example: Multi-dimensional entity**
 ```python
 # DataFrame name: 'unit_to_node'
-#   Index: MultiIndex with (name, source, sink)
-#   Columns: scalar parameters
-
 unit_to_node_df = pd.DataFrame({
     'capacity': [500.0, 200.0, 100.0],
     'other_operational_cost': [25.0, 15.0, 0.0]
@@ -97,20 +141,12 @@ unit_to_node_df = pd.DataFrame({
 
 These DataFrames store indexed parameter values where the index is datetime, string keys, or array positions.
 
-**Structure:**
 - **Index**: datetime (for time series), string keys (for maps), or position (for arrays)
 - **Columns**: Entity names (critical for transformations!)
-- **Naming patterns**:
-  - `{class}.ts.{parameter}` - time series with datetime index
-  - `{class}.str.{parameter}` - string-indexed maps
-  - `{class}.array.{parameter}` - position-indexed arrays
 
 **Example: Time series**
 ```python
 # DataFrame name: 'unit.ts.availability'
-#   Index: DatetimeIndex
-#   Columns: entity names
-
 availability_ts = pd.DataFrame({
     'coal_plant': [1.0, 1.0, 0.9, 0.95, ...],
     'gas_turbine': [1.0, 1.0, 1.0, 1.0, ...],
@@ -121,9 +157,6 @@ availability_ts = pd.DataFrame({
 **Example: String-indexed map (period data)**
 ```python
 # DataFrame name: 'unit.str.virtual_unitsize'
-#   Index: period names (strings)
-#   Columns: entity names
-
 period_capacity = pd.DataFrame({
     'coal_plant': [500.0, 500.0, 400.0],
     'gas_turbine': [200.0, 250.0, 300.0]
@@ -133,9 +166,6 @@ period_capacity = pd.DataFrame({
 **Example: Array**
 ```python
 # DataFrame name: 'system.array.solve_order'
-#   Index: numeric position
-#   Columns: entity names
-
 solve_order = pd.DataFrame({
     'main_system': ['y2025', 'y2030', 'y2035']
 })
@@ -143,18 +173,13 @@ solve_order = pd.DataFrame({
 
 ### MultiIndex Column Convention
 
-For multi-dimensional entity classes (e.g., `unit__node`, `unit_to_node`), time series/map/array DataFrames use MultiIndex columns:
+For multi-dimensional entity classes (e.g., `unit_to_node`), time series/map/array DataFrames use MultiIndex columns:
 
-**Structure:**
 - **Column tuples**: `(entity_name, dimension1, dimension2, ...)`
 - **Level names**: `['name', 'source', 'sink']` etc.
 
-**Example:**
 ```python
 # DataFrame name: 'unit_to_node.ts.profile_limit_upper'
-#   Index: DatetimeIndex
-#   Columns: MultiIndex with (name, source, sink)
-
 profile_ts = pd.DataFrame({
     ('coal_plant.west', 'coal_plant', 'west'): [1.0, 0.95, 0.9, ...],
     ('gas_turbine.east', 'gas_turbine', 'east'): [1.0, 1.0, 1.0, ...]
@@ -440,21 +465,8 @@ def transform_to_cesm(source: Dict[str, pd.DataFrame],
     Returns:
         Updated cesm dictionary with all Python transformations applied
     """
-    # Apply transformations
     cesm = my_custom_transform(source, cesm)
     cesm = another_transform(source, cesm, start_time)
-
-    return cesm
-
-
-def my_custom_transform(source: Dict[str, pd.DataFrame],
-                        cesm: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
-    """
-    Individual transformation function.
-
-    Keep functions focused on a single transformation concern.
-    """
-    # Implementation
     return cesm
 ```
 
@@ -490,18 +502,13 @@ def time_from_spine(flextool: Dict[str, pd.DataFrame],
     - cesm['solve_pattern']: DataFrame with start_time, duration
     - cesm['period']: DataFrame with years_represented
     """
-    # Get timestep duration from source data
     timestep_minutes = _get_timestep_minutes(flextool)
 
-    # Create timeline from timestep_duration
     if 'timeline.str.timestep_duration' in flextool:
         timestep_df = flextool['timeline.str.timestep_duration']
-
-        # Convert string index to datetime if needed
         datetime_index = _convert_str_index_to_datetime(
             timestep_df.index, start_time, timestep_minutes
         )
-
         cesm['timeline'] = pd.DataFrame(index=datetime_index)
         cesm['timeline'].index.name = 'datetime'
 
@@ -630,9 +637,9 @@ src/transformers/
 └── {source_format}/
     └── cesm_{cesm_version}/
         └── {source_version}/
-            ├── from_{source}.yaml      # Import: source → CESM
+            ├── from_{source}.yaml      # Import: source -> CESM
             ├── to_cesm.py              # Import: complex transformations (optional)
-            ├── to_{target}.yaml        # Export: CESM → target
+            ├── to_{target}.yaml        # Export: CESM -> target
             └── from_cesm.py            # Export: complex transformations (optional)
 ```
 
@@ -660,31 +667,41 @@ src/transformers/
    - Map source parameters to CESM equivalents
    - Note indexed data (time series, maps, arrays)
 
-3. **Create `from_{source}.yaml`:**
+3. **Create a reader** (`src/readers/from_{source}.py`) if the source format
+   is not already supported. The reader must return `Dict[str, pd.DataFrame]`
+   following the naming conventions above.
+
+4. **Create `from_{source}.yaml`:**
    ```yaml
    # Entity mappings
    source-entity-entities:
    - source_class
    - cesm_class
-   
+
    # Parameter mappings
    source_param:
    - source_class: source_param_name
    - cesm_class: cesm_param_name
    ```
 
-4. **Create `to_cesm.py` (if needed):**
+5. **Create `to_cesm.py` (if needed):**
    ```python
    def transform_to_cesm(source, cesm, start_time):
        # Complex transformations
        return cesm
    ```
 
-5. **Test the transformer:**
+6. **Create a processing script** (`scripts/processing/{source}_to_cesm.py`)
+   that orchestrates the pipeline: parse CLI args, call reader, apply YAML
+   transformer via `core.transform_parameters.transform_data()`, apply Python
+   transformer, call writer. See `flextool_to_cesm.py` and `griddb_to_cesm.py`
+   for working examples.
+
+7. **Test the transformer:**
    ```python
    from src.readers.from_spine_db import spine_to_dataframes
    from src.core.transform_parameters import transform_data
-   
+
    source_dfs = spine_to_dataframes(db_url, scenario)
    cesm_dfs = transform_data(source_dfs, 'from_source.yaml')
    ```
@@ -697,7 +714,7 @@ src/transformers/
    cesm-entity-entities:
    - cesm_class
    - target_class
-   
+
    # Parameter mappings
    cesm_param:
    - cesm_class: cesm_param_name
@@ -711,12 +728,15 @@ src/transformers/
        return target
    ```
 
-3. **Test the full round-trip:**
+3. **Create a writer** (`src/writers/to_{target}.py`) if the target format
+   is not already supported.
+
+4. **Test the full round-trip:**
    ```python
    # Import
    source_dfs = reader(source_path)
    cesm_dfs = transform_data(source_dfs, 'from_source.yaml')
-   
+
    # Export
    target_dfs = transform_data(cesm_dfs, 'to_target.yaml')
    writer(target_dfs, target_path)
@@ -737,7 +757,7 @@ src/transformers/
 
 - [ ] Create `to_{target}.yaml` with entity mappings
 - [ ] Map all CESM parameters to target format
-- [ ] Handle data type conversions (`[ts]` ↔ `[str]`)
+- [ ] Handle data type conversions (`[ts]` <-> `[str]`)
 - [ ] Implement dimension reordering with `order`
 - [ ] Add aggregation where dimensions collapse
 - [ ] Create `from_cesm.py` for complex transformations (if needed)
@@ -746,7 +766,7 @@ src/transformers/
 
 ---
 
-## Appendix: Quick Reference
+## 8. Quick Reference
 
 ### YAML Operation Types
 

@@ -7,11 +7,12 @@ to FlexTool format, and writes to a Spine database.
 
 import argparse
 from pathlib import Path
-import pandas as pd
-from core.transform_parameters import transform_data
-from writers.to_spine_db import dataframes_to_spine
-from readers.from_duckdb import dataframes_from_duckdb
 
+import pandas as pd
+
+from core.transform_parameters import transform_data
+from readers.from_duckdb import dataframes_from_duckdb
+from writers.to_spine_db import dataframes_to_spine
 
 REQUIRED_TABLES = [
     'solve_pattern',
@@ -161,20 +162,23 @@ def time_to_spine(flextool, cesm):
     solve_pattern_df = cesm['solve_pattern']
 
     if 'solve_pattern.ts.start_time_durations' in cesm:
-        durations_df = cesm['solve_pattern.ts.start_time_durations']
-    elif 'start_time' in solve_pattern_df.columns and 'duration' in solve_pattern_df.columns:
-        # Construct from scalar columns
-        durations_data = {}
+        durations_df = cesm['solve_pattern.ts.start_time_durations'].copy()
+    else:
+        durations_df = pd.DataFrame()
+
+    # Also add solve patterns that have scalar start_time/duration columns
+    # (these may not be in the ts table)
+    if 'start_time' in solve_pattern_df.columns and 'duration' in solve_pattern_df.columns:
         for solve_name in solve_pattern_df.index:
+            if solve_name in durations_df.columns:
+                continue  # Already covered by ts table
             start_time = solve_pattern_df.loc[solve_name, 'start_time']
             duration = solve_pattern_df.loc[solve_name, 'duration']
             if pd.notna(start_time) and pd.notna(duration):
-                if start_time not in durations_data:
-                    durations_data[start_time] = {}
-                durations_data[start_time][solve_name] = duration
-        durations_df = pd.DataFrame(durations_data).T
-        durations_df.index = pd.to_datetime(durations_df.index)
-    else:
+                start_time = pd.Timestamp(start_time)
+                durations_df.loc[start_time, solve_name] = duration
+
+    if durations_df.empty:
         raise ValueError("solve_pattern must have 'start_time_durations' or 'start_time' and 'duration' columns")
 
     # Calculate timestep duration from timeline for converting Timedelta to timestep count
@@ -252,19 +256,20 @@ def time_to_spine(flextool, cesm):
     # Create solve.str.years_represented
     # Only include periods that are actually used in each solve
     solve_years_represented = pd.DataFrame()
-    for solve_name, periods_dict in solve_periods.items():
-        # Combine all period lists and remove duplicates while preserving order
-        all_periods_list = (
-            periods_dict['operations'] +
-            periods_dict['investments'] +
-            periods_dict['additional_investments'] +
-            periods_dict['additional_operations']
-        )
-        all_solve_periods = list(dict.fromkeys(all_periods_list))  # Dedupe, preserve order
-        for period in all_solve_periods:
-            if period in cesm['period']['years_represented'].index:
-                years = cesm['period']['years_represented'].loc[period]
-                solve_years_represented.loc[period, solve_name] = years
+    if 'period' in cesm and 'years_represented' in cesm['period'].columns:
+        for solve_name, periods_dict in solve_periods.items():
+            # Combine all period lists and remove duplicates while preserving order
+            all_periods_list = (
+                periods_dict['operations'] +
+                periods_dict['investments'] +
+                periods_dict['additional_investments'] +
+                periods_dict['additional_operations']
+            )
+            all_solve_periods = list(dict.fromkeys(all_periods_list))  # Dedupe, preserve order
+            for period in all_solve_periods:
+                if period in cesm['period']['years_represented'].index:
+                    years = cesm['period']['years_represented'].loc[period]
+                    solve_years_represented.loc[period, solve_name] = years
     flextool['solve.str.years_represented'] = solve_years_represented
 
     # Create solve entity dataframe with single-valued parameters
@@ -272,12 +277,15 @@ def time_to_spine(flextool, cesm):
     for index, row in solve_pattern_df.iterrows():
         solve_data[index] = {}
 
-        # solve_mode
-        if 'solve_mode' in solve_pattern_df.columns and pd.notna(row.get('solve_mode')):
-            if row['solve_mode'] == 'rolling_solve':
-                solve_data[index]['solve_mode'] = 'rolling_window'    
+        # solve_mode (default to single_solve if not set)
+        if 'solve_mode' in solve_pattern_df.columns:
+            mode = row.get('solve_mode')
+            if pd.isna(mode) or mode is None:
+                mode = 'single_solve'
+            if mode == 'rolling_solve':
+                solve_data[index]['solve_mode'] = 'rolling_window'
             else:
-                solve_data[index]['solve_mode'] = row['solve_mode']
+                solve_data[index]['solve_mode'] = mode
 
         # rolling_solve_jump (from rolling_jump)
         if 'rolling_jump' in solve_pattern_df.columns and pd.notna(row.get('rolling_jump')):
@@ -293,18 +301,31 @@ def time_to_spine(flextool, cesm):
                         horizon_hours += add_horizon
                 solve_data[index]['rolling_solve_horizon'] = horizon_hours
 
-        # rolling_duration (from duration array, for rolling solves)
-        if row.get('solve_mode') == 'rolling_solve' and 'solve_pattern.map.start_time_durations' in cesm:
-            if index in cesm['solve_pattern.map.start_time_durations'].columns:
-                duration_vals = cesm['solve_pattern.map.start_time_durations'][index].dropna()
-                if len(duration_vals) > 0:
-                    dur_hours = timedelta_to_hours(duration_vals.iloc[0])
-                    if dur_hours is not None:
-                        solve_data[index]['rolling_duration'] = dur_hours
+        # rolling_duration (for rolling solves, from duration or start_time_durations)
+        if row.get('solve_mode') == 'rolling_solve':
+            dur_hours = None
+            # Try scalar duration column first
+            if 'duration' in solve_pattern_df.columns and pd.notna(row.get('duration')):
+                dur_hours = timedelta_to_hours(row['duration'])
+            # Then try ts/map start_time_durations
+            if dur_hours is None:
+                for ts_key in ['solve_pattern.ts.start_time_durations', 'solve_pattern.map.start_time_durations']:
+                    if ts_key in cesm and index in cesm[ts_key].columns:
+                        duration_vals = cesm[ts_key][index].dropna()
+                        if len(duration_vals) > 0:
+                            dur_hours = timedelta_to_hours(duration_vals.iloc[0])
+                            break
+            if dur_hours is not None:
+                solve_data[index]['rolling_duration'] = dur_hours
 
     # Create the solve entity dataframe
     if solve_data:
+        # Ensure all solve_patterns get a row, even those with no parameters
+        for key in solve_data:
+            if not solve_data[key]:
+                solve_data[key] = {None: None}
         flextool['solve'] = pd.DataFrame.from_dict(solve_data, orient='index')
+        flextool['solve'].drop(columns=[None], inplace=True, errors='ignore')
         flextool['solve'].index.name = 'solve'
 
     # Create solve.array.realized_periods (from periods_realise_operations)
@@ -334,23 +355,15 @@ def time_to_spine(flextool, cesm):
     if 'solve_pattern.array.periods_pass_storage_data' in cesm:
         flextool['solve.array.fix_storage_periods'] = cesm['solve_pattern.array.periods_pass_storage_data'].copy()
 
-    # Create solve.array.contains_solves (from contains_solve_pattern)
+    # Add contains_solves as a scalar parameter on the solve entity
     if 'contains_solve_pattern' in solve_pattern_df.columns:
-        contains_solves_data = {}
         for index, row in solve_pattern_df.iterrows():
             if pd.notna(row.get('contains_solve_pattern')):
                 val = row['contains_solve_pattern']
-                # Handle both single value and list
                 if isinstance(val, list):
-                    contains_solves_data[index] = val
-                else:
-                    contains_solves_data[index] = [val]
-        if contains_solves_data:
-            max_len = max(len(v) for v in contains_solves_data.values())
-            contains_df = pd.DataFrame(index=range(max_len))
-            for solve_name, solves in contains_solves_data.items():
-                contains_df[solve_name] = pd.Series(solves)
-            flextool['solve.array.contains_solves'] = contains_df
+                    val = val[0]  # FlexTool expects a single solve name
+                if 'solve' in flextool and index in flextool['solve'].index:
+                    flextool['solve'].loc[index, 'contains_solves'] = val
 
     return flextool
 

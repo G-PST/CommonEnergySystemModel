@@ -33,7 +33,21 @@
 //| [[slots_table.conversion_method]]<<conversion_method,`conversion_method`>>
 | 0..* +
 xref::enumeration/ConversionMethod.adoc[`ConversionMethod`]
-| +++Choose how the unit converts inputs to outputs+++
+| +++Choose how the unit converts inputs to outputs.+++
+| _n/a_
+
+| <<startup_cost,`startup_cost`>>
+//| [[slots_table.startup_cost]]<<startup_cost,`startup_cost`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Cost of one full startup for one unit.+++
+| _n/a_
+
+| <<startup_method,`startup_method`>>
+//| [[slots_table.startup_method]]<<startup_method,`startup_method`>>
+| 0..* +
+xref::enumeration/StartupMethod.adoc[`StartupMethod`]
+| +++Choose how the unit startups are treated in the model.+++
 | _n/a_
 
 | <<units_existing,`units_existing`>>
@@ -107,7 +121,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 //[discrete]
 [#conversion_method]
 === `conversion_method`
-+++Choose how the unit converts inputs to outputs+++
++++Choose how the unit converts inputs to outputs.+++
 
 
 [cols="h,4",width=65%]
@@ -213,6 +227,58 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.semantic_id,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#startup_cost]
+=== `startup_cost`
++++Cost of one full startup for one unit.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.startup_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#startup_method]
+=== `startup_method`
++++Choose how the unit startups are treated in the model.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| xref::enumeration/StartupMethod.adoc[`StartupMethod`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.startup_method,&#10548;>>
 --
 ////
 

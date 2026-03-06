@@ -6,10 +6,23 @@ build-backend = "setuptools.build_meta"
 name = "cesm"
 version = "0.1.0"
 dependencies = [
-    "linkml-runtime",
-    "pyyaml",
-    "xarray",
+    "linkml-runtime>=1.6",
+    "pyyaml>=6.0",
+    "pandas>=2.0",
+    "duckdb>=0.9",
 ]
+
+[project.optional-dependencies]
+spine = ["spinedb_api"]
+dev = ["pytest", "ruff"]
+docs = ["linkml"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

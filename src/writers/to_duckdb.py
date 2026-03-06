@@ -18,11 +18,12 @@ Usage:
     dataframes_to_duckdb(dataframes_dict, "output.duckdb")
 """
 
-import duckdb
-import pandas as pd
 import json
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
+import duckdb
+import pandas as pd
 
 
 def _get_index_info(df: pd.DataFrame) -> Tuple[str, int]:

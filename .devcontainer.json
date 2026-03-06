@@ -1,9 +1,12 @@
 {
   "name": "cesm container",
-  "image": "python:3.11",
+  "image": "ghcr.io/netbeheer-nederland/env:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
   "remoteUser": "devuser",
-  "postCreateCommand": "pip install -e .",
-  "postStartCommand": "pip install -e .",
+  "postCreateCommand": "pip install -e '.[dev,docs]' && npm install -g @antora/cli @antora/site-generator-default",
+  "postStartCommand": "pip install -e '.[dev,docs]'",
   "customizations": {
     "vscode": {
       "extensions": [

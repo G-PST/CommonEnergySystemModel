@@ -26,132 +26,6 @@
 
 
 
-.Associated classes
-[d2,svg,theme=4]
-----
-vars: {
-  d2-config: {
-    pad: 20
-  }
-}
-Port {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Entity {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Entity {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Any {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Any {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-Any {
-  style {
-    fill: "#cccccc"
-    shadow: true
-  }
-}
-
-
-
-
-Port -> Entity: source
-
-
-Port -> Entity: sink
-
-
-Port -> Any: investment_cost
-
-
-Port -> Any: fixed_cost
-
-
-Port -> Any: other_operational_cost
-
-
-legend: "" {
-  style: {
-    fill: transparent
-    stroke: transparent
-  }
-  grid-rows: 3
-  grid-columns: 2
-  grid-gap: 10
-  near: bottom-right
-  iec61968_color: "" {
-    style: {
-      fill: "#d1e7c2"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61968_text: "IEC61968 (Enterprise)" {
-    shape: text
-  }
-  iec61970_color: "" {
-    style: {
-      fill: "#eccfcb"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec61970_text: "IEC61970 (Grid)" {
-    shape: text
-  }
-  iec62325_color: "" {
-    style: {
-      fill: "#fffbef"
-      stroke: black
-      stroke-width: 1
-    }
-    width: 10
-    height: 10
-  }
-  iec62325_text: "IEC62325 (Market)" {
-    shape: text
-  }
-}
-----
-
 
 [cols="1,1,2,1",width=100%]
 |===
@@ -167,28 +41,35 @@ https://w3id.org/linkml/Float[`float`]
 | <<constraint_flow_coefficient,`constraint_flow_coefficient`>>
 //| [[slots_table.constraint_flow_coefficient]]<<constraint_flow_coefficient,`constraint_flow_coefficient`>>
 | 0..* +
-https://w3id.org/linkml/Float[`float`]
+xref::class/ConstraintFloat.adoc[`ConstraintFloat`]
 | +++Multiplier between constraints and the flow. Map of constraints and respective coefficients.+++
 | _n/a_
 
 | <<fixed_cost,`fixed_cost`>>
 //| [[slots_table.fixed_cost]]<<fixed_cost,`fixed_cost`>>
 | 0..* +
-xref::class/Any.adoc[`Any`]
+https://w3id.org/linkml/String[`string`]
 | +++Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.+++
+| _n/a_
+
+| <<inertia_constant,`inertia_constant`>>
+//| [[slots_table.inertia_constant]]<<inertia_constant,`inertia_constant`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Inertia constant for a synchronously connected unit to this node.+++
 | _n/a_
 
 | <<investment_cost,`investment_cost`>>
 //| [[slots_table.investment_cost]]<<investment_cost,`investment_cost`>>
 | 0..* +
-xref::class/Any.adoc[`Any`]
+https://w3id.org/linkml/String[`string`]
 | +++Overnight (in dataset currency using reference_year denomination) per kW.+++
 | _n/a_
 
 | <<other_operational_cost,`other_operational_cost`>>
 //| [[slots_table.other_operational_cost]]<<other_operational_cost,`other_operational_cost`>>
 | 0..* +
-xref::class/Any.adoc[`Any`]
+https://w3id.org/linkml/String[`string`]
 | +++Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.+++
 | _n/a_
 
@@ -306,7 +187,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| https://w3id.org/linkml/Float[`float`]
+| xref::class/ConstraintFloat.adoc[`ConstraintFloat`]
 
 
 |===
@@ -361,7 +242,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::class/Any.adoc[`Any`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -370,6 +251,32 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.fixed_cost,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#inertia_constant]
+=== `inertia_constant`
++++Inertia constant for a synchronously connected unit to this node.+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.inertia_constant,&#10548;>>
 --
 ////
 
@@ -387,7 +294,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::class/Any.adoc[`Any`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===
@@ -442,7 +349,7 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 | Cardinality
 | 0..*
 | Type
-| xref::class/Any.adoc[`Any`]
+| https://w3id.org/linkml/String[`string`]
 
 
 |===

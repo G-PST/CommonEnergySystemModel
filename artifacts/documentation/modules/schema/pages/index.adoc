@@ -19,6 +19,12 @@
 | xref::class/Constraint.adoc[`Constraint`]
 | +++Constraints define constraints on multiple variables at once+++
 
+| xref::class/ConstraintFloat.adoc[`ConstraintFloat`]
+| n/a
+
+| xref::class/ConversionRatesFloatFloat.adoc[`ConversionRatesFloatFloat`]
+| n/a
+
 | xref::class/Dataset.adoc[`Dataset`]
 | +++Dataset properties and holder for classes available in the schema.+++
 
@@ -73,6 +79,9 @@
 | xref::class/System.adoc[`System`]
 | +++Parameters related to the whole system to be modelled.+++
 
+| xref::class/Timeset.adoc[`Timeset`]
+| n/a
+
 | xref::class/Unit.adoc[`Unit`]
 | +++Units convert input(s) to output(s) using a ratio multiplier.+++
 
@@ -116,6 +125,9 @@ No types are defined in the schema.
 
 | xref::enumeration/SolveMode.adoc[`SolveMode`]
 | +++Choice of solve process handled within the model.+++
+
+| xref::enumeration/StartupMethod.adoc[`StartupMethod`]
+| +++Choose how the unit startup methods are treated+++
 
 | xref::enumeration/TransferMethod.adoc[`TransferMethod`]
 | +++How to transfer between the two links.+++

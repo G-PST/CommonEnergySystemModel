@@ -43,10 +43,6 @@ This class has no slots.
 
 
 
-| xref::class/Port.adoc[`Port`] | xref::class/Port.adoc#other_operational_cost[`other_operational_cost`]
-
-
-
 | xref::class/Storage.adoc[`Storage`] | xref::class/Storage.adoc#fixed_cost[`fixed_cost`]
 
 

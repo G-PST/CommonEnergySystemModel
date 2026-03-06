@@ -6,6 +6,7 @@ to GridDB format, and writes to a SQLite database.
 """
 
 import argparse
+
 from readers.from_duckdb import dataframes_from_duckdb
 from transformers.griddb import to_griddb
 from transformers.griddb.to_sqlite import write_to_sqlite

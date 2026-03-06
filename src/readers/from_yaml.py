@@ -6,9 +6,11 @@ and writes them to a DuckDB database file.
 """
 
 import argparse
-from generated.cesm_pydantic import Dataset
+
 from linkml_runtime.loaders import yaml_loader
+
 from core.linkml_to_dataframes import yaml_to_df
+from generated.cesm_pydantic import Dataset
 from writers.to_duckdb import dataframes_to_duckdb
 
 

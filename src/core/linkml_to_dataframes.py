@@ -1,10 +1,12 @@
-import pandas as pd
-import numpy as np
 import re
-from typing import Dict, List, Any
 import typing
+from typing import Any, Dict, List
+
+import numpy as np
+import pandas as pd
 from linkml_runtime.utils.schemaview import SchemaView
 from linkml_runtime.utils.yamlutils import extended_float, extended_int
+
 from generated.cesm_pydantic import Timeset
 
 
@@ -65,17 +67,17 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
     result_dfs = {}
     if timeline is not None:
         result_dfs['timeline'] = df = pd.DataFrame(index=pd.to_datetime(timeline))
-    
+
     # Get all collection attributes from dataset (excluding 'timeline', 'id', etc.)
     collection_attrs = _get_collection_attributes(dataset)
-    
+
     for attr_name in collection_attrs:
         collection = getattr(dataset, attr_name, [])
         if not collection:
             continue
-            
+
         slot_class_name = attr_name  # e.g., 'balance', 'storage'
-        slot = schema.induced_slot(slot_class_name, "Dataset")        
+        slot = schema.induced_slot(slot_class_name, "Dataset")
         class_name = slot.range
         dimensions = get_dimensions(schema, class_name)
 
@@ -89,7 +91,7 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
         period_data = {}
         array_data = {}
         datetime_data = {}
-        
+
         for entity in collection:
             entity_dict = _entity_to_dict(entity)
 
@@ -97,14 +99,14 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
             entity_name = getattr(entity, 'name', None) or getattr(entity, 'id', None)
             if entity_name is None:
                 entity_name = f'entity_{len(single_dim_data)}'
-            
+
             # Always include name/id to guarantee entity exists in table
             single_dim_row = {}
             if 'name' in entity_dict:
                 single_dim_row['name'] = entity_dict['name']
             if 'id' in entity_dict:
                 single_dim_row['id'] = entity_dict['id']
-            
+
             for key, value in entity_dict.items():
                 datatype = detect_datatype(value)
                 if datatype == "list_of_floats":
@@ -148,10 +150,10 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
                     # Handle single-dimensional data (skip name/id as already added)
                     if key not in ['name', 'id']:
                         single_dim_row[key] = value
-            
+
             # Always append - even if only name/id exist
             single_dim_data.append(single_dim_row)
-        
+
         # Create class DataFrame
         if single_dim_data:
             if dimensions:
@@ -168,7 +170,7 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
             remaining_cols = sorted([col for col in df.columns if col not in ['id']])
             cols.extend(remaining_cols)
             result_dfs[f"{slot_class_name}"] = df[cols]
-        
+
         # Create time-series DataFrames
         for ts_key, ts_dict in timeseries_data.items():
             df = pd.DataFrame(ts_dict).set_index('datetime').astype('float64')
@@ -181,7 +183,7 @@ def yaml_to_df(dataset, schema_path: str = None, strict: bool = True) -> Dict[st
             result_dfs[ts_key] = df
             if dimensions:
                 dim_names = [d['name'] for d in dimensions]
-        
+
         for array_key, array_dict in array_data.items():
             df = pd.DataFrame(array_dict)
             if dimensions:
@@ -269,7 +271,7 @@ def get_class_from_field(root_class, field_name):
     """Extract the actual class from a field's type hint"""
     field = root_class.__dataclass_fields__[field_name]
     field_type = field.type
-    
+
     # Parse Union types to find the actual class
     if hasattr(field_type, '__origin__'):
         args = typing.get_args(field_type)
@@ -292,18 +294,18 @@ def get_class_from_field(root_class, field_name):
 def _get_collection_attributes(dataset) -> List[str]:
     """Get all collection attributes from dataset object."""
     collection_attrs = []
-    
+
     # Get all attributes that are lists/collections (excluding special ones)
     for attr_name in dir(dataset):
         if attr_name.startswith('_'):
             continue
         if attr_name in ['timeline', 'id', 'currency_year']:
             continue
-            
+
         attr_value = getattr(dataset, attr_name, None)
         if isinstance(attr_value, list):
             collection_attrs.append(attr_name)
-    
+
     return collection_attrs
 
 def _entity_to_dict(entity) -> dict:
@@ -315,27 +317,27 @@ def _entity_to_dict(entity) -> dict:
         'node_type', '_inherited_slots', 'class_class_uri', 'class_class_curie',
         'class_name', 'class_model_uri', 'linkml_meta'
     }
-    
+
     entity_dict = {}
-    
+
     for attr_name in dir(entity):
         if attr_name.startswith('_'):
             continue
-        
+
         if attr_name.startswith('model_'):
             continue
 
         # Skip metadata attributes
         if attr_name in skip_attrs:
             continue
-            
+
         try:
             value = getattr(entity, attr_name)
-            
+
             # Skip methods and callable attributes
             if callable(value):
                 continue
-                
+
             # Handle None values
             if value is None:
                 entity_dict[attr_name] = None
@@ -359,11 +361,11 @@ def _entity_to_dict(entity) -> dict:
             # Handle objects with string representation
             else:
                 entity_dict[attr_name] = str(value)
-                
+
         except Exception:
             # Skip attributes that can't be accessed
             continue
-    
+
     return entity_dict
 
 def _is_timeseries_attribute(attr_name: str, value: Any, time_dimensional_attrs: set) -> bool:
@@ -371,14 +373,14 @@ def _is_timeseries_attribute(attr_name: str, value: Any, time_dimensional_attrs:
     # Check if explicitly marked as time_dimensional
     if attr_name in time_dimensional_attrs:
         return True
-    
+
     # Check if it's a list of numbers (heuristic)
     if isinstance(value, list) and len(value) > 1:
         # Check if first few elements are numeric
         sample = value[:min(3, len(value))]
         if all(isinstance(x, (int, float)) for x in sample):
             return True
-    
+
     return False
 
 if __name__ == "__main__":

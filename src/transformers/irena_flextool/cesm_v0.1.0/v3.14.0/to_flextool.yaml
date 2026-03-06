@@ -19,6 +19,7 @@
 #       aggregate: sum|average|max|min|first (when reducing dimensions)
 #     - if_parameter: conditional copy
 #     - if_not_parameter: conditional copy
+#     - default: value to use when source is NaN/None (applied before rename)
 #     - rename:
 #         source_value: target_value
 #     - value: constant or dimension-based [0, 1, ...]
@@ -49,6 +50,10 @@ solve_order:
 # =============================================================================
 # SOLVE_PATTERN
 # =============================================================================
+solve-entities:
+- solve_pattern
+- solve
+
 rolling_jump:
 - solve_pattern: rolling_jump
 - solve: rolling_solve_jump
@@ -60,6 +65,7 @@ rolling_horizon:
 solve_mode:
 - solve_pattern: solve_mode
 - solve: solve_mode
+- default: single_solve
 - rename:
     single_solve: single_solve
     rolling_solve: rolling_window

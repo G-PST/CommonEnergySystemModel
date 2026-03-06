@@ -1,10 +1,13 @@
 import ast
+import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
 import pandas as pd
 import yaml
-from typing import Dict, List, Any, Tuple, Union, Optional
-from datetime import datetime, timedelta
-import numpy as np
-import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _get_timestep_minutes_from_data(source_dfs: Dict[str, pd.DataFrame]) -> Optional[int]:
@@ -67,7 +70,7 @@ def _convert_str_index_to_datetime(
     # Get timestep duration from source data
     timestep_minutes = _get_timestep_minutes_from_data(source_dfs)
     if timestep_minutes is None:
-        logging.warning("Could not determine timestep duration for str→ts conversion")
+        logger.warning("Could not determine timestep duration for str→ts conversion")
         return df
 
     # Try to extract numeric part from index values
@@ -124,7 +127,7 @@ def load_config(config_path: str) -> Dict:
 
 def is_timeseries(df: pd.DataFrame) -> bool:
     """Check if DataFrame is a time series (has datetime in index)."""
-    return (df.index.name == 'datetime' or 
+    return (df.index.name == 'datetime' or
             (isinstance(df.index, pd.MultiIndex) and 'datetime' in df.index.names))
 
 
@@ -140,7 +143,7 @@ def get_entity_index(df: pd.DataFrame) -> Union[pd.Index, pd.MultiIndex]:
         return df.index
 
 
-def set_entity_index(df: pd.DataFrame, new_index: Union[pd.Index, pd.MultiIndex], 
+def set_entity_index(df: pd.DataFrame, new_index: Union[pd.Index, pd.MultiIndex],
                      is_pivoted: bool = False) -> pd.DataFrame:
     """
     Set the entity index for a DataFrame.
@@ -155,7 +158,8 @@ def set_entity_index(df: pd.DataFrame, new_index: Union[pd.Index, pd.MultiIndex]
     return result
 
 
-def list_of_lists_to_index(data):
+def list_of_lists_to_index(data: List[List]) -> Union[pd.Index, pd.MultiIndex]:
+    """Convert a list of lists to a pandas Index or MultiIndex."""
     if not data:
         return pd.Index([])
     if len(data[0]) == 1:
@@ -163,11 +167,106 @@ def list_of_lists_to_index(data):
     else:
         return pd.MultiIndex.from_tuples([tuple(item) for item in data])
 
-def index_to_names(idx: Union[pd.Index, pd.MultiIndex]) -> List[str]:
+
+def index_to_names(idx: Union[pd.Index, pd.MultiIndex]) -> List[List]:
     if isinstance(idx, pd.MultiIndex):
         return [list(row) for row in idx]
     else:
         return [[item] for item in idx]
+
+def _filter_entities_by_parameters(
+    entity_names: List,
+    source_dfs: Dict[str, pd.DataFrame],
+    base_class: str,
+    base_df: Optional[pd.DataFrame] = None,
+    if_params: Optional[List[str]] = None,
+    if_not_params: Optional[List[str]] = None,
+) -> List:
+    """
+    Filter entity names based on whether they have (or don't have) certain parameters.
+
+    This is shared logic used by copy_entities, create_parameter, and transform_parameter.
+
+    Args:
+        entity_names: List of entity names (each may be a list of parts, a tuple, or a string)
+        source_dfs: Dictionary of all source dataframes
+        base_class: The base source class name (used to find related parameter dataframes)
+        base_df: The base source dataframe for the class (used to check regular columns).
+                 If None, will be looked up from source_dfs using base_class.
+        if_params: List of parameter names - include only entities that have these parameters
+        if_not_params: List of parameter names - exclude entities that have these parameters
+
+    Returns:
+        Filtered list of entity names (same format as input)
+    """
+    if not if_params and not if_not_params:
+        return entity_names
+
+    if base_df is None:
+        base_df = source_dfs.get(base_class, pd.DataFrame())
+
+    filtered_names = list(entity_names)
+
+    # Precompute the split keys for finding related parameter dataframes
+    splitted_keys = [x.split('.') for x in source_dfs.keys()]
+    long_keys = [x for x in splitted_keys if len(x) > 2]
+
+    def _get_item_key(item):
+        """Convert an entity name item to a key suitable for DataFrame lookups."""
+        if isinstance(item, str):
+            return item
+        return tuple(item) if len(item) > 1 else item[0]
+
+    # Apply if_parameter filter (include only entities that have the parameter)
+    if if_params:
+        included_names = []
+        for if_param in if_params:
+            # Check in pivoted dataframes (time series)
+            df_keys_found = [
+                '.'.join(x) for x in long_keys
+                if x[0] == base_class and x[2] == if_param
+            ]
+            for df_key_found in df_keys_found:
+                for item in filtered_names:
+                    item_key = _get_item_key(item)
+                    if item_key in source_dfs[df_key_found].columns:
+                        if item not in included_names:
+                            included_names.append(item)
+            # Check in regular dataframes
+            if not base_df.empty and if_param in base_df.columns:
+                for item in filtered_names:
+                    item_key = _get_item_key(item)
+                    if item_key in base_df.index and pd.notna(base_df.loc[item_key, if_param]):
+                        if item not in included_names:
+                            included_names.append(item)
+        filtered_names = included_names
+
+    # Apply if_not_parameter filter (exclude entities that have the parameter)
+    if if_not_params:
+        excluded_names = []
+        for if_not_param in if_not_params:
+            # Check in pivoted dataframes (time series)
+            df_keys_found = [
+                '.'.join(x) for x in long_keys
+                if x[0] == base_class and x[2] == if_not_param
+            ]
+            for df_key_found in df_keys_found:
+                for item in filtered_names:
+                    item_key = _get_item_key(item)
+                    if item_key in source_dfs[df_key_found].columns:
+                        if item not in excluded_names:
+                            excluded_names.append(item)
+            # Check in regular dataframes
+            if not base_df.empty and if_not_param in base_df.columns:
+                for item in filtered_names:
+                    item_key = _get_item_key(item)
+                    if item_key in base_df.index and pd.notna(base_df.loc[item_key, if_not_param]):
+                        if item not in excluded_names:
+                            excluded_names.append(item)
+        filtered_names = [item for item in filtered_names if item not in excluded_names]
+
+    return filtered_names
+
 
 def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, List]:
     """
@@ -201,7 +300,7 @@ def parse_operation(operation_name: str, config: Dict) -> Tuple[List, List, List
 def parse_spec(spec: Any) -> List[Dict]:
     """Parse a source or target specification."""
     result = []
-    
+
     if isinstance(spec, str):
         result.append({'class': spec, 'attribute': None})
     elif isinstance(spec, dict):
@@ -213,16 +312,16 @@ def parse_spec(spec: Any) -> List[Dict]:
     elif isinstance(spec, list):
         for item in spec:
             result.extend(parse_spec(item))
-    
+
     return result
 
 
-def get_operation_type(source_specs: List[Dict], target_specs: List[Dict], 
+def get_operation_type(source_specs: List[Dict], target_specs: List[Dict],
                        operations: List[Dict]) -> str:
     """Determine the type of operation to perform."""
     source_has_attr = any(s.get('attribute') for s in source_specs)
     target_has_attr = any(t.get('attribute') for t in target_specs)
-    
+
     if not source_has_attr and not target_has_attr:
         return 'copy_entities'
     elif not source_has_attr and target_has_attr and any('value' in d for d in operations):
@@ -249,61 +348,31 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
     target_class = target_spec['class']
     for source_spec in source_specs:
         source_class = source_spec['class']
-        
+
         if source_class not in source_dfs:
             return target_dfs
-        
+
         source_df = source_dfs[source_class]
         source_idx = source_df.index
-        
+
         # Build target entities based on order specification
         if 'rule' in target_spec:
             source_names = index_to_names(source_idx).copy()
-            if 'if_parameter' in target_spec['rule']:
-                filtered_source_names = []
-                if_parameters = target_spec['rule']['if_parameter']
-                if not isinstance(if_parameters, list):
-                    if_parameters = [if_parameters]
-                for if_param in if_parameters:
-                    splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
-                    long_keys = [x for x in splitted_keys if len(x)>2]
-                    df_keys_found = ['.'.join(x) for x in long_keys if x[0] == source_class and x[2] == if_param]
-                    for df_key_found in df_keys_found:
-                        for item in source_names:
-                            if tuple(item) in source_dfs[df_key_found].columns:
-                                filtered_source_names.append(item)
-                    for item in source_names:
-                        if if_param in source_df.columns:
-                            item_key = tuple(item) if len(item) > 1 else item[0]
-                            if pd.notna(source_df.loc[item_key, if_param]):
-                                if item not in filtered_source_names:
-                                    filtered_source_names.append(item)
-                source_names = filtered_source_names
-            if 'if_not_parameter' in target_spec['rule']:
-                # Exclude entities that have non-null values for specified parameters
-                if_not_parameters = target_spec['rule']['if_not_parameter']
-                if not isinstance(if_not_parameters, list):
-                    if_not_parameters = [if_not_parameters]
-                excluded_names = []
-                for if_not_param in if_not_parameters:
-                    # Check in pivoted dataframes (time series)
-                    splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
-                    long_keys = [x for x in splitted_keys if len(x) > 2]
-                    df_keys_found = ['.'.join(x) for x in long_keys if x[0] == source_class and x[2] == if_not_param]
-                    for df_key_found in df_keys_found:
-                        for item in source_names:
-                            if tuple(item) in source_dfs[df_key_found].columns:
-                                if item not in excluded_names:
-                                    excluded_names.append(item)
-                    # Check in regular dataframes
-                    for item in source_names:
-                        if if_not_param in source_df.columns:
-                            item_key = tuple(item) if len(item) > 1 else item[0]
-                            if pd.notna(source_df.loc[item_key, if_not_param]):
-                                if item not in excluded_names:
-                                    excluded_names.append(item)
-                # Filter out excluded names
-                source_names = [item for item in source_names if item not in excluded_names]
+            # Extract if_parameter / if_not_parameter from rule
+            if_params = target_spec['rule'].get('if_parameter')
+            if if_params is not None and not isinstance(if_params, list):
+                if_params = [if_params]
+            if_not_params = target_spec['rule'].get('if_not_parameter')
+            if if_not_params is not None and not isinstance(if_not_params, list):
+                if_not_params = [if_not_params]
+            source_names = _filter_entities_by_parameters(
+                entity_names=source_names,
+                source_dfs=source_dfs,
+                base_class=source_class,
+                base_df=source_df,
+                if_params=if_params,
+                if_not_params=if_not_params,
+            )
             # Create target index from filtered source names (if no order specified)
             if source_names:
                 target_idx = list_of_lists_to_index(source_names)
@@ -326,10 +395,10 @@ def copy_entities(source_dfs: Dict[str, pd.DataFrame],
                     target_idx = list_of_lists_to_index(target_names)
                 else:
                     target_idx = pd.Index([])
-                    
+
         else:
             target_idx = source_idx
-        
+
         # Store or merge with existing target dataframe
         if target_class not in target_dfs:
             # Create new dataframe with just the index
@@ -370,23 +439,16 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
         # Check for if_parameter filter in operations
         for op_dict in operations:
             if 'if_parameter' in op_dict:
-                filtered_source_names = []
                 if_parameters = op_dict['if_parameter']
-                for if_param in if_parameters:
-                    # Check in pivoted dataframes (time series)
-                    splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
-                    long_keys = [x for x in splitted_keys if len(x) > 2]
-                    df_keys_found = ['.'.join(x) for x in long_keys if x[0] == source_class and x[2] == if_param]
-                    for df_key_found in df_keys_found:
-                        for item in source_names:
-                            if tuple(item) in source_dfs[df_key_found].columns and item not in filtered_source_names:
-                                filtered_source_names.append(item)
-                    # Check in regular dataframes
-                    for item in source_names:
-                        if if_param in source_df.columns and pd.notna(source_df.loc[tuple(item) if len(item) > 1 else item[0], if_param]):
-                            if item not in filtered_source_names:
-                                filtered_source_names.append(item)
-                source_names = filtered_source_names
+                if not isinstance(if_parameters, list):
+                    if_parameters = [if_parameters]
+                source_names = _filter_entities_by_parameters(
+                    entity_names=source_names,
+                    source_dfs=source_dfs,
+                    base_class=source_class,
+                    base_df=source_df,
+                    if_params=if_parameters,
+                )
                 source_idx = list_of_lists_to_index(source_names) if source_names else pd.Index([])
 
         # Skip if no matching entities after filtering
@@ -423,7 +485,7 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
 
         # Create target index and dataframe
         param_data = pd.DataFrame({target_attribute: new_parameter_value}, index=target_idx)
-        
+
         # Store result in target class dataframe
         if target_class not in target_dfs:
             target_dfs[target_class] = param_data
@@ -431,17 +493,17 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
             # Add column to existing dataframe
             if target_attribute not in target_dfs[target_class].columns:
                 target_dfs[target_class][target_attribute] = None
-            
+
             # Update values for matching indices
             common_idx = target_dfs[target_class].index.intersection(param_data.index)
             target_dfs[target_class].loc[common_idx, target_attribute] = param_data.loc[common_idx, target_attribute]
-            
+
             # Add new indices
             new_idx = param_data.index.difference(target_dfs[target_class].index)
             if len(new_idx) > 0:
                 new_data = pd.DataFrame({target_attribute: param_data.loc[new_idx, target_attribute]}, index=new_idx)
                 target_dfs[target_class] = pd.concat([target_dfs[target_class], new_data])
-    
+
     return target_dfs
 
 
@@ -507,10 +569,10 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     source_dfs[source_class] = source_dfs['timeline']
                 else:
                     # Missing pivoted data (e.g., arrays) - skip this transformation
-                    logging.warning(f"Could not find source dataframe '{source_class}'")
+                    logger.warning(f"Could not find source dataframe '{source_class}'")
                     return target_dfs
             else:
-                logging.warning(f"Could not find source dataframe from class '{source_class}'")
+                logger.warning(f"Could not find source dataframe from class '{source_class}'")
                 return target_dfs
 
         if is_pivoted:
@@ -521,7 +583,7 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                 # Use the attribute column
                 source_df = source_dfs[source_class][[source_attribute]]
             else:
-                logging.warning(f"Could not find source parameter '{source_attribute}' from class '{source_class}'")
+                logger.warning(f"Could not find source parameter '{source_attribute}' from class '{source_class}'")
                 return target_dfs
 
         source_dfs_list.append(source_df)
@@ -559,53 +621,14 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
         else:
             entity_names = index_to_names(result.index)
 
-        filtered_names = entity_names.copy()
-
-        # Apply if_parameter filter (include only entities that have the parameter)
-        if if_parameters_all:
-            included_names = []
-            for if_param in if_parameters_all:
-                # Check in pivoted dataframes (time series)
-                splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
-                long_keys = [x for x in splitted_keys if len(x) > 2]
-                df_keys_found = ['.'.join(x) for x in long_keys if x[0] == base_source_class and x[2] == if_param]
-                for df_key_found in df_keys_found:
-                    for item in filtered_names:
-                        item_key = item if isinstance(item, str) else (tuple(item) if len(item) > 1 else item[0])
-                        if item_key in source_dfs[df_key_found].columns:
-                            if item not in included_names:
-                                included_names.append(item)
-                # Check in regular dataframes
-                if if_param in base_source_df.columns:
-                    for item in filtered_names:
-                        item_key = item if isinstance(item, str) else (tuple(item) if len(item) > 1 else item[0])
-                        if item_key in base_source_df.index and pd.notna(base_source_df.loc[item_key, if_param]):
-                            if item not in included_names:
-                                included_names.append(item)
-            filtered_names = included_names
-
-        # Apply if_not_parameter filter (exclude entities that have the parameter)
-        if if_not_parameters_all:
-            excluded_names = []
-            for if_not_param in if_not_parameters_all:
-                # Check in pivoted dataframes (time series)
-                splitted_keys = [x.split('.') for x in list(source_dfs.keys())]
-                long_keys = [x for x in splitted_keys if len(x) > 2]
-                df_keys_found = ['.'.join(x) for x in long_keys if x[0] == base_source_class and x[2] == if_not_param]
-                for df_key_found in df_keys_found:
-                    for item in filtered_names:
-                        item_key = item if isinstance(item, str) else (tuple(item) if len(item) > 1 else item[0])
-                        if item_key in source_dfs[df_key_found].columns:
-                            if item not in excluded_names:
-                                excluded_names.append(item)
-                # Check in regular dataframes
-                if if_not_param in base_source_df.columns:
-                    for item in filtered_names:
-                        item_key = item if isinstance(item, str) else (tuple(item) if len(item) > 1 else item[0])
-                        if item_key in base_source_df.index and pd.notna(base_source_df.loc[item_key, if_not_param]):
-                            if item not in excluded_names:
-                                excluded_names.append(item)
-            filtered_names = [item for item in filtered_names if item not in excluded_names]
+        filtered_names = _filter_entities_by_parameters(
+            entity_names=entity_names,
+            source_dfs=source_dfs,
+            base_class=base_source_class,
+            base_df=base_source_df,
+            if_params=if_parameters_all if if_parameters_all else None,
+            if_not_params=if_not_parameters_all if if_not_parameters_all else None,
+        )
 
         # Apply the filter to result
         if is_pivoted:
@@ -649,11 +672,19 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                         # Try direct conversion (works for ISO datetime strings)
                         try:
                             result.index = pd.to_datetime(result.index)
-                        except Exception:
-                            logging.warning("Could not convert index to datetime - start_time not provided")
+                        except (ValueError, TypeError) as e:
+                            logger.warning("Could not convert index to datetime - start_time not provided: %s", e)
                 elif target_datatypes[0] == "array":
                     # Use consistent UTC formatting for datetime index
                     result.index = _datetime_index_to_str(result.index)
+
+    # Apply default value (fill NaN before other operations like rename)
+    for op_dict in operations:
+        if 'default' in op_dict:
+            default_value = op_dict['default']
+            if not is_pivoted:
+                result = result.fillna(default_value)
+            break
 
     # Apply operations
     for op_dict in operations:
@@ -797,7 +828,7 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
     return target_dfs
 
 
-def _do_op(op: ast.operator, a, b):
+def _do_op(op: ast.operator, a: Any, b: Any) -> Any:
     """Dispatch arithmetic operator to perform operation on a and b."""
     if isinstance(op, ast.Mult):
         return a * b
@@ -1028,22 +1059,22 @@ def add_dataframes(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame, 
+def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
                        op_dict: Dict) -> pd.DataFrame:
     """Multiply two dataframes together, with optional dimension matching."""
-    
+
     # Get match specification if provided
     match_spec = op_dict.get('match', {})
-    
+
     if match_spec:
         # Extract dimension indices for matching
         df1_match_dims = [i - 1 for i in match_spec.get('df1', [])]
         df2_match_dims = [i - 1 for i in match_spec.get('df2', [])]
-        
+
         # Get entity names
         df1_names = index_to_names(get_entity_index(df1))
         df2_names = index_to_names(get_entity_index(df2))
-        
+
         # Create match keys
         df1_match_keys = []
         for name in df1_names:
@@ -1053,7 +1084,7 @@ def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
                 df1_match_keys.append(key)
             else:
                 df1_match_keys.append(None)
-        
+
         df2_match_keys = []
         for name in df2_names:
             parts = name.split('.')
@@ -1062,13 +1093,13 @@ def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
                 df2_match_keys.append(key)
             else:
                 df2_match_keys.append(name)
-        
+
         # Create mapping from match key to values
         df2_map = {}
         for i, key in enumerate(df2_match_keys):
             if key is not None:
                 df2_map[key] = df2.iloc[i] if not is_timeseries(df2) else df2.iloc[:, i]
-        
+
         # Multiply matched values
         result = df1.copy()
         for i, key in enumerate(df1_match_keys):
@@ -1077,7 +1108,7 @@ def multiply_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
                     result.iloc[:, i] = result.iloc[:, i] * df2_map[key]
                 else:
                     result.iloc[i] = result.iloc[i] * df2_map[key]
-        
+
         return result
     else:
         # Simple element-wise multiplication
@@ -1103,7 +1134,7 @@ def reorder_entity_names(source_idx: pd.Index, order: List[List[int]]) -> pd.Ind
         target_names.append(target_dims)
     # Create entity index
     target_idx = list_of_lists_to_index(target_names)
-   
+
     return target_idx
 
 
@@ -1203,12 +1234,12 @@ def transform_data(source_dfs: Dict[str, pd.DataFrame],
     target_dfs = {}
 
     for operation_name in config.keys():
-        print(f"Processing operation: {operation_name}. ", end="")
+        logger.info("Processing operation: %s", operation_name)
 
         source_specs, target_specs, operations = parse_operation(operation_name, config)
         operation_type = get_operation_type(source_specs, target_specs, operations)
 
-        print(f"  Operation type: {operation_type}")
+        logger.info("  Operation type: %s", operation_type)
 
         for target_spec in target_specs:
             if operation_type == 'copy_entities':

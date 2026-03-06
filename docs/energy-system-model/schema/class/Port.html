@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Port.html">
     <link rel="prev" href="PeriodFloat.html">
     <link rel="next" href="Solve_pattern.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
   <body class="article">
@@ -92,6 +92,12 @@
     <a class="nav-link" href="Constraint.html">Constraint</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ConstraintFloat.html">ConstraintFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ConversionRatesFloatFloat.html">ConversionRatesFloatFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -143,6 +149,9 @@
     <a class="nav-link" href="System.html">System</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Timeset.html">Timeset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -177,6 +186,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/StartupMethod.html">StartupMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
@@ -216,7 +228,7 @@
     <li><a href="Port.html">Port</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/Port.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/artifacts/documentation/modules/schema/pages/class/Port.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -275,12 +287,6 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
-<div class="imageblock kroki">
-<div class="content">
-<img src="http://fruit.ritger.nl:9000/d2/svg/eNrVUstqwzAQvOcrhHtJDwbHoUmrQ6GUUHoo9A-CLK9sYUcy682L4n-v_ErikNJcQqnARjO7K82sdiOw5OxrxFgc-tIapZMWMlaImLMwcPtqVI0-LVITKGmfQ5eidJ5z5t3JZnkNV6YitlvOCNfQ1bq1MKRp_5cHvJj_Wt323n9mbQ84K-0aJVwKaJOd0O5azrTZQEkrMLSUtqTzsNI7iC9GLKWAS1sACtLWiLzPyiEB42bD846m-MAVoTBlIdBd2voitBmc85X7EtSxj3brhnDaQ2nz9co4JuyZRBScTepRNCCQs8gS2ZWPOknrgzTI2eRp9ugE5hYPws6kHVseT2AuQ69je3FRLmQ24Pytjil1Nzds1fx7KmhQCrWEDlanUgh2jvfeF68NZmP3RoAF6hLuD_JSUdRdcamD8nlwrROQUsnohk6clIGTecDGb-5JfvEQTsOHaz0opSJQN_PQSDnxUGM2_hCYAf3oovoGK6Zq_Q==?theme=4" alt="Associated classes">
-</div>
-<div class="title">Figure 1. Associated classes</div>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -307,28 +313,35 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#constraint_flow_coefficient"><code>constraint_flow_coefficient</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<a href="ConstraintFloat.html" class="xref page"><code>ConstraintFloat</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multiplier between constraints and the flow. Map of constraints and respective coefficients.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#fixed_cost"><code>fixed_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost of maintaining the asset (in dataset currency using reference_year denomination) per kW per year.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#inertia_constant"><code>inertia_constant</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inertia constant for a synchronously connected unit to this node.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#investment_cost"><code>investment_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overnight (in dataset currency using reference_year denomination) per kW.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#other_operational_cost"><code>other_operational_cost</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost (in dataset currency using reference_year denomination) per unit of the product flowing through, usually energy in MWh.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
@@ -454,7 +467,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ConstraintFloat.html" class="xref page"><code>ConstraintFloat</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -510,7 +523,33 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="inertia_constant"><a class="anchor" href="#inertia_constant"></a><code>inertia_constant</code></h3>
+<div class="paragraph">
+<p>Inertia constant for a synchronously connected unit to this node.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Float"><code>float</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -536,7 +575,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -592,7 +631,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Any.html" class="xref page"><code>Any</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
 </tr>
 </tbody>
 </table>

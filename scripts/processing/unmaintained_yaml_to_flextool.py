@@ -1,12 +1,13 @@
 import argparse
+
 import pandas as pd
-from generated.cesm_pydantic import Dataset  # This is the generated class
 from linkml_runtime.loaders import yaml_loader
+
 from core.linkml_to_dataframes import yaml_to_df
 from core.transform_parameters import transform_data
+from generated.cesm_pydantic import Dataset  # This is the generated class
 from writers.to_spine_db import dataframes_to_spine
-from spinedb_api import DatabaseMapping
-from spinedb_api.exception import NothingToCommit
+
 
 def time_to_spine(flextool, cesm):
     """
@@ -20,7 +21,7 @@ def time_to_spine(flextool, cesm):
     time_diffs = -dt_series.diff(-1).total_seconds() / 3600
     time_diffs = pd.Series(time_diffs)
     time_diffs.iloc[-1] = time_diffs.iloc[-2]
-    
+
     flextool['timeline.str.timestep_duration'] = pd.DataFrame({
         'cesm_timeline': time_diffs.values},
         index = cesm["timeline"].index,
@@ -32,7 +33,7 @@ def time_to_spine(flextool, cesm):
         'timeline': ['cesm_timeline']},
         index = ['cesm_timeset']
     )
-    
+
     # Create solve.str.period_timeset dataframe
     solve_periods = {}
     all_periods = []
@@ -47,7 +48,7 @@ def time_to_spine(flextool, cesm):
     period_timeset = pd.DataFrame(index=all_periods_unique)
     for solve_name, periods in solve_periods.items():
         for period in periods:
-            period_timeset.loc[period, solve_name] = 'cesm_timeset' 
+            period_timeset.loc[period, solve_name] = 'cesm_timeset'
     flextool['solve.str.period_timeset'] = period_timeset
 
     solve_years_represented = pd.DataFrame(index=all_periods_unique)

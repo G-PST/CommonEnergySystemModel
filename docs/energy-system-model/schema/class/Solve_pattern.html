@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/schema/class/Solve_pattern.html">
     <link rel="prev" href="Port.html">
     <link rel="next" href="Storage.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
   <body class="article">
@@ -92,6 +92,12 @@
     <a class="nav-link" href="Constraint.html">Constraint</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ConstraintFloat.html">ConstraintFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ConversionRatesFloatFloat.html">ConversionRatesFloatFloat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="DirectionalValue.html">DirectionalValue</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -143,6 +149,9 @@
     <a class="nav-link" href="System.html">System</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Timeset.html">Timeset</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="Unit.html">Unit</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -177,6 +186,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/SolveMode.html">SolveMode</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../enumeration/StartupMethod.html">StartupMethod</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../enumeration/TransferMethod.html">TransferMethod</a>
@@ -216,7 +228,7 @@
     <li><a href="Solve_pattern.html">Solve_pattern</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="file:///workspaces/oes-spec/artifacts/documentation/modules/schema/pages/class/Solve_pattern.adoc">Edit this Page</a></div>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/artifacts/documentation/modules/schema/pages/class/Solve_pattern.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -265,12 +277,6 @@
 <div class="sect1">
 <h2 id="_slots"><a class="anchor" href="#_slots"></a>Slots</h2>
 <div class="sectionbody">
-<div class="imageblock kroki">
-<div class="content">
-<img src="http://fruit.ritger.nl:9000/d2/svg/eNrVU8tqwzAQvOcrhHtJDwbHoUmrQy8llB4KhX6AUaS1LaJIRlKSPvC_d604D4eWupAcKvBjh93VzKy0ZtZR8jkgRKQxNzqXxTYkpGKCkjTB_3pQD16NWkNWMe_B6pDh_LuCNjeXSlESXfGwooC5kgmzocTbFbRNcL2AlUb86wbnsuJcfU4axfdkK5GSKnxdZoEp6SCTeg3OL0F795cygwDz0uheVUwI2SQzlZXGyg-jv6vqAJRoePOZa7AeyXhOPZPa7QsUFKCRQhQdbKQdH71l2lXMovStk96aBZziNT6FlSK2ZoPXYrwLuVGrpUYk3SEFqygZNZdDA7OUzI33ZhlbWZRNIwl8Mrqb3GZYaeye2Am1w5DFCKY8jVp0R26uGF90sHgjhS9x54DW4b2DkhCV0FBow_qYikeLca-n2UOIyXCm0c7K4oSv9_RKVjWuYGqnfJr0VQKc53x-QSVIpaNkmpDhI47kFw3pOL3pqyHP8znkF9MQqBxpaGIyfGZ2Af5HFfUXMnenuQ==?theme=4" alt="Associated classes">
-</div>
-<div class="title">Figure 1. Associated classes</div>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -288,31 +294,31 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve"><code>contains_solve</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve_pattern"><code>contains_solve_pattern</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A child solve_pattern to be executed inside of the parent solve_pattern.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#duration"><code>duration</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Duration of the solve in time steps. Defaults to full timeline.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#next_solve"><code>next_solve</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_additional_horizon"><code>periods_additional_horizon</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_additional_investments_horizon"><code>periods_additional_investments_horizon</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="Period.html" class="xref page"><code>Period</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods from which the model will report investment results and possibly pass to the next solve.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods that will be included in invest optimisation but are not part of results reporting (they may be solved...</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_additional_operations_horizon"><code>periods_additional_operations_horizon</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods that will be included in dispatch optimisation but are not part of results reporting (they may be solved...</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#periods_pass_storage_data"><code>periods_pass_storage_data</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of periods from which the model will pass storage level information to the next solve or to the child solves.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
@@ -330,6 +336,20 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#rolling_additional_horizon"><code>rolling_additional_horizon</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How much rolling solves have additional horizon beyond the rolling_jump duration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#rolling_jump"><code>rolling_jump</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
+<a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How much each roll jumps forward in time.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#solve_mode"><code>solve_mode</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
 <a href="../enumeration/SolveMode.html" class="xref page"><code>SolveMode</code></a></p></td>
@@ -337,17 +357,17 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#start_time"><code>start_time</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#start_time_durations"><code>start_time_durations</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.</p></td>
+<a href="Timeset.html" class="xref page"><code>Timeset</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains pairs of start time and duration to define what part of the timeline is to be solved. Start times need to match a...</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#time_resolution"><code>time_resolution</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0..*<br>
-<a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Time resolution the model should use. Multiples of the time resolution of the original data.</p></td>
+<a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time resolution the model should use. Has to be integer multiples of the time resolution of the original data.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
 </tr>
 <tr>
@@ -412,7 +432,7 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="contains_solve"><a class="anchor" href="#contains_solve"></a><code>contains_solve</code></h3>
+<h3 id="contains_solve_pattern"><a class="anchor" href="#contains_solve_pattern"></a><code>contains_solve_pattern</code></h3>
 <div class="paragraph">
 <p>A child solve_pattern to be executed inside of the parent solve_pattern.</p>
 </div>
@@ -468,32 +488,6 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="duration"><a class="anchor" href="#duration"></a><code>duration</code></h3>
-<div class="paragraph">
-<p>Duration of the solve in time steps. Defaults to full timeline.</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width: 65%;">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
-</tr>
-<tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
 <h3 id="name"><a class="anchor" href="#name"></a><code>name</code></h3>
 <div class="paragraph">
 <p>User-facing unique name identifier.</p>
@@ -524,9 +518,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="next_solve"><a class="anchor" href="#next_solve"></a><code>next_solve</code></h3>
+<h3 id="periods_additional_investments_horizon"><a class="anchor" href="#periods_additional_investments_horizon"></a><code>periods_additional_investments_horizon</code></h3>
 <div class="paragraph">
-<p>The next solve_pattern to be executed. If empty, the execution ends after the solve_pattern.</p>
+<p>A list of periods that will be included in invest optimisation but are not part of results reporting (they may be solved again in a later solve).</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -544,15 +538,41 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="periods_additional_horizon"><a class="anchor" href="#periods_additional_horizon"></a><code>periods_additional_horizon</code></h3>
+<h3 id="periods_additional_operations_horizon"><a class="anchor" href="#periods_additional_operations_horizon"></a><code>periods_additional_operations_horizon</code></h3>
 <div class="paragraph">
-<p>A list of periods from which the model will report investment results and possibly pass to the next solve.</p>
+<p>A list of periods that will be included in dispatch optimisation but are not part of results reporting (they may be solved again in a later solve).</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Period.html" class="xref page"><code>Period</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="periods_pass_storage_data"><a class="anchor" href="#periods_pass_storage_data"></a><code>periods_pass_storage_data</code></h3>
+<div class="paragraph">
+<p>A list of periods from which the model will pass storage level information to the next solve or to the child solves.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -628,6 +648,58 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="rolling_additional_horizon"><a class="anchor" href="#rolling_additional_horizon"></a><code>rolling_additional_horizon</code></h3>
+<div class="paragraph">
+<p>How much rolling solves have additional horizon beyond the rolling_jump duration.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="rolling_jump"><a class="anchor" href="#rolling_jump"></a><code>rolling_jump</code></h3>
+<div class="paragraph">
+<p>How much each roll jumps forward in time.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 65%;">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">URI</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n/a</em></p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cardinality</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0..*</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="semantic_id"><a class="anchor" href="#semantic_id"></a><code>semantic_id</code></h3>
 <div class="paragraph">
 <p>Optional id for semantic web integration.</p>
@@ -684,9 +756,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="start_time"><a class="anchor" href="#start_time"></a><code>start_time</code></h3>
+<h3 id="start_time_durations"><a class="anchor" href="#start_time_durations"></a><code>start_time_durations</code></h3>
 <div class="paragraph">
-<p>Start time of the solve - needs to match a value in the timeline. Defaults to the start of the timeline.</p>
+<p>Contains pairs of start time and duration to define what part of the timeline is to be solved. Start times need to match a value in the timeline. Defaults to the start of the timeline and full timeline duration. Can be a list of timesets to define representative periods.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -704,7 +776,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/String"><code>string</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Timeset.html" class="xref page"><code>Timeset</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -712,7 +784,7 @@
 <div class="sect2">
 <h3 id="time_resolution"><a class="anchor" href="#time_resolution"></a><code>time_resolution</code></h3>
 <div class="paragraph">
-<p>Time resolution the model should use. Multiples of the time resolution of the original data.</p>
+<p>Time resolution the model should use. Has to be integer multiples of the time resolution of the original data.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width: 65%;">
 <colgroup>
@@ -730,7 +802,7 @@
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Type</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://w3id.org/linkml/Integer"><code>integer</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#:enumeration/Duration.adoc" class="xref unresolved"><code>Duration</code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -758,7 +830,7 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="Solve_pattern.html" class="xref page"><code>Solve_pattern</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve"><code>contains_solve</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#contains_solve_pattern"><code>contains_solve_pattern</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="System.html" class="xref page"><code>System</code></a></p></td>

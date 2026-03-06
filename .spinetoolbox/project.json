@@ -129,7 +129,28 @@
                     "left"
                 ],
                 "options": {
-                    "purge_before_writing": false
+                    "purge_before_writing": true,
+                    "purge_settings": {
+                        "alternative": true,
+                        "scenario": true,
+                        "scenario_alternative": true,
+                        "entity_class": false,
+                        "display_mode": false,
+                        "entity_class_display_mode": false,
+                        "superclass_subclass": false,
+                        "entity": true,
+                        "entity_group": true,
+                        "entity_alternative": true,
+                        "parameter_value_list": false,
+                        "list_value": false,
+                        "parameter_definition": false,
+                        "parameter_type": false,
+                        "parameter_value": true,
+                        "metadata": true,
+                        "entity_metadata": true,
+                        "parameter_value_metadata": true,
+                        "entity_location": true
+                    }
                 },
                 "filter_settings": {
                     "auto_online": true,
@@ -430,8 +451,8 @@
         "FlexTool3": {
             "type": "Tool",
             "description": "",
-            "x": 307.8731908236936,
-            "y": -357.5393753877369,
+            "x": 306.3633357593399,
+            "y": -357.539375387737,
             "specification": "FlexTool3",
             "execute_in_work": false,
             "cmd_line_args": [

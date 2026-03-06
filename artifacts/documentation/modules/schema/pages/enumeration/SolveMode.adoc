@@ -24,6 +24,10 @@
 |===
 | Value | URI | Description
 
+| `rolling_solve`
+| n/a
+| n/a
+
 | `single_solve`
 | n/a
 | n/a

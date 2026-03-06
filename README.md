@@ -4,6 +4,10 @@ This repository contains a LinkML model that defines an information standard for
 
 It is designed to work well with other relevant standards like the [IEC-CIM](https://www.entsoe.eu/digital/common-information-model/), [qudt](https://qudt.org/). CESM has roots in in [ines-spec](https://github.com/ines-tools/ines-spec), but is built from the ground-up to conform with ontology standards and to have a clear separation between specification and implementation. It tries to consider the needs of several major modeling tools in the domain.
 
+For users of the data transformers: read this README.md and use the generated documentation when necessary (hopefully the data just transforms)
+
+For developers of transformers: read this README.md and then consult transformer-developer-guide.md in this same root folder.
+
 ## Overview
 
 The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/), a powerful schema language for defining data models. CESM is at early phase and currently supports:
@@ -31,6 +35,7 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - Single definition for single thing (e.g. either efficiency or heat rate but not both). Makes life easier for the transformers interacting with INES.
 - Flexibility in time: needs to allow models of different temporal scales to co-exist. Needs to distinguish between 'profile' time series and future oriented scenario-like values. Enable multi-stage multi-year modelling as well as detailed operational modelling. Support stochastic modelling.
 - Non-breaking changes only within major version branches, after the version branch has been 'released'.
+- Nodes do not specify which commodity they carry. Commodity association is implicit through port connections (Node_to_unit, Unit_to_node). This is intentional -- it keeps the specification flexible and domain-agnostic, and avoids requiring redundant commodity declarations on every node.
 
 ## Files Structure
 
@@ -49,6 +54,45 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - 'src/writers/' - Functions to write from memory to files
 - 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-pydantic model/cesm.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
 
+## Quick Install
+
+Prerequisites: Python 3.11+ and git.
+
+```bash
+git clone <repository-url>
+cd oes-spec
+pip install -e .
+```
+
+For development (includes pytest and ruff):
+
+```bash
+pip install -e ".[dev]"
+```
+
+For Spine DB workflows (requires `spinedb_api`):
+
+```bash
+pip install -e ".[spine]"
+```
+
+**Generate Python classes from the schema** (required before running scripts):
+
+```bash
+pip install linkml
+gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+```
+
+### Verify Installation
+
+Load the sample data into DuckDB:
+
+```bash
+python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb
+```
+
+See [docs/getting-started/quickstart.md](docs/getting-started/quickstart.md) for more usage examples.
+
 ## Getting Started
 
 1. **Understanding the Model**: The `cesm.yaml` file defines the core classes:
@@ -59,6 +103,12 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
    - `Link`: Transfer energy between nodes
 
 2. **Sample Data**: The sample file shows how to structure data according to the model. It has examples for all the classes and forms a small test system.
+
+3. **Documentation**:
+   - [Quickstart](docs/getting-started/quickstart.md) -- run your first transformation
+   - [Unit Conventions](docs/specification/unit-conventions.md) -- physical units, percentages vs fractions
+   - [Methods Reference](docs/specification/methods.md) -- method-parameter relationships
+   - [Transformer Developer Guide](transformer-developer-guide.md) -- architecture, DataFrame conventions, YAML syntax, and how to add new formats
 
 ## Development Environment
 
@@ -74,7 +124,15 @@ This project includes a devcontainer configuration that provides a consistent de
    - LinkML tools
    - Required dependencies
    - Pre-configured extensions for AsciiDoc and Drawio
-5. Once the repository has been reopened in the container, run ```poetry install``` to download all the python dependencies
+5. Once the repository has been reopened in the container, run `pip install -e .` to download all the python dependencies. For development, use `pip install -e ".[dev]"` to also install testing and linting tools.
+
+### Spine Toolbox Setup
+
+The `.spinetoolbox/project.json` file defines workflows for transforming data between CESM and various formats. Most tools (YAML to CESM, CESM to FlexTool, CESM to GridDB, etc.) use relative paths and work out of the box.
+
+However, the FlexTool3 tool specification references an external absolute path (to a local FlexTool3 installation). If you want to run FlexTool3 within Spine Toolbox, you must update this path in `.spinetoolbox/project.json` to point to your own FlexTool3 installation's `.spinetoolbox/specifications/Tool/flextool3.json`.
+
+FlexTool3 is optional -- the core CESM transformation tools (YAML to CESM, CESM to FlexTool format, CESM to GridDB, etc.) work without it. FlexTool3 is only needed if you want to execute the FlexTool3 solver from within the Spine Toolbox workflow.
 
 ### Generate Documentation
 
@@ -83,16 +141,35 @@ In order to generate the static website for local use or to be published on g-PS
 First, to generate the asciidoc files from the linkML models, run (inside devcontainer)
 
 ```BASH
-
-python -m linkml_asciidoc_generator.main  "model/cesm.yaml" "artifacts/documentation/modules/schema" --test
-
+python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
 ```
+
+Note: `linkml-asciidoc-generator` must be installed from source (not PyPI) due to a packaging issue with template files. Install via: `pip install -e git+https://github.com/Netbeheer-Nederland/linkml-asciidoc-generator.git#egg=linkml-asciidoc-generator` or use the devcontainer which includes it.
 
 then, to generate the HTML versions using antora, run
 
 ```BASH
 antora antora-playbook.yml 
 ```
+
+or if working from bash (need to have npm with appropriate packages installed):
+
+```BASH
+npx antora antora-playbook.yml
+```
+
+
+## Known Schema Validation Limitations
+
+The LinkML schema defines the structure of CESM data but does not enforce all referential integrity constraints. The following validations are **not** enforced by the schema and should be checked at runtime by transformers or validation tools:
+
+- **Port source/sink references**: `Unit_to_node` and `Node_to_unit` `source` and `sink` fields must reference existing entities (units, nodes).
+- **Link node references**: `Link` `node_A` and `node_B` must reference existing nodes.
+- **Group member references**: `Group_entity` members must reference existing entities.
+- **PeriodFloat period references**: Period names in `PeriodFloat` values must reference existing `Period` entities.
+- **Solve_pattern references**: `contains_solve_pattern` and related fields must reference valid `Solve_pattern` entities.
+
+These are known limitations that could be addressed in future work. Until then transformer implementations should validate entity references when reading or writing CESM data (or take the risk).
 
 ## Usage
 

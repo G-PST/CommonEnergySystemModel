@@ -15,9 +15,10 @@ Most transformations are now handled by the YAML configuration:
 These functions are the reverse of time_to_spine in cesm_to_flextool.py.
 """
 
-import pandas as pd
-from typing import Dict, Optional
 from datetime import datetime, timedelta
+from typing import Dict, Optional
+
+import pandas as pd
 
 
 def _parse_datetime_string(dt_str: str) -> datetime:

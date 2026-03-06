@@ -1,7 +1,8 @@
 """
 Core data handling utilities for working with Database objects.
 """
-from typing import Type, Optional, Dict, Any, List
+from typing import Any, Dict, List, Optional
+
 from generated.cesm import Database, Entity
 
 
