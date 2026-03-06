@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Transformer Developer Guide :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/transformer-developer-guide.html">
+    <link rel="prev" href="../user-guide/troubleshooting.html">
+    <link rel="next" href="architecture.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Developer Guide</li>
+    <li><a href="transformer-developer-guide.html">Transformer Developer Guide</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/developer-guide/pages/transformer-developer-guide.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Transformer Developer Guide</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide covers the full data transformation pipeline for creating transformers that convert between energy system model formats using CESM (Common Energy System Model) as the interchange format.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_table_of_contents"><a class="anchor" href="#_table_of_contents"></a>Table of Contents</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#architecture">1. Architecture</a></p>
+</li>
+<li>
+<p><a href="#dataframe-conventions">2. DataFrame Conventions</a></p>
+</li>
+<li>
+<p><a href="#yaml-transformer-syntax">3. YAML Transformer Syntax</a></p>
+</li>
+<li>
+<p><a href="#python-transformer-functions">4. Python Transformer Functions</a></p>
+</li>
+<li>
+<p><a href="#duckdb-storage-format">5. DuckDB Storage Format</a></p>
+</li>
+<li>
+<p><a href="#readers-and-writers">6. Readers and Writers</a></p>
+</li>
+<li>
+<p><a href="#creating-a-new-transformer">7. Creating a New Transformer</a></p>
+</li>
+<li>
+<p><a href="#quick-reference">8. Quick Reference</a></p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="architecture"><a class="anchor" href="#architecture"></a>1. Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM uses a hub-and-spoke architecture. Instead of N x N direct converters between
+every pair of tools, each tool only needs one import + one export transformer.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"> +------------------------------- CESM ----------------------------------+
+ |                                                                       |
+ |   CESM spec (LinkML) ----gen-python----&gt; Python class                 |
+ |        |                                     |                        |
+ |        v                                     v                        |
+ |   CESM sample (YAML) --linkml-runtime--&gt; validation                   |
+ |                                              |                        |
+ |                                              v                        |
+ |                                    CESM DataFrames (in-memory)        |
+ |                                         |        |                    |
+ |                                    writer        reader               |
+ |                                         |        |                    |
+ |                                         v        v                    |
+ |                                   CESM DuckDB (on-disk)              |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+        |          |                                    |          |
+     writer     reader                              writer     reader
+        |          |                                    |          |
+   Model X format (e.g. Spine DB)              Model Y format (e.g. SQLite)
+        |          |                                    |          |
+     reader     writer                              reader     writer
+        |          |                                    |          |
+ +------+----------+------+                    +-------+----------+------+
+ | Transformer script     |                    | Transformer script      |
+ | - Config (YAML):       |                    | - Config (YAML):        |
+ |   from-CESM / to-CESM  |                    |   from-CESM / to-CESM   |
+ | - CESM core functions   |                   | - CESM core functions    |
+ | - Purpose-built funcs  |                    | - Purpose-built funcs   |
+ +-------------------------+                    +-------------------------+</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_flow"><a class="anchor" href="#_data_flow"></a>Data Flow</h3>
+<div class="paragraph">
+<p>Each conversion pipeline has up to five components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Source DB --&gt; Reader --&gt; Source DataFrames --&gt; YAML Transformer --&gt; Python Transformer --&gt; CESM DataFrames --&gt; DuckDB Writer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the reverse for export:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">CESM DuckDB --&gt; DuckDB Reader --&gt; CESM DataFrames --&gt; YAML Transformer --&gt; Python Transformer --&gt; Target DataFrames --&gt; Writer --&gt; Target DB</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cesm_as_central_interchange_format"><a class="anchor" href="#_cesm_as_central_interchange_format"></a>CESM as Central Interchange Format</h3>
+<div class="paragraph">
+<p>CESM (stored in DuckDB and defined by <a href="model/cesm.yaml">LinkML schema</a>) serves as the canonical data representation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Normalization</strong>: All timestamps are UTC, all entity relationships are explicit</p>
+</li>
+<li>
+<p><strong>Versioning</strong>: CESM schema versions enable forward compatibility</p>
+</li>
+<li>
+<p><strong>Validation</strong>: Central format enables schema validation</p>
+</li>
+<li>
+<p><strong>Storage</strong>: DuckDB provides efficient columnar storage with metadata preservation</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_components_overview"><a class="anchor" href="#_components_overview"></a>Components Overview</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Location</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reader</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/readers/from_{format}.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reads source format into DataFrames</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">YAML Transformer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/transformers/{tool}/cesm_v{ver}/{src_ver}/from_{tool}.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declarative entity/parameter mappings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Python Transformer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/transformers/{tool}/cesm_v{ver}/{src_ver}/to_cesm.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complex logic YAML can&#8217;t handle</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Writer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/writers/to_{format}.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Writes DataFrames to target format</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Processing Script</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scripts/processing/{format}_to_cesm.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Orchestrates the full pipeline</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_existing_examples"><a class="anchor" href="#_existing_examples"></a>Existing Examples</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>FlexTool</strong>: <code>src/transformers/irena_flextool/</code>, <code>scripts/processing/flextool_to_cesm.py</code></p>
+</li>
+<li>
+<p><strong>GridDB</strong>: <code>src/transformers/griddb/</code>, <code>scripts/processing/griddb_to_cesm.py</code></p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="dataframe-conventions"><a class="anchor" href="#dataframe-conventions"></a>2. DataFrame Conventions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The pipeline uses pandas DataFrames as the universal intermediate representation with specific naming and structure conventions.</p>
+</div>
+<div class="sect2">
+<h3 id="_dataframe_naming"><a class="anchor" href="#_dataframe_naming"></a>DataFrame Naming</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pattern</th>
+<th class="tableblock halign-left valign-top">Index type</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{class}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code>, <code>balance</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{class}.ts.{param}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DatetimeIndex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit.ts.availability</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{class}.str.{param}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String keys</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit.str.virtual_unitsize</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{class}.array.{param}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer position</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system.array.solve_order</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_entity_dataframes"><a class="anchor" href="#_entity_dataframes"></a>Entity DataFrames</h3>
+<div class="paragraph">
+<p>Entity DataFrames store entities and their scalar parameter values.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Index</strong>: Entity names (single Index or MultiIndex for dimensional entities)</p>
+</li>
+<li>
+<p><strong>Columns</strong>: Parameter values (scalars)</p>
+</li>
+<li>
+<p><strong>Naming</strong>: <code>{class_name}</code> (e.g., <code>unit</code>, <code>balance</code>, <code>unit_to_node</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Example: Single-dimensional entity</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'unit'
+unit_df = pd.DataFrame({
+    'efficiency': [0.45, 0.55, 0.38],
+    'units_existing': [2, 1, 3],
+    'investment_method': ['not_allowed', 'no_limits', 'not_allowed']
+}, index=pd.Index(['coal_plant', 'gas_turbine', 'wind_farm'], name='unit'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Example: Multi-dimensional entity</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'unit_to_node'
+unit_to_node_df = pd.DataFrame({
+    'capacity': [500.0, 200.0, 100.0],
+    'other_operational_cost': [25.0, 15.0, 0.0]
+}, index=pd.MultiIndex.from_tuples([
+    ('coal_plant.west', 'coal_plant', 'west'),
+    ('gas_turbine.east', 'gas_turbine', 'east'),
+    ('wind_farm.west', 'wind_farm', 'west')
+], names=['name', 'source', 'sink']))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_time_series_map_array_dataframes"><a class="anchor" href="#_time_series_map_array_dataframes"></a>Time Series / Map / Array DataFrames</h3>
+<div class="paragraph">
+<p>These DataFrames store indexed parameter values where the index is datetime, string keys, or array positions.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Index</strong>: datetime (for time series), string keys (for maps), or position (for arrays)</p>
+</li>
+<li>
+<p><strong>Columns</strong>: Entity names (critical for transformations!)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Example: Time series</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'unit.ts.availability'
+availability_ts = pd.DataFrame({
+    'coal_plant': [1.0, 1.0, 0.9, 0.95, ...],
+    'gas_turbine': [1.0, 1.0, 1.0, 1.0, ...],
+    'wind_farm': [0.3, 0.45, 0.6, 0.2, ...]
+}, index=pd.date_range('2023-01-01', periods=8760, freq='h', name='datetime'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Example: String-indexed map (period data)</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'unit.str.virtual_unitsize'
+period_capacity = pd.DataFrame({
+    'coal_plant': [500.0, 500.0, 400.0],
+    'gas_turbine': [200.0, 250.0, 300.0]
+}, index=pd.Index(['y2025', 'y2030', 'y2035'], name='period'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Example: Array</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'system.array.solve_order'
+solve_order = pd.DataFrame({
+    'main_system': ['y2025', 'y2030', 'y2035']
+})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multiindex_column_convention"><a class="anchor" href="#_multiindex_column_convention"></a>MultiIndex Column Convention</h3>
+<div class="paragraph">
+<p>For multi-dimensional entity classes (e.g., <code>unit_to_node</code>), time series/map/array DataFrames use MultiIndex columns:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Column tuples</strong>: <code>(entity_name, dimension1, dimension2, &#8230;&#8203;)</code></p>
+</li>
+<li>
+<p><strong>Level names</strong>: <code>['name', 'source', 'sink']</code> etc.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># DataFrame name: 'unit_to_node.ts.profile_limit_upper'
+profile_ts = pd.DataFrame({
+    ('coal_plant.west', 'coal_plant', 'west'): [1.0, 0.95, 0.9, ...],
+    ('gas_turbine.east', 'gas_turbine', 'east'): [1.0, 1.0, 1.0, ...]
+}, index=pd.date_range('2023-01-01', periods=8760, freq='h', name='datetime'))
+
+profile_ts.columns = pd.MultiIndex.from_tuples(
+    profile_ts.columns.tolist(),
+    names=['name', 'source', 'sink']
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This convention enables dimension-based transformations (reordering, aggregation) in the YAML transformer.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="yaml-transformer-syntax"><a class="anchor" href="#yaml-transformer-syntax"></a>3. YAML Transformer Syntax</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The YAML transformer handles most data transformations declaratively. Each operation in the YAML file defines a transformation from source to target.</p>
+</div>
+<div class="sect2">
+<h3 id="_basic_structure"><a class="anchor" href="#_basic_structure"></a>Basic Structure</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">operation-name:
+- source_specification
+- target_specification
+- operations_list (optional)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_entity_operations"><a class="anchor" href="#_entity_operations"></a>Entity Operations</h3>
+<div class="paragraph">
+<p><strong>Simple entity copy:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Copy all entities from 'unit' class to 'unit' class
+unit-entities:
+- unit
+- unit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Entity copy with dimension specification:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Copy unit_to_node entities, specifying dimension names
+unit-to-node-entities:
+- unit_to_node
+- unit.outputNode:
+    order: [[0], [1], [2]]
+- dimensions: [unit, node]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Conditional entity copy with <code>if_parameter</code>:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Only copy nodes that have the 'has_balance' parameter set
+balance-entities:
+- node
+- balance:
+    if_parameter: has_balance</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Conditional entity copy with <code>if_not_parameter</code>:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Copy nodes that have has_balance but NOT has_storage
+balance-entities:
+- node
+- balance
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Multiple condition parameters:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Copy if any of the listed parameters exist
+profile-entities:
+- unit_to_node
+- profile:
+    order: [[0]]
+    if_parameter: [profile_limit_upper, profile_limit_lower]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dimension_reordering"><a class="anchor" href="#_dimension_reordering"></a>Dimension Reordering</h3>
+<div class="paragraph">
+<p>The <code>order</code> specification controls how source dimensions map to target dimensions.</p>
+</div>
+<div class="paragraph">
+<p><strong>Syntax:</strong> <code>order: [[source_dims_for_target_0], [source_dims_for_target_1], &#8230;&#8203;]</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Index <code>0</code> refers to the source entity name</p>
+</li>
+<li>
+<p>Index <code>1, 2, &#8230;&#8203;</code> refer to source dimension elements</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Examples:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Direct 1:1 mapping (entity_name, dim1, dim2) -&gt; (name, source, sink)
+unit_to_node-entities:
+- unit.outputNode
+- unit_to_node:
+    order: [[0], [1], [2]]
+- dimensions: [source, sink]
+
+# Swap dimensions: (name, dim1, dim2) -&gt; (name, dim2, dim1)
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]
+- dimensions: [source, sink]
+
+# Extract only entity name (drop dimensions)
+link efficiency:
+- connection: efficiency
+- link: efficiency
+- order: [[0]]
+
+# Combine dimensions into name
+link-entities:
+- connection.node.node
+- link:
+    order: [[1], [2], [3]]
+- dimensions: [node_A, node_B]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_parameter_transformations"><a class="anchor" href="#_parameter_transformations"></a>Parameter Transformations</h3>
+<div class="paragraph">
+<p><strong>Simple parameter copy:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit_efficiency:
+- unit: efficiency
+- unit: efficiency</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Parameter rename:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">units_existing:
+- unit: existing
+- unit: units_existing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Parameter with value rename mapping:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit_investment_method:
+- unit: invest_method
+- unit: investment_method
+- rename:
+    not_allowed: not_allowed
+    invest_no_limit: no_limits</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_type_conversions"><a class="anchor" href="#_data_type_conversions"></a>Data Type Conversions</h3>
+<div class="paragraph">
+<p>Use list notation <code>[parameter, [type]]</code> for indexed parameters:</p>
+</div>
+<div class="paragraph">
+<p><strong>Time series (<code>ts</code>) - datetime indexed:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">balance_inflow:
+- node: [inflow, [str]]        # Source: string-indexed map
+- balance: [flow_profile, [ts]] # Target: datetime-indexed time series
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>String-indexed map (<code>str</code>):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit_to_node profile_limit_upper:
+- unit_to_node: [profile_limit_upper, [ts]]  # Source: time series
+- profile: [profile, [str]]                   # Target: string-indexed map
+- - order: [[0]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Array:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">solve_order:
+- system: [solve_order, [array]]
+- model: [solves, [array]]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mathematical_operations"><a class="anchor" href="#_mathematical_operations"></a>Mathematical Operations</h3>
+<div class="paragraph">
+<p><strong>Multiply/Divide/Add/Subtract with constant:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage_investment_cost:
+- node: invest_cost
+- storage: investment_cost
+- - if_parameter: has_storage
+  - operation: multiply
+    with: 1000
+
+storage fixed-cost:
+- storage: fixed_cost
+- node: fixed_cost
+- operation:
+  - multiply:
+      with: 0.001</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Algebra between multiple sources:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Multiply values from two different sources
+# Formula: source1 * source2 where match defines dimension alignment
+test-multiply:
+- node_to_unit: other_operational_cost
+  unit: efficiency
+- unit.inputNode: test
+- - algebra: "1*2"
+    match: [[2], [1]]  # Match dim 2 of source 1 with dim 1 of source 2
+  - order: [[2], [1]]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aggregation"><a class="anchor" href="#_aggregation"></a>Aggregation</h3>
+<div class="paragraph">
+<p>When reducing dimensions, specify how to aggregate:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit_to_node investment_cost:
+- unit_to_node: investment_cost
+- unit: invest_cost
+- - order: [[1]]
+    aggregate: sum  # Options: sum, average, max, min, first</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_parameters_from_entities"><a class="anchor" href="#_creating_parameters_from_entities"></a>Creating Parameters from Entities</h3>
+<div class="paragraph">
+<p>Use <code>value</code> to create parameters based on entity existence:</p>
+</div>
+<div class="paragraph">
+<p><strong>Constant value:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">has_balance:
+- [balance, storage]
+- node: has_balance
+- value: 'yes'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Value from dimension:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Extract dimension value as parameter
+# value: [N] extracts the Nth dimension
+link_node_A:
+- connection.node.node
+- link: node_A
+- - order: [[0]]
+  - value: [2]  # Extract dimension 2 as the parameter value</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="python-transformer-functions"><a class="anchor" href="#python-transformer-functions"></a>4. Python Transformer Functions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use Python transformers for complex logic that cannot be expressed in YAML.</p>
+</div>
+<div class="sect2">
+<h3 id="_when_to_use_python_vs_yaml"><a class="anchor" href="#_when_to_use_python_vs_yaml"></a>When to Use Python vs YAML</h3>
+<div class="paragraph">
+<p><strong>Use YAML for:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Direct entity/parameter copies</p>
+</li>
+<li>
+<p>Simple renames and value mappings</p>
+</li>
+<li>
+<p>Dimension reordering</p>
+</li>
+<li>
+<p>Basic mathematical operations with constants</p>
+</li>
+<li>
+<p>Conditional filtering</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Use Python for:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Complex conditional logic spanning multiple DataFrames</p>
+</li>
+<li>
+<p>Temporal data reconstruction (timelines, solve patterns)</p>
+</li>
+<li>
+<p>Lookups across different entity classes</p>
+</li>
+<li>
+<p>Business logic requiring iteration or state</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_python_transformer_structure"><a class="anchor" href="#_python_transformer_structure"></a>Python Transformer Structure</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">"""
+Module docstring explaining the transformations.
+"""
+
+import pandas as pd
+from typing import Dict
+from datetime import datetime
+
+
+def transform_to_cesm(source: Dict[str, pd.DataFrame],
+                      cesm: Dict[str, pd.DataFrame],
+                      start_time: datetime) -&gt; Dict[str, pd.DataFrame]:
+    """
+    Main entry point called after the YAML transformer.
+
+    Args:
+        source: Dictionary of source DataFrames
+        cesm: Dictionary of CESM DataFrames (partially transformed by YAML)
+        start_time: Start datetime for the timeline
+
+    Returns:
+        Updated cesm dictionary with all Python transformations applied
+    """
+    cesm = my_custom_transform(source, cesm)
+    cesm = another_transform(source, cesm, start_time)
+    return cesm</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_available_helpers_in_transform_parameters_py"><a class="anchor" href="#_available_helpers_in_transform_parameters_py"></a>Available Helpers in transform_parameters.py</h3>
+<div class="paragraph">
+<p>The <code>transform_parameters.py</code> module provides utilities:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.core.transform_parameters import (
+    transform_data,      # Main YAML transformer function
+    load_config,         # Load YAML configuration
+    is_timeseries,       # Check if DataFrame is time series
+    get_entity_index,    # Get entity index (handles pivoted data)
+    set_entity_index,    # Set entity index
+    index_to_names,      # Convert index to list of name lists
+    list_of_lists_to_index,  # Convert name lists back to index
+    reorder_dimensions,  # Reorder DataFrame dimensions
+    apply_rename,        # Apply value rename mapping
+)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_time_data_transformation"><a class="anchor" href="#_example_time_data_transformation"></a>Example: Time Data Transformation</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def time_from_spine(flextool: Dict[str, pd.DataFrame],
+                    cesm: Dict[str, pd.DataFrame],
+                    start_time: datetime) -&gt; Dict[str, pd.DataFrame]:
+    """
+    Extract temporal data from FlexTool format and add to CESM.
+
+    Creates/updates:
+    - cesm['timeline']: DataFrame with DatetimeIndex
+    - cesm['solve_pattern']: DataFrame with start_time, duration
+    - cesm['period']: DataFrame with years_represented
+    """
+    timestep_minutes = _get_timestep_minutes(flextool)
+
+    if 'timeline.str.timestep_duration' in flextool:
+        timestep_df = flextool['timeline.str.timestep_duration']
+        datetime_index = _convert_str_index_to_datetime(
+            timestep_df.index, start_time, timestep_minutes
+        )
+        cesm['timeline'] = pd.DataFrame(index=datetime_index)
+        cesm['timeline'].index.name = 'datetime'
+
+    return cesm</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="duckdb-storage-format"><a class="anchor" href="#duckdb-storage-format"></a>5. DuckDB Storage Format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>DuckDB serves as the persistent storage for CESM data, with metadata to reconstruct exact DataFrame structures.</p>
+</div>
+<div class="sect2">
+<h3 id="_column_encoding"><a class="anchor" href="#_column_encoding"></a>Column Encoding</h3>
+<div class="paragraph">
+<p>MultiIndex columns are encoded using <code>::</code> separator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">("region", "north", "heat") -&gt; "region::north::heat"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>::</code> separator is used because entity names may contain dots (e.g., <code>source.sink</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_metadata_table"><a class="anchor" href="#_metadata_table"></a>Metadata Table</h3>
+<div class="paragraph">
+<p>Each DuckDB file contains a <code>_dataframe_metadata</code> table with:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Column</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>table_name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Original DataFrame name (e.g., <code>unit.ts.availability</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql_table_name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL-safe table name (dots replaced with underscores)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'single'</code>, <code>'datetime'</code>, or <code>'multi'</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index_count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of index columns (stored as first N columns)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>columns_multiindex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether columns are MultiIndex</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>columns_levels</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of level names if MultiIndex columns</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_storage_layout"><a class="anchor" href="#_storage_layout"></a>Storage Layout</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">DuckDB File
+├── _dataframe_metadata (table)
+├── unit (table) - entity DataFrame
+├── unit_to_node (table) - entity DataFrame with MultiIndex
+├── unit_ts_availability (table) - time series (original: unit.ts.availability)
+└── ...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verifying_with_dbeaver"><a class="anchor" href="#_verifying_with_dbeaver"></a>Verifying with DBeaver</h3>
+<div class="paragraph">
+<p>To inspect stored data:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open DuckDB file in DBeaver</p>
+</li>
+<li>
+<p>Query metadata: <code>SELECT * FROM "_dataframe_metadata"</code></p>
+</li>
+<li>
+<p>Query data tables: <code>SELECT * FROM "unit_ts_availability"</code></p>
+</li>
+<li>
+<p>Note that index columns are the first N columns based on <code>index_count</code></p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="readers-and-writers"><a class="anchor" href="#readers-and-writers"></a>6. Readers and Writers</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_available_readers"><a class="anchor" href="#_available_readers"></a>Available Readers</h3>
+<div class="paragraph">
+<p><strong>from_spine_db.py</strong> - Read Spine Toolbox databases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.readers.from_spine_db import spine_to_dataframes
+
+dfs = spine_to_dataframes(
+    db_url="sqlite:///path/to/database.sqlite",
+    scenario="base"
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>from_duckdb.py</strong> - Read DuckDB CESM storage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.readers.from_duckdb import dataframes_from_duckdb
+
+dfs = dataframes_from_duckdb("path/to/cesm.duckdb")</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_available_writers"><a class="anchor" href="#_available_writers"></a>Available Writers</h3>
+<div class="paragraph">
+<p><strong>to_duckdb.py</strong> - Write to DuckDB CESM storage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.writers.to_duckdb import dataframes_to_duckdb
+
+dataframes_to_duckdb(
+    dataframes=dfs,
+    db_path="output/cesm.duckdb",
+    overwrite=True
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>to_spine_db.py</strong> - Write to Spine Toolbox databases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.writers.to_spine_db import dataframes_to_spine
+
+dataframes_to_spine(
+    dataframes=dfs,
+    db_url="sqlite:///path/to/output.sqlite",
+    import_datetime="2025-01-15_10-30",
+    purge_before_import=True
+)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_readerswriters_preserve_structure"><a class="anchor" href="#_how_readerswriters_preserve_structure"></a>How Readers/Writers Preserve Structure</h3>
+<div class="paragraph">
+<p><strong>Entity DataFrames:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Index stored as first column(s)</p>
+</li>
+<li>
+<p>MultiIndex levels preserved via metadata</p>
+</li>
+<li>
+<p>Column names preserved as-is</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Time Series/Map/Array DataFrames:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>DatetimeIndex converted to/from ISO 8601 strings</p>
+</li>
+<li>
+<p>MultiIndex columns encoded/decoded with <code>::</code> separator</p>
+</li>
+<li>
+<p>Level names preserved in metadata</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-new-transformer"><a class="anchor" href="#creating-a-new-transformer"></a>7. Creating a New Transformer</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_directory_structure"><a class="anchor" href="#_directory_structure"></a>Directory Structure</h3>
+<div class="paragraph">
+<p>Transformers are organized by source format, CESM version, and source version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">src/transformers/
+└── {source_format}/
+    └── cesm_{cesm_version}/
+        └── {source_version}/
+            ├── from_{source}.yaml      # Import: source -&gt; CESM
+            ├── to_cesm.py              # Import: complex transformations (optional)
+            ├── to_{target}.yaml        # Export: CESM -&gt; target
+            └── from_cesm.py            # Export: complex transformations (optional)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Example:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">src/transformers/
+└── irena_flextool/
+    └── cesm_v0.1.0/
+        └── v3.14.0/
+            ├── from_flextool.yaml
+            ├── to_cesm.py
+            ├── to_flextool.yaml
+            └── from_cesm.py</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_creating_an_import_transformer"><a class="anchor" href="#_step_by_step_creating_an_import_transformer"></a>Step-by-Step: Creating an Import Transformer</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Create directory structure:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p src/transformers/{source}/cesm_v0.1.0/{version}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Analyze source data format:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Identify entity classes and their relationships</p>
+</li>
+<li>
+<p>Map source parameters to CESM equivalents</p>
+</li>
+<li>
+<p>Note indexed data (time series, maps, arrays)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Create a reader</strong> (<code>src/readers/from_{source}.py</code>) if the source format
+is not already supported. The reader must return <code>Dict[str, pd.DataFrame]</code>
+following the naming conventions above.</p>
+</li>
+<li>
+<p><strong>Create <code>from_{source}.yaml</code>:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Entity mappings
+source-entity-entities:
+- source_class
+- cesm_class
+
+# Parameter mappings
+source_param:
+- source_class: source_param_name
+- cesm_class: cesm_param_name</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Create <code>to_cesm.py</code> (if needed):</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def transform_to_cesm(source, cesm, start_time):
+    # Complex transformations
+    return cesm</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Create a processing script</strong> (<code>scripts/processing/{source}_to_cesm.py</code>)
+that orchestrates the pipeline: parse CLI args, call reader, apply YAML
+transformer via <code>core.transform_parameters.transform_data()</code>, apply Python
+transformer, call writer. See <code>flextool_to_cesm.py</code> and <code>griddb_to_cesm.py</code>
+for working examples.</p>
+</li>
+<li>
+<p><strong>Test the transformer:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from src.readers.from_spine_db import spine_to_dataframes
+from src.core.transform_parameters import transform_data
+
+source_dfs = spine_to_dataframes(db_url, scenario)
+cesm_dfs = transform_data(source_dfs, 'from_source.yaml')</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_creating_an_export_transformer"><a class="anchor" href="#_step_by_step_creating_an_export_transformer"></a>Step-by-Step: Creating an Export Transformer</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Create <code>to_{target}.yaml</code>:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Entity mappings (reverse of import)
+cesm-entity-entities:
+- cesm_class
+- target_class
+
+# Parameter mappings
+cesm_param:
+- cesm_class: cesm_param_name
+- target_class: target_param_name</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Create <code>from_cesm.py</code> (if needed):</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def transform_from_cesm(cesm, target, timeline):
+    # Complex reverse transformations
+    return target</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Create a writer</strong> (<code>src/writers/to_{target}.py</code>) if the target format
+is not already supported.</p>
+</li>
+<li>
+<p><strong>Test the full round-trip:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># Import
+source_dfs = reader(source_path)
+cesm_dfs = transform_data(source_dfs, 'from_source.yaml')
+
+# Export
+target_dfs = transform_data(cesm_dfs, 'to_target.yaml')
+writer(target_dfs, target_path)</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_checklist_import_transformer"><a class="anchor" href="#_checklist_import_transformer"></a>Checklist: Import Transformer</h3>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-square-o"></i> Create <code>from_{source}.yaml</code> with entity mappings</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Map all scalar parameters</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Handle indexed data (time series, maps, arrays) with type annotations</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Add dimension specifications for multi-dimensional entities</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Implement conditional logic with <code>if_parameter</code>/<code>if_not_parameter</code></p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Create <code>to_cesm.py</code> for complex transformations (if needed)</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Test with sample data</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Verify round-trip consistency</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_checklist_export_transformer"><a class="anchor" href="#_checklist_export_transformer"></a>Checklist: Export Transformer</h3>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-square-o"></i> Create <code>to_{target}.yaml</code> with entity mappings</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Map all CESM parameters to target format</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Handle data type conversions (<code>[ts]</code> &lt;&#8594; <code>[str]</code>)</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Implement dimension reordering with <code>order</code></p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Add aggregation where dimensions collapse</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Create <code>from_cesm.py</code> for complex transformations (if needed)</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Test with sample CESM data</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Verify output matches target format specification</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quick-reference"><a class="anchor" href="#quick-reference"></a>8. Quick Reference</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_yaml_operation_types"><a class="anchor" href="#_yaml_operation_types"></a>YAML Operation Types</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pattern</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>- source_class</code> + <code>- target_class</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity copy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copy entities between classes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>- source: param</code> + <code>- target: param</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter transform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copy/transform parameter values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>- source</code> + <code>- target: param</code> + <code>- value: X</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create parameter with fixed value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_index_type_indicators"><a class="anchor" href="#_index_type_indicators"></a>Index Type Indicators</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Suffix</th>
+<th class="tableblock halign-left valign-top">Index Type</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(none)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code>, <code>balance</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.ts.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DatetimeIndex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit.ts.availability</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.str.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String keys</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>solve.str.period_timeset</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.array.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Numeric position</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system.array.solve_order</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_common_order_patterns"><a class="anchor" href="#_common_order_patterns"></a>Common Order Patterns</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pattern</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[[0]]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep only entity name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[[0], [1], [2]]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep all dimensions in order</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[[0], [2], [1]]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Swap dimensions 1 and 2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[[1], [2], [3]]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Drop entity name, use dimensions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[[0, 1]]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Combine entity name with dimension 1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../user-guide/troubleshooting.html">Troubleshooting</a></span>
+  <span class="next"><a href="architecture.html">Architecture</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

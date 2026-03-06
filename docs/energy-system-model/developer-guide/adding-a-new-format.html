@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Adding a New Format :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/adding-a-new-format.html">
+    <link rel="prev" href="architecture.html">
+    <link rel="next" href="readers-writers.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Developer Guide</li>
+    <li><a href="adding-a-new-format.html">Adding a New Format</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/developer-guide/pages/adding-a-new-format.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Adding a New Format</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide walks through the process of adding support for a new energy system model format to the CESM conversion framework.
+The goal is to enable bidirectional conversion between your format and CESM (Common Energy System Model), so that data can flow between your tool and any other supported format.</p>
+</div>
+<div class="paragraph">
+<p>Throughout this guide, we use PLEXOS as a hypothetical case study and reference the existing FlexTool and GridDB implementations as concrete examples to follow.</p>
+</div>
+<div class="paragraph">
+<p>See also: <a href="architecture.html" class="xref page">Architecture</a>, <a href="readers-writers.html" class="xref page">Readers &amp; Writers</a>, <a href="transformer-developer-guide.html" class="xref page">Transformer Developer Guide</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview_of_the_conversion_pipeline"><a class="anchor" href="#_overview_of_the_conversion_pipeline"></a>Overview of the conversion pipeline</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A complete format integration consists of these components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Source format
+  -&gt; Reader (src/readers/from_{format}.py)
+    -&gt; Dict[str, pd.DataFrame]
+      -&gt; YAML Transformer (entity + parameter mapping)
+        -&gt; Python Transformer (complex logic)
+          -&gt; CESM Dict[str, pd.DataFrame]
+            -&gt; Writer (src/writers/to_{format}.py)
+              -&gt; Target format</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Not every format requires all components.
+If your source data is already in a Spine database or DuckDB, you can reuse the existing readers.
+Similarly, if the target is a standard format, you can reuse an existing writer.
+The transformer layer&#8201;&#8212;&#8201;both YAML and Python&#8201;&#8212;&#8201;is always required and is where most of the work happens.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_1_analyze_the_source_format"><a class="anchor" href="#_step_1_analyze_the_source_format"></a>Step 1: Analyze the source format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before writing any code, study the source format thoroughly.
+Identify the following:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity types</dt>
+<dd>
+<p>What are the main objects in the model? Generators, nodes, lines, fuels, storage units?</p>
+</dd>
+<dt class="hdlist1">Parameters</dt>
+<dd>
+<p>What properties does each entity type have? Capacities, costs, efficiencies, limits?</p>
+</dd>
+<dt class="hdlist1">Relationships</dt>
+<dd>
+<p>How are entities connected? Which generator connects to which node? Which line connects two nodes?</p>
+</dd>
+<dt class="hdlist1">Temporal structure</dt>
+<dd>
+<p>How is time represented? Hourly time series? Period-indexed data? Named timesteps or datetime indexes?</p>
+</dd>
+<dt class="hdlist1">Scenarios</dt>
+<dd>
+<p>Does the format support multiple scenarios or alternatives?</p>
+</dd>
+</dl>
+</div>
+<div class="sect2">
+<h3 id="_plexos_case_study_format_analysis"><a class="anchor" href="#_plexos_case_study_format_analysis"></a>PLEXOS case study: format analysis</h3>
+<div class="paragraph">
+<p>The file <code>data/PLEXOS-World 2015 Gold V1.1.xml</code> provides an example of a complex relational XML format.
+PLEXOS uses a set of relational tables encoded as XML elements:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>t_class</code></dt>
+<dd>
+<p>Defines entity types (Generator, Fuel, Storage, Node, Line, Region, Zone, etc.)</p>
+</dd>
+<dt class="hdlist1"><code>t_object</code></dt>
+<dd>
+<p>Instances of classes (individual generators, nodes, etc.)</p>
+</dd>
+<dt class="hdlist1"><code>t_membership</code></dt>
+<dd>
+<p>Relationships between objects (which generator belongs to which node)</p>
+</dd>
+<dt class="hdlist1"><code>t_data</code></dt>
+<dd>
+<p>Parameter values for objects (capacity, heat rate, cost, etc.)</p>
+</dd>
+<dt class="hdlist1"><code>t_attribute</code></dt>
+<dd>
+<p>Attribute definitions with metadata (units, defaults, enumerations)</p>
+</dd>
+<dt class="hdlist1"><code>t_property</code></dt>
+<dd>
+<p>Property definitions that parameters reference</p>
+</dd>
+<dt class="hdlist1"><code>t_collection</code></dt>
+<dd>
+<p>Defines how classes relate to each other (Generator.Nodes, Line.NodeFrom, etc.)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Key entity classes in PLEXOS and their CESM equivalents:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">PLEXOS Class</th>
+<th class="tableblock halign-left valign-top">CESM Entity</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primary conversion device</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">balance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Electrical nodes (no storage)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Line</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">link</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transmission connections between nodes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage devices</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fuel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commodity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fuel types</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Region / Zone</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">group</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spatial groupings</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_2_create_a_reader"><a class="anchor" href="#_step_2_create_a_reader"></a>Step 2: Create a reader</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If your format requires custom reading logic (not a standard Spine database or DuckDB), implement a reader in <code>src/readers/from_{format}.py</code>.</p>
+</div>
+<div class="paragraph">
+<p>The reader must return a <code>Dict[str, pd.DataFrame]</code> following the standard naming conventions:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity DataFrames</dt>
+<dd>
+<p>Named after the entity class (e.g., <code>unit</code>, <code>node</code>, <code>connection</code>).
+The index contains entity names; columns contain scalar parameter values.</p>
+</dd>
+<dt class="hdlist1">Time series DataFrames</dt>
+<dd>
+<p>Named <code>{class}.ts.{parameter}</code> (e.g., <code>unit.ts.availability</code>).
+The index is a <code>DatetimeIndex</code>; columns are entity names.</p>
+</dd>
+<dt class="hdlist1">Map DataFrames</dt>
+<dd>
+<p>Named <code>{class}.str.{parameter}</code> (e.g., <code>solve.str.period_timeset</code>).
+The index contains string keys; columns are entity names.</p>
+</dd>
+<dt class="hdlist1">Array DataFrames</dt>
+<dd>
+<p>Named <code>{class}.array.{parameter}</code> (e.g., <code>solve.array.realized_periods</code>).
+The index is numeric; columns are entity names.</p>
+</dd>
+<dt class="hdlist1">Multi-dimensional entities</dt>
+<dd>
+<p>For relationship entities (e.g., <code>unit.outputNode</code>), use a <code>pd.MultiIndex</code> with levels <code>[name, dimension1, dimension2]</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="sect2">
+<h3 id="_example_spine_database_reader"><a class="anchor" href="#_example_spine_database_reader"></a>Example: Spine database reader</h3>
+<div class="paragraph">
+<p>The existing <code>src/readers/from_spine_db.py</code> demonstrates the pattern.
+It reads entity classes, extracts scalar parameters into entity DataFrames, and builds separate DataFrames for time series (<code>ts</code>), maps (<code>str</code>), and arrays (<code>array</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def spine_to_dataframes(db_url: str, scenario: str) -&gt; Dict[str, pd.DataFrame]:
+    """
+    Read Spine database and convert to dataframes.
+
+    Returns:
+        Dict mapping dataframe names to DataFrames:
+        - Entity dataframes: 'class_name' or 'class1.class2'
+        - Time series: 'class_name.ts.parameter_name'
+        - Maps: 'class_name.str.parameter_name'
+        - Arrays: 'class_name.array.parameter_name'
+    """</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plexos_case_study_reader_design"><a class="anchor" href="#_plexos_case_study_reader_design"></a>PLEXOS case study: reader design</h3>
+<div class="paragraph">
+<p>A PLEXOS XML reader would:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Parse the XML and build lookup tables for <code>t_class</code>, <code>t_object</code>, <code>t_membership</code>, <code>t_property</code>, and <code>t_collection</code>.</p>
+</li>
+<li>
+<p>For each class (Generator, Node, Line, Storage, Fuel), create an entity DataFrame with <code>t_object</code> names as the index.</p>
+</li>
+<li>
+<p>Extract <code>t_data</code> entries as parameter values.
+Scalar values go into the entity DataFrame columns; time-indexed data goes into <code>.ts.</code> DataFrames.</p>
+</li>
+<li>
+<p>Build multi-dimensional DataFrames for membership relationships (e.g., Generator-to-Node connections).</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># src/readers/from_plexos_xml.py
+
+def plexos_xml_to_dataframes(xml_path: str) -&gt; Dict[str, pd.DataFrame]:
+    """Read PLEXOS XML and return Dict[str, pd.DataFrame]."""
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+
+    # Build lookup tables
+    classes = {elem.find('class_id').text: elem.find('name').text
+               for elem in root.findall('t_class')}
+    objects = parse_objects(root, classes)
+    memberships = parse_memberships(root, classes, objects)
+    data = parse_data(root, objects)
+
+    # Build DataFrames per class
+    dataframes = {}
+    for class_name, entities in objects.items():
+        dataframes[class_name] = build_entity_df(entities, data)
+        # Time series go into separate DataFrames
+        for param, ts_data in extract_timeseries(entities, data).items():
+            dataframes[f'{class_name}.ts.{param}'] = ts_data
+
+    return dataframes</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_3_create_entity_mapping_in_yaml_transformer"><a class="anchor" href="#_step_3_create_entity_mapping_in_yaml_transformer"></a>Step 3: Create entity mapping in YAML transformer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The YAML transformer handles the mapping of source entities to CESM entities.
+Transformer files are stored in:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">src/transformers/{format}/cesm_{version}/{source_version}/from_{format}.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, FlexTool&#8217;s transformer is at:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/from_flextool.yaml</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basic_entity_mapping"><a class="anchor" href="#_basic_entity_mapping"></a>Basic entity mapping</h3>
+<div class="paragraph">
+<p>Entity mapping rules use the <code>-entities</code> suffix.
+The first item is the source class; the second is the target class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Simple 1:1 mapping: FlexTool unit -&gt; CESM unit
+unit-entities:
+- unit
+- unit
+
+# Simple 1:1 mapping: FlexTool commodity -&gt; CESM commodity
+commodity-entities:
+- commodity
+- commodity</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_conditional_entity_mapping"><a class="anchor" href="#_conditional_entity_mapping"></a>Conditional entity mapping</h3>
+<div class="paragraph">
+<p>When a single source class maps to different CESM types based on parameter values, use <code>if_parameter</code> and <code>if_not_parameter</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool nodes with has_balance but NOT has_storage -&gt; CESM balance
+balance-entities:
+- node
+- balance
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+# FlexTool nodes with has_storage -&gt; CESM storage
+storage-entities:
+- node
+- storage:
+    if_parameter: has_storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a common pattern when the source format uses a single entity class (like "node") for what CESM separates into distinct types (balance vs. storage).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dimensional_entity_mapping_with_reordering"><a class="anchor" href="#_dimensional_entity_mapping_with_reordering"></a>Dimensional entity mapping with reordering</h3>
+<div class="paragraph">
+<p>Multi-dimensional entities often need dimension reordering.
+The <code>order</code> directive specifies which source dimensions map to which target dimensions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool unit.outputNode -&gt; CESM unit_to_node
+# Source dimensions: [name, unit, node] at indexes [0, 1, 2]
+# Target dimensions: [name, source, sink] - same order
+unit_to_node-entities:
+- unit.outputNode
+- unit_to_node:
+    order: [[0], [1], [2]]
+- dimensions: [source, sink]
+
+# FlexTool unit.inputNode -&gt; CESM node_to_unit
+# Source: [name, unit, node] -&gt; Target: [name, source=node, sink=unit]
+# Note the swap: dimension 2 (node) becomes source, dimension 1 (unit) becomes sink
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]
+- dimensions: [source, sink]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_link_entities_with_node_extraction"><a class="anchor" href="#_link_entities_with_node_extraction"></a>Link entities with node extraction</h3>
+<div class="paragraph">
+<p>Links (transmission lines) often require extracting node endpoints from a higher-dimensional relationship:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool connection.node.node -&gt; CESM link
+# Source: [name, connection, nodeA, nodeB]
+# Target: [name, node_A, node_B] - skip connection dimension
+link-entities:
+- connection.node.node
+- link:
+    order: [[0], [2], [3]]
+- dimensions: [node_A, node_B]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plexos_case_study_entity_mapping"><a class="anchor" href="#_plexos_case_study_entity_mapping"></a>PLEXOS case study: entity mapping</h3>
+<div class="paragraph">
+<p>For PLEXOS, the entity mapping would look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># PLEXOS Generator -&gt; CESM unit
+unit-entities:
+- generator
+- unit
+
+# PLEXOS Node -&gt; CESM balance
+balance-entities:
+- node
+- balance
+
+# PLEXOS Line -&gt; CESM link
+# Line has NodeFrom and NodeTo memberships
+link-entities:
+- line
+- link
+
+# PLEXOS Storage -&gt; CESM storage
+storage-entities:
+- storage
+- storage
+
+# PLEXOS Fuel -&gt; CESM commodity
+commodity-entities:
+- fuel
+- commodity</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_4_create_parameter_mapping_in_yaml_transformer"><a class="anchor" href="#_step_4_create_parameter_mapping_in_yaml_transformer"></a>Step 4: Create parameter mapping in YAML transformer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Parameter mappings define how source parameters translate to CESM parameters.
+Each mapping rule has a source (class + parameter), a target (class + parameter), and optional operations.</p>
+</div>
+<div class="sect2">
+<h3 id="_basic_parameter_mapping"><a class="anchor" href="#_basic_parameter_mapping"></a>Basic parameter mapping</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Direct copy: same parameter name, same class
+commodity_price:
+- commodity: price
+- commodity: price_per_unit</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unit_conversions"><a class="anchor" href="#_unit_conversions"></a>Unit conversions</h3>
+<div class="paragraph">
+<p>Use <code>operation</code> to apply arithmetic transformations.
+This is essential when source and target use different units:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool stores discount_rate as 0-1 ratio; CESM uses percentage (0-100)
+unit_discount_rate:
+- unit: interest_rate
+- unit: discount_rate
+- operation:
+  - multiply:
+      with: 100
+
+# Reverse: CESM percentage -&gt; FlexTool ratio
+unit discount_rate:
+- unit: discount_rate
+- unit: interest_rate
+- operation:
+  - multiply:
+      with: 0.01</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_type_conversions"><a class="anchor" href="#_data_type_conversions"></a>Data type conversions</h3>
+<div class="paragraph">
+<p>When a parameter needs to change between scalar and indexed types, specify the types in brackets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool stores inflow as a string-indexed map (str);
+# CESM stores flow_profile as a time series (ts)
+balance_inflow:
+- node: [inflow, [str]]
+- balance: [flow_profile, [ts]]
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_value_renaming"><a class="anchor" href="#_value_renaming"></a>Value renaming</h3>
+<div class="paragraph">
+<p>When source and target use different enumeration values for the same concept:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># FlexTool and CESM use different names for conversion methods
+conversion_method:
+- unit: conversion_method
+- unit: conversion_method
+- rename:
+    constant_efficiency: constant_efficiency
+    min_load_efficiency: two_point_efficiency
+
+# Different solve mode names
+solve_mode:
+- solve: solve_mode
+- solve_pattern: solve_mode
+- rename:
+    single_solve: single_solve
+    rolling_window: rolling_solve</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dimension_reduction_with_aggregation"><a class="anchor" href="#_dimension_reduction_with_aggregation"></a>Dimension reduction with aggregation</h3>
+<div class="paragraph">
+<p>When mapping from a higher-dimensional entity to a lower one, use <code>order</code> with <code>aggregate</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># CESM unit_to_node capacity -&gt; FlexTool unit virtual_unitsize
+# Reduces from (unit, node) to just (unit), taking the max across nodes
+units_capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: max</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supported aggregation methods: <code>sum</code>, <code>average</code>, <code>max</code>, <code>min</code>, <code>first</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_constant_values"><a class="anchor" href="#_setting_constant_values"></a>Setting constant values</h3>
+<div class="paragraph">
+<p>Use <code>value</code> to set a constant parameter value during entity creation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># When creating FlexTool nodes from CESM balance entities,
+# set has_balance = 'yes'
+balance-has_balance:
+- balance
+- node: has_balance
+- value: 'yes'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plexos_case_study_parameter_mapping_challenges"><a class="anchor" href="#_plexos_case_study_parameter_mapping_challenges"></a>PLEXOS case study: parameter mapping challenges</h3>
+<div class="paragraph">
+<p>PLEXOS has over 3000 property definitions across its classes, while CESM uses a method-based approach with far fewer parameters.
+Key challenges:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Attribute explosion</strong>: Many PLEXOS properties have no direct CESM equivalent. Focus on the properties that affect dispatch and investment decisions: capacity, cost, efficiency, availability, constraints.</p>
+</li>
+<li>
+<p><strong>Property-band structure</strong>: PLEXOS uses a band system where a single property can have multiple bands (e.g., heat rate at different operating points). CESM uses multiarray DataFrames for this purpose.</p>
+</li>
+<li>
+<p><strong>Missing temporal structure</strong>: PLEXOS encodes temporal resolution through Data File references and pattern objects, which need to be reconstructed into CESM&#8217;s explicit timeline.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_5_create_python_transformer_for_complex_logic"><a class="anchor" href="#_step_5_create_python_transformer_for_complex_logic"></a>Step 5: Create Python transformer for complex logic</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some transformations cannot be expressed in YAML configuration alone.
+These require a Python transformer module at:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">src/transformers/{format}/cesm_{version}/{source_version}/to_cesm.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The module must implement a <code>transform_to_cesm</code> function that receives both the source and partially-transformed CESM DataFrames:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def transform_to_cesm(
+    source: Dict[str, pd.DataFrame],
+    cesm: Dict[str, pd.DataFrame],
+    start_time: datetime
+) -&gt; Dict[str, pd.DataFrame]:
+    """
+    Apply Python-based transformations after YAML transformer.
+
+    Args:
+        source: Original source DataFrames (read-only reference)
+        cesm: Partially transformed CESM DataFrames (from YAML stage)
+        start_time: Start datetime for timeline reconstruction
+
+    Returns:
+        Updated cesm dictionary
+    """</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_to_use_python_transformers"><a class="anchor" href="#_when_to_use_python_transformers"></a>When to use Python transformers</h3>
+<div class="paragraph">
+<p>Use Python when the transformation involves:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Timeline reconstruction</dt>
+<dd>
+<p>Converting between different temporal representations. FlexTool uses string timestep indexes (<code>t0001</code>, <code>t0002</code>) that must be converted to datetime. The <code>time_from_spine</code> function in the FlexTool transformer handles this.</p>
+</dd>
+<dt class="hdlist1">Cross-entity lookups</dt>
+<dd>
+<p>When a target parameter depends on data from multiple source entities. For example, FlexTool&#8217;s capacity transformation (<code>capacities_from_spine</code>) looks up <code>unit.outputNode</code> relationships to determine how <code>virtual_unitsize</code> maps to <code>unit_to_node.capacity</code>.</p>
+</dd>
+<dt class="hdlist1">Multi-source calculations</dt>
+<dd>
+<p>When a CESM parameter is computed from multiple source parameters. For example, efficiency transformation (<code>efficiency_to_cesm</code>) combines <code>efficiency</code>, <code>min_load</code>, and <code>efficiency_at_min_load</code> into CESM&#8217;s <code>conversion_rates</code> format.</p>
+</dd>
+<dt class="hdlist1">Configuration-driven logic</dt>
+<dd>
+<p>The GridDB transformer uses a YAML configuration file (<code>to_cesm_config.yaml</code>) for technology-specific mappings like heat rate conversion factors and prime-mover-to-fuel lookups.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_flextool_python_transformer"><a class="anchor" href="#_example_flextool_python_transformer"></a>Example: FlexTool Python transformer</h3>
+<div class="paragraph">
+<p>The FlexTool Python transformer at <code>src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_cesm.py</code> handles four categories of complex logic:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>time_from_spine</code>&#8201;&#8212;&#8201;Reconstructs CESM timeline, solve patterns, and periods from FlexTool&#8217;s timeset/timeline structure.</p>
+</li>
+<li>
+<p><code>capacities_from_spine</code>&#8201;&#8212;&#8201;Maps unit capacity and cost data to the correct port entities, handling the virtual_unitsize vs. existing distinction.</p>
+</li>
+<li>
+<p><code>profile_to_cesm</code>&#8201;&#8212;&#8201;Transforms profile limit data by looking up profile connections across unit-node-profile relationships.</p>
+</li>
+<li>
+<p><code>efficiency_to_cesm</code>&#8201;&#8212;&#8201;Converts efficiency ratios to CESM percentage format, with optional two-point efficiency curves as multiarray DataFrames.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_griddb_python_transformer"><a class="anchor" href="#_example_griddb_python_transformer"></a>Example: GridDB Python transformer</h3>
+<div class="paragraph">
+<p>The GridDB transformer at <code>src/transformers/griddb/cesm_v0.1.0/v0.2.0/to_cesm.py</code> is entirely Python-based (no YAML transformer) because GridDB&#8217;s relational SQL structure requires complex joins and lookups.
+It uses a configuration file (<code>to_cesm_config.yaml</code>) for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Heat rate to efficiency conversion factors</p>
+</li>
+<li>
+<p>Default efficiencies per technology type</p>
+</li>
+<li>
+<p>Prime mover and fuel type mappings</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_6_create_reverse_transformer_cesm_to_source_format"><a class="anchor" href="#_step_6_create_reverse_transformer_cesm_to_source_format"></a>Step 6: Create reverse transformer (CESM to source format)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For bidirectional conversion, create a reverse transformer.
+The reverse YAML file mirrors the forward file with source and target swapped:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">src/transformers/{format}/cesm_{version}/{source_version}/to_{format}.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Key differences in the reverse direction:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Source and target are swapped in every rule.</p>
+</li>
+<li>
+<p>Rename mappings are inverted (source_value and target_value swap).</p>
+</li>
+<li>
+<p>Multiply operations become divide (or use the reciprocal factor).</p>
+</li>
+<li>
+<p>Dimension reordering indexes are adjusted to reverse the mapping.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_example_flextool_forward_vs_reverse"><a class="anchor" href="#_example_flextool_forward_vs_reverse"></a>Example: FlexTool forward vs. reverse</h3>
+<div class="paragraph">
+<p>Forward (<code>from_flextool.yaml</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">inflation_rate:
+- model: discount_rate
+- system: inflation_rate
+- operation:
+  - multiply:
+      with: 100</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reverse (<code>to_flextool.yaml</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">inflation_rate:
+- system: inflation_rate
+- model: discount_rate
+- operation:
+  - multiply:
+      with: 0.01</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Forward (entity dimension reordering):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># From FlexTool: unit.inputNode [name, unit, node]
+# To CESM: node_to_unit [name, source=node, sink=unit]
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reverse:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># From CESM: node_to_unit [name, source, sink]
+# To FlexTool: unit.inputNode [name, unit=sink, node=source]
+node_to_unit-entities:
+- node_to_unit
+- unit.inputNode:
+    order: [[0], [2], [1]]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_7_create_a_writer"><a class="anchor" href="#_step_7_create_a_writer"></a>Step 7: Create a writer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If your target format requires custom writing logic, implement a writer in <code>src/writers/to_{format}.py</code>.</p>
+</div>
+<div class="paragraph">
+<p>The writer receives a <code>Dict[str, pd.DataFrame]</code> and writes it to the target format.
+Existing writers include:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>src/writers/to_duckdb.py</code></dt>
+<dd>
+<p>Writes DataFrames to a DuckDB database with metadata for round-trip fidelity.</p>
+</dd>
+<dt class="hdlist1"><code>src/writers/to_spine_db.py</code></dt>
+<dd>
+<p>Writes DataFrames to a Spine Toolbox database, creating entity classes, entities, and parameter values.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>If your target format is one of the supported databases (DuckDB, Spine), you can reuse the existing writer and skip this step.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_8_create_a_processing_script"><a class="anchor" href="#_step_8_create_a_processing_script"></a>Step 8: Create a processing script</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a command-line script in <code>scripts/processing/</code> that ties the reader, transformer, and writer together.
+Follow the pattern established by existing scripts.</p>
+</div>
+<div class="sect2">
+<h3 id="_script_structure"><a class="anchor" href="#_script_structure"></a>Script structure</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># scripts/processing/{format}_to_cesm.py
+"""
+Read {Format} data and convert to CESM DuckDB format.
+"""
+
+import argparse
+from pathlib import Path
+
+from core.transform_parameters import transform_data
+from readers.from_{format} import {format}_to_dataframes
+from writers.to_duckdb import dataframes_to_duckdb
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Convert {Format} data to CESM DuckDB format"
+    )
+    parser.add_argument("input", type=str, help="Input file path")
+    parser.add_argument("output", type=str, help="Output DuckDB file path")
+    args = parser.parse_args()
+
+    # Step 1: Read source data
+    source_dfs = {format}_to_dataframes(args.input)
+
+    # Step 2: Apply YAML transformer
+    transformer_yaml = "src/transformers/{format}/cesm_v0.1.0/v1.0.0/from_{format}.yaml"
+    cesm = transform_data(source_dfs, transformer_yaml)
+
+    # Step 3: Apply Python transformer (if needed)
+    from transformers.{format}.cesm_v0_1_0.v1_0_0.to_cesm import transform_to_cesm
+    cesm = transform_to_cesm(source_dfs, cesm)
+
+    # Step 4: Write output
+    dataframes_to_duckdb(cesm, args.output)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_existing_scripts_for_reference"><a class="anchor" href="#_existing_scripts_for_reference"></a>Existing scripts for reference</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>scripts/processing/flextool_to_cesm.py</code></dt>
+<dd>
+<p>Reads from Spine database, applies YAML + Python transformer, writes to DuckDB. Supports scenario selection, version flags, and optional datetime start time.</p>
+</dd>
+<dt class="hdlist1"><code>scripts/processing/griddb_to_cesm.py</code></dt>
+<dd>
+<p>Reads from GridDB SQLite, applies Python-only transformer, writes to DuckDB.</p>
+</dd>
+<dt class="hdlist1"><code>scripts/processing/cesm_to_flextool.py</code></dt>
+<dd>
+<p>Reverse direction: reads CESM DuckDB, applies reverse YAML + Python transformer, writes to Spine database.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_9_add_to_spine_toolbox_project_optional"><a class="anchor" href="#_step_9_add_to_spine_toolbox_project_optional"></a>Step 9: Add to Spine Toolbox project (optional)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to integrate your conversion into a visual workflow, you can add it to the Spine Toolbox project.
+This is optional but useful for users who prefer a graphical interface over command-line scripts.</p>
+</div>
+<div class="paragraph">
+<p>The Spine Toolbox project files are in the repository root.
+Add your processing script as a Tool item and connect it to the appropriate data stores.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_10_test_with_round_trip_verification"><a class="anchor" href="#_step_10_test_with_round_trip_verification"></a>Step 10: Test with round-trip verification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The most reliable way to validate a conversion is round-trip testing:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start with data in your source format.</p>
+</li>
+<li>
+<p>Convert to CESM.</p>
+</li>
+<li>
+<p>Convert back to your source format.</p>
+</li>
+<li>
+<p>Compare original and round-tripped data.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_what_to_verify"><a class="anchor" href="#_what_to_verify"></a>What to verify</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity preservation</dt>
+<dd>
+<p>All entities from the source should appear in the round-tripped output. Check that no entities were lost or duplicated.</p>
+</dd>
+<dt class="hdlist1">Parameter accuracy</dt>
+<dd>
+<p>Scalar parameters should match exactly (accounting for unit conversion round-trips). Time series should match within floating-point tolerance.</p>
+</dd>
+<dt class="hdlist1">Relationship integrity</dt>
+<dd>
+<p>Multi-dimensional relationships (unit-to-node connections, link endpoints) must survive the round trip with correct dimension ordering.</p>
+</dd>
+<dt class="hdlist1">Temporal structure</dt>
+<dd>
+<p>Timeline indexes, solve patterns, and period definitions should reconstruct correctly.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_testing_approach"><a class="anchor" href="#_testing_approach"></a>Testing approach</h3>
+<div class="paragraph">
+<p>The test suite is in the <code>tests/</code> directory.
+Write tests that:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def test_round_trip():
+    """Verify source -&gt; CESM -&gt; source preserves data."""
+    # Read original
+    original = read_source_format("test_data/sample.ext")
+
+    # Forward: source -&gt; CESM
+    cesm = transform_to_cesm(original)
+
+    # Reverse: CESM -&gt; source
+    result = transform_to_source(cesm)
+
+    # Compare entity counts
+    assert set(original.keys()) == set(result.keys())
+
+    # Compare parameter values
+    for name in original:
+        pd.testing.assert_frame_equal(
+            original[name], result[name],
+            check_dtype=False, atol=1e-10
+        )</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_known_round_trip_limitations"><a class="anchor" href="#_known_round_trip_limitations"></a>Known round-trip limitations</h3>
+<div class="paragraph">
+<p>Some information loss is expected in round trips:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Parameters with no CESM equivalent will be dropped during forward conversion.</p>
+</li>
+<li>
+<p>Default values in the source format may not be preserved if CESM represents them differently.</p>
+</li>
+<li>
+<p>Temporal resolution differences (e.g., CESM&#8217;s explicit timeline vs. a source format&#8217;s pattern-based time representation) may cause minor differences.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Document these known limitations in your transformer module&#8217;s docstrings.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary_checklist"><a class="anchor" href="#_summary_checklist"></a>Summary checklist</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use this checklist when adding support for a new format:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Step</th>
+<th class="tableblock halign-left valign-top">Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Analyze format</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Document entity types, parameters, relationships, temporal structure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2. Reader</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/readers/from_{format}.py</code> returning <code>Dict[str, pd.DataFrame]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3. Entity mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">YAML file with <code>-entities</code> rules in <code>src/transformers/{format}/cesm_{version}/{source_version}/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4. Parameter mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">YAML file with parameter rules (conversions, renames, operations)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5. Python transformer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_cesm.py</code> for timeline, cross-entity, and multi-source logic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6. Reverse transformer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_{format}.yaml</code> and optional reverse Python module</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7. Writer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/writers/to_{format}.py</code> (if custom format needed)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8. Processing script</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scripts/processing/{format}_to_cesm.py</code> and <code>cesm_to_{format}.py</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9. Spine Toolbox</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional workflow integration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10. Tests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Round-trip verification in <code>tests/</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="architecture.html">Architecture</a></span>
+  <span class="next"><a href="readers-writers.html">Readers &amp; Writers</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

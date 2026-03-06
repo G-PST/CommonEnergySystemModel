@@ -1,0 +1,251 @@
+= Readers & Writers
+
+Readers and writers are the I/O layer of CESM.
+A reader loads data from an external format into a common in-memory representation (a dictionary of pandas DataFrames), and a writer serialises that representation back to an external format.
+This page describes the conventions that all readers and writers follow, the DataFrame structures they operate on, and the specifics of each supported format.
+
+See also: xref:architecture.adoc[Architecture] | xref:adding-a-new-format.adoc[Adding a New Format]
+
+== Design overview
+
+=== Abstract base classes
+
+The module `src/core/interfaces.py` defines two abstract base classes:
+
+[source,python]
+----
+class DataReader(ABC):
+    @abstractmethod
+    def read(self, source: Any) -> Database: ...
+
+class DataWriter(ABC):
+    @abstractmethod
+    def write(self, data: Database, target: Any) -> None: ...
+----
+
+These classes establish the contract that every reader returns a `Database` object and every writer accepts one.
+In practice, the current implementations mostly use *standalone functions* that operate on `Dict[str, pd.DataFrame]` directly, because the DataFrame dictionary is the central interchange format within the pipeline.
+
+=== Typical function signatures
+
+Readers expose a function that returns the dictionary:
+
+[source,python]
+----
+def dataframes_from_duckdb(
+    db_path: str,
+    tables: Optional[list] = None,
+) -> Dict[str, pd.DataFrame]: ...
+
+def spine_to_dataframes(
+    db_url: str,
+    scenario: str,
+) -> Dict[str, pd.DataFrame]: ...
+----
+
+Writers expose a function that accepts the dictionary:
+
+[source,python]
+----
+def dataframes_to_duckdb(
+    dataframes: Dict[str, pd.DataFrame],
+    db_path: str,
+    overwrite: bool = True,
+) -> None: ...
+
+def dataframes_to_spine(
+    dataframes: Dict[str, pd.DataFrame],
+    db_url: str,
+    import_datetime: Optional[str] = None,
+    purge_before_import: bool = True,
+) -> None: ...
+----
+
+The YAML reader follows a two-step pattern: first load the YAML into a LinkML-generated `Dataset` object, then convert that object to DataFrames with `yaml_to_df()`.
+
+== DataFrame conventions
+
+The `Dict[str, pd.DataFrame]` returned by readers (and consumed by writers) uses a consistent set of naming and structural conventions.
+
+=== Dictionary keys
+
+Each key in the dictionary identifies an entity class or a typed parameter group.
+
+Entity DataFrames::
+Plain class names such as `node`, `unit`, `connection`, or dot-separated names for multi-dimensional classes such as `unit.outputNode`.
+
+Time-series DataFrames::
+`<class>**.ts.**<parameter>` -- for example, `node.ts.inflow`.
+
+String / categorical (Map) DataFrames::
+`<class>**.str.**<parameter>` -- for example, `node.str.inflow`.
+
+Array DataFrames::
+`<class>**.array.**<parameter>` -- for example, `unit.array.capacity_profile`.
+
+=== Entity DataFrames
+
+Entity DataFrames hold scalar parameter values.
+Rows represent entities; columns represent parameters.
+
+[source,python]
+----
+# Single-dimensional entity class
+dataframes['node'] = pd.DataFrame({
+    'annual_flow': [100000.0, 80000.0, None],
+    'penalty_up':  [10000.0,  10000.0, 10000.0],
+}, index=pd.Index(['west', 'east', 'heat'], name='node'))
+----
+
+For multi-dimensional entity classes the index is a `pd.MultiIndex`:
+
+[source,python]
+----
+# Multi-dimensional entity class
+dataframes['unit.outputNode'] = pd.DataFrame({
+    'capacity':   [100.0, 50.0],
+    'efficiency': [0.9,   0.95],
+}, index=pd.MultiIndex.from_tuples(
+    [('coal_plant', 'west'), ('gas_plant', 'east')],
+    names=['unit', 'outputNode'],
+))
+----
+
+=== Time-series and indexed DataFrames
+
+Time-series, map, and array DataFrames share a transposed layout: the *index* carries the time or category dimension, and *columns* carry entity names.
+
+[source,python]
+----
+# Time-series example: node.ts.inflow
+dataframes['node.ts.inflow'] = pd.DataFrame({
+    'west': [-1002.1, -980.7, -968.0],
+    'east': [-1002.1, -980.7, -968.0],
+    'heat': [-30.0,   -40.0,  -50.0],
+}, index=pd.date_range('2023-01-01', periods=3, freq='h', name='datetime'))
+----
+
+For multi-dimensional entity classes the columns become a `pd.MultiIndex` with levels `[name, dimension1, dimension2, ...]`.
+
+=== Column naming for MultiIndex columns
+
+When a DataFrame has MultiIndex columns, the levels are encoded with a `::` separator for storage in flat formats such as DuckDB:
+
+----
+("region", "north", "heat")  ->  "region::north::heat"
+----
+
+The `::` separator is used instead of `.` because entity names may already contain dots.
+
+== Existing readers
+
+Readers live under `src/readers/`.
+
+[cols="1,2,2", options="header"]
+|===
+| Module | Entry point | Notes
+
+| `from_yaml.py`
+| CLI script; calls `yaml_to_df()` from `core/linkml_to_dataframes`
+| Loads a CESM YAML file via the LinkML runtime, converts the `Dataset` object to DataFrames, then passes them to a writer.
+
+| `linkml_yaml.py`
+| `LinkMLYAMLReader.read(source) -> Database`
+| Class-based reader that wraps `linkml_runtime.loaders.YAMLLoader`. Returns a LinkML `Database` object rather than DataFrames directly.
+
+| `from_duckdb.py`
+| `dataframes_from_duckdb(db_path, tables=None) -> Dict[str, pd.DataFrame]`
+| Reads DuckDB tables and uses a `_dataframe_metadata` table to reconstruct indexes, MultiIndex columns, and datetime types exactly.
+
+| `from_spine_db.py`
+| `spine_to_dataframes(db_url, scenario) -> Dict[str, pd.DataFrame]`
+| Reads a Spine Toolbox database filtered by scenario. Separates scalar, time-series, map, and array parameters into appropriately keyed DataFrames.
+|===
+
+== Existing writers
+
+Writers live under `src/writers/`.
+
+[cols="1,2,2", options="header"]
+|===
+| Module | Entry point | Notes
+
+| `to_duckdb.py`
+| `dataframes_to_duckdb(dataframes, db_path, overwrite=True)`
+| Flattens DataFrames (resets indexes, encodes MultiIndex columns with `::`), writes each as a DuckDB table, and stores structural metadata in `_dataframe_metadata`.
+
+| `to_spine_db.py`
+| `dataframes_to_spine(dataframes, db_url, import_datetime=None, purge_before_import=True)`
+| Writes to a Spine Toolbox SQLite database. Creates entity classes, entities, and parameter values. Supports scalars, time series (`TimeSeries`), maps (`Map`), and arrays (`Array`) via `spinedb_api`.
+|===
+
+== Format-specific details
+
+=== DuckDB
+
+The DuckDB format provides a one-to-one mapping between DataFrames and database tables.
+
+Metadata table (`_dataframe_metadata`)::
+Stores the structural information needed to reconstruct DataFrames on read:
++
+[cols="1,3", options="header"]
+|===
+| Column | Description
+
+| `table_name`         | Original dictionary key (e.g., `node.ts.inflow`)
+| `sql_table_name`     | SQL-safe table name (dots and hyphens replaced with underscores)
+| `index_type`         | One of `single`, `datetime`, or `multi`
+| `index_count`        | Number of leading columns that form the index
+| `columns_multiindex` | Boolean -- whether columns are MultiIndex
+| `columns_levels`     | JSON array of level names (if MultiIndex columns)
+|===
+
+Datetime handling::
+All `DatetimeIndex` values are normalised to UTC (timezone-naive) before storage.
+On read, the first `index_count` columns are converted back to the appropriate index type.
+
+=== Spine Toolbox
+
+The Spine DB writer maps CESM concepts to Spine Toolbox concepts as follows:
+
+[cols="1,1", options="header"]
+|===
+| CESM concept | Spine DB concept
+
+| Entity class (single-dimensional) | Object class
+| Entity class (multi-dimensional, e.g., `unit.outputNode`) | Relationship class (`unit__node`)
+| Entity name | Object / relationship entity
+| Scalar parameter | Parameter value (float, string)
+| Time-series parameter | Parameter value of type `TimeSeries`
+| Map parameter | Parameter value of type `Map`
+| Array parameter | Parameter value of type `Array`
+|===
+
+Class name conversion::
+Dots in CESM class names are replaced with double underscores for Spine DB (e.g., `unit.node` becomes `unit__node`).
+
+Alternatives and scenarios::
+Each import creates a timestamped alternative (e.g., `cesm-2025_10_02-15_30`) and attaches it to a `base` scenario.
+By default the writer purges existing parameter values, entities, and alternatives before importing.
+
+Dependencies::
+The Spine DB reader and writer require the `spinedb_api` package.
+
+== Data flow summary
+
+The following diagram shows the typical data flow through the reader/writer layer:
+
+----
+External format          In-memory representation          External format
+ (YAML / DuckDB /   -->  Dict[str, pd.DataFrame]  -->   (DuckDB / Spine DB
+  Spine DB)                                                / other)
+                              |
+                              v
+                      Transformation layer
+                      (filtering, mapping,
+                       unit conversion, ...)
+----
+
+Readers populate the dictionary.
+The transformation layer may modify it (see xref:transformer-developer-guide.adoc[Transformer Developer Guide]).
+Writers consume the dictionary and persist it in the target format.

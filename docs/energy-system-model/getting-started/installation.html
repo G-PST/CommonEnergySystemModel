@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Installation :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/getting-started/installation.html">
+    <link rel="prev" href="../index.html">
+    <link rel="next" href="quickstart.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Getting Started</li>
+    <li><a href="installation.html">Installation</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/getting-started/pages/installation.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Installation</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide covers all the ways to set up CESM for use, development, and documentation generation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Python 3.11</strong> or newer</p>
+</li>
+<li>
+<p><strong>git</strong></p>
+</li>
+<li>
+<p><strong>Docker</strong> (optional, only needed for the devcontainer workflow)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_installation"><a class="anchor" href="#_basic_installation"></a>Basic installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Clone the repository and install CESM in editable mode:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
+cd oes-spec
+pip install -e .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This installs the core dependencies defined in <code>pyproject.toml</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>linkml-runtime</code>&#8201;&#8212;&#8201;LinkML schema runtime</p>
+</li>
+<li>
+<p><code>pyyaml</code>&#8201;&#8212;&#8201;YAML parsing</p>
+</li>
+<li>
+<p><code>pandas</code>&#8201;&#8212;&#8201;DataFrame operations</p>
+</li>
+<li>
+<p><code>duckdb</code>&#8201;&#8212;&#8201;embedded analytical database</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optional_extras"><a class="anchor" href="#_optional_extras"></a>Optional extras</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The project defines optional dependency groups in <code>pyproject.toml</code>. Install them by appending the group name in brackets:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Development tools (pytest, ruff)</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Spine DB workflows (spinedb_api)</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[spine]"</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Documentation tooling (linkml)</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[docs]"</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>You can combine extras: <code>pip install -e ".[dev,spine]"</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generating_pydantic_classes_from_the_schema"><a class="anchor" href="#_generating_pydantic_classes_from_the_schema"></a>Generating Pydantic classes from the schema</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before running any scripts, you must generate the Python classes from the LinkML schema. This step is required because the readers, writers, and transformation scripts depend on these generated classes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
+gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to <code>model/cesm.yaml</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_devcontainer_setup"><a class="anchor" href="#_devcontainer_setup"></a>Devcontainer setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The repository includes a devcontainer configuration that provides a ready-to-use development environment with Python 3.x, LinkML tools, all required dependencies, and editor extensions for AsciiDoc and Drawio.</p>
+</div>
+<div class="sect2">
+<h3 id="_vs_code"><a class="anchor" href="#_vs_code"></a>VS Code</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Dev Containers</a> extension.</p>
+</li>
+<li>
+<p>Open the repository folder in VS Code.</p>
+</li>
+<li>
+<p>When prompted, select <strong>Reopen in Container</strong> (or run the command <strong>Dev Containers: Reopen in Container</strong> from the command palette).</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vscodium"><a class="anchor" href="#_vscodium"></a>VSCodium</h3>
+<div class="paragraph">
+<p>VS Code&#8217;s Dev Containers extension is not available in VSCodium. Use <a href="https://devpod.sh/">DevPod</a> instead to open the devcontainer.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_after_opening_the_container"><a class="anchor" href="#_after_opening_the_container"></a>After opening the container</h3>
+<div class="paragraph">
+<p>Once inside the container, install CESM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, for development:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_documentation_generation_optional"><a class="anchor" href="#_documentation_generation_optional"></a>Documentation generation (optional)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Building the project documentation is a multi-step process that generates schema reference pages from the LinkML model and then assembles everything into an HTML site with Antora.</p>
+</div>
+<div class="sect2">
+<h3 id="_step_1_install_the_asciidoc_generator"><a class="anchor" href="#_step_1_install_the_asciidoc_generator"></a>Step 1: Install the AsciiDoc generator</h3>
+<div class="paragraph">
+<p>The schema documentation generator is installed from source:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e git+https://github.com/Netbeheer-Nederland/linkml-asciidoc-generator.git#egg=linkml-asciidoc-generator</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_2_generate_schema_reference_pages"><a class="anchor" href="#_step_2_generate_schema_reference_pages"></a>Step 2: Generate schema reference pages</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This produces AsciiDoc pages describing every class, slot, and enum in the CESM schema.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_3_build_the_html_site_with_antora"><a class="anchor" href="#_step_3_build_the_html_site_with_antora"></a>Step 3: Build the HTML site with Antora</h3>
+<div class="paragraph">
+<p>You need Node.js and npm installed for this step.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">npx antora antora-playbook.yml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated site is written to the output directory configured in <code>antora-playbook.yml</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_verification"><a class="anchor" href="#_verification"></a>Verification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To verify that the installation works, load the included sample dataset into a DuckDB database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If this completes without errors, the core installation is working correctly. See the <a href="quickstart.html" class="xref page">Quickstart</a> guide for more ways to exercise the toolchain.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spine_toolbox_setup"><a class="anchor" href="#_spine_toolbox_setup"></a>Spine Toolbox setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The repository includes Spine Toolbox project files in <code>.spinetoolbox/project.json</code> that define GUI-based workflows for data transformations.</p>
+</div>
+<div class="paragraph">
+<p>To use them:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install CESM with the Spine extra: <code>pip install -e ".[spine]"</code></p>
+</li>
+<li>
+<p>Open <a href="https://github.com/spine-tools/Spine-Toolbox">Spine Toolbox</a> and load the project from the repository root.</p>
+</li>
+<li>
+<p>Select a workflow and execute it through the GUI.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The FlexTool3 tool specification in the project file references an external path that must be updated to match your local installation. FlexTool3 itself is optional&#8201;&#8212;&#8201;the core CESM transformation tools work without it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more details, see the <a href="spine-toolbox-guide.html" class="xref page">Spine Toolbox Guide</a>.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../index.html">Energy System Model</a></span>
+  <span class="next"><a href="quickstart.html">Quickstart</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

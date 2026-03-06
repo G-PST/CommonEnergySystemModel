@@ -1,0 +1,128 @@
+= Methods
+
+Methods in CESM control how entities behave during optimization.
+Each method defines which parameters are required and how they are interpreted by the solver.
+This design makes it straightforward to validate input data: if a method is selected, the corresponding parameters must be present.
+It also makes the specification easier to extend -- adding a new method does not break existing functionality, and a model tool can clearly report whether it supports a given method.
+
+== Conversion Method
+
+The xref:schema:enumeration/ConversionMethod.adoc[ConversionMethod] enum is set on xref:schema:class/Unit.adoc[Unit] via `conversion_method`.
+It determines how a unit converts input flows to output flows.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `constant_efficiency`
+| Single efficiency value applied uniformly across all operating points.
+The unit converts all inputs to outputs using this constant ratio.
+| `efficiency` (percentage, e.g. 38.0)
+| Unit `ocgt`: `conversion_method=constant_efficiency`, `efficiency=38.0`
+
+| `two_point_efficiency`
+| Piecewise linear efficiency defined by two operating points.
+Allows modelling efficiency that varies with load.
+| `conversion_rates` -- a list of (operating_point, conversion_rate) tuples.
+Values must have decreasing operating points, starting from 100%.
+| `conversion_rates=[(100, 0.40), (50, 0.35)]`
+|===
+
+== Flow Scaling Method
+
+The xref:schema:enumeration/FlowScalingMethod.adoc[FlowScalingMethod] enum is available on Balance and Storage entities through the HasFlow mixin.
+It controls how `flow_profile` time series data is interpreted.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `use_profile_directly`
+| The `flow_profile` values are used as-is, representing absolute MW values.
+| `flow_profile`
+| Balance `north`: `flow_scaling_method=use_profile_directly`, `flow_profile=[...]`
+
+| `scale_to_annual`
+| The `flow_profile` is scaled so that its sum matches `flow_annual`.
+| `flow_profile`, `flow_annual`
+| Balance `west`: `flow_scaling_method=scale_to_annual`, `flow_annual=20000000.0`, `flow_profile=[...]`
+|===
+
+== Startup Method
+
+The xref:schema:enumeration/StartupMethod.adoc[StartupMethod] enum is set on xref:schema:class/Unit.adoc[Unit] via `startup_method`.
+It controls how the online/offline status of a unit is modelled.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `linear`
+| The online variable is continuous (relaxed LP formulation).
+Faster to solve but allows fractional online states.
+| `startup_cost`
+| `startup_method=linear`, `startup_cost=5000`
+
+| `integer`
+| The online variable is discrete (MIP formulation).
+The unit is either fully online or fully offline.
+| `startup_cost`
+| `startup_method=integer`, `startup_cost=5000`
+|===
+
+== Transfer Method
+
+The xref:schema:enumeration/TransferMethod.adoc[TransferMethod] enum is set on xref:schema:class/Link.adoc[Link] via `transfer_method`.
+It defines how energy is transferred between nodes.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `regular_linear`
+| Standard linear transfer with fixed efficiency and capacity.
+| `efficiency`, `capacity`
+| Link `pony1`: `transfer_method=regular_linear`, `capacity=500`, `efficiency=98.0`
+|===
+
+== Solve Mode
+
+The xref:schema:enumeration/SolveMode.adoc[SolveMode] enum is set on Solve_pattern via `solve_mode`.
+It determines the temporal structure of the optimization.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `single_solve`
+| The entire time horizon is solved in one optimization window.
+| `start_time_durations`
+| `solve_mode=single_solve`, `start_time_durations=[...]`
+
+| `rolling_solve`
+| The time horizon is solved using a rolling window that advances by `rolling_jump` each step,
+with `rolling_additional_horizon` of look-ahead beyond the jump.
+| `start_time_durations`, `rolling_jump`, `rolling_additional_horizon`
+| Solve_pattern `solve_2035_rolling_dispatch`: `solve_mode=rolling_solve`, `rolling_jump=PT2H`, `rolling_additional_horizon=PT2H`
+|===
+
+== Investment Method
+
+The xref:schema:enumeration/InvestmentMethod.adoc[InvestmentMethod] enum is available on xref:schema:class/Unit.adoc[Unit], Port, xref:schema:class/Link.adoc[Link], and Storage entities through the HasInvestments mixin.
+It controls whether and how new capacity investments are allowed.
+
+[cols="1,2,2,2", options="header"]
+|===
+| Method | Description | Required Parameters | Example
+
+| `not_allowed`
+| No new investment is possible. Existing capacity is used as-is.
+| _None_
+| `investment_method=not_allowed`
+
+| `no_limits`
+| Unconstrained investment. The solver can build any amount of new capacity,
+subject to economic parameters.
+| `investment_cost`, `discount_rate`, `payback_time`
+| Unit `ocgt`: `investment_method=no_limits`, `discount_rate=6.0`, `payback_time=25`
+|===

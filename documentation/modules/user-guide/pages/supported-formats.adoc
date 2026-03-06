@@ -1,0 +1,84 @@
+= Supported Formats
+
+This page lists the data formats that CESM can read and write, and describes each format briefly.
+For step-by-step usage of the conversion scripts, see xref:transformation-workflows.adoc[Transformation Workflows].
+
+== Format Support Matrix
+
+[cols="1,1,1,2,2", options="header"]
+|===
+| Format | Read (into CESM) | Write (from CESM) | Script | Notes
+
+| CESM YAML
+| Yes
+| No
+| `src/readers/from_yaml.py`
+| Sample and test data loading
+
+| CESM DuckDB
+| Yes
+| Yes
+| (internal)
+| Primary storage format, used as the central hub for all conversions
+
+| FlexTool (Spine DB)
+| Yes
+| Yes
+| `scripts/processing/flextool_to_cesm.py`, `cesm_to_flextool.py`
+| Full bidirectional. Requires `spinedb_api`. Transformer versions: cesm_v0.1.0 / flextool v3.14.0
+
+| GridDB (SQLite)
+| Yes
+| Yes
+| `scripts/processing/griddb_to_cesm.py`, `cesm_to_griddb.py`
+| Full bidirectional. Versions: cesm_v0.1.0 / griddb v0.1.0, v0.2.0
+
+| Spine DB (generic)
+| No
+| Yes
+| `scripts/processing/cesm_to_spine_db.py`
+| Export only
+
+| PLEXOS XML
+| No
+| No
+| --
+| Planned; a data file exists in `data/`
+|===
+
+== Format Descriptions
+
+=== CESM YAML
+
+A plain-text YAML representation of CESM data, used primarily for sample and test datasets.
+The reader (`src/readers/from_yaml.py`) loads YAML files into CESM DuckDB.
+
+=== CESM DuckDB
+
+The primary storage and interchange format.
+All conversions pass through DuckDB as the central hub -- to convert between any two external formats you first import into DuckDB, then export from it.
+DuckDB files can be inspected with the https://duckdb.org/docs/api/cli[DuckDB CLI] or the Python API.
+
+=== FlexTool (Spine DB)
+
+https://www.irena.org/Energy-Transition/Planning/Flextool[FlexTool] is an energy system optimisation tool that uses a Spine database (SQLite) as its data store.
+It is typically used together with https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] for workflow management.
+Conversion is fully bidirectional and requires the `spinedb_api` Python package.
+
+NOTE: Spine Toolbox provides a graphical alternative to running the command-line conversion scripts.
+
+=== GridDB (SQLite)
+
+GridDB is an SQLite-based energy system database.
+Two GridDB schema versions are supported (v0.1.0 and v0.2.0), and conversion is fully bidirectional.
+
+=== Spine DB (generic)
+
+A generic Spine database export that does not apply tool-specific transformations.
+Useful for interoperability with other tools in the https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] ecosystem.
+Currently export-only (CESM to Spine DB).
+
+=== PLEXOS XML
+
+https://www.energyexemplar.com/plexos[PLEXOS] is a commercial energy market simulation tool that uses an XML-based data format.
+Support is planned but not yet implemented.

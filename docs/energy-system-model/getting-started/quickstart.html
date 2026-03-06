@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quickstart :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/getting-started/quickstart.html">
+    <link rel="prev" href="installation.html">
+    <link rel="next" href="spine-toolbox-guide.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation.html">Installation</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Getting Started</li>
+    <li><a href="quickstart.html">Quickstart</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/getting-started/pages/quickstart.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Quickstart</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide walks you through loading sample data, inspecting it, and running format conversions with CESM.
+For full setup instructions, see the <a href="installation.html" class="xref page">Installation Guide</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ensure CESM is installed and the Pydantic classes have been generated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
+cd oes-spec
+pip install -e .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generate the required Python classes from the LinkML schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
+gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All scripts below are run from the repository root (<code>oes-spec/</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_load_sample_data_into_duckdb"><a class="anchor" href="#_load_sample_data_into_duckdb"></a>Load sample data into DuckDB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The repository includes a sample CESM dataset at <code>data/samples/cesm-sample.yaml</code>.
+It contains balance nodes, storage, commodities, units, ports, links, groups, periods, solve patterns, and system configuration.</p>
+</div>
+<div class="paragraph">
+<p>Load it into a DuckDB database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This reads the YAML file, validates it against the CESM schema, converts it to DataFrames, and writes them as tables in a DuckDB file.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Run <code>python src/readers/from_yaml.py --help</code> for all available options, including <code>--schema</code> and <code>--clear-target-db</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inspect_the_data"><a class="anchor" href="#_inspect_the_data"></a>Inspect the data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can query the resulting DuckDB file directly with Python:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">import duckdb
+
+con = duckdb.connect("artifacts/cesm.duckdb", read_only=True)
+
+# List all tables
+tables = con.execute("SHOW TABLES").fetchall()
+for t in tables:
+    print(t[0])
+
+# Preview a specific table
+print(con.execute("SELECT * FROM balance LIMIT 5").df())
+
+con.close()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This gives you a quick way to verify that the data was loaded correctly and to explore the table structure.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transform_cesm_to_flextool"><a class="anchor" href="#_transform_cesm_to_flextool"></a>Transform CESM to FlexTool</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Convert a CESM DuckDB database to FlexTool format in a Spine database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/cesm_to_flextool.py artifacts/cesm.duckdb artifacts/flextool.sqlite</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script reads CESM DataFrames from DuckDB, transforms them to FlexTool parameters, and writes them to a Spine database.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The input CESM data must include <code>solve_pattern</code> entries. Run <code>python scripts/processing/cesm_to_flextool.py --help</code> for full usage details.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transform_cesm_to_griddb"><a class="anchor" href="#_transform_cesm_to_griddb"></a>Transform CESM to GridDB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Convert a CESM DuckDB database to GridDB (SQLite) format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/cesm_to_griddb.py artifacts/cesm.duckdb artifacts/griddb.sqlite</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional flags control version metadata:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/cesm_to_griddb.py artifacts/cesm.duckdb artifacts/griddb.sqlite \
+    --cesm-version cesm_v0.1.0 \
+    --griddb-version v0.2.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_import_from_external_formats"><a class="anchor" href="#_import_from_external_formats"></a>Import from external formats</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_flextool_spine_db_to_cesm"><a class="anchor" href="#_flextool_spine_db_to_cesm"></a>FlexTool (Spine DB) to CESM</h3>
+<div class="paragraph">
+<p>Convert FlexTool data from a Spine database into CESM DuckDB format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/flextool_to_cesm.py input_flextool.sqlite my_scenario artifacts/cesm.duckdb \
+    --cesm-version cesm_v0.1.0 \
+    --flextool-version v3.14.0 \
+    --start-time "2023-01-01T00:00:00"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To list available scenarios in the source database first:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/flextool_to_cesm.py input_flextool.sqlite dummy output.duckdb --list-scenarios</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_griddb_sqlite_to_cesm"><a class="anchor" href="#_griddb_sqlite_to_cesm"></a>GridDB (SQLite) to CESM</h3>
+<div class="paragraph">
+<p>Convert a GridDB SQLite database into CESM DuckDB format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/griddb_to_cesm.py data/griddb.sqlite artifacts/cesm_from_griddb.duckdb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_export_cesm_to_spine_db"><a class="anchor" href="#_export_cesm_to_spine_db"></a>Export CESM to Spine DB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Write CESM data directly to a Spine database (without FlexTool transformation):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/cesm_to_spine_db.py artifacts/cesm.duckdb artifacts/cesm_spine.sqlite</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_round_trip_example"><a class="anchor" href="#_round_trip_example"></a>Round-trip example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A round-trip demonstrates that data survives conversion between formats.
+For example, starting from a FlexTool Spine database, converting to CESM, and back:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1. FlexTool → CESM
+python scripts/processing/flextool_to_cesm.py flextool.sqlite my_scenario artifacts/cesm_rt.duckdb \
+    --start-time "2023-01-01T00:00:00"
+
+# 2. CESM → FlexTool
+python scripts/processing/cesm_to_flextool.py artifacts/cesm_rt.duckdb artifacts/flextool_rt.sqlite</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, for GridDB:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1. GridDB → CESM
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite artifacts/cesm_rt.duckdb
+
+# 2. CESM → GridDB
+python scripts/processing/cesm_to_griddb.py artifacts/cesm_rt.duckdb artifacts/griddb_rt.sqlite</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then compare the original and round-tripped databases to verify fidelity.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spine_toolbox_workflows"><a class="anchor" href="#_spine_toolbox_workflows"></a>Spine Toolbox workflows</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an alternative to the command-line scripts, CESM includes predefined workflows for <a href="https://github.com/spine-tools/Spine-Toolbox">Spine Toolbox</a>, a graphical workflow manager.
+The project file at <code>.spinetoolbox/project.json</code> defines GUI-based pipelines for the same transformations described above.</p>
+</div>
+<div class="paragraph">
+<p>To use them:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the Spine Toolbox extra: <code>pip install -e ".[spine]"</code></p>
+</li>
+<li>
+<p>Open Spine Toolbox and load the project from the repository root.</p>
+</li>
+<li>
+<p>Select a workflow and execute it through the GUI.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This approach is useful for interactive exploration and for users who prefer a visual pipeline over command-line scripts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_steps"><a class="anchor" href="#_next_steps"></a>Next steps</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Examine the CESM schema at <code>model/cesm.yaml</code> to understand the data model.</p>
+</li>
+<li>
+<p>Check <code>python &lt;script&gt; --help</code> for any script to see all available options.</p>
+</li>
+<li>
+<p>See the <a href="installation.html" class="xref page">Installation Guide</a> for development and testing setup.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="installation.html">Installation</a></span>
+  <span class="next"><a href="spine-toolbox-guide.html">Spine Toolbox Guide</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

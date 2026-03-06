@@ -1,0 +1,190 @@
+= Architecture
+
+This page describes the system architecture of CESM (Common Energy System Model).
+It is intended for developers who want to understand how the components fit together before contributing code.
+
+== High-level data flow
+
+The following diagram shows how data moves through the system, from schema definition to format-specific output.
+
+----
+LinkML Schema (model/cesm.yaml)
+     |
+     | gen-pydantic
+     v
+Generated Pydantic classes (src/generated/cesm_pydantic.py)
+     |
+     | used for validation
+     v
+Readers -----> Dict[str, DataFrame] -----> Transformers -----> Writers
+   ^                                                              |
+   |              DuckDB (central storage)                        |
+   |                   ^        |                                 |
+   |                   |        v                                 |
+Source formats    intermediate data                       Target formats
+(YAML, Spine DB,  (versioned, with                      (DuckDB, Spine DB,
+ DuckDB, GridDB)   timestamps)                           GridDB)
+----
+
+Every conversion follows the same pattern: a *reader* loads source data into a dictionary of DataFrames, a *transformer* reshapes and remaps those DataFrames, and a *writer* persists the result.
+DuckDB sits at the centre as persistent storage, making it easy to inspect intermediate results, chain transformations, and debug.
+
+== Schema
+
+*Location:* `model/cesm.yaml`
+
+The LinkML schema is the single source of truth.
+It defines all classes, enums, slots, and their relationships.
+From this schema, Pydantic classes are generated automatically:
+
+ gen-pydantic model/cesm.yaml
+
+The generated file (`src/generated/cesm_pydantic.py`) provides runtime validation.
+The core `DataHandler` class in `src/core/data_handler.py` wraps the generated `Database` object and offers utilities for working with entity collections.
+
+== Readers
+
+*Location:* `src/readers/`
+
+Each reader loads data from a specific source format and returns a `Dict[str, pd.DataFrame]`.
+
+[cols="1,2"]
+|===
+| Module | Source
+
+| `from_yaml.py`
+| CESM YAML sample data
+
+| `from_duckdb.py`
+| CESM DuckDB database
+
+| `from_spine_db.py`
+| Spine Toolbox database (used for FlexTool and other Spine-based formats)
+
+| `linkml_yaml.py`
+| LinkML-native YAML loading
+|===
+
+All readers conform to a common interface so that downstream code can treat them interchangeably.
+See xref:readers-writers.adoc[Readers & Writers] for implementation details.
+
+== Writers
+
+*Location:* `src/writers/`
+
+Each writer accepts a `Dict[str, pd.DataFrame]` and persists the data to a target format.
+
+[cols="1,2"]
+|===
+| Module | Target
+
+| `to_duckdb.py`
+| CESM DuckDB database
+
+| `to_spine_db.py`
+| Spine Toolbox database (used for FlexTool and other Spine-based formats)
+|===
+
+Format-specific serialisation logic (e.g. GridDB SQLite) lives in the transformer layer when the conversion requires structural changes beyond simple persistence.
+
+== Transformers
+
+*Location:* `src/transformers/`
+
+Transformers handle the mapping between CESM's internal data model and external format-specific models.
+They are organised by format and versioned by both the CESM schema version and the source format version:
+
+----
+src/transformers/
+  irena_flextool/
+    cesm_v0.1.0/
+      v3.14.0/
+        from_flextool.yaml     <-- declarative (YAML) mapping
+        to_flextool.yaml
+        to_cesm.py             <-- procedural (Python) logic
+  griddb/
+    cesm_v0.1.0/
+      v0.1.0/
+        to_griddb.yaml
+        to_griddb.py
+      v0.2.0/
+        to_cesm.py
+        to_cesm_config.yaml
+        to_griddb.py
+    to_sqlite.py               <-- GridDB SQLite serialisation
+----
+
+=== YAML transformers (declarative)
+
+YAML transformer files contain declarative mappings -- column renames, value lookups, filtering rules.
+The core transformation engine in `src/core/transform_parameters.py` processes these definitions at runtime.
+This approach keeps simple mappings readable and version-controllable without writing Python.
+
+=== Python transformers (procedural)
+
+When a conversion requires logic that cannot be expressed declaratively -- timeline reconstruction, cross-entity lookups, conditional aggregation -- a Python transformer module handles it.
+These modules sit alongside their YAML counterparts in the same versioned directory.
+
+=== Versioning convention
+
+The directory structure `cesm_v{X}/v{Y}` encodes a version pair:
+
+* `cesm_v{X}` -- the CESM schema version the transformer targets.
+* `v{Y}` -- the version of the external format.
+
+This allows multiple transformer versions to coexist, so older format versions remain supported while new ones are developed.
+
+See xref:transformer-developer-guide.adoc[Transformer Developer Guide] for a walkthrough of writing transformers.
+
+== Core utilities
+
+*Location:* `src/core/`
+
+[cols="1,2"]
+|===
+| Module | Purpose
+
+| `data_handler.py`
+| Wraps the generated `Database` class; provides generic operations across all entity types (listing collections, counting entities).
+
+| `linkml_to_dataframes.py`
+| Converts LinkML object trees into the `Dict[str, pd.DataFrame]` representation used throughout the pipeline.
+
+| `transform_parameters.py`
+| The transformation engine that reads YAML transformer definitions and applies them to DataFrames.
+|===
+
+== DataFrame conventions
+
+The entire pipeline passes data as `Dict[str, pd.DataFrame]`, where each key is a class or relationship name.
+
+Entity DataFrames:: Named after the CESM class they represent: `balance`, `unit`, `unit_to_node`, and so on.
+
+Parameter columns:: Use a dotted naming convention that encodes both the class and the data type:
++
+----
+class.ts.param     -- time series parameter
+class.str.param    -- string parameter
+class.array.param  -- array parameter
+----
+
+MultiIndex:: Multi-dimensional entities (e.g. ports with source/sink dimensions) use a Pandas `MultiIndex`.
+
+Storage encoding:: When stored in DuckDB, MultiIndex columns are encoded with a `::` separator so they can be faithfully round-tripped.
+
+== DuckDB as central hub
+
+All data passes through DuckDB.
+It stores CESM data together with metadata such as schema versions and timestamps.
+This design has several advantages:
+
+* *Inspectability* -- you can query intermediate results with standard SQL.
+* *Composability* -- transformations can be chained: read from DuckDB, transform, write back.
+* *Reproducibility* -- versioned metadata makes it clear which schema and transformer produced a given dataset.
+
+== Where to go next
+
+* xref:adding-a-new-format.adoc[Adding a New Format] -- step-by-step guide for integrating a new energy system model.
+* xref:readers-writers.adoc[Readers & Writers] -- details on the reader/writer interface and how to implement one.
+* xref:transformer-developer-guide.adoc[Transformer Developer Guide] -- how to write declarative and procedural transformers.
+* xref:testing.adoc[Testing] -- how to test readers, writers, and transformers.

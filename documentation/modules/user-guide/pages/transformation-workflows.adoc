@@ -1,0 +1,166 @@
+= Transformation Workflows
+
+This page documents end-to-end transformation workflows between CESM and external tool formats.
+For initial setup, see the xref:getting-started:quickstart.adoc[Quickstart].
+
+== Overview
+
+=== Internal pipeline
+
+Each transformation script follows the same internal three-step pipeline:
+
+----
+  Reader  ──►  Transformer  ──►  Writer
+----
+
+. A *reader* loads source data into a set of pandas DataFrames (e.g. `from_spine_db` reads a FlexTool Spine database).
+. A *transformer* converts between the source model's DataFrames and the CESM DataFrames (e.g. `flextool_to_cesm` maps FlexTool entities and parameters to CESM equivalents).
+. A *writer* persists the resulting DataFrames to the target format (e.g. `to_duckdb` writes CESM DataFrames into a DuckDB database).
+
+This means it is equally possible to chain transformations without persisting to disk in between -- read from format A, transform to CESM DataFrames, transform from CESM DataFrames to format B, and write to format B -- all in a single pipeline.
+The processing scripts in this repository choose to write an intermediate CESM DuckDB file because it makes each step independently inspectable and debuggable, but this is a convenience, not a requirement.
+
+=== Script-level view
+
+The provided scripts use *CESM DuckDB* as a convenient hub format.
+Converting between any two external formats is a two-script process through the hub:
+
+----
+FlexTool (Spine DB)  ──►  CESM DuckDB  ──►  FlexTool (Spine DB)
+GridDB (SQLite)      ──►  CESM DuckDB  ──►  GridDB (SQLite)
+YAML                 ──►  CESM DuckDB  ──►  Spine DB
+----
+
+Each arrow is a single script invocation. Internally, each script runs the reader → transformer → writer pipeline described above.
+The scripts live in `scripts/processing/` and `src/readers/`.
+
+== YAML to CESM DuckDB
+
+Load a CESM YAML file (such as the included sample data) into a DuckDB database.
+
+[source,bash]
+----
+python src/readers/from_yaml.py data/samples/cesm-sample.yaml output/cesm.duckdb
+----
+
+Optional flags:
+
+* `--schema` / `-s` -- Path to the CESM schema (default: `model/cesm.yaml`).
+* `--clear-target-db` -- Clear the target database before writing.
+
+[source,bash]
+----
+python src/readers/from_yaml.py --help
+----
+
+== FlexTool Round-Trip
+
+=== FlexTool to CESM
+
+Read a FlexTool Spine database and convert a specific scenario to CESM DuckDB.
+
+[source,bash]
+----
+python scripts/processing/flextool_to_cesm.py flextool.sqlite my_scenario output/cesm.duckdb \
+    --cesm-version cesm_v0.1.0 \
+    --flextool-version v3.14.0 \
+    --start-time "2023-01-01T00:00:00"
+----
+
+Key arguments:
+
+* The first positional argument is a Spine database file path or URL.
+* The second positional argument is the scenario name.
+* `--start-time` -- Required when the database uses non-datetime indexes (e.g., `t0001`).
+* `--list-scenarios` -- List available scenarios and exit.
+* `--summary` -- Print a detailed summary of dataframes at each stage.
+
+[source,bash]
+----
+python scripts/processing/flextool_to_cesm.py --help
+python scripts/processing/flextool_to_cesm.py flextool.sqlite --list-scenarios
+----
+
+=== CESM to FlexTool
+
+Convert CESM DuckDB data back to a FlexTool Spine database.
+
+[source,bash]
+----
+python scripts/processing/cesm_to_flextool.py output/cesm.duckdb output/flextool.sqlite
+----
+
+Optional flags:
+
+* `--transformer` / `-t` -- Path to the transformer configuration YAML
+  (default: `src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml`).
+
+[source,bash]
+----
+python scripts/processing/cesm_to_flextool.py --help
+----
+
+== GridDB Round-Trip
+
+=== GridDB to CESM
+
+Convert a GridDB SQLite database to CESM DuckDB.
+
+[source,bash]
+----
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite output/cesm_from_griddb.duckdb
+----
+
+Optional flags:
+
+* `--clear-target-db` -- Clear the target database before writing.
+
+[source,bash]
+----
+python scripts/processing/griddb_to_cesm.py --help
+----
+
+=== CESM to GridDB
+
+Convert CESM DuckDB data to a GridDB SQLite database.
+
+[source,bash]
+----
+python scripts/processing/cesm_to_griddb.py output/cesm.duckdb output/griddb.sqlite
+----
+
+Optional flags:
+
+* `--cesm-version` / `-c` -- CESM version (default: `cesm_v0.1.0`).
+* `--griddb-version` / `-g` -- GridDB version (default: `v0.2.0`).
+* `--schema` / `-s` -- GridDB SQL schema path (auto-detected from versions by default).
+
+[source,bash]
+----
+python scripts/processing/cesm_to_griddb.py --help
+----
+
+== CESM to Spine DB
+
+Export CESM DuckDB data directly to a generic Spine database (without tool-specific transformations).
+
+[source,bash]
+----
+python scripts/processing/cesm_to_spine_db.py output/cesm.duckdb output/spine.sqlite
+----
+
+The output argument accepts either a file path or a `sqlite:///` URL.
+
+[source,bash]
+----
+python scripts/processing/cesm_to_spine_db.py --help
+----
+
+== Tips
+
+* Run `python <script> --help` for the full and up-to-date list of arguments for any script.
+* Version flags (`--cesm-version`, `--flextool-version`, `--griddb-version`) select which transformer modules are used.
+  Make sure the version combination you specify has a corresponding transformer under `src/transformers/`.
+* DuckDB is the central interchange format.
+  You can inspect any intermediate `.duckdb` file with the https://duckdb.org/docs/api/cli[DuckDB CLI] or Python API to debug data issues.
+* All scripts run from the repository root directory.

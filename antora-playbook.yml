@@ -8,6 +8,9 @@ content:
   - url: .
     branches: HEAD
     start_path: artifacts/documentation
+  - url: .
+    branches: HEAD
+    start_path: documentation
 
   # - url: https://gitlab.com/antora/demo/demo-component-b.git
   #   branches: [v2.0, v1.0]

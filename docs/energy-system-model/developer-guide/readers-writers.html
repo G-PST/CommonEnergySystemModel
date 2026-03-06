@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Readers &amp; Writers :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/readers-writers.html">
+    <link rel="prev" href="adding-a-new-format.html">
+    <link rel="next" href="testing.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Developer Guide</li>
+    <li><a href="readers-writers.html">Readers &amp; Writers</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/developer-guide/pages/readers-writers.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Readers &amp; Writers</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Readers and writers are the I/O layer of CESM.
+A reader loads data from an external format into a common in-memory representation (a dictionary of pandas DataFrames), and a writer serialises that representation back to an external format.
+This page describes the conventions that all readers and writers follow, the DataFrame structures they operate on, and the specifics of each supported format.</p>
+</div>
+<div class="paragraph">
+<p>See also: <a href="architecture.html" class="xref page">Architecture</a> | <a href="adding-a-new-format.html" class="xref page">Adding a New Format</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_overview"><a class="anchor" href="#_design_overview"></a>Design overview</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_abstract_base_classes"><a class="anchor" href="#_abstract_base_classes"></a>Abstract base classes</h3>
+<div class="paragraph">
+<p>The module <code>src/core/interfaces.py</code> defines two abstract base classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">class DataReader(ABC):
+    @abstractmethod
+    def read(self, source: Any) -&gt; Database: ...
+
+class DataWriter(ABC):
+    @abstractmethod
+    def write(self, data: Database, target: Any) -&gt; None: ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These classes establish the contract that every reader returns a <code>Database</code> object and every writer accepts one.
+In practice, the current implementations mostly use <strong>standalone functions</strong> that operate on <code>Dict[str, pd.DataFrame]</code> directly, because the DataFrame dictionary is the central interchange format within the pipeline.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_typical_function_signatures"><a class="anchor" href="#_typical_function_signatures"></a>Typical function signatures</h3>
+<div class="paragraph">
+<p>Readers expose a function that returns the dictionary:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def dataframes_from_duckdb(
+    db_path: str,
+    tables: Optional[list] = None,
+) -&gt; Dict[str, pd.DataFrame]: ...
+
+def spine_to_dataframes(
+    db_url: str,
+    scenario: str,
+) -&gt; Dict[str, pd.DataFrame]: ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Writers expose a function that accepts the dictionary:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">def dataframes_to_duckdb(
+    dataframes: Dict[str, pd.DataFrame],
+    db_path: str,
+    overwrite: bool = True,
+) -&gt; None: ...
+
+def dataframes_to_spine(
+    dataframes: Dict[str, pd.DataFrame],
+    db_url: str,
+    import_datetime: Optional[str] = None,
+    purge_before_import: bool = True,
+) -&gt; None: ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The YAML reader follows a two-step pattern: first load the YAML into a LinkML-generated <code>Dataset</code> object, then convert that object to DataFrames with <code>yaml_to_df()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dataframe_conventions"><a class="anchor" href="#_dataframe_conventions"></a>DataFrame conventions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Dict[str, pd.DataFrame]</code> returned by readers (and consumed by writers) uses a consistent set of naming and structural conventions.</p>
+</div>
+<div class="sect2">
+<h3 id="_dictionary_keys"><a class="anchor" href="#_dictionary_keys"></a>Dictionary keys</h3>
+<div class="paragraph">
+<p>Each key in the dictionary identifies an entity class or a typed parameter group.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity DataFrames</dt>
+<dd>
+<p>Plain class names such as <code>node</code>, <code>unit</code>, <code>connection</code>, or dot-separated names for multi-dimensional classes such as <code>unit.outputNode</code>.</p>
+</dd>
+<dt class="hdlist1">Time-series DataFrames</dt>
+<dd>
+<p><code>&lt;class&gt;<strong>.ts.</strong>&lt;parameter&gt;</code>&#8201;&#8212;&#8201;for example, <code>node.ts.inflow</code>.</p>
+</dd>
+<dt class="hdlist1">String / categorical (Map) DataFrames</dt>
+<dd>
+<p><code>&lt;class&gt;<strong>.str.</strong>&lt;parameter&gt;</code>&#8201;&#8212;&#8201;for example, <code>node.str.inflow</code>.</p>
+</dd>
+<dt class="hdlist1">Array DataFrames</dt>
+<dd>
+<p><code>&lt;class&gt;<strong>.array.</strong>&lt;parameter&gt;</code>&#8201;&#8212;&#8201;for example, <code>unit.array.capacity_profile</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_entity_dataframes"><a class="anchor" href="#_entity_dataframes"></a>Entity DataFrames</h3>
+<div class="paragraph">
+<p>Entity DataFrames hold scalar parameter values.
+Rows represent entities; columns represent parameters.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># Single-dimensional entity class
+dataframes['node'] = pd.DataFrame({
+    'annual_flow': [100000.0, 80000.0, None],
+    'penalty_up':  [10000.0,  10000.0, 10000.0],
+}, index=pd.Index(['west', 'east', 'heat'], name='node'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For multi-dimensional entity classes the index is a <code>pd.MultiIndex</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># Multi-dimensional entity class
+dataframes['unit.outputNode'] = pd.DataFrame({
+    'capacity':   [100.0, 50.0],
+    'efficiency': [0.9,   0.95],
+}, index=pd.MultiIndex.from_tuples(
+    [('coal_plant', 'west'), ('gas_plant', 'east')],
+    names=['unit', 'outputNode'],
+))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_time_series_and_indexed_dataframes"><a class="anchor" href="#_time_series_and_indexed_dataframes"></a>Time-series and indexed DataFrames</h3>
+<div class="paragraph">
+<p>Time-series, map, and array DataFrames share a transposed layout: the <strong>index</strong> carries the time or category dimension, and <strong>columns</strong> carry entity names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python"># Time-series example: node.ts.inflow
+dataframes['node.ts.inflow'] = pd.DataFrame({
+    'west': [-1002.1, -980.7, -968.0],
+    'east': [-1002.1, -980.7, -968.0],
+    'heat': [-30.0,   -40.0,  -50.0],
+}, index=pd.date_range('2023-01-01', periods=3, freq='h', name='datetime'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For multi-dimensional entity classes the columns become a <code>pd.MultiIndex</code> with levels <code>[name, dimension1, dimension2, &#8230;&#8203;]</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_column_naming_for_multiindex_columns"><a class="anchor" href="#_column_naming_for_multiindex_columns"></a>Column naming for MultiIndex columns</h3>
+<div class="paragraph">
+<p>When a DataFrame has MultiIndex columns, the levels are encoded with a <code>::</code> separator for storage in flat formats such as DuckDB:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>("region", "north", "heat")  -&gt;  "region::north::heat"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>::</code> separator is used instead of <code>.</code> because entity names may already contain dots.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_existing_readers"><a class="anchor" href="#_existing_readers"></a>Existing readers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Readers live under <code>src/readers/</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Entry point</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_yaml.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLI script; calls <code>yaml_to_df()</code> from <code>core/linkml_to_dataframes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads a CESM YAML file via the LinkML runtime, converts the <code>Dataset</code> object to DataFrames, then passes them to a writer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>linkml_yaml.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LinkMLYAMLReader.read(source) &#8594; Database</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class-based reader that wraps <code>linkml_runtime.loaders.YAMLLoader</code>. Returns a LinkML <code>Database</code> object rather than DataFrames directly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_duckdb.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dataframes_from_duckdb(db_path, tables=None) &#8594; Dict[str, pd.DataFrame]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reads DuckDB tables and uses a <code>_dataframe_metadata</code> table to reconstruct indexes, MultiIndex columns, and datetime types exactly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_spine_db.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spine_to_dataframes(db_url, scenario) &#8594; Dict[str, pd.DataFrame]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reads a Spine Toolbox database filtered by scenario. Separates scalar, time-series, map, and array parameters into appropriately keyed DataFrames.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_existing_writers"><a class="anchor" href="#_existing_writers"></a>Existing writers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Writers live under <code>src/writers/</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Entry point</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_duckdb.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dataframes_to_duckdb(dataframes, db_path, overwrite=True)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flattens DataFrames (resets indexes, encodes MultiIndex columns with <code>::</code>), writes each as a DuckDB table, and stores structural metadata in <code>_dataframe_metadata</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_spine_db.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dataframes_to_spine(dataframes, db_url, import_datetime=None, purge_before_import=True)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Writes to a Spine Toolbox SQLite database. Creates entity classes, entities, and parameter values. Supports scalars, time series (<code>TimeSeries</code>), maps (<code>Map</code>), and arrays (<code>Array</code>) via <code>spinedb_api</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_format_specific_details"><a class="anchor" href="#_format_specific_details"></a>Format-specific details</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_duckdb"><a class="anchor" href="#_duckdb"></a>DuckDB</h3>
+<div class="paragraph">
+<p>The DuckDB format provides a one-to-one mapping between DataFrames and database tables.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Metadata table (<code>_dataframe_metadata</code>)</dt>
+<dd>
+<p>Stores the structural information needed to reconstruct DataFrames on read:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Column</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>table_name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Original dictionary key (e.g., <code>node.ts.inflow</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql_table_name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL-safe table name (dots and hyphens replaced with underscores)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>single</code>, <code>datetime</code>, or <code>multi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index_count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of leading columns that form the index</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>columns_multiindex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean&#8201;&#8212;&#8201;whether columns are MultiIndex</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>columns_levels</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON array of level names (if MultiIndex columns)</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt class="hdlist1">Datetime handling</dt>
+<dd>
+<p>All <code>DatetimeIndex</code> values are normalised to UTC (timezone-naive) before storage.
+On read, the first <code>index_count</code> columns are converted back to the appropriate index type.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spine_toolbox"><a class="anchor" href="#_spine_toolbox"></a>Spine Toolbox</h3>
+<div class="paragraph">
+<p>The Spine DB writer maps CESM concepts to Spine Toolbox concepts as follows:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">CESM concept</th>
+<th class="tableblock halign-left valign-top">Spine DB concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity class (single-dimensional)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity class (multi-dimensional, e.g., <code>unit.outputNode</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relationship class (<code>unit__node</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object / relationship entity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scalar parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter value (float, string)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time-series parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter value of type <code>TimeSeries</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter value of type <code>Map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter value of type <code>Array</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Class name conversion</dt>
+<dd>
+<p>Dots in CESM class names are replaced with double underscores for Spine DB (e.g., <code>unit.node</code> becomes <code>unit__node</code>).</p>
+</dd>
+<dt class="hdlist1">Alternatives and scenarios</dt>
+<dd>
+<p>Each import creates a timestamped alternative (e.g., <code>cesm-2025_10_02-15_30</code>) and attaches it to a <code>base</code> scenario.
+By default the writer purges existing parameter values, entities, and alternatives before importing.</p>
+</dd>
+<dt class="hdlist1">Dependencies</dt>
+<dd>
+<p>The Spine DB reader and writer require the <code>spinedb_api</code> package.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_flow_summary"><a class="anchor" href="#_data_flow_summary"></a>Data flow summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following diagram shows the typical data flow through the reader/writer layer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>External format          In-memory representation          External format
+ (YAML / DuckDB /   --&gt;  Dict[str, pd.DataFrame]  --&gt;   (DuckDB / Spine DB
+  Spine DB)                                                / other)
+                              |
+                              v
+                      Transformation layer
+                      (filtering, mapping,
+                       unit conversion, ...)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Readers populate the dictionary.
+The transformation layer may modify it (see <a href="transformer-developer-guide.html" class="xref page">Transformer Developer Guide</a>).
+Writers consume the dictionary and persist it in the target format.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="adding-a-new-format.html">Adding a New Format</a></span>
+  <span class="next"><a href="testing.html">Testing</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

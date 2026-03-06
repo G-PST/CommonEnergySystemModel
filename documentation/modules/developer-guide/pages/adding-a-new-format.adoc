@@ -1,0 +1,698 @@
+= Adding a New Format
+
+This guide walks through the process of adding support for a new energy system model format to the CESM conversion framework.
+The goal is to enable bidirectional conversion between your format and CESM (Common Energy System Model), so that data can flow between your tool and any other supported format.
+
+Throughout this guide, we use PLEXOS as a hypothetical case study and reference the existing FlexTool and GridDB implementations as concrete examples to follow.
+
+See also: xref:architecture.adoc[Architecture], xref:readers-writers.adoc[Readers & Writers], xref:transformer-developer-guide.adoc[Transformer Developer Guide].
+
+== Overview of the conversion pipeline
+
+A complete format integration consists of these components:
+
+[source,text]
+----
+Source format
+  -> Reader (src/readers/from_{format}.py)
+    -> Dict[str, pd.DataFrame]
+      -> YAML Transformer (entity + parameter mapping)
+        -> Python Transformer (complex logic)
+          -> CESM Dict[str, pd.DataFrame]
+            -> Writer (src/writers/to_{format}.py)
+              -> Target format
+----
+
+Not every format requires all components.
+If your source data is already in a Spine database or DuckDB, you can reuse the existing readers.
+Similarly, if the target is a standard format, you can reuse an existing writer.
+The transformer layer -- both YAML and Python -- is always required and is where most of the work happens.
+
+== Step 1: Analyze the source format
+
+Before writing any code, study the source format thoroughly.
+Identify the following:
+
+Entity types:: What are the main objects in the model? Generators, nodes, lines, fuels, storage units?
+Parameters:: What properties does each entity type have? Capacities, costs, efficiencies, limits?
+Relationships:: How are entities connected? Which generator connects to which node? Which line connects two nodes?
+Temporal structure:: How is time represented? Hourly time series? Period-indexed data? Named timesteps or datetime indexes?
+Scenarios:: Does the format support multiple scenarios or alternatives?
+
+=== PLEXOS case study: format analysis
+
+The file `data/PLEXOS-World 2015 Gold V1.1.xml` provides an example of a complex relational XML format.
+PLEXOS uses a set of relational tables encoded as XML elements:
+
+`t_class`:: Defines entity types (Generator, Fuel, Storage, Node, Line, Region, Zone, etc.)
+`t_object`:: Instances of classes (individual generators, nodes, etc.)
+`t_membership`:: Relationships between objects (which generator belongs to which node)
+`t_data`:: Parameter values for objects (capacity, heat rate, cost, etc.)
+`t_attribute`:: Attribute definitions with metadata (units, defaults, enumerations)
+`t_property`:: Property definitions that parameters reference
+`t_collection`:: Defines how classes relate to each other (Generator.Nodes, Line.NodeFrom, etc.)
+
+Key entity classes in PLEXOS and their CESM equivalents:
+
+[cols="1,1,2"]
+|===
+| PLEXOS Class | CESM Entity | Notes
+
+| Generator | unit | Primary conversion device
+| Node | balance | Electrical nodes (no storage)
+| Line | link | Transmission connections between nodes
+| Storage | storage | Storage devices
+| Fuel | commodity | Fuel types
+| Region / Zone | group | Spatial groupings
+|===
+
+== Step 2: Create a reader
+
+If your format requires custom reading logic (not a standard Spine database or DuckDB), implement a reader in `src/readers/from_{format}.py`.
+
+The reader must return a `Dict[str, pd.DataFrame]` following the standard naming conventions:
+
+Entity DataFrames:: Named after the entity class (e.g., `unit`, `node`, `connection`).
+The index contains entity names; columns contain scalar parameter values.
+
+Time series DataFrames:: Named `{class}.ts.{parameter}` (e.g., `unit.ts.availability`).
+The index is a `DatetimeIndex`; columns are entity names.
+
+Map DataFrames:: Named `{class}.str.{parameter}` (e.g., `solve.str.period_timeset`).
+The index contains string keys; columns are entity names.
+
+Array DataFrames:: Named `{class}.array.{parameter}` (e.g., `solve.array.realized_periods`).
+The index is numeric; columns are entity names.
+
+Multi-dimensional entities:: For relationship entities (e.g., `unit.outputNode`), use a `pd.MultiIndex` with levels `[name, dimension1, dimension2]`.
+
+=== Example: Spine database reader
+
+The existing `src/readers/from_spine_db.py` demonstrates the pattern.
+It reads entity classes, extracts scalar parameters into entity DataFrames, and builds separate DataFrames for time series (`ts`), maps (`str`), and arrays (`array`):
+
+[source,python]
+----
+def spine_to_dataframes(db_url: str, scenario: str) -> Dict[str, pd.DataFrame]:
+    """
+    Read Spine database and convert to dataframes.
+
+    Returns:
+        Dict mapping dataframe names to DataFrames:
+        - Entity dataframes: 'class_name' or 'class1.class2'
+        - Time series: 'class_name.ts.parameter_name'
+        - Maps: 'class_name.str.parameter_name'
+        - Arrays: 'class_name.array.parameter_name'
+    """
+----
+
+=== PLEXOS case study: reader design
+
+A PLEXOS XML reader would:
+
+. Parse the XML and build lookup tables for `t_class`, `t_object`, `t_membership`, `t_property`, and `t_collection`.
+. For each class (Generator, Node, Line, Storage, Fuel), create an entity DataFrame with `t_object` names as the index.
+. Extract `t_data` entries as parameter values.
+Scalar values go into the entity DataFrame columns; time-indexed data goes into `.ts.` DataFrames.
+. Build multi-dimensional DataFrames for membership relationships (e.g., Generator-to-Node connections).
+
+[source,python]
+----
+# src/readers/from_plexos_xml.py
+
+def plexos_xml_to_dataframes(xml_path: str) -> Dict[str, pd.DataFrame]:
+    """Read PLEXOS XML and return Dict[str, pd.DataFrame]."""
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+
+    # Build lookup tables
+    classes = {elem.find('class_id').text: elem.find('name').text
+               for elem in root.findall('t_class')}
+    objects = parse_objects(root, classes)
+    memberships = parse_memberships(root, classes, objects)
+    data = parse_data(root, objects)
+
+    # Build DataFrames per class
+    dataframes = {}
+    for class_name, entities in objects.items():
+        dataframes[class_name] = build_entity_df(entities, data)
+        # Time series go into separate DataFrames
+        for param, ts_data in extract_timeseries(entities, data).items():
+            dataframes[f'{class_name}.ts.{param}'] = ts_data
+
+    return dataframes
+----
+
+== Step 3: Create entity mapping in YAML transformer
+
+The YAML transformer handles the mapping of source entities to CESM entities.
+Transformer files are stored in:
+
+[source,text]
+----
+src/transformers/{format}/cesm_{version}/{source_version}/from_{format}.yaml
+----
+
+For example, FlexTool's transformer is at:
+
+[source,text]
+----
+src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/from_flextool.yaml
+----
+
+=== Basic entity mapping
+
+Entity mapping rules use the `-entities` suffix.
+The first item is the source class; the second is the target class:
+
+[source,yaml]
+----
+# Simple 1:1 mapping: FlexTool unit -> CESM unit
+unit-entities:
+- unit
+- unit
+
+# Simple 1:1 mapping: FlexTool commodity -> CESM commodity
+commodity-entities:
+- commodity
+- commodity
+----
+
+=== Conditional entity mapping
+
+When a single source class maps to different CESM types based on parameter values, use `if_parameter` and `if_not_parameter`:
+
+[source,yaml]
+----
+# FlexTool nodes with has_balance but NOT has_storage -> CESM balance
+balance-entities:
+- node
+- balance
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+
+# FlexTool nodes with has_storage -> CESM storage
+storage-entities:
+- node
+- storage:
+    if_parameter: has_storage
+----
+
+This is a common pattern when the source format uses a single entity class (like "node") for what CESM separates into distinct types (balance vs. storage).
+
+=== Dimensional entity mapping with reordering
+
+Multi-dimensional entities often need dimension reordering.
+The `order` directive specifies which source dimensions map to which target dimensions:
+
+[source,yaml]
+----
+# FlexTool unit.outputNode -> CESM unit_to_node
+# Source dimensions: [name, unit, node] at indexes [0, 1, 2]
+# Target dimensions: [name, source, sink] - same order
+unit_to_node-entities:
+- unit.outputNode
+- unit_to_node:
+    order: [[0], [1], [2]]
+- dimensions: [source, sink]
+
+# FlexTool unit.inputNode -> CESM node_to_unit
+# Source: [name, unit, node] -> Target: [name, source=node, sink=unit]
+# Note the swap: dimension 2 (node) becomes source, dimension 1 (unit) becomes sink
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]
+- dimensions: [source, sink]
+----
+
+=== Link entities with node extraction
+
+Links (transmission lines) often require extracting node endpoints from a higher-dimensional relationship:
+
+[source,yaml]
+----
+# FlexTool connection.node.node -> CESM link
+# Source: [name, connection, nodeA, nodeB]
+# Target: [name, node_A, node_B] - skip connection dimension
+link-entities:
+- connection.node.node
+- link:
+    order: [[0], [2], [3]]
+- dimensions: [node_A, node_B]
+----
+
+=== PLEXOS case study: entity mapping
+
+For PLEXOS, the entity mapping would look something like:
+
+[source,yaml]
+----
+# PLEXOS Generator -> CESM unit
+unit-entities:
+- generator
+- unit
+
+# PLEXOS Node -> CESM balance
+balance-entities:
+- node
+- balance
+
+# PLEXOS Line -> CESM link
+# Line has NodeFrom and NodeTo memberships
+link-entities:
+- line
+- link
+
+# PLEXOS Storage -> CESM storage
+storage-entities:
+- storage
+- storage
+
+# PLEXOS Fuel -> CESM commodity
+commodity-entities:
+- fuel
+- commodity
+----
+
+== Step 4: Create parameter mapping in YAML transformer
+
+Parameter mappings define how source parameters translate to CESM parameters.
+Each mapping rule has a source (class + parameter), a target (class + parameter), and optional operations.
+
+=== Basic parameter mapping
+
+[source,yaml]
+----
+# Direct copy: same parameter name, same class
+commodity_price:
+- commodity: price
+- commodity: price_per_unit
+----
+
+=== Unit conversions
+
+Use `operation` to apply arithmetic transformations.
+This is essential when source and target use different units:
+
+[source,yaml]
+----
+# FlexTool stores discount_rate as 0-1 ratio; CESM uses percentage (0-100)
+unit_discount_rate:
+- unit: interest_rate
+- unit: discount_rate
+- operation:
+  - multiply:
+      with: 100
+
+# Reverse: CESM percentage -> FlexTool ratio
+unit discount_rate:
+- unit: discount_rate
+- unit: interest_rate
+- operation:
+  - multiply:
+      with: 0.01
+----
+
+=== Data type conversions
+
+When a parameter needs to change between scalar and indexed types, specify the types in brackets:
+
+[source,yaml]
+----
+# FlexTool stores inflow as a string-indexed map (str);
+# CESM stores flow_profile as a time series (ts)
+balance_inflow:
+- node: [inflow, [str]]
+- balance: [flow_profile, [ts]]
+- - if_parameter: has_balance
+  - if_not_parameter: has_storage
+----
+
+=== Value renaming
+
+When source and target use different enumeration values for the same concept:
+
+[source,yaml]
+----
+# FlexTool and CESM use different names for conversion methods
+conversion_method:
+- unit: conversion_method
+- unit: conversion_method
+- rename:
+    constant_efficiency: constant_efficiency
+    min_load_efficiency: two_point_efficiency
+
+# Different solve mode names
+solve_mode:
+- solve: solve_mode
+- solve_pattern: solve_mode
+- rename:
+    single_solve: single_solve
+    rolling_window: rolling_solve
+----
+
+=== Dimension reduction with aggregation
+
+When mapping from a higher-dimensional entity to a lower one, use `order` with `aggregate`:
+
+[source,yaml]
+----
+# CESM unit_to_node capacity -> FlexTool unit virtual_unitsize
+# Reduces from (unit, node) to just (unit), taking the max across nodes
+units_capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: max
+----
+
+Supported aggregation methods: `sum`, `average`, `max`, `min`, `first`.
+
+=== Setting constant values
+
+Use `value` to set a constant parameter value during entity creation:
+
+[source,yaml]
+----
+# When creating FlexTool nodes from CESM balance entities,
+# set has_balance = 'yes'
+balance-has_balance:
+- balance
+- node: has_balance
+- value: 'yes'
+----
+
+=== PLEXOS case study: parameter mapping challenges
+
+PLEXOS has over 3000 property definitions across its classes, while CESM uses a method-based approach with far fewer parameters.
+Key challenges:
+
+. **Attribute explosion**: Many PLEXOS properties have no direct CESM equivalent. Focus on the properties that affect dispatch and investment decisions: capacity, cost, efficiency, availability, constraints.
+
+. **Property-band structure**: PLEXOS uses a band system where a single property can have multiple bands (e.g., heat rate at different operating points). CESM uses multiarray DataFrames for this purpose.
+
+. **Missing temporal structure**: PLEXOS encodes temporal resolution through Data File references and pattern objects, which need to be reconstructed into CESM's explicit timeline.
+
+== Step 5: Create Python transformer for complex logic
+
+Some transformations cannot be expressed in YAML configuration alone.
+These require a Python transformer module at:
+
+[source,text]
+----
+src/transformers/{format}/cesm_{version}/{source_version}/to_cesm.py
+----
+
+The module must implement a `transform_to_cesm` function that receives both the source and partially-transformed CESM DataFrames:
+
+[source,python]
+----
+def transform_to_cesm(
+    source: Dict[str, pd.DataFrame],
+    cesm: Dict[str, pd.DataFrame],
+    start_time: datetime
+) -> Dict[str, pd.DataFrame]:
+    """
+    Apply Python-based transformations after YAML transformer.
+
+    Args:
+        source: Original source DataFrames (read-only reference)
+        cesm: Partially transformed CESM DataFrames (from YAML stage)
+        start_time: Start datetime for timeline reconstruction
+
+    Returns:
+        Updated cesm dictionary
+    """
+----
+
+=== When to use Python transformers
+
+Use Python when the transformation involves:
+
+Timeline reconstruction:: Converting between different temporal representations. FlexTool uses string timestep indexes (`t0001`, `t0002`) that must be converted to datetime. The `time_from_spine` function in the FlexTool transformer handles this.
+
+Cross-entity lookups:: When a target parameter depends on data from multiple source entities. For example, FlexTool's capacity transformation (`capacities_from_spine`) looks up `unit.outputNode` relationships to determine how `virtual_unitsize` maps to `unit_to_node.capacity`.
+
+Multi-source calculations:: When a CESM parameter is computed from multiple source parameters. For example, efficiency transformation (`efficiency_to_cesm`) combines `efficiency`, `min_load`, and `efficiency_at_min_load` into CESM's `conversion_rates` format.
+
+Configuration-driven logic:: The GridDB transformer uses a YAML configuration file (`to_cesm_config.yaml`) for technology-specific mappings like heat rate conversion factors and prime-mover-to-fuel lookups.
+
+=== Example: FlexTool Python transformer
+
+The FlexTool Python transformer at `src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_cesm.py` handles four categories of complex logic:
+
+. `time_from_spine` -- Reconstructs CESM timeline, solve patterns, and periods from FlexTool's timeset/timeline structure.
+. `capacities_from_spine` -- Maps unit capacity and cost data to the correct port entities, handling the virtual_unitsize vs. existing distinction.
+. `profile_to_cesm` -- Transforms profile limit data by looking up profile connections across unit-node-profile relationships.
+. `efficiency_to_cesm` -- Converts efficiency ratios to CESM percentage format, with optional two-point efficiency curves as multiarray DataFrames.
+
+=== Example: GridDB Python transformer
+
+The GridDB transformer at `src/transformers/griddb/cesm_v0.1.0/v0.2.0/to_cesm.py` is entirely Python-based (no YAML transformer) because GridDB's relational SQL structure requires complex joins and lookups.
+It uses a configuration file (`to_cesm_config.yaml`) for:
+
+- Heat rate to efficiency conversion factors
+- Default efficiencies per technology type
+- Prime mover and fuel type mappings
+
+== Step 6: Create reverse transformer (CESM to source format)
+
+For bidirectional conversion, create a reverse transformer.
+The reverse YAML file mirrors the forward file with source and target swapped:
+
+[source,text]
+----
+src/transformers/{format}/cesm_{version}/{source_version}/to_{format}.yaml
+----
+
+Key differences in the reverse direction:
+
+. Source and target are swapped in every rule.
+. Rename mappings are inverted (source_value and target_value swap).
+. Multiply operations become divide (or use the reciprocal factor).
+. Dimension reordering indexes are adjusted to reverse the mapping.
+
+=== Example: FlexTool forward vs. reverse
+
+Forward (`from_flextool.yaml`):
+
+[source,yaml]
+----
+inflation_rate:
+- model: discount_rate
+- system: inflation_rate
+- operation:
+  - multiply:
+      with: 100
+----
+
+Reverse (`to_flextool.yaml`):
+
+[source,yaml]
+----
+inflation_rate:
+- system: inflation_rate
+- model: discount_rate
+- operation:
+  - multiply:
+      with: 0.01
+----
+
+Forward (entity dimension reordering):
+
+[source,yaml]
+----
+# From FlexTool: unit.inputNode [name, unit, node]
+# To CESM: node_to_unit [name, source=node, sink=unit]
+node_to_unit-entities:
+- unit.inputNode
+- node_to_unit:
+    order: [[0], [2], [1]]
+----
+
+Reverse:
+
+[source,yaml]
+----
+# From CESM: node_to_unit [name, source, sink]
+# To FlexTool: unit.inputNode [name, unit=sink, node=source]
+node_to_unit-entities:
+- node_to_unit
+- unit.inputNode:
+    order: [[0], [2], [1]]
+----
+
+== Step 7: Create a writer
+
+If your target format requires custom writing logic, implement a writer in `src/writers/to_{format}.py`.
+
+The writer receives a `Dict[str, pd.DataFrame]` and writes it to the target format.
+Existing writers include:
+
+`src/writers/to_duckdb.py`:: Writes DataFrames to a DuckDB database with metadata for round-trip fidelity.
+`src/writers/to_spine_db.py`:: Writes DataFrames to a Spine Toolbox database, creating entity classes, entities, and parameter values.
+
+If your target format is one of the supported databases (DuckDB, Spine), you can reuse the existing writer and skip this step.
+
+== Step 8: Create a processing script
+
+Create a command-line script in `scripts/processing/` that ties the reader, transformer, and writer together.
+Follow the pattern established by existing scripts.
+
+=== Script structure
+
+[source,python]
+----
+# scripts/processing/{format}_to_cesm.py
+"""
+Read {Format} data and convert to CESM DuckDB format.
+"""
+
+import argparse
+from pathlib import Path
+
+from core.transform_parameters import transform_data
+from readers.from_{format} import {format}_to_dataframes
+from writers.to_duckdb import dataframes_to_duckdb
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Convert {Format} data to CESM DuckDB format"
+    )
+    parser.add_argument("input", type=str, help="Input file path")
+    parser.add_argument("output", type=str, help="Output DuckDB file path")
+    args = parser.parse_args()
+
+    # Step 1: Read source data
+    source_dfs = {format}_to_dataframes(args.input)
+
+    # Step 2: Apply YAML transformer
+    transformer_yaml = "src/transformers/{format}/cesm_v0.1.0/v1.0.0/from_{format}.yaml"
+    cesm = transform_data(source_dfs, transformer_yaml)
+
+    # Step 3: Apply Python transformer (if needed)
+    from transformers.{format}.cesm_v0_1_0.v1_0_0.to_cesm import transform_to_cesm
+    cesm = transform_to_cesm(source_dfs, cesm)
+
+    # Step 4: Write output
+    dataframes_to_duckdb(cesm, args.output)
+
+
+if __name__ == "__main__":
+    main()
+----
+
+=== Existing scripts for reference
+
+`scripts/processing/flextool_to_cesm.py`:: Reads from Spine database, applies YAML + Python transformer, writes to DuckDB. Supports scenario selection, version flags, and optional datetime start time.
+
+`scripts/processing/griddb_to_cesm.py`:: Reads from GridDB SQLite, applies Python-only transformer, writes to DuckDB.
+
+`scripts/processing/cesm_to_flextool.py`:: Reverse direction: reads CESM DuckDB, applies reverse YAML + Python transformer, writes to Spine database.
+
+== Step 9: Add to Spine Toolbox project (optional)
+
+If you want to integrate your conversion into a visual workflow, you can add it to the Spine Toolbox project.
+This is optional but useful for users who prefer a graphical interface over command-line scripts.
+
+The Spine Toolbox project files are in the repository root.
+Add your processing script as a Tool item and connect it to the appropriate data stores.
+
+== Step 10: Test with round-trip verification
+
+The most reliable way to validate a conversion is round-trip testing:
+
+. Start with data in your source format.
+. Convert to CESM.
+. Convert back to your source format.
+. Compare original and round-tripped data.
+
+=== What to verify
+
+Entity preservation:: All entities from the source should appear in the round-tripped output. Check that no entities were lost or duplicated.
+
+Parameter accuracy:: Scalar parameters should match exactly (accounting for unit conversion round-trips). Time series should match within floating-point tolerance.
+
+Relationship integrity:: Multi-dimensional relationships (unit-to-node connections, link endpoints) must survive the round trip with correct dimension ordering.
+
+Temporal structure:: Timeline indexes, solve patterns, and period definitions should reconstruct correctly.
+
+=== Testing approach
+
+The test suite is in the `tests/` directory.
+Write tests that:
+
+[source,python]
+----
+def test_round_trip():
+    """Verify source -> CESM -> source preserves data."""
+    # Read original
+    original = read_source_format("test_data/sample.ext")
+
+    # Forward: source -> CESM
+    cesm = transform_to_cesm(original)
+
+    # Reverse: CESM -> source
+    result = transform_to_source(cesm)
+
+    # Compare entity counts
+    assert set(original.keys()) == set(result.keys())
+
+    # Compare parameter values
+    for name in original:
+        pd.testing.assert_frame_equal(
+            original[name], result[name],
+            check_dtype=False, atol=1e-10
+        )
+----
+
+=== Known round-trip limitations
+
+Some information loss is expected in round trips:
+
+- Parameters with no CESM equivalent will be dropped during forward conversion.
+- Default values in the source format may not be preserved if CESM represents them differently.
+- Temporal resolution differences (e.g., CESM's explicit timeline vs. a source format's pattern-based time representation) may cause minor differences.
+
+Document these known limitations in your transformer module's docstrings.
+
+== Summary checklist
+
+Use this checklist when adding support for a new format:
+
+[cols="1,3"]
+|===
+| Step | Deliverable
+
+| 1. Analyze format
+| Document entity types, parameters, relationships, temporal structure
+
+| 2. Reader
+| `src/readers/from_{format}.py` returning `Dict[str, pd.DataFrame]`
+
+| 3. Entity mapping
+| YAML file with `-entities` rules in `src/transformers/{format}/cesm_{version}/{source_version}/`
+
+| 4. Parameter mapping
+| YAML file with parameter rules (conversions, renames, operations)
+
+| 5. Python transformer
+| `to_cesm.py` for timeline, cross-entity, and multi-source logic
+
+| 6. Reverse transformer
+| `to_{format}.yaml` and optional reverse Python module
+
+| 7. Writer
+| `src/writers/to_{format}.py` (if custom format needed)
+
+| 8. Processing script
+| `scripts/processing/{format}_to_cesm.py` and `cesm_to_{format}.py`
+
+| 9. Spine Toolbox
+| Optional workflow integration
+
+| 10. Tests
+| Round-trip verification in `tests/`
+|===

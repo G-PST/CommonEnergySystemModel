@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Temporal Model :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/temporal-model.html">
+    <link rel="prev" href="methods.html">
+    <link rel="next" href="data-format.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="temporal-model.html">Temporal Model</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/temporal-model.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Temporal Model</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM separates the notion of <em>data time</em> from <em>solve time</em>.
+The timeline defines when data points exist; periods define investment epochs; and solve patterns control which slices of time the optimiser actually sees in each run.
+This page explains each concept and how they interact.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_timeline"><a class="anchor" href="#_timeline"></a>Timeline</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>timeline</code> field on a <a href="../schema/class/Dataset.html" class="xref page">Dataset</a> is an ordered list of ISO 8601 timestamps that defines every time step for which data can be provided.
+All time-series arrays in the dataset&#8201;&#8212;&#8201;flow profiles, price series, capacity-factor profiles&#8201;&#8212;&#8201;must have exactly as many elements as the timeline has entries.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">timeline:
+  - "2023-01-01T00:00:00Z"
+  - "2023-01-01T01:00:00Z"
+  - "2023-01-01T02:00:00Z"
+  - "2023-01-01T03:00:00Z"
+  - "2023-01-01T04:00:00Z"
+  - "2023-01-01T05:00:00Z"
+  - "2023-01-01T06:00:00Z"
+  - "2023-01-01T07:00:00Z"
+  - "2023-01-01T08:00:00Z"
+  - "2023-01-01T09:00:00Z"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example defines ten hourly time steps.
+A wind profile array of length 10 such as <code>[0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]</code> maps one-to-one onto these timestamps.</p>
+</div>
+<div class="paragraph">
+<p>The timeline is the single source of truth for temporal alignment.
+Tools reading a CESM dataset can rely on this alignment without additional metadata about time step spacing or offsets.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_periods"><a class="anchor" href="#_periods"></a>Periods</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <a href="../schema/class/Period.html" class="xref page">Period</a> represents an investment epoch&#8201;&#8212;&#8201;a span of years over which capacity decisions are assumed to hold.
+Each period has a single attribute beyond its name:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>years_represented</code> (float)</dt>
+<dd>
+<p>How many years this period covers before the next period begins.
+Used by the solver for discounting and annualisation.
+Values below one are permitted, allowing multiple periods within a single year.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example the model considers two investment periods: one centred on 2030 that represents five years, followed by another centred on 2035 that also represents five years.</p>
+</div>
+<div class="paragraph">
+<p>Periods serve two purposes:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>They define the investment timeline&#8201;&#8212;&#8201;which capacity expansion decisions belong to which epoch.</p>
+</li>
+<li>
+<p>They are referenced by solve patterns to control which periods are optimised or reported in each solve.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_timesets_and_durations"><a class="anchor" href="#_timesets_and_durations"></a>Timesets and Durations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two helper types underpin the temporal definitions in solve patterns.</p>
+</div>
+<div class="sect2">
+<h3 id="_timeset"><a class="anchor" href="#_timeset"></a>Timeset</h3>
+<div class="paragraph">
+<p>A Timeset is a pair of <code>start_time</code> (a datetime) and <code>duration</code> (an ISO 8601 duration string).
+Together they identify a contiguous window on the timeline.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">start_time_durations:
+  - start_time: "2023-01-01T00:00"
+    duration: PT10H</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start_time</code> must match a value in the dataset timeline.
+The duration extends forward from that point.
+Multiple timesets can be listed to define representative periods or disjoint time windows within a single solve.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_duration"><a class="anchor" href="#_duration"></a>Duration</h3>
+<div class="paragraph">
+<p>A Duration is an ISO 8601 duration string.
+Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PT5M30S</code>&#8201;&#8212;&#8201;five minutes and thirty seconds</p>
+</li>
+<li>
+<p><code>PT2H</code>&#8201;&#8212;&#8201;two hours</p>
+</li>
+<li>
+<p><code>PT10H</code>&#8201;&#8212;&#8201;ten hours</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Durations appear in <code>rolling_jump</code>, <code>rolling_additional_horizon</code>, <code>time_resolution</code>, and as the duration component of a Timeset.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solve_patterns"><a class="anchor" href="#_solve_patterns"></a>Solve Patterns</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <a href="../schema/class/Solve_pattern.html" class="xref page">Solve_pattern</a> is the central object that controls how the optimiser operates on the temporal structure.
+It specifies which time window to solve, which periods to include, and whether to solve the window in one pass or roll through it.</p>
+</div>
+<div class="sect2">
+<h3 id="_solve_mode"><a class="anchor" href="#_solve_mode"></a>Solve Mode</h3>
+<div class="paragraph">
+<p>The <code>solve_mode</code> attribute selects the solving strategy:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>single_solve</code></dt>
+<dd>
+<p>The entire time window defined by <code>start_time_durations</code> is optimised in one shot.
+All time steps are visible to the solver simultaneously.</p>
+</dd>
+<dt class="hdlist1"><code>rolling_solve</code></dt>
+<dd>
+<p>The time window is solved in overlapping chunks that advance through the timeline.
+This is useful for large problems where solving the full horizon at once is intractable, or where a look-ahead is needed without committing to decisions far in the future.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_time_window"><a class="anchor" href="#_time_window"></a>Time Window</h3>
+<div class="paragraph">
+<p>The <code>start_time_durations</code> attribute is a list of Timesets that define what part of the timeline the solve pattern covers.
+When omitted, the default is the full timeline.
+Multiple Timesets can be provided to model representative periods (e.g., a typical winter week and a typical summer week).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_period_lists"><a class="anchor" href="#_period_lists"></a>Period Lists</h3>
+<div class="paragraph">
+<p>Solve patterns reference periods through five lists that control which investment and operational decisions are active:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>periods_realise_operations</code></dt>
+<dd>
+<p>Periods from which the model will report operational results and possibly pass them to the next solve.</p>
+</dd>
+<dt class="hdlist1"><code>periods_realise_investments</code></dt>
+<dd>
+<p>Periods from which the model will report investment results and possibly pass them to the next solve.</p>
+</dd>
+<dt class="hdlist1"><code>periods_pass_storage_data</code></dt>
+<dd>
+<p>Periods from which the model will pass storage level information to the next solve or to child solves.</p>
+</dd>
+<dt class="hdlist1"><code>periods_additional_operations_horizon</code></dt>
+<dd>
+<p>Periods included in dispatch optimisation but not reported&#8201;&#8212;&#8201;they provide look-ahead context and may be solved again in a later solve.</p>
+</dd>
+<dt class="hdlist1"><code>periods_additional_investments_horizon</code></dt>
+<dd>
+<p>Periods included in investment optimisation but not reported&#8201;&#8212;&#8201;they provide look-ahead context for capacity decisions.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This separation allows a solve to optimise over a wider horizon than it commits to, which is essential for multi-stage investment planning where early decisions should account for future conditions.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_time_resolution"><a class="anchor" href="#_time_resolution"></a>Time Resolution</h3>
+<div class="paragraph">
+<p>The <code>time_resolution</code> attribute is a Duration that sets the model time resolution.
+It must be an integer multiple of the data resolution implied by the timeline.
+For example, if the timeline has hourly steps, a <code>time_resolution</code> of <code>PT2H</code> would aggregate pairs of time steps.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Variable time resolution (different resolutions for different parts of the timeline) is a planned future feature noted in the schema.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nested_solve_patterns"><a class="anchor" href="#_nested_solve_patterns"></a>Nested Solve Patterns</h3>
+<div class="paragraph">
+<p>The <code>contains_solve_pattern</code> attribute allows one solve pattern to contain a child solve pattern.
+When the parent executes, it runs the child solve pattern inside its own context.
+This enables hierarchical solving strategies&#8201;&#8212;&#8201;for example, an investment solve that contains a detailed dispatch solve within each investment period.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rolling_solve_in_detail"><a class="anchor" href="#_rolling_solve_in_detail"></a>Rolling Solve in Detail</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A rolling solve advances through the time window in steps, solving a sub-window at each step.
+Two parameters control the rolling behaviour:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>rolling_jump</code></dt>
+<dd>
+<p>A Duration that specifies how far each roll advances.</p>
+</dd>
+<dt class="hdlist1"><code>rolling_additional_horizon</code></dt>
+<dd>
+<p>A Duration that specifies how much additional look-ahead the solver sees beyond the jump.
+This overlap prevents myopic end-of-window effects.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following diagram illustrates a rolling solve over a 10-hour window with <code>rolling_jump: PT2H</code> and <code>rolling_additional_horizon: PT2H</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Timeline:  T0   T1   T2   T3   T4   T5   T6   T7   T8   T9
+           00h  01h  02h  03h  04h  05h  06h  07h  08h  09h
+
+Roll 1:    [====JUMP=====|==HORIZON==]
+           T0   T1        T2   T3
+
+Roll 2:              [====JUMP=====|==HORIZON==]
+                     T2   T3        T4   T5
+
+Roll 3:                        [====JUMP=====|==HORIZON==]
+                               T4   T5        T6   T7
+
+Roll 4:                                  [====JUMP=====|==HORIZON==]
+                                         T6   T7        T8   T9
+
+Roll 5:                                            [====JUMP=====]
+                                                   T8   T9</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In each roll:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The solver optimises over both the jump window and the additional horizon.</p>
+</li>
+<li>
+<p>Only the decisions within the jump window are committed (realised).</p>
+</li>
+<li>
+<p>The horizon window provides foresight so that end-of-window effects do not distort the committed decisions.</p>
+</li>
+<li>
+<p>The next roll starts where the previous jump ended.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the remaining timeline is shorter than the jump plus horizon, the final roll covers whatever time steps remain.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solve_order"><a class="anchor" href="#_solve_order"></a>Solve Order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/class/System.html" class="xref page">System</a> entity defines the <code>solve_order</code>&#8201;&#8212;&#8201;an ordered list of solve pattern names that specifies the sequence in which solves execute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">system:
+  - name: test_system
+    solve_order:
+      - solve_2030
+      - solve_2035_invest
+      - solve_2035_rolling_dispatch</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Solves execute in the listed order.
+Each solve can pass results (investments, storage states) to subsequent solves.
+This allows multi-stage workflows such as:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Solve 2030 investments and operations together.</p>
+</li>
+<li>
+<p>Solve 2035 investments using the 2030 results as a starting point.</p>
+</li>
+<li>
+<p>Solve 2035 operations in a rolling fashion with fixed investments from step 2.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_complete_example"><a class="anchor" href="#_complete_example"></a>Complete Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example brings all temporal concepts together.
+It defines a 10-hour timeline, two investment periods, and three solve patterns executed in sequence.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">timeline:
+  - "2023-01-01T00:00:00Z"
+  - "2023-01-01T01:00:00Z"
+  - "2023-01-01T02:00:00Z"
+  - "2023-01-01T03:00:00Z"
+  - "2023-01-01T04:00:00Z"
+  - "2023-01-01T05:00:00Z"
+  - "2023-01-01T06:00:00Z"
+  - "2023-01-01T07:00:00Z"
+  - "2023-01-01T08:00:00Z"
+  - "2023-01-01T09:00:00Z"
+
+period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
+
+solve_pattern:
+  - name: solve_2030                          <i class="conum" data-value="1"></i><b>(1)</b>
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    periods_realise_operations:
+      - y2030
+    periods_realise_investments:
+      - y2030
+    periods_additional_investments_horizon:
+      - y2035
+
+  - name: solve_2035_invest                   <i class="conum" data-value="2"></i><b>(2)</b>
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    periods_realise_investments:
+      - y2035
+
+  - name: solve_2035_rolling_dispatch         <i class="conum" data-value="3"></i><b>(3)</b>
+    solve_mode: rolling_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    rolling_jump: PT2H
+    rolling_additional_horizon: PT2H
+    periods_realise_operations:
+      - y2035
+
+system:
+  - name: test_system
+    solve_order:
+      - solve_2030
+      - solve_2035_invest
+      - solve_2035_rolling_dispatch</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Solves both investments and operations for 2030 in a single pass.
+The 2035 period is included as an additional investment horizon so that 2030 capacity decisions account for future needs, but 2035 investment results are not committed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Solves 2035 investments in a single pass, building on the 2030 results.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Solves 2035 operations using a rolling horizon.
+Each roll advances 2 hours and looks ahead an additional 2 hours.
+Investments are already fixed from step 2.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_periodfloat_period_dependent_values"><a class="anchor" href="#_periodfloat_period_dependent_values"></a>PeriodFloat: Period-Dependent Values</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many parameters in CESM can vary by period.
+The PeriodFloat type represents this as a list of period-name / value pairs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">inflation_rate:
+  - period: y2030
+    value: 3.0
+  - period: y2035
+    value: 2.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Parameters that accept PeriodFloat can also accept a plain float, in which case the value applies to all periods.
+This pattern appears throughout the specification for costs, penalties, and other parameters that may change across investment epochs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_future_directions"><a class="anchor" href="#_future_directions"></a>Future Directions</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Variable time resolution</dt>
+<dd>
+<p>The schema notes that variable time resolution&#8201;&#8212;&#8201;using different temporal granularities for different parts of the timeline within a single solve&#8201;&#8212;&#8201;is planned for a future version.
+Currently, <code>time_resolution</code> applies uniformly.</p>
+</dd>
+<dt class="hdlist1">Stochastic modelling</dt>
+<dd>
+<p>The specification is designed with multi-stage stochastic optimisation as a goal.
+The separation of periods, solve patterns, and nested solves provides the structural foundation for stochastic scenarios, though the explicit stochastic modelling constructs are not yet part of the schema.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="methods.html">Methods Reference</a></span>
+  <span class="next"><a href="data-format.html">Data Format</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

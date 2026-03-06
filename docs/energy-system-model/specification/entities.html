@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Entity Reference :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/entities.html">
+    <link rel="prev" href="overview.html">
+    <link rel="next" href="methods.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="entities.html">Entity Reference</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/entities.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Entity Reference</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page is the complete reference for every entity class in CESM.
+Each section covers the entity&#8217;s purpose, attributes, applicable mixins, relationships to other entities, and an example drawn from the sample dataset.</p>
+</div>
+<div class="paragraph">
+<p>For the conceptual overview and design rationale, see <a href="overview.html" class="xref page">Overview</a>.
+For physical units and the currency convention, see <a href="unit-conventions.html" class="xref page">Unit Conventions</a>.
+For method enumerations and their required parameters, see <a href="methods.html" class="xref page">Methods Reference</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_base_classes"><a class="anchor" href="#_base_classes"></a>Base Classes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_entity_abstract"><a class="anchor" href="#_entity_abstract"></a>Entity (abstract)</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Entity.html" class="xref page">Entity</a> is the abstract root of the class hierarchy.
+Every concrete entity inherits these attributes.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (identifier)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User-facing unique name. Acts as the primary key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>semantic_id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URI or CURIE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional identifier for semantic web integration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>alternative_names</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of alternative names and aliases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Free-text description of the entity.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_node_abstract"><a class="anchor" href="#_node_abstract"></a>Node (abstract)</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Node.html" class="xref page">Node</a> extends Entity and is the abstract parent of all node types.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NodeType enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discriminator that limits allowed subtypes: <code>Balance</code>, <code>Storage</code>, <code>Commodity</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Three concrete classes inherit from Node: Balance, Storage, and Commodity.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nodes"><a class="anchor" href="#_nodes"></a>Nodes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="balance"><a class="anchor" href="#balance"></a>Balance</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Balance.html" class="xref page">Balance</a> nodes maintain an input/output balance in every time step.
+They do not have a storage state variable.
+Balance nodes are the workhorse of energy system models&#8201;&#8212;&#8201;they represent buses where supply must equal demand, plus any slack penalties.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mixins:</strong> HasFlow, HasPenalty</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>Inherited from Entity</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasFlow mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_annual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual flow used to scale <code>flow_profile</code>. Always positive; the profile defines direction.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_profile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time series profile. Positive values are inflow, negative values are outflow from the node.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_scaling_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FlowScalingMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How to combine <code>flow_profile</code> and <code>flow_annual</code>. Values: <code>use_profile_directly</code>, <code>scale_to_annual</code>.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasPenalty mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_upward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost per MWh of slack created (unserved energy).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_downward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost per MWh of slack destroyed (excess energy).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connected to <a href="../schema/class/Unit.html" class="xref page">Units</a> via <a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a> and <a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a> ports.</p>
+</li>
+<li>
+<p>Connected to other nodes via <a href="../schema/class/Link.html" class="xref page">Links</a>.</p>
+</li>
+<li>
+<p>Can be a member of a <a href="../schema/class/Group.html" class="xref page">Group</a> (via <a href="../schema/class/Group_entity.html" class="xref page">Group_entity</a>).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Balance node <code>west</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: west
+  flow_scaling_method: scale_to_annual
+  flow_annual: 20000000.0
+  flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
+  penalty_upward: 1000</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="storage"><a class="anchor" href="#storage"></a>Storage</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Storage.html" class="xref page">Storage</a> nodes include a state variable that tracks stored energy across time steps.
+They maintain the same input/output balance as a Balance node, but also model charging and discharging of the state.
+Storage capacity can receive investments.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mixins:</strong> HasFlow, HasPenalty, HasInvestments</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>Own attributes</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage_capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of a single storage asset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storages_existing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pre-existing storage assets at model start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/kWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overnight investment cost per kWh of storage capacity.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/kWh/year)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual maintenance cost per kWh of storage capacity.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage_loss_from_stored_energy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fraction of stored energy lost per hour.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>availability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or float[] (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time series for forced outage representation.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasFlow mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_annual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual flow for scaling.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_profile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flow profile time series.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_scaling_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FlowScalingMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Profile scaling method.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasPenalty mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_upward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Slack creation penalty.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_downward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Slack destruction penalty.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasInvestments mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvestmentMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Investment method: <code>not_allowed</code>, <code>no_limits</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discount_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discount rate for the investment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (years)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Economic payback time used to annualise investments.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connected to <a href="../schema/class/Unit.html" class="xref page">Units</a> via ports.</p>
+</li>
+<li>
+<p>Connected to other nodes via <a href="../schema/class/Link.html" class="xref page">Links</a> (e.g. a charger link).</p>
+</li>
+<li>
+<p>Can be a member of a <a href="../schema/class/Group.html" class="xref page">Group</a>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Storage node <code>battery</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: battery
+  storage_capacity: 750
+  storages_existing: 2
+  investment_method: no_limits
+  investment_cost: 600.0
+  discount_rate: 7.0
+  payback_time: 12
+  flow_scaling_method: use_profile_directly
+  flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+  penalty_upward: 10000</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="commodity"><a class="anchor" href="#commodity"></a>Commodity</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Commodity.html" class="xref page">Commodity</a> nodes represent exogenous markets where the model can buy or sell commodities at a given price.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commodity_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CommodityType enum (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type of commodity: <code>fuel</code> or <code>emission</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>price_per_unit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Price per unit of the product bought or sold.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connected to <a href="../schema/class/Unit.html" class="xref page">Units</a> via <a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a> ports (fuel supply) or <a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a> ports (emission output).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Commodity node <code>natural_gas</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: natural_gas
+  commodity_type: fuel
+  price_per_unit: 25</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_unit"><a class="anchor" href="#_unit"></a>Unit</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="unit"><a class="anchor" href="#unit"></a>Unit</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Unit.html" class="xref page">Unit</a> entities convert one or more input flows into one or more output flows.
+The <code>conversion_method</code> determines the mathematical relationship between inputs and outputs.
+Units connect to nodes exclusively through ports.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mixin:</strong> HasInvestments</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>Own attributes</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConversionMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How inputs convert to outputs: <code>constant_efficiency</code>, <code>two_point_efficiency</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StartupMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How startups are treated: <code>linear</code> (continuous online variable), <code>integer</code> (discrete).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>units_existing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pre-existing conversion units at model start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/unit)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost of one full startup for one unit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_rates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or ConversionRatesFloatFloat[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency multiplier(s). A single float for constant efficiency, or a list of operating-point/conversion-rate tuples for piecewise efficiency curves.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>availability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or float[] (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time series for forced outage representation.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasInvestments mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvestmentMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Investment method: <code>not_allowed</code>, <code>no_limits</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discount_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discount rate for the investment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (years)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Economic payback time.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Receives input from <a href="../schema/class/Node.html" class="xref page">Nodes</a> via <a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a> ports.</p>
+</li>
+<li>
+<p>Sends output to <a href="../schema/class/Node.html" class="xref page">Nodes</a> via <a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a> ports.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Unit <code>ocgt</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: ocgt
+  conversion_method: constant_efficiency
+  units_existing: 2
+  efficiency: 38.0
+  investment_method: no_limits
+  discount_rate: 6.0
+  payback_time: 25</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ports"><a class="anchor" href="#_ports"></a>Ports</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="port"><a class="anchor" href="#port"></a>Port (abstract)</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Port.html" class="xref page">Port</a> is the abstract base for directed connections between units and nodes.
+Every port has a <code>source</code> and a <code>sink</code>.
+Port capacity, investment cost, and operational cost are defined here.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mixin:</strong> HasProfiles</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>Own attributes</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the source entity (Unit or Node, depending on subclass).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sink</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the sink entity (Unit or Node, depending on subclass).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of the port for a single unit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/kW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overnight investment cost per kW.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/kW/year)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual maintenance cost per kW.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>other_operational_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable cost per MWh of flow through the port.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>constraint_flow_coefficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConstraintFloat (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiplier between constraints and the flow. Maps constraints to their coefficients.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inertia_constant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MWs/MW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inertia constant for a synchronously connected unit to this node.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>availability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or float[] (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time series for forced outage representation.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasProfiles mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile_limit_upper</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Upper bound time series on flow as a fraction of capacity.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile_limit_lower</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lower bound time series on flow as a fraction of capacity.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="unit-to-node"><a class="anchor" href="#unit-to-node"></a>Unit_to_node</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a> is an output port&#8201;&#8212;&#8201;flow leaves a <a href="../schema/class/Unit.html" class="xref page">Unit</a> and enters a <a href="../schema/class/Node.html" class="xref page">Node</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The unit producing the output.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sink</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The node receiving the output.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All other attributes are inherited from <a href="#port">Port</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Unit_to_node <code>ocgt.west</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: ocgt.west
+  source: ocgt
+  sink: west
+  capacity: 50
+  investment_cost: 500</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="node-to-unit"><a class="anchor" href="#node-to-unit"></a>Node_to_unit</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a> is an input port&#8201;&#8212;&#8201;flow leaves a <a href="../schema/class/Node.html" class="xref page">Node</a> and enters a <a href="../schema/class/Unit.html" class="xref page">Unit</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The node supplying the input.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sink</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The unit consuming the input.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All other attributes are inherited from <a href="#port">Port</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Node_to_unit <code>natural_gas.ocgt</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: natural_gas.ocgt
+  source: natural_gas
+  sink: ocgt</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_link"><a class="anchor" href="#_link"></a>Link</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="link"><a class="anchor" href="#link"></a>Link</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Link.html" class="xref page">Link</a> connects two nodes (<code>node_A</code> and <code>node_B</code>) and models energy transfer between them&#8201;&#8212;&#8201;a transmission line, a pipeline, or any bidirectional flow path.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mixin:</strong> HasInvestments</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>Own attributes</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node_A</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">First node of the bidirectional link.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node_B</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Second node of the bidirectional link.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transfer_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TransferMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How to model the transfer: <code>regular_linear</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacity of a single link asset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>links_existing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pre-existing links at model start.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/kW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overnight investment cost per kW.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/kW/year)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual maintenance cost per kW.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operational_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable cost per MWh of flow.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_rates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or ConversionRatesFloatFloat[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency/conversion multiplier(s) for the link.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>availability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or float[] (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time series for forced outage representation.</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top" colspan="3"><p class="tableblock"><em>From HasInvestments mixin</em></p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvestmentMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Investment method: <code>not_allowed</code>, <code>no_limits</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discount_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discount rate for the investment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (years)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Economic payback time.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>efficiency</code> attribute on a Link can be a single float (symmetric), a float array, or a <a href="../schema/class/DirectionalValue.html" class="xref page">DirectionalValue</a> with separate <code>forward</code> (A to B) and <code>reverse</code> (B to A) values.</p>
+</div>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connects two <a href="../schema/class/Node.html" class="xref page">Nodes</a> directly.</p>
+</li>
+<li>
+<p>Can be a member of a <a href="../schema/class/Group.html" class="xref page">Group</a> (e.g. for shared investment constraints).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Link <code>pony1</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: pony1
+  node_A: east
+  node_B: west
+  transfer_method: regular_linear
+  capacity: 500
+  links_existing: 1
+  efficiency: 98.0
+  investment_method: no_limits
+  investment_cost: 1600
+  discount_rate: 4.0
+  payback_time: 50</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supporting_entities"><a class="anchor" href="#_supporting_entities"></a>Supporting Entities</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="period"><a class="anchor" href="#period"></a>Period</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Period.html" class="xref page">Period</a> defines an investment period and how many years it represents in the model.
+Periods are used for discounting and for associating period-dependent parameter values (via the PeriodFloat helper type).</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>years_represented</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How many years the period represents before the next period. Used for discounting. Can be below one (multiple periods in one year).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Period <code>y2030</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: y2030
+  years_represented: 5.0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="group"><a class="anchor" href="#group"></a>Group</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Group.html" class="xref page">Group</a> defines constraints that apply across multiple entities at once.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GroupType enum (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type of group: <code>node</code> (shared node constraints), <code>power_grid</code> (synchronous power grid), <code>link</code> (shared link constraints).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invest_max_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MW)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum aggregated investment capacity across all group members, summed over all periods.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Members are added via <a href="../schema/class/Group_entity.html" class="xref page">Group_entity</a> records.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Group <code>elec_nodes</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: elec_nodes
+  group_type: power_grid</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="group-entity"><a class="anchor" href="#group-entity"></a>Group_entity</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Group_entity.html" class="xref page">Group_entity</a> assigns an entity as a member of a group.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The group to which the entity belongs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>entity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Entity reference (required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The entity being added to the group.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Group_entity <code>elec_nodes.west</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: elec_nodes.west
+  group: elec_nodes
+  entity: west</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="constraint"><a class="anchor" href="#constraint"></a>Constraint</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Constraint.html" class="xref page">Constraint</a> defines user-defined constraints on decision variables.
+The constraint binds to entity flows through the <code>constraint_flow_coefficient</code> attribute on ports.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>constant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (multivalued)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Right-hand side of the constraint equation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sense</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Equality enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sense of the constraint: <code>equal</code>, <code>greater_than</code>, <code>less_than</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="solve-pattern"><a class="anchor" href="#solve-pattern"></a>Solve_pattern</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Solve_pattern.html" class="xref page">Solve_pattern</a> defines the properties of each solve&#8201;&#8212;&#8201;single-solve versus rolling-horizon, temporal scope, look-ahead parameters, and time resolution.
+See <a href="temporal-model.html" class="xref page">Temporal Model</a> for a detailed discussion.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>solve_mode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SolveMode enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solve process: <code>single_solve</code> or <code>rolling_solve</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>periods_realise_operations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Periods from which operational results are reported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>periods_realise_investments</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Periods from which investment results are reported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>periods_pass_storage_data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Periods from which storage level information is passed to subsequent solves.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>periods_additional_operations_horizon</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional periods included in dispatch optimisation but not reported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>periods_additional_investments_horizon</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional periods included in investment optimisation but not reported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>start_time_durations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timeset[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pairs of start time and duration defining what part of the timeline to solve. Can be a list for representative periods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rolling_jump</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration (ISO 8601)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How far each rolling window jumps forward.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rolling_additional_horizon</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration (ISO 8601)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional look-ahead beyond <code>rolling_jump</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>time_resolution</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration (ISO 8601)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time resolution the model should use. Must be an integer multiple of the original data resolution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contains_solve_pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solve_pattern reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A child solve pattern to be executed inside the parent.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;Solve_pattern <code>solve_2030</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: solve_2030
+  solve_mode: single_solve
+  start_time_durations:
+    - start_time: '2023-01-01T00:00'
+      duration: PT10H
+  periods_realise_operations: ['y2030']
+  periods_realise_investments: ['y2030']
+  periods_additional_investments_horizon: ['y2035']</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="system"><a class="anchor" href="#system"></a>System</h3>
+<div class="paragraph">
+<p><a href="../schema/class/System.html" class="xref page">System</a> holds parameters that apply to the whole system being modelled.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>solve_order</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solve_pattern[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ordered list of solve patterns that define the sequence of solves.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inflation_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rate of inflation for the currency year of the dataset.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Relationships:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>References <a href="../schema/class/Solve_pattern.html" class="xref page">Solve_pattern</a> entities via <code>solve_order</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Sample data&#8201;&#8212;&#8201;System <code>test_system</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: test_system
+  solve_order: ['solve_2030', 'solve_2035_invest', 'solve_2035_rolling_dispatch']
+  inflation_rate: 3.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dataset"><a class="anchor" href="#_dataset"></a>Dataset</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="dataset"><a class="anchor" href="#dataset"></a>Dataset</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Dataset.html" class="xref page">Dataset</a> is the tree root of a CESM data file.
+It holds global metadata and collections of all entity types.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer (identifier)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dataset-level identifier to distinguish between dataset versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">datetime[] (ordered)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time steps for which data can be entered. Used to validate input time series.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currency</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (ISO 4217, required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Currency code for all monetary values in the dataset (e.g. <code>EUR</code>, <code>USD</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reference_year</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (four-digit year, required)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All monetary values are expressed in real terms for this year.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>balance</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Balance[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Balance nodes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Storage nodes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commodity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commodity[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Commodity nodes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Units.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node_to_unit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node_to_unit[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of input ports.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit_to_node</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit_to_node[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of output ports.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>link</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Link[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Links.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Groups.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>constraint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constraint[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Constraints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group_entity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group_entity[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Group memberships.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>solve_pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solve_pattern[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Solve patterns.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of Periods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collection of System configurations.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mixins"><a class="anchor" href="#_mixins"></a>Mixins</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Mixins attach reusable parameter groups to entity classes without deep inheritance.
+An entity that includes a mixin gains all of its attributes.</p>
+</div>
+<div class="sect2">
+<h3 id="hasflow"><a class="anchor" href="#hasflow"></a>HasFlow</h3>
+<div class="paragraph">
+<p>Applied to: <a href="../schema/class/Balance.html" class="xref page">Balance</a>, <a href="../schema/class/Storage.html" class="xref page">Storage</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_annual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float (MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual flow used to scale the flow profile. Always positive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_profile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flow profile time series. Positive values are inflow, negative values are outflow from the node.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_scaling_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FlowScalingMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How to combine profile and annual flow: <code>use_profile_directly</code> or <code>scale_to_annual</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="haspenalty"><a class="anchor" href="#haspenalty"></a>HasPenalty</h3>
+<div class="paragraph">
+<p>Applied to: <a href="../schema/class/Balance.html" class="xref page">Balance</a>, <a href="../schema/class/Storage.html" class="xref page">Storage</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_upward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Penalty for creating slack (unserved energy).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_downward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (currency/MWh)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Penalty for destroying slack (excess energy).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="hasinvestments"><a class="anchor" href="#hasinvestments"></a>HasInvestments</h3>
+<div class="paragraph">
+<p>Applied to: <a href="../schema/class/Unit.html" class="xref page">Unit</a>, <a href="../schema/class/Storage.html" class="xref page">Storage</a>, <a href="../schema/class/Link.html" class="xref page">Link</a>, <a href="../schema/class/Port.html" class="xref page">Port</a> (and its subclasses)</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvestmentMethod enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Investment method: <code>not_allowed</code>, <code>no_limits</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discount_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discount rate for the investment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float or PeriodFloat (years)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Economic payback time used to annualise investments.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="hasprofiles"><a class="anchor" href="#hasprofiles"></a>HasProfiles</h3>
+<div class="paragraph">
+<p>Applied to: <a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a>, <a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile_limit_upper</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Upper bound on flow as a fraction of capacity.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile_limit_lower</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[] (unitless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lower bound on flow as a fraction of capacity.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helper_types"><a class="anchor" href="#_helper_types"></a>Helper Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Several structured types support complex parameter values.
+These are not entities themselves but are used as attribute types within entities.</p>
+</div>
+<div class="sect2">
+<h3 id="directional-value"><a class="anchor" href="#directional-value"></a>DirectionalValue</h3>
+<div class="paragraph">
+<p><a href="../schema/class/DirectionalValue.html" class="xref page">DirectionalValue</a> holds separate values for each direction of a bidirectional link.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>forward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value applied in the forward direction (Node_A to Node_B).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reverse</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value applied in the reverse direction (Node_B to Node_A).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="period-float"><a class="anchor" href="#period-float"></a>PeriodFloat</h3>
+<div class="paragraph">
+<p><a href="../schema/class/PeriodFloat.html" class="xref page">PeriodFloat</a> represents period-dependent parameter values.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of period references.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Corresponding numeric values.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="constraint-float"><a class="anchor" href="#constraint-float"></a>ConstraintFloat</h3>
+<div class="paragraph">
+<p><a href="../schema/class/ConstraintFloat.html" class="xref page">ConstraintFloat</a> maps constraints to coefficients.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>constraint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constraint[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of constraint references.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Corresponding coefficient values.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="conversion-rates"><a class="anchor" href="#conversion-rates"></a>ConversionRatesFloatFloat</h3>
+<div class="paragraph">
+<p><a href="../schema/class/ConversionRatesFloatFloat.html" class="xref page">ConversionRatesFloatFloat</a> defines operating-point/conversion-rate pairs for piecewise efficiency curves.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operating_point</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operating point (starting from 100%, decreasing).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_rate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conversion rate (efficiency) at this operating point.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="timeset"><a class="anchor" href="#timeset"></a>Timeset</h3>
+<div class="paragraph">
+<p><a href="../schema/class/Timeset.html" class="xref page">Timeset</a> pairs a start time with a duration to define temporal windows for solve patterns.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>start_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">datetime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start of the time window. Must match a value in the dataset timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duration (ISO 8601)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Length of the time window (e.g. <code>PT10H</code> for 10 hours).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="overview.html">Overview</a></span>
+  <span class="next"><a href="methods.html">Methods Reference</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

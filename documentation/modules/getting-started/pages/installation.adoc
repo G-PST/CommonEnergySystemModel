@@ -1,0 +1,157 @@
+= Installation
+
+This guide covers all the ways to set up CESM for use, development, and documentation generation.
+
+== Prerequisites
+
+* **Python 3.11** or newer
+* **git**
+* **Docker** (optional, only needed for the devcontainer workflow)
+
+== Basic installation
+
+Clone the repository and install CESM in editable mode:
+
+[source,bash]
+----
+git clone <repository-url>
+cd oes-spec
+pip install -e .
+----
+
+This installs the core dependencies defined in `pyproject.toml`:
+
+* `linkml-runtime` -- LinkML schema runtime
+* `pyyaml` -- YAML parsing
+* `pandas` -- DataFrame operations
+* `duckdb` -- embedded analytical database
+
+== Optional extras
+
+The project defines optional dependency groups in `pyproject.toml`. Install them by appending the group name in brackets:
+
+Development tools (pytest, ruff)::
++
+[source,bash]
+----
+pip install -e ".[dev]"
+----
+
+Spine DB workflows (spinedb_api)::
++
+[source,bash]
+----
+pip install -e ".[spine]"
+----
+
+Documentation tooling (linkml)::
++
+[source,bash]
+----
+pip install -e ".[docs]"
+----
+
+You can combine extras: `pip install -e ".[dev,spine]"`.
+
+== Generating Pydantic classes from the schema
+
+Before running any scripts, you must generate the Python classes from the LinkML schema. This step is required because the readers, writers, and transformation scripts depend on these generated classes.
+
+[source,bash]
+----
+pip install linkml
+gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+----
+
+The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to `model/cesm.yaml`.
+
+== Devcontainer setup
+
+The repository includes a devcontainer configuration that provides a ready-to-use development environment with Python 3.x, LinkML tools, all required dependencies, and editor extensions for AsciiDoc and Drawio.
+
+=== VS Code
+
+. Install the https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers[Dev Containers] extension.
+. Open the repository folder in VS Code.
+. When prompted, select **Reopen in Container** (or run the command **Dev Containers: Reopen in Container** from the command palette).
+
+=== VSCodium
+
+VS Code's Dev Containers extension is not available in VSCodium. Use https://devpod.sh/[DevPod] instead to open the devcontainer.
+
+=== After opening the container
+
+Once inside the container, install CESM:
+
+[source,bash]
+----
+pip install -e .
+----
+
+Or, for development:
+
+[source,bash]
+----
+pip install -e ".[dev]"
+----
+
+== Documentation generation (optional)
+
+Building the project documentation is a multi-step process that generates schema reference pages from the LinkML model and then assembles everything into an HTML site with Antora.
+
+=== Step 1: Install the AsciiDoc generator
+
+The schema documentation generator is installed from source:
+
+[source,bash]
+----
+pip install -e git+https://github.com/Netbeheer-Nederland/linkml-asciidoc-generator.git#egg=linkml-asciidoc-generator
+----
+
+=== Step 2: Generate schema reference pages
+
+[source,bash]
+----
+python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
+----
+
+This produces AsciiDoc pages describing every class, slot, and enum in the CESM schema.
+
+=== Step 3: Build the HTML site with Antora
+
+You need Node.js and npm installed for this step.
+
+[source,bash]
+----
+npx antora antora-playbook.yml
+----
+
+The generated site is written to the output directory configured in `antora-playbook.yml`.
+
+== Verification
+
+To verify that the installation works, load the included sample dataset into a DuckDB database:
+
+[source,bash]
+----
+python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb
+----
+
+If this completes without errors, the core installation is working correctly. See the xref:quickstart.adoc[Quickstart] guide for more ways to exercise the toolchain.
+
+== Spine Toolbox setup
+
+The repository includes Spine Toolbox project files in `.spinetoolbox/project.json` that define GUI-based workflows for data transformations.
+
+To use them:
+
+. Install CESM with the Spine extra: `pip install -e ".[spine]"`
+. Open https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] and load the project from the repository root.
+. Select a workflow and execute it through the GUI.
+
+[NOTE]
+====
+The FlexTool3 tool specification in the project file references an external path that must be updated to match your local installation. FlexTool3 itself is optional -- the core CESM transformation tools work without it.
+====
+
+For more details, see the xref:spine-toolbox-guide.adoc[Spine Toolbox Guide].

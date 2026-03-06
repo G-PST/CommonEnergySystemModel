@@ -1,0 +1,1013 @@
+= Entity Reference
+
+This page is the complete reference for every entity class in CESM.
+Each section covers the entity's purpose, attributes, applicable mixins, relationships to other entities, and an example drawn from the sample dataset.
+
+For the conceptual overview and design rationale, see xref:overview.adoc[Overview].
+For physical units and the currency convention, see xref:unit-conventions.adoc[Unit Conventions].
+For method enumerations and their required parameters, see xref:methods.adoc[Methods Reference].
+
+
+== Base Classes
+
+=== Entity (abstract)
+
+xref:schema:class/Entity.adoc[Entity] is the abstract root of the class hierarchy.
+Every concrete entity inherits these attributes.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `name`
+| string (identifier)
+| User-facing unique name. Acts as the primary key.
+
+| `semantic_id`
+| URI or CURIE
+| Optional identifier for semantic web integration.
+
+| `alternative_names`
+| string[]
+| List of alternative names and aliases.
+
+| `description`
+| string
+| Free-text description of the entity.
+|===
+
+
+=== Node (abstract)
+
+xref:schema:class/Node.adoc[Node] extends Entity and is the abstract parent of all node types.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `node_type`
+| NodeType enum
+| Discriminator that limits allowed subtypes: `Balance`, `Storage`, `Commodity`.
+|===
+
+Three concrete classes inherit from Node: Balance, Storage, and Commodity.
+
+
+== Nodes
+
+[[balance]]
+=== Balance
+
+xref:schema:class/Balance.adoc[Balance] nodes maintain an input/output balance in every time step.
+They do not have a storage state variable.
+Balance nodes are the workhorse of energy system models -- they represent buses where supply must equal demand, plus any slack penalties.
+
+**Mixins:** HasFlow, HasPenalty
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+3+h| _Inherited from Entity_
+
+| `name`
+| string
+| Unique identifier.
+
+3+h| _From HasFlow mixin_
+
+| `flow_annual`
+| float (MWh)
+| Annual flow used to scale `flow_profile`. Always positive; the profile defines direction.
+
+| `flow_profile`
+| float[] (unitless)
+| Time series profile. Positive values are inflow, negative values are outflow from the node.
+
+| `flow_scaling_method`
+| FlowScalingMethod enum
+| How to combine `flow_profile` and `flow_annual`. Values: `use_profile_directly`, `scale_to_annual`.
+
+3+h| _From HasPenalty mixin_
+
+| `penalty_upward`
+| float or PeriodFloat (currency/MWh)
+| Cost per MWh of slack created (unserved energy).
+
+| `penalty_downward`
+| float or PeriodFloat (currency/MWh)
+| Cost per MWh of slack destroyed (excess energy).
+|===
+
+**Relationships:**
+
+* Connected to xref:schema:class/Unit.adoc[Units] via xref:schema:class/Unit_to_node.adoc[Unit_to_node] and xref:schema:class/Node_to_unit.adoc[Node_to_unit] ports.
+* Connected to other nodes via xref:schema:class/Link.adoc[Links].
+* Can be a member of a xref:schema:class/Group.adoc[Group] (via xref:schema:class/Group_entity.adoc[Group_entity]).
+
+.Sample data -- Balance node `west`
+[source,yaml]
+----
+- name: west
+  flow_scaling_method: scale_to_annual
+  flow_annual: 20000000.0
+  flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
+  penalty_upward: 1000
+----
+
+
+[[storage]]
+=== Storage
+
+xref:schema:class/Storage.adoc[Storage] nodes include a state variable that tracks stored energy across time steps.
+They maintain the same input/output balance as a Balance node, but also model charging and discharging of the state.
+Storage capacity can receive investments.
+
+**Mixins:** HasFlow, HasPenalty, HasInvestments
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+3+h| _Own attributes_
+
+| `storage_capacity`
+| float (MWh)
+| Capacity of a single storage asset.
+
+| `storages_existing`
+| float or PeriodFloat (unitless)
+| Number of pre-existing storage assets at model start.
+
+| `investment_cost`
+| float (currency/kWh)
+| Overnight investment cost per kWh of storage capacity.
+
+| `fixed_cost`
+| float (currency/kWh/year)
+| Annual maintenance cost per kWh of storage capacity.
+
+| `storage_loss_from_stored_energy`
+| float (%)
+| Fraction of stored energy lost per hour.
+
+| `availability`
+| float or float[] (%)
+| Time series for forced outage representation.
+
+3+h| _From HasFlow mixin_
+
+| `flow_annual`
+| float (MWh)
+| Annual flow for scaling.
+
+| `flow_profile`
+| float[] (unitless)
+| Flow profile time series.
+
+| `flow_scaling_method`
+| FlowScalingMethod enum
+| Profile scaling method.
+
+3+h| _From HasPenalty mixin_
+
+| `penalty_upward`
+| float or PeriodFloat (currency/MWh)
+| Slack creation penalty.
+
+| `penalty_downward`
+| float or PeriodFloat (currency/MWh)
+| Slack destruction penalty.
+
+3+h| _From HasInvestments mixin_
+
+| `investment_method`
+| InvestmentMethod enum
+| Investment method: `not_allowed`, `no_limits`.
+
+| `discount_rate`
+| float or PeriodFloat (%)
+| Discount rate for the investment.
+
+| `payback_time`
+| float or PeriodFloat (years)
+| Economic payback time used to annualise investments.
+|===
+
+**Relationships:**
+
+* Connected to xref:schema:class/Unit.adoc[Units] via ports.
+* Connected to other nodes via xref:schema:class/Link.adoc[Links] (e.g. a charger link).
+* Can be a member of a xref:schema:class/Group.adoc[Group].
+
+.Sample data -- Storage node `battery`
+[source,yaml]
+----
+- name: battery
+  storage_capacity: 750
+  storages_existing: 2
+  investment_method: no_limits
+  investment_cost: 600.0
+  discount_rate: 7.0
+  payback_time: 12
+  flow_scaling_method: use_profile_directly
+  flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+  penalty_upward: 10000
+----
+
+
+[[commodity]]
+=== Commodity
+
+xref:schema:class/Commodity.adoc[Commodity] nodes represent exogenous markets where the model can buy or sell commodities at a given price.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `commodity_type`
+| CommodityType enum (required)
+| Type of commodity: `fuel` or `emission`.
+
+| `price_per_unit`
+| float or PeriodFloat (currency/MWh)
+| Price per unit of the product bought or sold.
+|===
+
+**Relationships:**
+
+* Connected to xref:schema:class/Unit.adoc[Units] via xref:schema:class/Node_to_unit.adoc[Node_to_unit] ports (fuel supply) or xref:schema:class/Unit_to_node.adoc[Unit_to_node] ports (emission output).
+
+.Sample data -- Commodity node `natural_gas`
+[source,yaml]
+----
+- name: natural_gas
+  commodity_type: fuel
+  price_per_unit: 25
+----
+
+
+== Unit
+
+[[unit]]
+=== Unit
+
+xref:schema:class/Unit.adoc[Unit] entities convert one or more input flows into one or more output flows.
+The `conversion_method` determines the mathematical relationship between inputs and outputs.
+Units connect to nodes exclusively through ports.
+
+**Mixin:** HasInvestments
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+3+h| _Own attributes_
+
+| `conversion_method`
+| ConversionMethod enum
+| How inputs convert to outputs: `constant_efficiency`, `two_point_efficiency`.
+
+| `startup_method`
+| StartupMethod enum
+| How startups are treated: `linear` (continuous online variable), `integer` (discrete).
+
+| `units_existing`
+| float or PeriodFloat (unitless)
+| Number of pre-existing conversion units at model start.
+
+| `startup_cost`
+| float (currency/unit)
+| Cost of one full startup for one unit.
+
+| `conversion_rates`
+| float or ConversionRatesFloatFloat[]
+| Efficiency multiplier(s). A single float for constant efficiency, or a list of operating-point/conversion-rate tuples for piecewise efficiency curves.
+
+| `availability`
+| float or float[] (%)
+| Time series for forced outage representation.
+
+3+h| _From HasInvestments mixin_
+
+| `investment_method`
+| InvestmentMethod enum
+| Investment method: `not_allowed`, `no_limits`.
+
+| `discount_rate`
+| float or PeriodFloat (%)
+| Discount rate for the investment.
+
+| `payback_time`
+| float or PeriodFloat (years)
+| Economic payback time.
+|===
+
+**Relationships:**
+
+* Receives input from xref:schema:class/Node.adoc[Nodes] via xref:schema:class/Node_to_unit.adoc[Node_to_unit] ports.
+* Sends output to xref:schema:class/Node.adoc[Nodes] via xref:schema:class/Unit_to_node.adoc[Unit_to_node] ports.
+
+.Sample data -- Unit `ocgt`
+[source,yaml]
+----
+- name: ocgt
+  conversion_method: constant_efficiency
+  units_existing: 2
+  efficiency: 38.0
+  investment_method: no_limits
+  discount_rate: 6.0
+  payback_time: 25
+----
+
+
+== Ports
+
+[[port]]
+=== Port (abstract)
+
+xref:schema:class/Port.adoc[Port] is the abstract base for directed connections between units and nodes.
+Every port has a `source` and a `sink`.
+Port capacity, investment cost, and operational cost are defined here.
+
+**Mixin:** HasProfiles
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+3+h| _Own attributes_
+
+| `source`
+| Entity reference (required)
+| Name of the source entity (Unit or Node, depending on subclass).
+
+| `sink`
+| Entity reference (required)
+| Name of the sink entity (Unit or Node, depending on subclass).
+
+| `capacity`
+| float (MW)
+| Capacity of the port for a single unit.
+
+| `investment_cost`
+| float or PeriodFloat (currency/kW)
+| Overnight investment cost per kW.
+
+| `fixed_cost`
+| float or PeriodFloat (currency/kW/year)
+| Annual maintenance cost per kW.
+
+| `other_operational_cost`
+| float or PeriodFloat (currency/MWh)
+| Variable cost per MWh of flow through the port.
+
+| `constraint_flow_coefficient`
+| ConstraintFloat (unitless)
+| Multiplier between constraints and the flow. Maps constraints to their coefficients.
+
+| `inertia_constant`
+| float (MWs/MW)
+| Inertia constant for a synchronously connected unit to this node.
+
+| `availability`
+| float or float[] (%)
+| Time series for forced outage representation.
+
+3+h| _From HasProfiles mixin_
+
+| `profile_limit_upper`
+| float[] (unitless)
+| Upper bound time series on flow as a fraction of capacity.
+
+| `profile_limit_lower`
+| float[] (unitless)
+| Lower bound time series on flow as a fraction of capacity.
+|===
+
+
+[[unit-to-node]]
+=== Unit_to_node
+
+xref:schema:class/Unit_to_node.adoc[Unit_to_node] is an output port -- flow leaves a xref:schema:class/Unit.adoc[Unit] and enters a xref:schema:class/Node.adoc[Node].
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `source`
+| Unit reference (required)
+| The unit producing the output.
+
+| `sink`
+| Node reference (required)
+| The node receiving the output.
+|===
+
+All other attributes are inherited from <<port,Port>>.
+
+.Sample data -- Unit_to_node `ocgt.west`
+[source,yaml]
+----
+- name: ocgt.west
+  source: ocgt
+  sink: west
+  capacity: 50
+  investment_cost: 500
+----
+
+
+[[node-to-unit]]
+=== Node_to_unit
+
+xref:schema:class/Node_to_unit.adoc[Node_to_unit] is an input port -- flow leaves a xref:schema:class/Node.adoc[Node] and enters a xref:schema:class/Unit.adoc[Unit].
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `source`
+| Node reference (required)
+| The node supplying the input.
+
+| `sink`
+| Unit reference (required)
+| The unit consuming the input.
+|===
+
+All other attributes are inherited from <<port,Port>>.
+
+.Sample data -- Node_to_unit `natural_gas.ocgt`
+[source,yaml]
+----
+- name: natural_gas.ocgt
+  source: natural_gas
+  sink: ocgt
+----
+
+
+== Link
+
+[[link]]
+=== Link
+
+xref:schema:class/Link.adoc[Link] connects two nodes (`node_A` and `node_B`) and models energy transfer between them -- a transmission line, a pipeline, or any bidirectional flow path.
+
+**Mixin:** HasInvestments
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+3+h| _Own attributes_
+
+| `node_A`
+| Node reference (required)
+| First node of the bidirectional link.
+
+| `node_B`
+| Node reference (required)
+| Second node of the bidirectional link.
+
+| `transfer_method`
+| TransferMethod enum
+| How to model the transfer: `regular_linear`.
+
+| `capacity`
+| float (MW)
+| Capacity of a single link asset.
+
+| `links_existing`
+| float or PeriodFloat (unitless)
+| Number of pre-existing links at model start.
+
+| `investment_cost`
+| float (currency/kW)
+| Overnight investment cost per kW.
+
+| `fixed_cost`
+| float (currency/kW/year)
+| Annual maintenance cost per kW.
+
+| `operational_cost`
+| float (currency/MWh)
+| Variable cost per MWh of flow.
+
+| `conversion_rates`
+| float or ConversionRatesFloatFloat[]
+| Efficiency/conversion multiplier(s) for the link.
+
+| `availability`
+| float or float[] (%)
+| Time series for forced outage representation.
+
+3+h| _From HasInvestments mixin_
+
+| `investment_method`
+| InvestmentMethod enum
+| Investment method: `not_allowed`, `no_limits`.
+
+| `discount_rate`
+| float or PeriodFloat (%)
+| Discount rate for the investment.
+
+| `payback_time`
+| float or PeriodFloat (years)
+| Economic payback time.
+|===
+
+The `efficiency` attribute on a Link can be a single float (symmetric), a float array, or a xref:schema:class/DirectionalValue.adoc[DirectionalValue] with separate `forward` (A to B) and `reverse` (B to A) values.
+
+**Relationships:**
+
+* Connects two xref:schema:class/Node.adoc[Nodes] directly.
+* Can be a member of a xref:schema:class/Group.adoc[Group] (e.g. for shared investment constraints).
+
+.Sample data -- Link `pony1`
+[source,yaml]
+----
+- name: pony1
+  node_A: east
+  node_B: west
+  transfer_method: regular_linear
+  capacity: 500
+  links_existing: 1
+  efficiency: 98.0
+  investment_method: no_limits
+  investment_cost: 1600
+  discount_rate: 4.0
+  payback_time: 50
+----
+
+
+== Supporting Entities
+
+[[period]]
+=== Period
+
+xref:schema:class/Period.adoc[Period] defines an investment period and how many years it represents in the model.
+Periods are used for discounting and for associating period-dependent parameter values (via the PeriodFloat helper type).
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `years_represented`
+| float
+| How many years the period represents before the next period. Used for discounting. Can be below one (multiple periods in one year).
+|===
+
+.Sample data -- Period `y2030`
+[source,yaml]
+----
+- name: y2030
+  years_represented: 5.0
+----
+
+
+[[group]]
+=== Group
+
+xref:schema:class/Group.adoc[Group] defines constraints that apply across multiple entities at once.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `group_type`
+| GroupType enum (required)
+| Type of group: `node` (shared node constraints), `power_grid` (synchronous power grid), `link` (shared link constraints).
+
+| `invest_max_total`
+| float (MW)
+| Maximum aggregated investment capacity across all group members, summed over all periods.
+|===
+
+**Relationships:**
+
+* Members are added via xref:schema:class/Group_entity.adoc[Group_entity] records.
+
+.Sample data -- Group `elec_nodes`
+[source,yaml]
+----
+- name: elec_nodes
+  group_type: power_grid
+----
+
+
+[[group-entity]]
+=== Group_entity
+
+xref:schema:class/Group_entity.adoc[Group_entity] assigns an entity as a member of a group.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `group`
+| Group reference (required)
+| The group to which the entity belongs.
+
+| `entity`
+| Entity reference (required)
+| The entity being added to the group.
+|===
+
+.Sample data -- Group_entity `elec_nodes.west`
+[source,yaml]
+----
+- name: elec_nodes.west
+  group: elec_nodes
+  entity: west
+----
+
+
+[[constraint]]
+=== Constraint
+
+xref:schema:class/Constraint.adoc[Constraint] defines user-defined constraints on decision variables.
+The constraint binds to entity flows through the `constraint_flow_coefficient` attribute on ports.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `constant`
+| float[] (multivalued)
+| Right-hand side of the constraint equation.
+
+| `sense`
+| Equality enum
+| Sense of the constraint: `equal`, `greater_than`, `less_than`.
+|===
+
+
+[[solve-pattern]]
+=== Solve_pattern
+
+xref:schema:class/Solve_pattern.adoc[Solve_pattern] defines the properties of each solve -- single-solve versus rolling-horizon, temporal scope, look-ahead parameters, and time resolution.
+See xref:temporal-model.adoc[Temporal Model] for a detailed discussion.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `solve_mode`
+| SolveMode enum
+| Solve process: `single_solve` or `rolling_solve`.
+
+| `periods_realise_operations`
+| Period[] (ordered)
+| Periods from which operational results are reported.
+
+| `periods_realise_investments`
+| Period[] (ordered)
+| Periods from which investment results are reported.
+
+| `periods_pass_storage_data`
+| Period[] (ordered)
+| Periods from which storage level information is passed to subsequent solves.
+
+| `periods_additional_operations_horizon`
+| Period[] (ordered)
+| Additional periods included in dispatch optimisation but not reported.
+
+| `periods_additional_investments_horizon`
+| Period[] (ordered)
+| Additional periods included in investment optimisation but not reported.
+
+| `start_time_durations`
+| Timeset[] (ordered)
+| Pairs of start time and duration defining what part of the timeline to solve. Can be a list for representative periods.
+
+| `rolling_jump`
+| Duration (ISO 8601)
+| How far each rolling window jumps forward.
+
+| `rolling_additional_horizon`
+| Duration (ISO 8601)
+| Additional look-ahead beyond `rolling_jump`.
+
+| `time_resolution`
+| Duration (ISO 8601)
+| Time resolution the model should use. Must be an integer multiple of the original data resolution.
+
+| `contains_solve_pattern`
+| Solve_pattern reference
+| A child solve pattern to be executed inside the parent.
+|===
+
+.Sample data -- Solve_pattern `solve_2030`
+[source,yaml]
+----
+- name: solve_2030
+  solve_mode: single_solve
+  start_time_durations:
+    - start_time: '2023-01-01T00:00'
+      duration: PT10H
+  periods_realise_operations: ['y2030']
+  periods_realise_investments: ['y2030']
+  periods_additional_investments_horizon: ['y2035']
+----
+
+
+[[system]]
+=== System
+
+xref:schema:class/System.adoc[System] holds parameters that apply to the whole system being modelled.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `solve_order`
+| Solve_pattern[] (ordered)
+| Ordered list of solve patterns that define the sequence of solves.
+
+| `inflation_rate`
+| float or PeriodFloat (%)
+| Rate of inflation for the currency year of the dataset.
+|===
+
+**Relationships:**
+
+* References xref:schema:class/Solve_pattern.adoc[Solve_pattern] entities via `solve_order`.
+
+.Sample data -- System `test_system`
+[source,yaml]
+----
+- name: test_system
+  solve_order: ['solve_2030', 'solve_2035_invest', 'solve_2035_rolling_dispatch']
+  inflation_rate: 3.0
+----
+
+
+== Dataset
+
+[[dataset]]
+=== Dataset
+
+xref:schema:class/Dataset.adoc[Dataset] is the tree root of a CESM data file.
+It holds global metadata and collections of all entity types.
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `id`
+| integer (identifier)
+| Dataset-level identifier to distinguish between dataset versions.
+
+| `timeline`
+| datetime[] (ordered)
+| Time steps for which data can be entered. Used to validate input time series.
+
+| `currency`
+| string (ISO 4217, required)
+| Currency code for all monetary values in the dataset (e.g. `EUR`, `USD`).
+
+| `reference_year`
+| string (four-digit year, required)
+| All monetary values are expressed in real terms for this year.
+
+| `balance`
+| Balance[]
+| Collection of Balance nodes.
+
+| `storage`
+| Storage[]
+| Collection of Storage nodes.
+
+| `commodity`
+| Commodity[]
+| Collection of Commodity nodes.
+
+| `unit`
+| Unit[]
+| Collection of Units.
+
+| `node_to_unit`
+| Node_to_unit[]
+| Collection of input ports.
+
+| `unit_to_node`
+| Unit_to_node[]
+| Collection of output ports.
+
+| `link`
+| Link[]
+| Collection of Links.
+
+| `group`
+| Group[]
+| Collection of Groups.
+
+| `constraint`
+| Constraint[]
+| Collection of Constraints.
+
+| `group_entity`
+| Group_entity[]
+| Collection of Group memberships.
+
+| `solve_pattern`
+| Solve_pattern[]
+| Collection of Solve patterns.
+
+| `period`
+| Period[]
+| Collection of Periods.
+
+| `system`
+| System[]
+| Collection of System configurations.
+|===
+
+
+== Mixins
+
+Mixins attach reusable parameter groups to entity classes without deep inheritance.
+An entity that includes a mixin gains all of its attributes.
+
+[[hasflow]]
+=== HasFlow
+
+Applied to: xref:schema:class/Balance.adoc[Balance], xref:schema:class/Storage.adoc[Storage]
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `flow_annual`
+| float (MWh)
+| Annual flow used to scale the flow profile. Always positive.
+
+| `flow_profile`
+| float[] (unitless)
+| Flow profile time series. Positive values are inflow, negative values are outflow from the node.
+
+| `flow_scaling_method`
+| FlowScalingMethod enum
+| How to combine profile and annual flow: `use_profile_directly` or `scale_to_annual`.
+|===
+
+
+[[haspenalty]]
+=== HasPenalty
+
+Applied to: xref:schema:class/Balance.adoc[Balance], xref:schema:class/Storage.adoc[Storage]
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `penalty_upward`
+| float or PeriodFloat (currency/MWh)
+| Penalty for creating slack (unserved energy).
+
+| `penalty_downward`
+| float or PeriodFloat (currency/MWh)
+| Penalty for destroying slack (excess energy).
+|===
+
+
+[[hasinvestments]]
+=== HasInvestments
+
+Applied to: xref:schema:class/Unit.adoc[Unit], xref:schema:class/Storage.adoc[Storage], xref:schema:class/Link.adoc[Link], xref:schema:class/Port.adoc[Port] (and its subclasses)
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `investment_method`
+| InvestmentMethod enum
+| Investment method: `not_allowed`, `no_limits`.
+
+| `discount_rate`
+| float or PeriodFloat (%)
+| Discount rate for the investment.
+
+| `payback_time`
+| float or PeriodFloat (years)
+| Economic payback time used to annualise investments.
+|===
+
+
+[[hasprofiles]]
+=== HasProfiles
+
+Applied to: xref:schema:class/Unit_to_node.adoc[Unit_to_node], xref:schema:class/Node_to_unit.adoc[Node_to_unit]
+
+[cols="2,1,4", options="header"]
+|===
+| Attribute | Type | Description
+
+| `profile_limit_upper`
+| float[] (unitless)
+| Upper bound on flow as a fraction of capacity.
+
+| `profile_limit_lower`
+| float[] (unitless)
+| Lower bound on flow as a fraction of capacity.
+|===
+
+
+== Helper Types
+
+Several structured types support complex parameter values.
+These are not entities themselves but are used as attribute types within entities.
+
+[[directional-value]]
+=== DirectionalValue
+
+xref:schema:class/DirectionalValue.adoc[DirectionalValue] holds separate values for each direction of a bidirectional link.
+
+[cols="2,1,4", options="header"]
+|===
+| Field | Type | Description
+
+| `forward`
+| float[]
+| Value applied in the forward direction (Node_A to Node_B).
+
+| `reverse`
+| float[]
+| Value applied in the reverse direction (Node_B to Node_A).
+|===
+
+
+[[period-float]]
+=== PeriodFloat
+
+xref:schema:class/PeriodFloat.adoc[PeriodFloat] represents period-dependent parameter values.
+
+[cols="2,1,4", options="header"]
+|===
+| Field | Type | Description
+
+| `period`
+| Period[]
+| List of period references.
+
+| `value`
+| float[]
+| Corresponding numeric values.
+|===
+
+
+[[constraint-float]]
+=== ConstraintFloat
+
+xref:schema:class/ConstraintFloat.adoc[ConstraintFloat] maps constraints to coefficients.
+
+[cols="2,1,4", options="header"]
+|===
+| Field | Type | Description
+
+| `constraint`
+| Constraint[]
+| List of constraint references.
+
+| `value`
+| float[]
+| Corresponding coefficient values.
+|===
+
+
+[[conversion-rates]]
+=== ConversionRatesFloatFloat
+
+xref:schema:class/ConversionRatesFloatFloat.adoc[ConversionRatesFloatFloat] defines operating-point/conversion-rate pairs for piecewise efficiency curves.
+
+[cols="2,1,4", options="header"]
+|===
+| Field | Type | Description
+
+| `operating_point`
+| float
+| Operating point (starting from 100%, decreasing).
+
+| `conversion_rate`
+| float
+| Conversion rate (efficiency) at this operating point.
+|===
+
+
+[[timeset]]
+=== Timeset
+
+xref:schema:class/Timeset.adoc[Timeset] pairs a start time with a duration to define temporal windows for solve patterns.
+
+[cols="2,1,4", options="header"]
+|===
+| Field | Type | Description
+
+| `start_time`
+| datetime
+| Start of the time window. Must match a value in the dataset timeline.
+
+| `duration`
+| Duration (ISO 8601)
+| Length of the time window (e.g. `PT10H` for 10 hours).
+|===

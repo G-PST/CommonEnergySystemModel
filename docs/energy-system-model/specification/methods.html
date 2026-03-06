@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Methods :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/methods.html">
+    <link rel="prev" href="entities.html">
+    <link rel="next" href="temporal-model.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="methods.html">Methods Reference</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/methods.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Methods</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Methods in CESM control how entities behave during optimization.
+Each method defines which parameters are required and how they are interpreted by the solver.
+This design makes it straightforward to validate input data: if a method is selected, the corresponding parameters must be present.
+It also makes the specification easier to extend&#8201;&#8212;&#8201;adding a new method does not break existing functionality, and a model tool can clearly report whether it supports a given method.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conversion_method"><a class="anchor" href="#_conversion_method"></a>Conversion Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/ConversionMethod.html" class="xref page">ConversionMethod</a> enum is set on <a href="../schema/class/Unit.html" class="xref page">Unit</a> via <code>conversion_method</code>.
+It determines how a unit converts input flows to output flows.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>constant_efficiency</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single efficiency value applied uniformly across all operating points.
+The unit converts all inputs to outputs using this constant ratio.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>efficiency</code> (percentage, e.g. 38.0)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit <code>ocgt</code>: <code>conversion_method=constant_efficiency</code>, <code>efficiency=38.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>two_point_efficiency</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Piecewise linear efficiency defined by two operating points.
+Allows modelling efficiency that varies with load.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_rates</code>&#8201;&#8212;&#8201;a list of (operating_point, conversion_rate) tuples.
+Values must have decreasing operating points, starting from 100%.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conversion_rates=[(100, 0.40), (50, 0.35)]</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flow_scaling_method"><a class="anchor" href="#_flow_scaling_method"></a>Flow Scaling Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/FlowScalingMethod.html" class="xref page">FlowScalingMethod</a> enum is available on Balance and Storage entities through the HasFlow mixin.
+It controls how <code>flow_profile</code> time series data is interpreted.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>use_profile_directly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>flow_profile</code> values are used as-is, representing absolute MW values.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_profile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Balance <code>north</code>: <code>flow_scaling_method=use_profile_directly</code>, <code>flow_profile=[&#8230;&#8203;]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scale_to_annual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>flow_profile</code> is scaled so that its sum matches <code>flow_annual</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_profile</code>, <code>flow_annual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Balance <code>west</code>: <code>flow_scaling_method=scale_to_annual</code>, <code>flow_annual=20000000.0</code>, <code>flow_profile=[&#8230;&#8203;]</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_startup_method"><a class="anchor" href="#_startup_method"></a>Startup Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/StartupMethod.html" class="xref page">StartupMethod</a> enum is set on <a href="../schema/class/Unit.html" class="xref page">Unit</a> via <code>startup_method</code>.
+It controls how the online/offline status of a unit is modelled.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>linear</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The online variable is continuous (relaxed LP formulation).
+Faster to solve but allows fractional online states.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_method=linear</code>, <code>startup_cost=5000</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The online variable is discrete (MIP formulation).
+The unit is either fully online or fully offline.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>startup_method=integer</code>, <code>startup_cost=5000</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transfer_method"><a class="anchor" href="#_transfer_method"></a>Transfer Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/TransferMethod.html" class="xref page">TransferMethod</a> enum is set on <a href="../schema/class/Link.html" class="xref page">Link</a> via <code>transfer_method</code>.
+It defines how energy is transferred between nodes.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>regular_linear</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard linear transfer with fixed efficiency and capacity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>efficiency</code>, <code>capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Link <code>pony1</code>: <code>transfer_method=regular_linear</code>, <code>capacity=500</code>, <code>efficiency=98.0</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solve_mode"><a class="anchor" href="#_solve_mode"></a>Solve Mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/SolveMode.html" class="xref page">SolveMode</a> enum is set on Solve_pattern via <code>solve_mode</code>.
+It determines the temporal structure of the optimization.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>single_solve</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The entire time horizon is solved in one optimization window.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>start_time_durations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>solve_mode=single_solve</code>, <code>start_time_durations=[&#8230;&#8203;]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rolling_solve</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The time horizon is solved using a rolling window that advances by <code>rolling_jump</code> each step,
+with <code>rolling_additional_horizon</code> of look-ahead beyond the jump.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>start_time_durations</code>, <code>rolling_jump</code>, <code>rolling_additional_horizon</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solve_pattern <code>solve_2035_rolling_dispatch</code>: <code>solve_mode=rolling_solve</code>, <code>rolling_jump=PT2H</code>, <code>rolling_additional_horizon=PT2H</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_investment_method"><a class="anchor" href="#_investment_method"></a>Investment Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/enumeration/InvestmentMethod.html" class="xref page">InvestmentMethod</a> enum is available on <a href="../schema/class/Unit.html" class="xref page">Unit</a>, Port, <a href="../schema/class/Link.html" class="xref page">Link</a>, and Storage entities through the HasInvestments mixin.
+It controls whether and how new capacity investments are allowed.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Required Parameters</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>not_allowed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No new investment is possible. Existing capacity is used as-is.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>None</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method=not_allowed</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>no_limits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unconstrained investment. The solver can build any amount of new capacity,
+subject to economic parameters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_cost</code>, <code>discount_rate</code>, <code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit <code>ocgt</code>: <code>investment_method=no_limits</code>, <code>discount_rate=6.0</code>, <code>payback_time=25</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="entities.html">Entity Reference</a></span>
+  <span class="next"><a href="temporal-model.html">Temporal Model</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,586 @@
+= Data Format
+
+This page is the formal specification of the CESM YAML data format.
+It defines the top-level document structure, entity collections, complex value types, and naming conventions.
+For the full attribute listing of each entity, see xref:entities.adoc[Entity Reference].
+For units of measure and monetary conventions, see xref:unit-conventions.adoc[Unit Conventions].
+
+
+== Document Structure
+
+A CESM dataset is a single YAML document.
+The root object is a `Dataset` with four required scalar fields and up to thirteen optional entity collections.
+
+[source,yaml]
+----
+id: 0
+timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z", "2023-01-01T02:00:00Z"]
+currency: EUR
+reference_year: "2025"
+
+balance:       []   # optional
+storage:       []   # optional
+commodity:     []   # optional
+unit:          []   # optional
+node_to_unit:  []   # optional
+unit_to_node:  []   # optional
+link:          []   # optional
+group:         []   # optional
+group_entity:  []   # optional
+period:        []   # optional
+solve_pattern: []   # optional
+system:        []   # optional
+constraint:    []   # optional
+----
+
+
+[#required-fields]
+== Required Top-Level Fields
+
+[cols="1,1,3", options="header"]
+|===
+| Field | Type | Description
+
+| `id`
+| Integer
+| Dataset version identifier.
+  Used to distinguish between versions of a dataset.
+
+| `timeline`
+| List of ISO 8601 datetimes
+| The time steps for which data can be entered in the dataset.
+  All time series arrays in the dataset must match the length of this list.
+  Example: `["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z"]`
+
+| `currency`
+| String (3-letter ISO 4217 code)
+| The currency for all monetary values in the dataset.
+  Must be a valid ISO 4217 code such as `EUR`, `USD`, or `GBP`.
+  Pattern: `^[A-Z]{3}$`
+
+| `reference_year`
+| String (4-digit year)
+| The year in which all monetary values are denominated (real prices).
+  Pattern: `^\d{4}$`
+  Example: `"2025"`
+|===
+
+
+[#entity-collections]
+== Entity Collections
+
+Each entity collection is an optional list of objects.
+Every object in every collection has a required `name` field that serves as its unique identifier within the collection.
+
+[cols="1,2,2", options="header"]
+|===
+| Collection | Entity Type | Description
+
+| `balance`
+| Balance
+| Nodes that maintain an input/output balance in each time step.
+
+| `storage`
+| Storage
+| Nodes with an internal state variable for stored energy.
+
+| `commodity`
+| Commodity
+| Nodes where the model can buy or sell against an exogenous price.
+
+| `unit`
+| Unit
+| Conversion units that transform inputs to outputs.
+
+| `node_to_unit`
+| Node_to_unit
+| Input ports -- flow from a node into a unit.
+
+| `unit_to_node`
+| Unit_to_node
+| Output ports -- flow from a unit into a node.
+
+| `link`
+| Link
+| Connections between two nodes for energy transfer.
+
+| `group`
+| Group
+| Defines shared constraints across multiple entities.
+
+| `group_entity`
+| Group_entity
+| Assigns an entity as a member of a group.
+
+| `period`
+| Period
+| Investment periods and how many years each represents.
+
+| `solve_pattern`
+| Solve_pattern
+| Solver configuration: solve mode, time structure, rolling horizon.
+
+| `system`
+| System
+| Whole-system parameters such as solve order and inflation rate.
+
+| `constraint`
+| Constraint
+| User-defined constraints on decision variables.
+|===
+
+
+[#common-fields]
+== Common Entity Fields
+
+All entities inherit from the abstract `Entity` base class.
+The following fields are available on every entity:
+
+[cols="1,1,1,3", options="header"]
+|===
+| Field | Type | Required | Description
+
+| `name`
+| String
+| Yes
+| User-facing unique identifier within the collection.
+
+| `semantic_id`
+| URI or CURIE
+| No
+| Optional identifier for semantic web integration.
+
+| `alternative_names`
+| List of strings
+| No
+| Alternative names and aliases.
+
+| `description`
+| String
+| No
+| Free-text description of the entity.
+|===
+
+
+[#complex-types]
+== Complex Value Types
+
+Several parameters accept structured values beyond simple scalars.
+This section specifies each complex type.
+
+
+[#time-series]
+=== Time Series
+
+A time series is a YAML list of numeric values whose length must match the `timeline` array.
+Each element corresponds to the time step at the same index.
+
+[source,yaml]
+----
+flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
+----
+
+Time series are used for:
+
+* `flow_profile` -- demand or generation profiles on Balance and Storage nodes
+* `profile_limit_upper` / `profile_limit_lower` -- time-varying capacity factor bounds on ports
+* `availability` -- forced outage profiles on units, ports, and links
+* `constant` -- right-hand side of constraints (when multivalued)
+
+
+[#period-float]
+=== PeriodFloat
+
+A `PeriodFloat` represents a value that varies by investment period.
+It contains two parallel arrays: `period` (list of period names) and `value` (list of floats).
+
+[source,yaml]
+----
+discount_rate:
+  period: [y2030, y2035]
+  value: [6.0, 5.5]
+----
+
+Many parameters accept either a single float or a `PeriodFloat`.
+When a single float is given, that value applies to all periods.
+
+Parameters that support `PeriodFloat` include:
+
+* `units_existing`, `storages_existing`, `links_existing`
+* `discount_rate`, `payback_time`
+* `investment_cost`, `fixed_cost`, `other_operational_cost`
+* `price_per_unit`
+* `penalty_upward`, `penalty_downward`
+* `inflation_rate`
+
+
+[#directional-value]
+=== DirectionalValue
+
+A `DirectionalValue` holds separate values for the forward and reverse directions of a bidirectional link.
+Forward means Node_A to Node_B; reverse means Node_B to Node_A.
+
+[source,yaml]
+----
+efficiency:
+  forward: 98.0
+  reverse: 95.0
+----
+
+Both `forward` and `reverse` can also be time series (lists of floats matching the timeline).
+
+Used by: `efficiency` on Link entities (which can alternatively be a single float or a time series).
+
+
+[#constraint-float]
+=== ConstraintFloat
+
+A `ConstraintFloat` maps constraint names to coefficient values.
+It contains two parallel arrays: `constraint` (list of constraint names) and `value` (list of floats).
+
+[source,yaml]
+----
+constraint_flow_coefficient:
+  constraint: [co2_cap, energy_limit]
+  value: [0.5, 1.0]
+----
+
+Used by: `constraint_flow_coefficient` on Port entities.
+
+
+[#conversion-rates-float-float]
+=== ConversionRatesFloatFloat
+
+A list of operating-point / conversion-rate tuples used for piecewise linear efficiency curves (the `two_point_efficiency` conversion method).
+Operating points must be listed in decreasing order, starting from 100%.
+
+[source,yaml]
+----
+conversion_rates:
+  - operating_point: 100.0
+    conversion_rate: 38.0
+  - operating_point: 50.0
+    conversion_rate: 42.0
+----
+
+Alternatively, `conversion_rates` can be a single float when using `constant_efficiency`.
+
+Used by: `conversion_rates` on Unit and Link entities.
+
+
+[#timeset]
+=== Timeset
+
+A `Timeset` pairs a start time with a duration.
+Start times must match a value in the dataset `timeline`.
+Durations use ISO 8601 duration format (e.g., `PT10H` for 10 hours).
+
+[source,yaml]
+----
+start_time_durations:
+  - start_time: '2023-01-01T00:00'
+    duration: PT10H
+----
+
+Multiple timesets can define representative periods:
+
+[source,yaml]
+----
+start_time_durations:
+  - start_time: '2023-01-01T00:00'
+    duration: PT10H
+  - start_time: '2023-07-01T00:00'
+    duration: PT10H
+----
+
+The ISO 8601 duration pattern is: `^-?P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$`
+
+Used by: `start_time_durations` on Solve_pattern entities.
+
+
+[#naming-conventions]
+== Naming Conventions
+
+
+[#port-naming]
+=== Port Naming
+
+Port names follow the convention `{source}.{sink}`, where `source` and `sink` are the names of the connected entities:
+
+* For `unit_to_node` (output port): `{unit_name}.{node_name}` -- e.g., `ocgt.west`
+* For `node_to_unit` (input port): `{node_name}.{unit_name}` -- e.g., `natural_gas.ocgt`
+
+[source,yaml]
+----
+node_to_unit:
+  - name: natural_gas.ocgt
+    source: natural_gas
+    sink: ocgt
+
+unit_to_node:
+  - name: ocgt.west
+    source: ocgt
+    sink: west
+----
+
+
+[#link-naming]
+=== Link Naming
+
+Link names are chosen by the user.
+Common conventions include `{node_A}.{node_B}` or a descriptive name:
+
+[source,yaml]
+----
+link:
+  - name: pony1
+    node_A: east
+    node_B: west
+----
+
+
+[#group-entity-naming]
+=== Group Entity Naming
+
+Group entity names typically follow `{group_name}.{entity_name}`:
+
+[source,yaml]
+----
+group_entity:
+  - name: elec_nodes.west
+    group: elec_nodes
+    entity: west
+----
+
+
+[#references]
+== Entity References
+
+Several fields reference other entities by their `name` string.
+The referenced entity must exist in the corresponding collection within the same dataset.
+
+[cols="2,2,2", options="header"]
+|===
+| Field | Found On | References
+
+| `source`
+| Node_to_unit
+| A Node (Balance, Storage, or Commodity)
+
+| `sink`
+| Node_to_unit
+| A Unit
+
+| `source`
+| Unit_to_node
+| A Unit
+
+| `sink`
+| Unit_to_node
+| A Node (Balance, Storage, or Commodity)
+
+| `node_A`
+| Link
+| A Node
+
+| `node_B`
+| Link
+| A Node
+
+| `group`
+| Group_entity
+| A Group
+
+| `entity`
+| Group_entity
+| Any Entity
+
+| `solve_order`
+| System
+| List of Solve_pattern names
+
+| `contains_solve_pattern`
+| Solve_pattern
+| A Solve_pattern (child)
+
+| `periods_realise_operations`
+| Solve_pattern
+| List of Period names
+
+| `periods_realise_investments`
+| Solve_pattern
+| List of Period names
+
+| `periods_pass_storage_data`
+| Solve_pattern
+| List of Period names
+
+| `periods_additional_operations_horizon`
+| Solve_pattern
+| List of Period names
+
+| `periods_additional_investments_horizon`
+| Solve_pattern
+| List of Period names
+|===
+
+
+[#full-example]
+== Complete Example
+
+The following is an abbreviated but structurally complete CESM dataset demonstrating all top-level keys and major value types.
+
+[source,yaml]
+----
+id: 0
+timeline:
+  - "2023-01-01T00:00:00Z"
+  - "2023-01-01T01:00:00Z"
+  - "2023-01-01T02:00:00Z"
+  - "2023-01-01T03:00:00Z"
+  - "2023-01-01T04:00:00Z"
+  - "2023-01-01T05:00:00Z"
+  - "2023-01-01T06:00:00Z"
+  - "2023-01-01T07:00:00Z"
+  - "2023-01-01T08:00:00Z"
+  - "2023-01-01T09:00:00Z"
+currency: EUR
+reference_year: "2025"
+
+balance:
+  - name: west
+    flow_scaling_method: scale_to_annual
+    flow_annual: 20000000.0
+    flow_profile: [-602.1, -780.7, -802, -769.1, -1171.9, -1357.8, -1475.2, -1575.1, -1673.2, -1500]
+    penalty_upward: 1000
+
+storage:
+  - name: battery
+    storage_capacity: 750
+    storages_existing: 2
+    investment_method: no_limits
+    investment_cost: 600.0
+    discount_rate: 7.0
+    payback_time: 12
+    flow_scaling_method: use_profile_directly
+    flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+    penalty_upward: 10000
+
+commodity:
+  - name: natural_gas
+    commodity_type: fuel
+    price_per_unit: 25
+
+unit:
+  - name: ocgt
+    conversion_method: constant_efficiency
+    units_existing: 2
+    efficiency: 38.0
+    investment_method: no_limits
+    discount_rate: 6.0
+    payback_time: 25
+
+node_to_unit:
+  - name: natural_gas.ocgt
+    source: natural_gas
+    sink: ocgt
+
+unit_to_node:
+  - name: ocgt.west
+    source: ocgt
+    sink: west
+    capacity: 50
+    investment_cost: 500
+  - name: wind.north
+    source: wind
+    sink: north
+    capacity: 1500
+    investment_cost: 1000
+    profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
+
+link:
+  - name: pony1
+    node_A: east
+    node_B: west
+    transfer_method: regular_linear
+    capacity: 500
+    links_existing: 1
+    efficiency: 98.0
+    investment_method: no_limits
+    investment_cost: 1600
+    discount_rate: 4.0
+    payback_time: 50
+
+group:
+  - name: elec_nodes
+    group_type: power_grid
+
+group_entity:
+  - name: elec_nodes.west
+    group: elec_nodes
+    entity: west
+  - name: elec_nodes.east
+    group: elec_nodes
+    entity: east
+
+period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
+
+solve_pattern:
+  - name: solve_2030
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    periods_realise_operations: ['y2030']
+    periods_realise_investments: ['y2030']
+    periods_additional_investments_horizon: ['y2035']
+  - name: solve_2035_rolling_dispatch
+    solve_mode: rolling_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    rolling_jump: PT2H
+    rolling_additional_horizon: PT2H
+    periods_realise_operations: ['y2035']
+
+system:
+  - name: test_system
+    solve_order: ['solve_2030', 'solve_2035_rolling_dispatch']
+    inflation_rate: 3.0
+
+constraint:
+  - name: co2_cap
+    constant: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+    sense: less_than
+----
+
+
+[#schema-source]
+== Schema Source
+
+The CESM data format is formally defined as a https://linkml.io/[LinkML] schema.
+The canonical schema file is `model/cesm.yaml` in the specification repository.
+The LinkML schema enables:
+
+* Automated validation of YAML datasets
+* Generation of JSON Schema, SQL DDL, and other target formats
+* Machine-readable unit annotations via https://qudt.org/[QUDT]
+
+
+== Related Pages
+
+xref:entities.adoc[Entity Reference]::
+Full attribute listing for every CESM entity class.
+
+xref:unit-conventions.adoc[Unit Conventions]::
+Units of measure, currency handling, and the percentage convention.
+
+xref:methods.adoc[Methods Reference]::
+Documentation of every method enumeration and its required parameters.
+
+xref:temporal-model.adoc[Temporal Model]::
+How CESM represents time -- periods, solve patterns, rolling horizons.

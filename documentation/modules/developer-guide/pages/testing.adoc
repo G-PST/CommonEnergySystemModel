@@ -1,0 +1,114 @@
+= Testing
+
+This project uses https://docs.pytest.org/[pytest] for automated testing.
+Tests are located in the `tests/` directory at the repository root.
+
+== Running tests
+
+Install test dependencies and run the full test suite:
+
+[source,bash]
+----
+pip install -e ".[dev]"
+pytest
+----
+
+To run tests from a specific file:
+
+[source,bash]
+----
+pytest tests/test_schema.py
+pytest tests/test_readers.py
+pytest tests/test_writers.py
+pytest tests/test_transform_parameters.py
+----
+
+To run a single test class or method:
+
+[source,bash]
+----
+pytest tests/test_schema.py::TestSchemaFile::test_schema_has_expected_classes
+----
+
+Use `-v` for verbose output or `-x` to stop on the first failure:
+
+[source,bash]
+----
+pytest -v -x
+----
+
+== Test categories
+
+=== Schema validation (`test_schema.py`)
+
+Verifies that the LinkML schema at `model/cesm.yaml` is well-formed:
+
+* Schema file exists and is valid YAML
+* Required LinkML fields (`id`, `name`, `classes`) are present
+* Expected entity classes exist (`Dataset`, `Balance`, `Unit`, `Storage`, `Link`, `Commodity`)
+* Enums are defined
+* `Dataset` class has a `timeline` attribute
+* Schema loads with LinkML `SchemaView` (skipped if LinkML has compatibility issues)
+
+=== Reader tests (`test_readers.py`)
+
+Tests for loading CESM data from various formats:
+
+* YAML sample file existence and structure
+* Top-level keys, entity names, timeline format
+* Time series array length matches timeline length
+* LinkML YAML-to-DataFrame conversion (skipped if `SchemaView` is unavailable)
+* DuckDB reader error handling (nonexistent files, missing metadata)
+
+=== Writer tests (`test_writers.py`)
+
+Tests for the DuckDB writer, focused on round-trip fidelity:
+
+* Single-index, datetime-index, and MultiIndex DataFrames survive write/read
+* MultiIndex columns are encoded and decoded correctly
+* Multiple DataFrames can be written and read together
+* Overwrite vs. append modes work as expected
+* Empty DataFrames are handled
+* Selective table reading returns only requested tables
+* Helper functions (`_get_index_info`, `_get_columns_info`, `_encode_multiindex_column`, `_flatten_dataframe`) are unit-tested
+
+=== Transformer tests (`test_transform_parameters.py`)
+
+Tests for the parameter transformation engine in `src/core/transform_parameters.py`:
+
+* `list_of_lists_to_index` / `index_to_names` conversion and round-trip
+* `parse_spec` handles string, dict, list, and nested spec formats
+* `get_operation_type` classifies operations as `copy_entities`, `create_parameter`, `transform_parameter`, or `unknown`
+* `is_timeseries` detection based on index names
+* `_filter_entities_by_parameters` with `if_parameter` and `if_not_parameter` filters
+* `load_config` reads YAML configuration files
+* Integration tests for `transform_data` with minimal copy and create-parameter configs
+
+== Test data
+
+Tests use sample data from two sources:
+
+`data/samples/cesm-sample.yaml`::
+The primary sample CESM dataset used by reader tests and as reference data.
+
+`tests/conftest.py` fixtures::
+Shared pytest fixtures that create in-memory DataFrames for writer and transformer tests. These include `entity_df`, `timeseries_df`, `multiindex_entity_df`, `multiindex_column_df`, and `sample_dataframes`.
+
+Temporary DuckDB files are created via the `tmp_duckdb_path` fixture using pytest's `tmp_path`.
+
+== Adding new tests
+
+Follow the existing patterns:
+
+. Place test files in the `tests/` directory, named `test_<module>.py`.
+. Use test classes to group related tests (e.g., `TestSchemaFile`, `TestDuckdbRoundTrip`).
+. Use fixtures from `conftest.py` for shared data. Add new fixtures there if they will be reused.
+. For tests that depend on optional packages (LinkML, spinedb_api), use `pytest.skip()` when the import fails.
+. For tests that need temporary files, use pytest's built-in `tmp_path` fixture.
+
+== Skipped tests
+
+Some tests are expected to be skipped depending on your environment:
+
+* `TestSchemaViewLoading` and `TestLinkmlYamlReader` tests skip if `linkml_runtime` is not installed or has compatibility issues with the current schema.
+* This is normal and does not indicate a problem with the codebase.

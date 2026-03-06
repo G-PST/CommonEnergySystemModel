@@ -1,0 +1,84 @@
+= Spine Toolbox Guide
+
+https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] is a graphical workflow management tool for energy system modelling.
+This project includes a Spine Toolbox project that provides ready-made workflows for converting between CESM and other data formats.
+
+== What Spine Toolbox provides
+
+Spine Toolbox allows you to build and run data processing pipelines visually.
+Each pipeline consists of connected items -- data sources, transformation tools, and data stores.
+You can inspect intermediate results, re-run individual steps, and manage scenarios through the GUI.
+
+== Opening the project
+
+The Spine Toolbox project file is located at `.spinetoolbox/project.json` in the repository root.
+
+To open it:
+
+. Launch Spine Toolbox
+. Select **File > Open project...**
+. Navigate to the `oes-spec` repository root and open it
+
+Spine Toolbox will load the project and display the workflow canvas.
+
+== Available workflows
+
+The project includes the following workflows:
+
+YAML to DuckDB to FlexTool::
+Loads a CESM YAML file (e.g., `data/samples/cesm-sample.yaml`), writes it to a DuckDB database, transforms it to FlexTool format, and optionally runs FlexTool3.
++
+Items: *CESAME sample* -> *yaml to CESAME* -> *CESAME-db* -> *CESAME to FlexTool* -> *flextool input* -> *FlexTool3*
+
+GridDB to CESM::
+Imports data from a Spine/GridDB SQLite database into CESM DuckDB format.
++
+Items: *GridDB sqlite2* -> *GridDB to CESAME* -> *CESAME-db*
+
+CESM to GridDB::
+Exports CESM DuckDB data to a Spine/GridDB SQLite database.
++
+Items: *CESAME-db* -> *CESAME to GridDB* -> *GridDB sqlite*
+
+CESM to Spine DB::
+Exports CESM data to a native Spine DB format for visualization in Spine Toolbox's DB editor.
++
+Items: *CESAME-db* -> *CESAME to Spine DB* -> *CESAME in Spine DB*
+
+FlexTool to CESM::
+Imports FlexTool input data from a Spine DB into CESM DuckDB format.
++
+Items: *flextool input2* -> *flextool to CESAME* -> *CESAME-db*
+
+== Running a workflow
+
+To execute a workflow:
+
+. Select the items you want to run by clicking on them (hold Ctrl to select multiple items)
+. Click the **Execute Selected** button in the toolbar, or press Ctrl+Enter
+. Alternatively, use **Execute All** to run the entire project
+
+Execution proceeds left-to-right through the connected items. Progress and logs are shown in the **Event Log** panel at the bottom.
+
+== FlexTool3 configuration
+
+The FlexTool3 tool specification references an external path:
+
+----
+/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json
+----
+
+This path must point to a local FlexTool installation. To configure it:
+
+. Open `.spinetoolbox/project.json` in a text editor
+. Find the FlexTool3 specification entry under `"specifications" > "Tool"`
+. Update the `"path"` value to your local FlexTool installation path
+
+If you do not have FlexTool installed, the FlexTool3 tool item will show an error.
+This does not affect other workflows -- FlexTool3 is optional for core CESM data conversion tasks.
+
+== Notes
+
+* The CESM DuckDB file (`CESAME-db` item) is the central data store shared by most workflows.
+* Some tool items use `--clear-target-db` to overwrite existing data; others append. Check the command-line arguments shown in each tool's properties panel.
+* Data Store items use SQLite databases for Spine DB / GridDB format. Data Connection items reference flat files (YAML, DuckDB).

@@ -1,0 +1,7 @@
+* Specification
+** xref:overview.adoc[Overview]
+** xref:entities.adoc[Entity Reference]
+** xref:methods.adoc[Methods Reference]
+** xref:temporal-model.adoc[Temporal Model]
+** xref:data-format.adoc[Data Format]
+** xref:unit-conventions.adoc[Unit Conventions]

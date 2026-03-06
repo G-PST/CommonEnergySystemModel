@@ -1,0 +1,136 @@
+= Troubleshooting
+
+Common issues and solutions when working with CESM.
+
+== Missing `spinedb_api` module
+
+*Symptom:* `ModuleNotFoundError: No module named 'spinedb_api'`
+
+*Solution:* The Spine DB API is an optional dependency. Install it with:
+
+[source,bash]
+----
+pip install -e ".[spine]"
+----
+
+This is only needed for workflows that read from or write to Spine Toolbox databases (GridDB, FlexTool).
+
+== DuckDB file locked
+
+*Symptom:* `duckdb.IOException: Could not set lock on file` or similar locking errors.
+
+*Solution:* DuckDB allows only one write connection at a time. Close any other processes or notebooks that have the same `.duckdb` file open. Common culprits:
+
+* Another Python script or Jupyter notebook with an active DuckDB connection
+* A Spine Toolbox workflow that wrote to the same file
+* The DuckDB CLI tool
+
+If the lock persists after closing all known connections, check for stale `.wal` files next to the database and remove them.
+
+== Timeline length mismatch
+
+*Symptom:* `AssertionError: Balance 'west' flow_profile length 8 != timeline length 10` or similar validation errors.
+
+*Solution:* All time series arrays (`flow_profile`, `profile_limit_upper`, etc.) must have exactly the same number of elements as the `timeline` array. Count the entries in your `timeline` and verify that every time series array matches.
+
+[source,yaml]
+----
+# timeline has 3 entries, so all profiles must also have 3 entries
+timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z", "2023-01-01T02:00:00Z"]
+balance:
+  - name: west
+    flow_profile: [-602.1, -780.7, -802]  # 3 entries - correct
+----
+
+== Schema validation errors
+
+*Symptom:* Validation errors when loading YAML data, such as missing required fields.
+
+*Solution:* Check that all required fields are present for each entity type:
+
+* `balance`: requires `name`
+* `commodity`: requires `name`, `commodity_type`
+* `unit`: requires `name`
+* `link`: requires `name`, `node_A`, `node_B`
+* `storage`: requires `name`
+* `unit_to_node` / `node_to_unit`: requires `name`, `source`, `sink`
+
+Use the LinkML schema at `model/cesm.yaml` as the authoritative reference for required and optional fields.
+
+== Spine Toolbox FlexTool3 tool not found
+
+*Symptom:* Spine Toolbox reports that the FlexTool3 tool specification cannot be found.
+
+*Solution:* The FlexTool3 specification references an external path outside this repository:
+
+[source,json]
+----
+{
+    "type": "path",
+    "relative": false,
+    "path": "/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
+}
+----
+
+This path is hardcoded in `.spinetoolbox/project.json`. Update it to point to your local FlexTool installation, or remove it if you do not need to run FlexTool3 directly. FlexTool3 is optional for core CESM workflows.
+
+== Generated Pydantic classes out of date
+
+*Symptom:* Import errors or validation mismatches in `src/generated/cesm_pydantic.py` after schema changes.
+
+*Solution:* Regenerate the Pydantic classes from the LinkML schema:
+
+[source,bash]
+----
+pip install linkml
+gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+----
+
+This must be re-run whenever `model/cesm.yaml` is modified.
+
+== Import errors after cloning
+
+*Symptom:* `ModuleNotFoundError` for `core`, `readers`, `writers`, `transformers`, or `generated` modules.
+
+*Solution:* The project must be installed in development mode so that Python can find the packages under `src/`:
+
+[source,bash]
+----
+pip install -e .
+----
+
+If you also need development tools (pytest, ruff):
+
+[source,bash]
+----
+pip install -e ".[dev]"
+----
+
+== YAML parsing errors
+
+*Symptom:* `yaml.scanner.ScannerError` or unexpected data when loading CESM YAML files.
+
+*Solution:* Common YAML pitfalls:
+
+* Unquoted strings that look like numbers or booleans (e.g., `yes`, `no`, `on`, `off`)
+* Missing quotes around ISO 8601 timestamps in non-timeline fields
+* Indentation errors -- YAML is whitespace-sensitive
+* Using tabs instead of spaces
+
+Validate your YAML syntax with an external tool before debugging CESM-specific issues.
+
+== Tests failing
+
+*Symptom:* `pytest` failures after a fresh clone.
+
+*Solution:* Ensure the full development setup is complete:
+
+[source,bash]
+----
+pip install -e ".[dev]"
+pip install linkml
+gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+pytest
+----
+
+Some tests (particularly those using `SchemaView`) may be skipped if there are LinkML version compatibility issues. Skipped tests are expected and do not indicate a problem.

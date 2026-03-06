@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Architecture :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/architecture.html">
+    <link rel="prev" href="transformer-developer-guide.html">
+    <link rel="next" href="adding-a-new-format.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Developer Guide</li>
+    <li><a href="architecture.html">Architecture</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/developer-guide/pages/architecture.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Architecture</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page describes the system architecture of CESM (Common Energy System Model).
+It is intended for developers who want to understand how the components fit together before contributing code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_high_level_data_flow"><a class="anchor" href="#_high_level_data_flow"></a>High-level data flow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following diagram shows how data moves through the system, from schema definition to format-specific output.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>LinkML Schema (model/cesm.yaml)
+     |
+     | gen-pydantic
+     v
+Generated Pydantic classes (src/generated/cesm_pydantic.py)
+     |
+     | used for validation
+     v
+Readers -----&gt; Dict[str, DataFrame] -----&gt; Transformers -----&gt; Writers
+   ^                                                              |
+   |              DuckDB (central storage)                        |
+   |                   ^        |                                 |
+   |                   |        v                                 |
+Source formats    intermediate data                       Target formats
+(YAML, Spine DB,  (versioned, with                      (DuckDB, Spine DB,
+ DuckDB, GridDB)   timestamps)                           GridDB)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every conversion follows the same pattern: a <strong>reader</strong> loads source data into a dictionary of DataFrames, a <strong>transformer</strong> reshapes and remaps those DataFrames, and a <strong>writer</strong> persists the result.
+DuckDB sits at the centre as persistent storage, making it easy to inspect intermediate results, chain transformations, and debug.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schema"><a class="anchor" href="#_schema"></a>Schema</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Location:</strong> <code>model/cesm.yaml</code></p>
+</div>
+<div class="paragraph">
+<p>The LinkML schema is the single source of truth.
+It defines all classes, enums, slots, and their relationships.
+From this schema, Pydantic classes are generated automatically:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>gen-pydantic model/cesm.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated file (<code>src/generated/cesm_pydantic.py</code>) provides runtime validation.
+The core <code>DataHandler</code> class in <code>src/core/data_handler.py</code> wraps the generated <code>Database</code> object and offers utilities for working with entity collections.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_readers"><a class="anchor" href="#_readers"></a>Readers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Location:</strong> <code>src/readers/</code></p>
+</div>
+<div class="paragraph">
+<p>Each reader loads data from a specific source format and returns a <code>Dict[str, pd.DataFrame]</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_yaml.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CESM YAML sample data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_duckdb.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CESM DuckDB database</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from_spine_db.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spine Toolbox database (used for FlexTool and other Spine-based formats)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>linkml_yaml.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LinkML-native YAML loading</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All readers conform to a common interface so that downstream code can treat them interchangeably.
+See <a href="readers-writers.html" class="xref page">Readers &amp; Writers</a> for implementation details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_writers"><a class="anchor" href="#_writers"></a>Writers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Location:</strong> <code>src/writers/</code></p>
+</div>
+<div class="paragraph">
+<p>Each writer accepts a <code>Dict[str, pd.DataFrame]</code> and persists the data to a target format.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_duckdb.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CESM DuckDB database</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>to_spine_db.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spine Toolbox database (used for FlexTool and other Spine-based formats)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Format-specific serialisation logic (e.g. GridDB SQLite) lives in the transformer layer when the conversion requires structural changes beyond simple persistence.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transformers"><a class="anchor" href="#_transformers"></a>Transformers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Location:</strong> <code>src/transformers/</code></p>
+</div>
+<div class="paragraph">
+<p>Transformers handle the mapping between CESM&#8217;s internal data model and external format-specific models.
+They are organised by format and versioned by both the CESM schema version and the source format version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>src/transformers/
+  irena_flextool/
+    cesm_v0.1.0/
+      v3.14.0/
+        from_flextool.yaml     &lt;-- declarative (YAML) mapping
+        to_flextool.yaml
+        to_cesm.py             &lt;-- procedural (Python) logic
+  griddb/
+    cesm_v0.1.0/
+      v0.1.0/
+        to_griddb.yaml
+        to_griddb.py
+      v0.2.0/
+        to_cesm.py
+        to_cesm_config.yaml
+        to_griddb.py
+    to_sqlite.py               &lt;-- GridDB SQLite serialisation</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_yaml_transformers_declarative"><a class="anchor" href="#_yaml_transformers_declarative"></a>YAML transformers (declarative)</h3>
+<div class="paragraph">
+<p>YAML transformer files contain declarative mappings&#8201;&#8212;&#8201;column renames, value lookups, filtering rules.
+The core transformation engine in <code>src/core/transform_parameters.py</code> processes these definitions at runtime.
+This approach keeps simple mappings readable and version-controllable without writing Python.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_python_transformers_procedural"><a class="anchor" href="#_python_transformers_procedural"></a>Python transformers (procedural)</h3>
+<div class="paragraph">
+<p>When a conversion requires logic that cannot be expressed declaratively&#8201;&#8212;&#8201;timeline reconstruction, cross-entity lookups, conditional aggregation&#8201;&#8212;&#8201;a Python transformer module handles it.
+These modules sit alongside their YAML counterparts in the same versioned directory.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_versioning_convention"><a class="anchor" href="#_versioning_convention"></a>Versioning convention</h3>
+<div class="paragraph">
+<p>The directory structure <code>cesm_v{X}/v{Y}</code> encodes a version pair:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>cesm_v{X}</code>&#8201;&#8212;&#8201;the CESM schema version the transformer targets.</p>
+</li>
+<li>
+<p><code>v{Y}</code>&#8201;&#8212;&#8201;the version of the external format.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This allows multiple transformer versions to coexist, so older format versions remain supported while new ones are developed.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="transformer-developer-guide.html" class="xref page">Transformer Developer Guide</a> for a walkthrough of writing transformers.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_core_utilities"><a class="anchor" href="#_core_utilities"></a>Core utilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Location:</strong> <code>src/core/</code></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data_handler.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wraps the generated <code>Database</code> class; provides generic operations across all entity types (listing collections, counting entities).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>linkml_to_dataframes.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Converts LinkML object trees into the <code>Dict[str, pd.DataFrame]</code> representation used throughout the pipeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>transform_parameters.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The transformation engine that reads YAML transformer definitions and applies them to DataFrames.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dataframe_conventions"><a class="anchor" href="#_dataframe_conventions"></a>DataFrame conventions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The entire pipeline passes data as <code>Dict[str, pd.DataFrame]</code>, where each key is a class or relationship name.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity DataFrames</dt>
+<dd>
+<p>Named after the CESM class they represent: <code>balance</code>, <code>unit</code>, <code>unit_to_node</code>, and so on.</p>
+</dd>
+<dt class="hdlist1">Parameter columns</dt>
+<dd>
+<p>Use a dotted naming convention that encodes both the class and the data type:</p>
+<div class="listingblock">
+<div class="content">
+<pre>class.ts.param     -- time series parameter
+class.str.param    -- string parameter
+class.array.param  -- array parameter</pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">MultiIndex</dt>
+<dd>
+<p>Multi-dimensional entities (e.g. ports with source/sink dimensions) use a Pandas <code>MultiIndex</code>.</p>
+</dd>
+<dt class="hdlist1">Storage encoding</dt>
+<dd>
+<p>When stored in DuckDB, MultiIndex columns are encoded with a <code>::</code> separator so they can be faithfully round-tripped.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_duckdb_as_central_hub"><a class="anchor" href="#_duckdb_as_central_hub"></a>DuckDB as central hub</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All data passes through DuckDB.
+It stores CESM data together with metadata such as schema versions and timestamps.
+This design has several advantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Inspectability</strong>&#8201;&#8212;&#8201;you can query intermediate results with standard SQL.</p>
+</li>
+<li>
+<p><strong>Composability</strong>&#8201;&#8212;&#8201;transformations can be chained: read from DuckDB, transform, write back.</p>
+</li>
+<li>
+<p><strong>Reproducibility</strong>&#8201;&#8212;&#8201;versioned metadata makes it clear which schema and transformer produced a given dataset.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_where_to_go_next"><a class="anchor" href="#_where_to_go_next"></a>Where to go next</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-a-new-format.html" class="xref page">Adding a New Format</a>&#8201;&#8212;&#8201;step-by-step guide for integrating a new energy system model.</p>
+</li>
+<li>
+<p><a href="readers-writers.html" class="xref page">Readers &amp; Writers</a>&#8201;&#8212;&#8201;details on the reader/writer interface and how to implement one.</p>
+</li>
+<li>
+<p><a href="transformer-developer-guide.html" class="xref page">Transformer Developer Guide</a>&#8201;&#8212;&#8201;how to write declarative and procedural transformers.</p>
+</li>
+<li>
+<p><a href="testing.html" class="xref page">Testing</a>&#8201;&#8212;&#8201;how to test readers, writers, and transformers.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="transformer-developer-guide.html">Transformer Developer Guide</a></span>
+  <span class="next"><a href="adding-a-new-format.html">Adding a New Format</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

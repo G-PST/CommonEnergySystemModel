@@ -1,0 +1,4 @@
+* Getting Started
+** xref:installation.adoc[Installation]
+** xref:quickstart.adoc[Quickstart]
+** xref:spine-toolbox-guide.adoc[Spine Toolbox Guide]

@@ -1,0 +1,318 @@
+= Temporal Model
+
+CESM separates the notion of _data time_ from _solve time_.
+The timeline defines when data points exist; periods define investment epochs; and solve patterns control which slices of time the optimiser actually sees in each run.
+This page explains each concept and how they interact.
+
+
+== Timeline
+
+The `timeline` field on a xref:schema:class/Dataset.adoc[Dataset] is an ordered list of ISO 8601 timestamps that defines every time step for which data can be provided.
+All time-series arrays in the dataset -- flow profiles, price series, capacity-factor profiles -- must have exactly as many elements as the timeline has entries.
+
+[source,yaml]
+----
+timeline:
+  - "2023-01-01T00:00:00Z"
+  - "2023-01-01T01:00:00Z"
+  - "2023-01-01T02:00:00Z"
+  - "2023-01-01T03:00:00Z"
+  - "2023-01-01T04:00:00Z"
+  - "2023-01-01T05:00:00Z"
+  - "2023-01-01T06:00:00Z"
+  - "2023-01-01T07:00:00Z"
+  - "2023-01-01T08:00:00Z"
+  - "2023-01-01T09:00:00Z"
+----
+
+This example defines ten hourly time steps.
+A wind profile array of length 10 such as `[0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]` maps one-to-one onto these timestamps.
+
+The timeline is the single source of truth for temporal alignment.
+Tools reading a CESM dataset can rely on this alignment without additional metadata about time step spacing or offsets.
+
+
+== Periods
+
+A xref:schema:class/Period.adoc[Period] represents an investment epoch -- a span of years over which capacity decisions are assumed to hold.
+Each period has a single attribute beyond its name:
+
+`years_represented` (float)::
+How many years this period covers before the next period begins.
+Used by the solver for discounting and annualisation.
+Values below one are permitted, allowing multiple periods within a single year.
+
+[source,yaml]
+----
+period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
+----
+
+In this example the model considers two investment periods: one centred on 2030 that represents five years, followed by another centred on 2035 that also represents five years.
+
+Periods serve two purposes:
+
+. They define the investment timeline -- which capacity expansion decisions belong to which epoch.
+. They are referenced by solve patterns to control which periods are optimised or reported in each solve.
+
+
+== Timesets and Durations
+
+Two helper types underpin the temporal definitions in solve patterns.
+
+=== Timeset
+
+A Timeset is a pair of `start_time` (a datetime) and `duration` (an ISO 8601 duration string).
+Together they identify a contiguous window on the timeline.
+
+[source,yaml]
+----
+start_time_durations:
+  - start_time: "2023-01-01T00:00"
+    duration: PT10H
+----
+
+The `start_time` must match a value in the dataset timeline.
+The duration extends forward from that point.
+Multiple timesets can be listed to define representative periods or disjoint time windows within a single solve.
+
+=== Duration
+
+A Duration is an ISO 8601 duration string.
+Examples:
+
+* `PT5M30S` -- five minutes and thirty seconds
+* `PT2H` -- two hours
+* `PT10H` -- ten hours
+
+Durations appear in `rolling_jump`, `rolling_additional_horizon`, `time_resolution`, and as the duration component of a Timeset.
+
+
+== Solve Patterns
+
+A xref:schema:class/Solve_pattern.adoc[Solve_pattern] is the central object that controls how the optimiser operates on the temporal structure.
+It specifies which time window to solve, which periods to include, and whether to solve the window in one pass or roll through it.
+
+=== Solve Mode
+
+The `solve_mode` attribute selects the solving strategy:
+
+`single_solve`::
+The entire time window defined by `start_time_durations` is optimised in one shot.
+All time steps are visible to the solver simultaneously.
+
+`rolling_solve`::
+The time window is solved in overlapping chunks that advance through the timeline.
+This is useful for large problems where solving the full horizon at once is intractable, or where a look-ahead is needed without committing to decisions far in the future.
+
+=== Time Window
+
+The `start_time_durations` attribute is a list of Timesets that define what part of the timeline the solve pattern covers.
+When omitted, the default is the full timeline.
+Multiple Timesets can be provided to model representative periods (e.g., a typical winter week and a typical summer week).
+
+=== Period Lists
+
+Solve patterns reference periods through five lists that control which investment and operational decisions are active:
+
+`periods_realise_operations`::
+Periods from which the model will report operational results and possibly pass them to the next solve.
+
+`periods_realise_investments`::
+Periods from which the model will report investment results and possibly pass them to the next solve.
+
+`periods_pass_storage_data`::
+Periods from which the model will pass storage level information to the next solve or to child solves.
+
+`periods_additional_operations_horizon`::
+Periods included in dispatch optimisation but not reported -- they provide look-ahead context and may be solved again in a later solve.
+
+`periods_additional_investments_horizon`::
+Periods included in investment optimisation but not reported -- they provide look-ahead context for capacity decisions.
+
+This separation allows a solve to optimise over a wider horizon than it commits to, which is essential for multi-stage investment planning where early decisions should account for future conditions.
+
+=== Time Resolution
+
+The `time_resolution` attribute is a Duration that sets the model time resolution.
+It must be an integer multiple of the data resolution implied by the timeline.
+For example, if the timeline has hourly steps, a `time_resolution` of `PT2H` would aggregate pairs of time steps.
+
+NOTE: Variable time resolution (different resolutions for different parts of the timeline) is a planned future feature noted in the schema.
+
+=== Nested Solve Patterns
+
+The `contains_solve_pattern` attribute allows one solve pattern to contain a child solve pattern.
+When the parent executes, it runs the child solve pattern inside its own context.
+This enables hierarchical solving strategies -- for example, an investment solve that contains a detailed dispatch solve within each investment period.
+
+
+== Rolling Solve in Detail
+
+A rolling solve advances through the time window in steps, solving a sub-window at each step.
+Two parameters control the rolling behaviour:
+
+`rolling_jump`::
+A Duration that specifies how far each roll advances.
+
+`rolling_additional_horizon`::
+A Duration that specifies how much additional look-ahead the solver sees beyond the jump.
+This overlap prevents myopic end-of-window effects.
+
+The following diagram illustrates a rolling solve over a 10-hour window with `rolling_jump: PT2H` and `rolling_additional_horizon: PT2H`:
+
+[source]
+----
+Timeline:  T0   T1   T2   T3   T4   T5   T6   T7   T8   T9
+           00h  01h  02h  03h  04h  05h  06h  07h  08h  09h
+
+Roll 1:    [====JUMP=====|==HORIZON==]
+           T0   T1        T2   T3
+
+Roll 2:              [====JUMP=====|==HORIZON==]
+                     T2   T3        T4   T5
+
+Roll 3:                        [====JUMP=====|==HORIZON==]
+                               T4   T5        T6   T7
+
+Roll 4:                                  [====JUMP=====|==HORIZON==]
+                                         T6   T7        T8   T9
+
+Roll 5:                                            [====JUMP=====]
+                                                   T8   T9
+----
+
+In each roll:
+
+. The solver optimises over both the jump window and the additional horizon.
+. Only the decisions within the jump window are committed (realised).
+. The horizon window provides foresight so that end-of-window effects do not distort the committed decisions.
+. The next roll starts where the previous jump ended.
+
+When the remaining timeline is shorter than the jump plus horizon, the final roll covers whatever time steps remain.
+
+
+== Solve Order
+
+The xref:schema:class/System.adoc[System] entity defines the `solve_order` -- an ordered list of solve pattern names that specifies the sequence in which solves execute:
+
+[source,yaml]
+----
+system:
+  - name: test_system
+    solve_order:
+      - solve_2030
+      - solve_2035_invest
+      - solve_2035_rolling_dispatch
+----
+
+Solves execute in the listed order.
+Each solve can pass results (investments, storage states) to subsequent solves.
+This allows multi-stage workflows such as:
+
+. Solve 2030 investments and operations together.
+. Solve 2035 investments using the 2030 results as a starting point.
+. Solve 2035 operations in a rolling fashion with fixed investments from step 2.
+
+
+== Complete Example
+
+The following example brings all temporal concepts together.
+It defines a 10-hour timeline, two investment periods, and three solve patterns executed in sequence.
+
+[source,yaml]
+----
+timeline:
+  - "2023-01-01T00:00:00Z"
+  - "2023-01-01T01:00:00Z"
+  - "2023-01-01T02:00:00Z"
+  - "2023-01-01T03:00:00Z"
+  - "2023-01-01T04:00:00Z"
+  - "2023-01-01T05:00:00Z"
+  - "2023-01-01T06:00:00Z"
+  - "2023-01-01T07:00:00Z"
+  - "2023-01-01T08:00:00Z"
+  - "2023-01-01T09:00:00Z"
+
+period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
+
+solve_pattern:
+  - name: solve_2030                          # <1>
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    periods_realise_operations:
+      - y2030
+    periods_realise_investments:
+      - y2030
+    periods_additional_investments_horizon:
+      - y2035
+
+  - name: solve_2035_invest                   # <2>
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    periods_realise_investments:
+      - y2035
+
+  - name: solve_2035_rolling_dispatch         # <3>
+    solve_mode: rolling_solve
+    start_time_durations:
+      - start_time: "2023-01-01T00:00"
+        duration: PT10H
+    rolling_jump: PT2H
+    rolling_additional_horizon: PT2H
+    periods_realise_operations:
+      - y2035
+
+system:
+  - name: test_system
+    solve_order:
+      - solve_2030
+      - solve_2035_invest
+      - solve_2035_rolling_dispatch
+----
+<1> Solves both investments and operations for 2030 in a single pass.
+    The 2035 period is included as an additional investment horizon so that 2030 capacity decisions account for future needs, but 2035 investment results are not committed.
+<2> Solves 2035 investments in a single pass, building on the 2030 results.
+<3> Solves 2035 operations using a rolling horizon.
+    Each roll advances 2 hours and looks ahead an additional 2 hours.
+    Investments are already fixed from step 2.
+
+
+== PeriodFloat: Period-Dependent Values
+
+Many parameters in CESM can vary by period.
+The PeriodFloat type represents this as a list of period-name / value pairs:
+
+[source,yaml]
+----
+inflation_rate:
+  - period: y2030
+    value: 3.0
+  - period: y2035
+    value: 2.5
+----
+
+Parameters that accept PeriodFloat can also accept a plain float, in which case the value applies to all periods.
+This pattern appears throughout the specification for costs, penalties, and other parameters that may change across investment epochs.
+
+
+== Future Directions
+
+Variable time resolution::
+The schema notes that variable time resolution -- using different temporal granularities for different parts of the timeline within a single solve -- is planned for a future version.
+Currently, `time_resolution` applies uniformly.
+
+Stochastic modelling::
+The specification is designed with multi-stage stochastic optimisation as a goal.
+The separation of periods, solve patterns, and nested solves provides the structural foundation for stochastic scenarios, though the explicit stochastic modelling constructs are not yet part of the schema.

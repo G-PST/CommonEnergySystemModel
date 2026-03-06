@@ -1,0 +1,163 @@
+= Unit Conventions
+
+This page defines the unit conventions used throughout the Common Energy System Model (CESM) data format.
+All units are declared in the LinkML schema using https://qudt.org/[QUDT] annotations, ensuring machine-readable unit semantics alongside the human-readable conventions described here.
+
+[#currency-and-reference-year]
+== Currency and Reference Year
+
+Every CESM dataset must declare two required fields at the top level:
+
+currency:: A 3-letter ISO 4217 currency code (e.g., `EUR`, `USD`). The same currency applies to all monetary values in the dataset.
+reference_year:: A 4-digit year (e.g., `2025`). All monetary values are denominated in this year's prices.
+
+[#percentage-convention]
+== Percentage Convention
+
+[IMPORTANT]
+====
+CESM expresses percentages as whole numbers, not as fractions.
+For example, an efficiency of 38% is entered as `38.0`, not `0.38`.
+This applies to all fields annotated with the QUDT unit `PERCENT`, including efficiency (conversion rates), discount rates, availability, storage losses, and inflation rates.
+This convention differs from many other energy system tools that use the 0-to-1 fraction form.
+====
+
+[#unit-reference]
+== Unit Reference
+
+The following table lists all parameter categories, their units, and example values from the sample dataset.
+
+[cols="3,2,2,2", options="header"]
+|===
+| Parameter | Unit | QUDT Annotation | Example Values
+
+| Port capacity
+| MW
+| `unit:MegaW`
+| 50, 500, 800, 1500
+
+| Link capacity
+| MW
+| `unit:MegaW`
+| (same as port capacity)
+
+| Maximum total investment
+| MW
+| `unit:MegaW`
+| (group-level cap)
+
+| Storage capacity
+| MWh
+| `unit:MegaW-HR`
+| 750
+
+| Annual flow
+| MWh
+| `unit:MegaW-HR`
+| (per-flow annual total)
+
+| Conversion rate (efficiency)
+| %
+| `unit:PERCENT`
+| 38.0, 58.0, 100.0
+
+| Availability
+| %
+| `unit:PERCENT`
+| (0--100)
+
+| Discount rate
+| %
+| `unit:PERCENT`
+| 6.0, 7.0, 8.0
+
+| Storage loss (from stored energy)
+| %
+| `unit:PERCENT`
+| (per-timestep loss)
+
+| Inflation rate
+| %
+| `unit:PERCENT`
+| 3.0
+
+| Payback time
+| years
+| `unit:YR`
+| 12, 25, 30, 40, 50
+
+| Units / storages / links existing
+| unitless (count)
+| `unit:UNITLESS`
+| (integer or float count)
+
+| Flow profile
+| unitless (multiplier)
+| `unit:UNITLESS`
+| (0--1 time series)
+
+| Profile limit (upper / lower)
+| unitless (multiplier)
+| `unit:UNITLESS`
+| (0--1 bounds)
+|===
+
+[#cost-units]
+== Cost Units
+
+All cost parameters use the currency declared in the dataset-level `currency` field.
+The denominator units use *kW* and *kWh* (not MW/MWh) for investment and fixed costs, following common industry practice for quoting specific costs.
+
+[cols="3,3,2", options="header"]
+|===
+| Parameter | Unit | Example Values
+
+| Port investment cost
+| currency / kW
+| 500, 1000, 1200, 5500
+
+| Link investment cost
+| currency / kW
+| 10, 1600
+
+| Storage investment cost
+| currency / kWh
+| 600.0
+
+| Port fixed cost
+| currency / kW / year
+| (annual fixed O&M)
+
+| Storage fixed cost
+| currency / kWh / year
+| (annual fixed O&M)
+
+| Operational cost
+| currency / MWh
+| 12
+
+| Startup cost
+| currency / startup
+| (cost of one full startup)
+
+| Commodity price
+| currency / MWh
+| 25, 30
+
+| Penalty (upward / downward)
+| currency / MWh
+| 1000, 10000
+|===
+
+[#time-conventions]
+== Time Conventions
+
+Timestamps:: ISO 8601 datetime format, e.g., `2023-01-01T00:00:00Z`.
+Durations:: ISO 8601 duration format, e.g., `PT10H` (10 hours), `PT2H` (2 hours).
+
+[#qudt-integration]
+== QUDT Integration
+
+The CESM LinkML schema annotates each numeric field with a https://qudt.org/[QUDT] unit URI (e.g., `qudt_unit: "unit:MegaW"`).
+This enables automated validation and conversion by tools that understand the QUDT ontology.
+Cost units that combine currency with a physical unit are represented as custom unit types in the schema (e.g., `currency_per_kilowatt`) since the specific currency is dataset-dependent.

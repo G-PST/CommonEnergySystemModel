@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CESM YAML Examples :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/user-guide/cesm-yaml-examples.html">
+    <link rel="prev" href="supported-formats.html">
+    <link rel="next" href="troubleshooting.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>User Guide</li>
+    <li><a href="cesm-yaml-examples.html">CESM YAML Examples</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/user-guide/pages/cesm-yaml-examples.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">CESM YAML Examples</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page presents annotated YAML examples, progressing from a minimal valid dataset to a full multi-period system.
+All examples use the CESM YAML format consumed by <code>src/readers/from_yaml.py</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_minimal_valid_dataset"><a class="anchor" href="#_minimal_valid_dataset"></a>Minimal valid dataset</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The smallest valid CESM YAML file requires <code>id</code>, <code>timeline</code>, <code>currency</code>, <code>reference_year</code>, and at least one balance node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">id: 0
+timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z"]
+currency: EUR
+reference_year: 2025
+balance:
+  - name: grid
+    flow_profile: [-100, -120]
+    penalty_upward: 1000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>flow_profile</code> arrays must have the same length as <code>timeline</code>.
+Negative values represent demand (consumption).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_electricity_system"><a class="anchor" href="#_simple_electricity_system"></a>Simple electricity system</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows three balance nodes (regions) connected by links, with generation units and fuel commodities.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">id: 0
+timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z", "2023-01-01T02:00:00Z"]
+currency: EUR
+reference_year: 2025
+
+balance:
+  - name: west
+    flow_scaling_method: scale_to_annual
+    flow_annual: 20000000.0
+    flow_profile: [-602.1, -780.7, -802]
+    penalty_upward: 1000
+  - name: east
+    flow_scaling_method: scale_to_annual
+    flow_annual: 15000000
+    flow_profile: [-1002.1, -980.7, -968]
+    penalty_upward: 1000
+  - name: north
+    flow_scaling_method: use_profile_directly
+    flow_profile: [-600, -700, -800]
+    penalty_upward: 1000
+
+commodity:
+  - name: natural_gas
+    commodity_type: fuel
+    price_per_unit: 25
+
+unit:
+  - name: ccgt
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 58.0
+  - name: wind
+    conversion_method: constant_efficiency
+    units_existing: 1
+    efficiency: 100.0
+
+node_to_unit:
+  - name: natural_gas.ccgt
+    source: natural_gas
+    sink: ccgt
+
+unit_to_node:
+  - name: ccgt.east
+    source: ccgt
+    sink: east
+    capacity: 500
+  - name: wind.north
+    source: wind
+    sink: north
+    capacity: 1500
+    profile_limit_upper: [0.03, 0.34, 0.55]
+
+link:
+  - name: east_west
+    node_A: east
+    node_B: west
+    transfer_method: regular_linear
+    capacity: 500
+    links_existing: 1
+    efficiency: 98.0
+    investment_method: not_allowed
+  - name: east_north
+    node_A: east
+    node_B: north
+    transfer_method: regular_linear
+    capacity: 250
+    links_existing: 2
+    efficiency: 95.0
+    investment_method: not_allowed</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Key points:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>flow_scaling_method</code> controls how <code>flow_profile</code> is interpreted&#8201;&#8212;&#8201;<code>scale_to_annual</code> scales the profile shape to match <code>flow_annual</code>, while <code>use_profile_directly</code> uses profile values as-is.</p>
+</li>
+<li>
+<p><code>node_to_unit</code> connects fuel commodities to units (input port).</p>
+</li>
+<li>
+<p><code>unit_to_node</code> connects units to balance nodes (output port) and carries <code>capacity</code>.</p>
+</li>
+<li>
+<p><code>profile_limit_upper</code> constrains output per timestep (e.g., wind availability factors).</p>
+</li>
+<li>
+<p>Links connect two balance nodes with <code>efficiency</code> representing transfer losses.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_system_with_storage"><a class="anchor" href="#_system_with_storage"></a>System with storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Add a <code>storage</code> section to model batteries or other storage technologies.
+Storage nodes are connected to the rest of the system through links.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  - name: battery
+    storage_capacity: 750
+    storages_existing: 2
+    investment_method: no_limits
+    investment_cost: 600.0
+    discount_rate: 7.0
+    payback_time: 12
+    flow_scaling_method: use_profile_directly
+    flow_profile: [-1, -1, -1]
+    penalty_upward: 10000
+
+link:
+  - name: charger
+    node_A: east
+    node_B: battery
+    transfer_method: regular_linear
+    capacity: 750
+    links_existing: 1
+    efficiency: 90.0
+    investment_method: no_limits
+    investment_cost: 10
+    discount_rate: 7.0
+    payback_time: 12</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>charger</code> link connects the battery to the <code>east</code> balance node.
+<code>storage_capacity</code> is the energy capacity per existing unit, and <code>storages_existing</code> is the number of installed units.
+The battery&#8217;s <code>flow_profile</code> of <code>[-1, -1, -1]</code> represents a constant self-discharge profile.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_system_with_investment_options"><a class="anchor" href="#_system_with_investment_options"></a>System with investment options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Units, storage, and links can all carry investment parameters.
+The key fields are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit:
+  - name: ocgt
+    conversion_method: constant_efficiency
+    units_existing: 2
+    efficiency: 38.0
+    investment_method: no_limits      # or: not_allowed
+    discount_rate: 6.0                # percent
+    payback_time: 25                  # years
+
+unit_to_node:
+  - name: ocgt.west
+    source: ocgt
+    sink: west
+    capacity: 50
+    investment_cost: 500              # cost per unit of capacity</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>investment_method: no_limits</code> allows the solver to build new capacity. Use <code>not_allowed</code> to freeze existing capacity.</p>
+</li>
+<li>
+<p><code>investment_cost</code> is specified on the port (unit_to_node) because a single unit may connect to multiple nodes with different costs.</p>
+</li>
+<li>
+<p><code>discount_rate</code> and <code>payback_time</code> are used to annualize the investment cost.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The same pattern applies to storage and links:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  - name: battery
+    investment_method: no_limits
+    investment_cost: 600.0
+    discount_rate: 7.0
+    payback_time: 12
+
+link:
+  - name: pony1
+    investment_method: no_limits
+    investment_cost: 1600
+    discount_rate: 4.0
+    payback_time: 50</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multi_period_system"><a class="anchor" href="#_multi_period_system"></a>Multi-period system</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Multi-period planning uses <code>period</code>, <code>solve_pattern</code>, and <code>system</code> sections to define investment horizons.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">period:
+  - name: y2030
+    years_represented: 5.0
+  - name: y2035
+    years_represented: 5.0
+
+solve_pattern:
+  - name: solve_2030
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    periods_realise_operations: ['y2030']
+    periods_realise_investments: ['y2030']
+    periods_additional_investments_horizon: ['y2035']
+  - name: solve_2035_invest
+    solve_mode: single_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    periods_realise_investments: ['y2035']
+  - name: solve_2035_rolling_dispatch
+    solve_mode: rolling_solve
+    start_time_durations:
+      - start_time: '2023-01-01T00:00'
+        duration: PT10H
+    rolling_jump: PT2H
+    rolling_additional_horizon: PT2H
+    periods_realise_operations: ['y2035']
+
+system:
+  - name: test_system
+    solve_order: ['solve_2030', 'solve_2035_invest', 'solve_2035_rolling_dispatch']
+    inflation_rate: 3.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Key points:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each <code>period</code> represents a planning epoch; <code>years_represented</code> weights the period in the objective function.</p>
+</li>
+<li>
+<p><code>solve_pattern</code> defines how each solve step operates&#8201;&#8212;&#8201;which periods to invest in and which to dispatch.</p>
+</li>
+<li>
+<p><code>solve_mode: rolling_solve</code> enables rolling-window dispatch with <code>rolling_jump</code> and <code>rolling_additional_horizon</code> controlling the window movement.</p>
+</li>
+<li>
+<p><code>periods_additional_investments_horizon</code> lets the solver see future periods for investment foresight.</p>
+</li>
+<li>
+<p><code>system.solve_order</code> determines the execution sequence of solve patterns.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The full sample dataset combining all of these features is available at <code>data/samples/cesm-sample.yaml</code>.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="supported-formats.html">Supported Formats</a></span>
+  <span class="next"><a href="troubleshooting.html">Troubleshooting</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

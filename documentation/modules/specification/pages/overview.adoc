@@ -1,0 +1,298 @@
+= Overview
+
+The Common Energy System Model (CESM) is an information standard for multi-energy system modelling.
+It defines a structured, tool-agnostic vocabulary for describing energy systems -- balances, storages, commodities, conversion units, links, and the parameters that govern their behaviour.
+CESM is expressed as a https://linkml.io/[LinkML] schema and is designed so that any optimisation or simulation tool can read or write datasets that conform to the specification.
+
+This page introduces the conceptual design of CESM: why it is structured the way it is, what entities it contains, and how they connect to form a complete energy system description.
+
+== Design Principles
+
+CESM follows a set of principles that shape every part of the specification.
+
+Specification is separate from implementation::
+CESM defines _what_ data looks like, not _how_ a tool processes it.
+A common specification enables interoperability between tools without forcing them to share code.
+
+Domain-agnostic abstractions::
+A xref:schema:class/Unit.adoc[Unit] converts inputs to outputs.
+There is no separate definition for a heat pump versus a gas turbine -- they differ only in parametrisation.
+This keeps the specification small and tractable, and allows tools built on a layer of abstraction to avoid maintaining long compatibility lists.
+
+Parameters reflect physical properties::
+Parameter names and units correspond to the physical quantities they represent, at the level of detail appropriate for energy system planning models.
+
+Single currency, single reference year::
+Financial parameters do not carry per-parameter currency or inflation metadata.
+Every xref:schema:class/Dataset.adoc[Dataset] declares one `currency` (ISO 4217) and one `reference_year`; all monetary values use that denomination.
+See xref:unit-conventions.adoc[Unit Conventions] for details.
+
+Behaviour is controlled by methods::
+CESM is explicit about _how_ something should be modelled.
+A xref:schema:class/Unit.adoc[Unit] declares a `conversion_method` such as `constant_efficiency` or `two_point_efficiency`.
+Each method defines exactly which parameters are required, enabling validation and clear error messages.
+See xref:methods.adoc[Methods Reference] for the full catalogue.
+
+Methods support incremental extension::
+Adding a new method does not break existing functionality.
+A tool can report which methods it supports, making capability gaps immediately visible to users.
+
+Single definition for a single concept::
+For example, efficiency is expressed one way -- not as both an efficiency and a heat rate.
+This avoids ambiguity and simplifies data transformers.
+
+Flexibility in time::
+The specification accommodates models of different temporal scales: detailed operational dispatch, multi-year investment planning, multi-stage stochastic optimisation, and rolling-horizon solves.
+Profile time series are distinguished from scenario-oriented values.
+
+Non-breaking versioning::
+Within a released major version branch, only non-breaking changes are permitted.
+
+Implicit commodity association::
+Nodes do not declare which commodity they carry.
+Commodity association is determined by port connections (xref:schema:class/Node_to_unit.adoc[Node_to_unit] and xref:schema:class/Unit_to_node.adoc[Unit_to_node]).
+This keeps the specification flexible and avoids redundant declarations.
+
+
+== Entity Hierarchy
+
+Every CESM dataset is rooted in a xref:schema:class/Dataset.adoc[Dataset] object that holds the timeline, currency, reference year, and collections of all entities.
+The entities themselves form a hierarchy anchored by the abstract `Entity` base class.
+
+[source]
+----
+Dataset
+  |
+  +-- Entity (abstract)
+  |     name, semantic_id, alternative_names, description
+  |
+  +-- Node (abstract, extends Entity)
+  |     node_type
+  |     |
+  |     +-- Balance        [HasFlow, HasPenalty]
+  |     +-- Storage        [HasFlow, HasPenalty, HasInvestments]
+  |     +-- Commodity
+  |
+  +-- Unit (extends Entity)              [HasInvestments]
+  |     conversion_method, startup_method
+  |
+  +-- Port (abstract, extends Entity)    [HasProfiles]
+  |     |
+  |     +-- Unit_to_node   (unit -> node)
+  |     +-- Node_to_unit   (node -> unit)
+  |
+  +-- Link (extends Entity)             [HasInvestments]
+  |     transfer_method, node_A, node_B
+  |
+  +-- Period
+  +-- Group
+  +-- Group_entity
+  +-- Constraint
+  +-- Solve_pattern
+  +-- System
+----
+
+For a complete reference of every attribute on each entity, see xref:entities.adoc[Entity Reference].
+
+=== Nodes
+
+Nodes represent locations where energy (or matter) is produced, consumed, stored, or traded.
+CESM defines three concrete node types:
+
+xref:schema:class/Balance.adoc[Balance]::
+Maintains an input/output balance in every time step.
+Balance nodes are the workhorse of energy system models -- they represent buses where supply must equal demand (plus any slack penalties).
+
+xref:schema:class/Storage.adoc[Storage]::
+Like a Balance node but with an internal state variable that tracks stored energy across time steps.
+Storages can receive investments (battery capacity, reservoir volume, etc.).
+
+xref:schema:class/Commodity.adoc[Commodity]::
+Represents an exogenous market where energy can be bought or sold at a given `price_per_unit`.
+
+=== Units
+
+A xref:schema:class/Unit.adoc[Unit] converts one or more input flows into one or more output flows.
+The `conversion_method` determines the mathematical relationship (constant efficiency, piecewise linear, etc.) and the `startup_method` controls online/offline modelling.
+Units connect to nodes exclusively through ports.
+
+=== Ports
+
+Ports are the directed connections between units and nodes:
+
+xref:schema:class/Unit_to_node.adoc[Unit_to_node]::
+An output port -- flow leaves a unit and enters a node.
+Carries capacity, investment cost, operational cost, and profile limits.
+
+xref:schema:class/Node_to_unit.adoc[Node_to_unit]::
+An input port -- flow leaves a node and enters a unit.
+
+Ports belong to the `HasProfiles` mixin, which provides `profile_limit_upper` and `profile_limit_lower` for time-varying bounds on flow.
+
+=== Links
+
+A xref:schema:class/Link.adoc[Link] connects two nodes (`node_A` and `node_B`) and models energy transfer between them -- a transmission line, a pipeline, or any directed or bidirectional flow path.
+The `transfer_method` controls modelling detail (e.g. `regular_linear`).
+Links can receive investments.
+
+=== Supporting Entities
+
+xref:schema:class/Period.adoc[Period]::
+Defines investment periods and how many years each period represents.
+
+xref:schema:class/Group.adoc[Group] and xref:schema:class/Group_entity.adoc[Group_entity]::
+Apply shared constraints across multiple entities (e.g. a cap on total installed wind capacity).
+
+xref:schema:class/Constraint.adoc[Constraint]::
+User-defined constraints on decision variables, with a `constant` and a `sense` (equality type).
+
+xref:schema:class/Solve_pattern.adoc[Solve_pattern]::
+Solver configuration: single-solve vs. rolling-horizon, time step structure, look-ahead parameters.
+
+xref:schema:class/System.adoc[System]::
+Whole-system parameters such as `solve_order` and `inflation_rate`.
+
+
+== Mixins
+
+Mixins attach reusable parameter groups to entities without deep inheritance.
+
+[cols="1,2,2", options="header"]
+|===
+| Mixin | Parameters | Used By
+
+| HasFlow
+| `flow_annual`, `flow_profile`, `flow_scaling_method`
+| Balance, Storage
+
+| HasPenalty
+| `penalty_upward`, `penalty_downward`
+| Balance, Storage
+
+| HasInvestments
+| `investment_method`, `discount_rate`, `payback_time`
+| Unit, Storage, Link, Port (Unit_to_node)
+
+| HasProfiles
+| `profile_limit_upper`, `profile_limit_lower`
+| Unit_to_node, Node_to_unit
+|===
+
+
+== Helper Types
+
+Several structured types support complex parameter values:
+
+DirectionalValue:: Holds `forward` and `reverse` values for bidirectional links.
+PeriodFloat:: Period-dependent values -- a list of period names paired with numeric values.
+ConstraintFloat:: Coefficients used in user-defined constraints.
+ConversionRatesFloatFloat:: Operating-point / conversion-rate tuples for piecewise efficiency curves.
+Timeset:: Start-time / duration pairs that define the temporal structure of a solve pattern.
+
+
+== How the Pieces Fit Together
+
+An energy system in CESM is assembled from nodes, units, ports, and links:
+
+. *Nodes* form the backbone -- each node represents a point where energy is balanced, stored, or traded.
+. *Units* sit between nodes and perform conversion (fuel to electricity, electricity to heat, etc.).
+. *Ports* are the directed edges that connect units to nodes.
+  Every unit has at least one input port (Node_to_unit) and one output port (Unit_to_node).
+. *Links* connect nodes to each other for energy transfer (transmission, pipelines).
+. *Methods* on units, links, and other entities define the mathematical formulation.
+. *Groups* and *constraints* layer additional bounds across entities.
+. *Solve patterns* and *system* parameters configure how and when the optimisation runs.
+
+The following diagram shows the connection pattern:
+
+[source]
+----
+         Node_to_unit          Unit_to_node
+ [Node A] ----------> [Unit] ----------> [Node B]
+    |                                        |
+    +--------------- [Link] ----------------+
+----
+
+
+== Example: A Simple Electricity System
+
+Consider a minimal system with a gas turbine supplying an electricity demand node, plus a wind farm and a battery.
+
+[source,yaml]
+----
+balances:
+  - name: elec_bus
+    node_type: Balance
+    penalty_upward: 10000       # cost of unserved energy (currency/MWh)
+    penalty_downward: 1000      # cost of excess energy  (currency/MWh)
+
+commodities:
+  - name: gas_market
+    node_type: Commodity
+    commodity_type: source
+    price_per_unit: 30          # currency/MWh
+
+storages:
+  - name: battery
+    node_type: Storage
+    storage_capacity: 750       # MWh
+
+units:
+  - name: gas_turbine
+    conversion_method: constant_efficiency
+    efficiency: 38.0            # percent
+    startup_method: integer
+    startup_cost: 5000
+
+  - name: wind_farm
+    conversion_method: constant_efficiency
+    efficiency: 100.0
+
+node_to_units:
+  - name: gas_to_turbine
+    source: gas_market
+    sink: gas_turbine
+
+unit_to_nodes:
+  - name: turbine_to_elec
+    source: gas_turbine
+    sink: elec_bus
+    capacity: 500               # MW
+    investment_cost: 1000       # currency/kW
+
+  - name: wind_to_elec
+    source: wind_farm
+    sink: elec_bus
+    capacity: 800               # MW
+    profile_limit_upper: [...]  # hourly capacity factor time series
+----
+
+In this dataset:
+
+* `gas_market` is a Commodity node -- fuel is purchased at 30 currency/MWh.
+* `gas_turbine` is a Unit that converts gas to electricity at 38% efficiency.
+* `elec_bus` is a Balance node where supply must meet demand every time step.
+* `battery` is a Storage node with 750 MWh of capacity.
+* `wind_farm` is a Unit with a time-varying output profile.
+* Ports (`node_to_units` and `unit_to_nodes`) wire everything together.
+
+Note that no entity declares "electricity" or "gas" as a commodity label.
+The commodity association is implicit: `gas_market` connects to `gas_turbine` via a port, so the turbine's input is gas; `gas_turbine` connects to `elec_bus` via another port, so its output is electricity.
+
+
+== What to Read Next
+
+xref:entities.adoc[Entity Reference]::
+Full attribute listing for every CESM class.
+
+xref:methods.adoc[Methods Reference]::
+Detailed documentation of every method enum and its required parameters.
+
+xref:unit-conventions.adoc[Unit Conventions]::
+Units of measure, currency handling, and the percentage convention.
+
+xref:temporal-model.adoc[Temporal Model]::
+How CESM represents time -- periods, solve patterns, rolling horizons.
+
+xref:data-format.adoc[Data Format]::
+Serialisation formats (YAML, DuckDB) and structural conventions.

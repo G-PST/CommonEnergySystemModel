@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Unit Conventions :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/unit-conventions.html">
+    <link rel="prev" href="data-format.html">
+    <link rel="next" href="../user-guide/transformation-workflows.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="unit-conventions.html">Unit Conventions</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/unit-conventions.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Unit Conventions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page defines the unit conventions used throughout the Common Energy System Model (CESM) data format.
+All units are declared in the LinkML schema using <a href="https://qudt.org/">QUDT</a> annotations, ensuring machine-readable unit semantics alongside the human-readable conventions described here.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="currency-and-reference-year"><a class="anchor" href="#currency-and-reference-year"></a>Currency and Reference Year</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every CESM dataset must declare two required fields at the top level:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">currency</dt>
+<dd>
+<p>A 3-letter ISO 4217 currency code (e.g., <code>EUR</code>, <code>USD</code>). The same currency applies to all monetary values in the dataset.</p>
+</dd>
+<dt class="hdlist1">reference_year</dt>
+<dd>
+<p>A 4-digit year (e.g., <code>2025</code>). All monetary values are denominated in this year&#8217;s prices.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="percentage-convention"><a class="anchor" href="#percentage-convention"></a>Percentage Convention</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CESM expresses percentages as whole numbers, not as fractions.
+For example, an efficiency of 38% is entered as <code>38.0</code>, not <code>0.38</code>.
+This applies to all fields annotated with the QUDT unit <code>PERCENT</code>, including efficiency (conversion rates), discount rates, availability, storage losses, and inflation rates.
+This convention differs from many other energy system tools that use the 0-to-1 fraction form.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="unit-reference"><a class="anchor" href="#unit-reference"></a>Unit Reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists all parameter categories, their units, and example values from the sample dataset.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Unit</th>
+<th class="tableblock halign-left valign-top">QUDT Annotation</th>
+<th class="tableblock halign-left valign-top">Example Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:MegaW</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50, 500, 800, 1500</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Link capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:MegaW</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(same as port capacity)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum total investment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:MegaW</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(group-level cap)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:MegaW-HR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">750</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annual flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:MegaW-HR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(per-flow annual total)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conversion rate (efficiency)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:PERCENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">38.0, 58.0, 100.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:PERCENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(0&#8212;&#8203;100)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discount rate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:PERCENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0, 7.0, 8.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage loss (from stored energy)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:PERCENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(per-timestep loss)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inflation rate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:PERCENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Payback time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">years</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:YR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12, 25, 30, 40, 50</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Units / storages / links existing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unitless (count)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:UNITLESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(integer or float count)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flow profile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unitless (multiplier)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:UNITLESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(0&#8212;&#8203;1 time series)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Profile limit (upper / lower)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unitless (multiplier)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unit:UNITLESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(0&#8212;&#8203;1 bounds)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cost-units"><a class="anchor" href="#cost-units"></a>Cost Units</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All cost parameters use the currency declared in the dataset-level <code>currency</code> field.
+The denominator units use <strong>kW</strong> and <strong>kWh</strong> (not MW/MWh) for investment and fixed costs, following common industry practice for quoting specific costs.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Unit</th>
+<th class="tableblock halign-left valign-top">Example Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port investment cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / kW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500, 1000, 1200, 5500</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Link investment cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / kW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10, 1600</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage investment cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / kWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">600.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port fixed cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / kW / year</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(annual fixed O&amp;M)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage fixed cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / kWh / year</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(annual fixed O&amp;M)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operational cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / MWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Startup cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / startup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(cost of one full startup)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commodity price</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / MWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">25, 30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Penalty (upward / downward)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currency / MWh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1000, 10000</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="time-conventions"><a class="anchor" href="#time-conventions"></a>Time Conventions</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Timestamps</dt>
+<dd>
+<p>ISO 8601 datetime format, e.g., <code>2023-01-01T00:00:00Z</code>.</p>
+</dd>
+<dt class="hdlist1">Durations</dt>
+<dd>
+<p>ISO 8601 duration format, e.g., <code>PT10H</code> (10 hours), <code>PT2H</code> (2 hours).</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="qudt-integration"><a class="anchor" href="#qudt-integration"></a>QUDT Integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CESM LinkML schema annotates each numeric field with a <a href="https://qudt.org/">QUDT</a> unit URI (e.g., <code>qudt_unit: "unit:MegaW"</code>).
+This enables automated validation and conversion by tools that understand the QUDT ontology.
+Cost units that combine currency with a physical unit are represented as custom unit types in the schema (e.g., <code>currency_per_kilowatt</code>) since the specific currency is dataset-dependent.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="data-format.html">Data Format</a></span>
+  <span class="next"><a href="../user-guide/transformation-workflows.html">Transformation Workflows</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

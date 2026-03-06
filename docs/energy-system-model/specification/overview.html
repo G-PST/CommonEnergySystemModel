@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Overview :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/overview.html">
+    <link rel="prev" href="../getting-started/spine-toolbox-guide.html">
+    <link rel="next" href="entities.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="overview.html">Overview</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/overview.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Overview</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Common Energy System Model (CESM) is an information standard for multi-energy system modelling.
+It defines a structured, tool-agnostic vocabulary for describing energy systems&#8201;&#8212;&#8201;balances, storages, commodities, conversion units, links, and the parameters that govern their behaviour.
+CESM is expressed as a <a href="https://linkml.io/">LinkML</a> schema and is designed so that any optimisation or simulation tool can read or write datasets that conform to the specification.</p>
+</div>
+<div class="paragraph">
+<p>This page introduces the conceptual design of CESM: why it is structured the way it is, what entities it contains, and how they connect to form a complete energy system description.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles"><a class="anchor" href="#_design_principles"></a>Design Principles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM follows a set of principles that shape every part of the specification.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Specification is separate from implementation</dt>
+<dd>
+<p>CESM defines <em>what</em> data looks like, not <em>how</em> a tool processes it.
+A common specification enables interoperability between tools without forcing them to share code.</p>
+</dd>
+<dt class="hdlist1">Domain-agnostic abstractions</dt>
+<dd>
+<p>A <a href="../schema/class/Unit.html" class="xref page">Unit</a> converts inputs to outputs.
+There is no separate definition for a heat pump versus a gas turbine&#8201;&#8212;&#8201;they differ only in parametrisation.
+This keeps the specification small and tractable, and allows tools built on a layer of abstraction to avoid maintaining long compatibility lists.</p>
+</dd>
+<dt class="hdlist1">Parameters reflect physical properties</dt>
+<dd>
+<p>Parameter names and units correspond to the physical quantities they represent, at the level of detail appropriate for energy system planning models.</p>
+</dd>
+<dt class="hdlist1">Single currency, single reference year</dt>
+<dd>
+<p>Financial parameters do not carry per-parameter currency or inflation metadata.
+Every <a href="../schema/class/Dataset.html" class="xref page">Dataset</a> declares one <code>currency</code> (ISO 4217) and one <code>reference_year</code>; all monetary values use that denomination.
+See <a href="unit-conventions.html" class="xref page">Unit Conventions</a> for details.</p>
+</dd>
+<dt class="hdlist1">Behaviour is controlled by methods</dt>
+<dd>
+<p>CESM is explicit about <em>how</em> something should be modelled.
+A <a href="../schema/class/Unit.html" class="xref page">Unit</a> declares a <code>conversion_method</code> such as <code>constant_efficiency</code> or <code>two_point_efficiency</code>.
+Each method defines exactly which parameters are required, enabling validation and clear error messages.
+See <a href="methods.html" class="xref page">Methods Reference</a> for the full catalogue.</p>
+</dd>
+<dt class="hdlist1">Methods support incremental extension</dt>
+<dd>
+<p>Adding a new method does not break existing functionality.
+A tool can report which methods it supports, making capability gaps immediately visible to users.</p>
+</dd>
+<dt class="hdlist1">Single definition for a single concept</dt>
+<dd>
+<p>For example, efficiency is expressed one way&#8201;&#8212;&#8201;not as both an efficiency and a heat rate.
+This avoids ambiguity and simplifies data transformers.</p>
+</dd>
+<dt class="hdlist1">Flexibility in time</dt>
+<dd>
+<p>The specification accommodates models of different temporal scales: detailed operational dispatch, multi-year investment planning, multi-stage stochastic optimisation, and rolling-horizon solves.
+Profile time series are distinguished from scenario-oriented values.</p>
+</dd>
+<dt class="hdlist1">Non-breaking versioning</dt>
+<dd>
+<p>Within a released major version branch, only non-breaking changes are permitted.</p>
+</dd>
+<dt class="hdlist1">Implicit commodity association</dt>
+<dd>
+<p>Nodes do not declare which commodity they carry.
+Commodity association is determined by port connections (<a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a> and <a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a>).
+This keeps the specification flexible and avoids redundant declarations.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_entity_hierarchy"><a class="anchor" href="#_entity_hierarchy"></a>Entity Hierarchy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every CESM dataset is rooted in a <a href="../schema/class/Dataset.html" class="xref page">Dataset</a> object that holds the timeline, currency, reference year, and collections of all entities.
+The entities themselves form a hierarchy anchored by the abstract <code>Entity</code> base class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Dataset
+  |
+  +-- Entity (abstract)
+  |     name, semantic_id, alternative_names, description
+  |
+  +-- Node (abstract, extends Entity)
+  |     node_type
+  |     |
+  |     +-- Balance        [HasFlow, HasPenalty]
+  |     +-- Storage        [HasFlow, HasPenalty, HasInvestments]
+  |     +-- Commodity
+  |
+  +-- Unit (extends Entity)              [HasInvestments]
+  |     conversion_method, startup_method
+  |
+  +-- Port (abstract, extends Entity)    [HasProfiles]
+  |     |
+  |     +-- Unit_to_node   (unit -&gt; node)
+  |     +-- Node_to_unit   (node -&gt; unit)
+  |
+  +-- Link (extends Entity)             [HasInvestments]
+  |     transfer_method, node_A, node_B
+  |
+  +-- Period
+  +-- Group
+  +-- Group_entity
+  +-- Constraint
+  +-- Solve_pattern
+  +-- System</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a complete reference of every attribute on each entity, see <a href="entities.html" class="xref page">Entity Reference</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_nodes"><a class="anchor" href="#_nodes"></a>Nodes</h3>
+<div class="paragraph">
+<p>Nodes represent locations where energy (or matter) is produced, consumed, stored, or traded.
+CESM defines three concrete node types:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../schema/class/Balance.html" class="xref page">Balance</a></dt>
+<dd>
+<p>Maintains an input/output balance in every time step.
+Balance nodes are the workhorse of energy system models&#8201;&#8212;&#8201;they represent buses where supply must equal demand (plus any slack penalties).</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Storage.html" class="xref page">Storage</a></dt>
+<dd>
+<p>Like a Balance node but with an internal state variable that tracks stored energy across time steps.
+Storages can receive investments (battery capacity, reservoir volume, etc.).</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Commodity.html" class="xref page">Commodity</a></dt>
+<dd>
+<p>Represents an exogenous market where energy can be bought or sold at a given <code>price_per_unit</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_units"><a class="anchor" href="#_units"></a>Units</h3>
+<div class="paragraph">
+<p>A <a href="../schema/class/Unit.html" class="xref page">Unit</a> converts one or more input flows into one or more output flows.
+The <code>conversion_method</code> determines the mathematical relationship (constant efficiency, piecewise linear, etc.) and the <code>startup_method</code> controls online/offline modelling.
+Units connect to nodes exclusively through ports.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ports"><a class="anchor" href="#_ports"></a>Ports</h3>
+<div class="paragraph">
+<p>Ports are the directed connections between units and nodes:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../schema/class/Unit_to_node.html" class="xref page">Unit_to_node</a></dt>
+<dd>
+<p>An output port&#8201;&#8212;&#8201;flow leaves a unit and enters a node.
+Carries capacity, investment cost, operational cost, and profile limits.</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Node_to_unit.html" class="xref page">Node_to_unit</a></dt>
+<dd>
+<p>An input port&#8201;&#8212;&#8201;flow leaves a node and enters a unit.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Ports belong to the <code>HasProfiles</code> mixin, which provides <code>profile_limit_upper</code> and <code>profile_limit_lower</code> for time-varying bounds on flow.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_links"><a class="anchor" href="#_links"></a>Links</h3>
+<div class="paragraph">
+<p>A <a href="../schema/class/Link.html" class="xref page">Link</a> connects two nodes (<code>node_A</code> and <code>node_B</code>) and models energy transfer between them&#8201;&#8212;&#8201;a transmission line, a pipeline, or any directed or bidirectional flow path.
+The <code>transfer_method</code> controls modelling detail (e.g. <code>regular_linear</code>).
+Links can receive investments.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_supporting_entities"><a class="anchor" href="#_supporting_entities"></a>Supporting Entities</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../schema/class/Period.html" class="xref page">Period</a></dt>
+<dd>
+<p>Defines investment periods and how many years each period represents.</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Group.html" class="xref page">Group</a> and <a href="../schema/class/Group_entity.html" class="xref page">Group_entity</a></dt>
+<dd>
+<p>Apply shared constraints across multiple entities (e.g. a cap on total installed wind capacity).</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Constraint.html" class="xref page">Constraint</a></dt>
+<dd>
+<p>User-defined constraints on decision variables, with a <code>constant</code> and a <code>sense</code> (equality type).</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/Solve_pattern.html" class="xref page">Solve_pattern</a></dt>
+<dd>
+<p>Solver configuration: single-solve vs. rolling-horizon, time step structure, look-ahead parameters.</p>
+</dd>
+<dt class="hdlist1"><a href="../schema/class/System.html" class="xref page">System</a></dt>
+<dd>
+<p>Whole-system parameters such as <code>solve_order</code> and <code>inflation_rate</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mixins"><a class="anchor" href="#_mixins"></a>Mixins</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Mixins attach reusable parameter groups to entities without deep inheritance.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mixin</th>
+<th class="tableblock halign-left valign-top">Parameters</th>
+<th class="tableblock halign-left valign-top">Used By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HasFlow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flow_annual</code>, <code>flow_profile</code>, <code>flow_scaling_method</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Balance, Storage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HasPenalty</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>penalty_upward</code>, <code>penalty_downward</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Balance, Storage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HasInvestments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>investment_method</code>, <code>discount_rate</code>, <code>payback_time</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit, Storage, Link, Port (Unit_to_node)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HasProfiles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profile_limit_upper</code>, <code>profile_limit_lower</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit_to_node, Node_to_unit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helper_types"><a class="anchor" href="#_helper_types"></a>Helper Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Several structured types support complex parameter values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DirectionalValue</dt>
+<dd>
+<p>Holds <code>forward</code> and <code>reverse</code> values for bidirectional links.</p>
+</dd>
+<dt class="hdlist1">PeriodFloat</dt>
+<dd>
+<p>Period-dependent values&#8201;&#8212;&#8201;a list of period names paired with numeric values.</p>
+</dd>
+<dt class="hdlist1">ConstraintFloat</dt>
+<dd>
+<p>Coefficients used in user-defined constraints.</p>
+</dd>
+<dt class="hdlist1">ConversionRatesFloatFloat</dt>
+<dd>
+<p>Operating-point / conversion-rate tuples for piecewise efficiency curves.</p>
+</dd>
+<dt class="hdlist1">Timeset</dt>
+<dd>
+<p>Start-time / duration pairs that define the temporal structure of a solve pattern.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_the_pieces_fit_together"><a class="anchor" href="#_how_the_pieces_fit_together"></a>How the Pieces Fit Together</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An energy system in CESM is assembled from nodes, units, ports, and links:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Nodes</strong> form the backbone&#8201;&#8212;&#8201;each node represents a point where energy is balanced, stored, or traded.</p>
+</li>
+<li>
+<p><strong>Units</strong> sit between nodes and perform conversion (fuel to electricity, electricity to heat, etc.).</p>
+</li>
+<li>
+<p><strong>Ports</strong> are the directed edges that connect units to nodes.
+Every unit has at least one input port (Node_to_unit) and one output port (Unit_to_node).</p>
+</li>
+<li>
+<p><strong>Links</strong> connect nodes to each other for energy transfer (transmission, pipelines).</p>
+</li>
+<li>
+<p><strong>Methods</strong> on units, links, and other entities define the mathematical formulation.</p>
+</li>
+<li>
+<p><strong>Groups</strong> and <strong>constraints</strong> layer additional bounds across entities.</p>
+</li>
+<li>
+<p><strong>Solve patterns</strong> and <strong>system</strong> parameters configure how and when the optimisation runs.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The following diagram shows the connection pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">         Node_to_unit          Unit_to_node
+ [Node A] ----------&gt; [Unit] ----------&gt; [Node B]
+    |                                        |
+    +--------------- [Link] ----------------+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_a_simple_electricity_system"><a class="anchor" href="#_example_a_simple_electricity_system"></a>Example: A Simple Electricity System</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Consider a minimal system with a gas turbine supplying an electricity demand node, plus a wind farm and a battery.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">balances:
+  - name: elec_bus
+    node_type: Balance
+    penalty_upward: 10000       # cost of unserved energy (currency/MWh)
+    penalty_downward: 1000      # cost of excess energy  (currency/MWh)
+
+commodities:
+  - name: gas_market
+    node_type: Commodity
+    commodity_type: source
+    price_per_unit: 30          # currency/MWh
+
+storages:
+  - name: battery
+    node_type: Storage
+    storage_capacity: 750       # MWh
+
+units:
+  - name: gas_turbine
+    conversion_method: constant_efficiency
+    efficiency: 38.0            # percent
+    startup_method: integer
+    startup_cost: 5000
+
+  - name: wind_farm
+    conversion_method: constant_efficiency
+    efficiency: 100.0
+
+node_to_units:
+  - name: gas_to_turbine
+    source: gas_market
+    sink: gas_turbine
+
+unit_to_nodes:
+  - name: turbine_to_elec
+    source: gas_turbine
+    sink: elec_bus
+    capacity: 500               # MW
+    investment_cost: 1000       # currency/kW
+
+  - name: wind_to_elec
+    source: wind_farm
+    sink: elec_bus
+    capacity: 800               # MW
+    profile_limit_upper: [...]  # hourly capacity factor time series</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this dataset:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>gas_market</code> is a Commodity node&#8201;&#8212;&#8201;fuel is purchased at 30 currency/MWh.</p>
+</li>
+<li>
+<p><code>gas_turbine</code> is a Unit that converts gas to electricity at 38% efficiency.</p>
+</li>
+<li>
+<p><code>elec_bus</code> is a Balance node where supply must meet demand every time step.</p>
+</li>
+<li>
+<p><code>battery</code> is a Storage node with 750 MWh of capacity.</p>
+</li>
+<li>
+<p><code>wind_farm</code> is a Unit with a time-varying output profile.</p>
+</li>
+<li>
+<p>Ports (<code>node_to_units</code> and <code>unit_to_nodes</code>) wire everything together.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that no entity declares "electricity" or "gas" as a commodity label.
+The commodity association is implicit: <code>gas_market</code> connects to <code>gas_turbine</code> via a port, so the turbine&#8217;s input is gas; <code>gas_turbine</code> connects to <code>elec_bus</code> via another port, so its output is electricity.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_to_read_next"><a class="anchor" href="#_what_to_read_next"></a>What to Read Next</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="entities.html" class="xref page">Entity Reference</a></dt>
+<dd>
+<p>Full attribute listing for every CESM class.</p>
+</dd>
+<dt class="hdlist1"><a href="methods.html" class="xref page">Methods Reference</a></dt>
+<dd>
+<p>Detailed documentation of every method enum and its required parameters.</p>
+</dd>
+<dt class="hdlist1"><a href="unit-conventions.html" class="xref page">Unit Conventions</a></dt>
+<dd>
+<p>Units of measure, currency handling, and the percentage convention.</p>
+</dd>
+<dt class="hdlist1"><a href="temporal-model.html" class="xref page">Temporal Model</a></dt>
+<dd>
+<p>How CESM represents time&#8201;&#8212;&#8201;periods, solve patterns, rolling horizons.</p>
+</dd>
+<dt class="hdlist1"><a href="data-format.html" class="xref page">Data Format</a></dt>
+<dd>
+<p>Serialisation formats (YAML, DuckDB) and structural conventions.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a></span>
+  <span class="next"><a href="entities.html">Entity Reference</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

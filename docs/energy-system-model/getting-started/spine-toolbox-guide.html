@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Spine Toolbox Guide :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/getting-started/spine-toolbox-guide.html">
+    <link rel="prev" href="quickstart.html">
+    <link rel="next" href="../specification/overview.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Getting Started</li>
+    <li><a href="spine-toolbox-guide.html">Spine Toolbox Guide</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/getting-started/pages/spine-toolbox-guide.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Spine Toolbox Guide</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/spine-tools/Spine-Toolbox">Spine Toolbox</a> is a graphical workflow management tool for energy system modelling.
+This project includes a Spine Toolbox project that provides ready-made workflows for converting between CESM and other data formats.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_spine_toolbox_provides"><a class="anchor" href="#_what_spine_toolbox_provides"></a>What Spine Toolbox provides</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Spine Toolbox allows you to build and run data processing pipelines visually.
+Each pipeline consists of connected items&#8201;&#8212;&#8201;data sources, transformation tools, and data stores.
+You can inspect intermediate results, re-run individual steps, and manage scenarios through the GUI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_opening_the_project"><a class="anchor" href="#_opening_the_project"></a>Opening the project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Spine Toolbox project file is located at <code>.spinetoolbox/project.json</code> in the repository root.</p>
+</div>
+<div class="paragraph">
+<p>To open it:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Launch Spine Toolbox</p>
+</li>
+<li>
+<p>Select <strong>File &gt; Open project&#8230;&#8203;</strong></p>
+</li>
+<li>
+<p>Navigate to the <code>oes-spec</code> repository root and open it</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Spine Toolbox will load the project and display the workflow canvas.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_available_workflows"><a class="anchor" href="#_available_workflows"></a>Available workflows</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The project includes the following workflows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">YAML to DuckDB to FlexTool</dt>
+<dd>
+<p>Loads a CESM YAML file (e.g., <code>data/samples/cesm-sample.yaml</code>), writes it to a DuckDB database, transforms it to FlexTool format, and optionally runs FlexTool3.</p>
+<div class="paragraph">
+<p>Items: <strong>CESAME sample</strong> &#8594; <strong>yaml to CESAME</strong> &#8594; <strong>CESAME-db</strong> &#8594; <strong>CESAME to FlexTool</strong> &#8594; <strong>flextool input</strong> &#8594; <strong>FlexTool3</strong></p>
+</div>
+</dd>
+<dt class="hdlist1">GridDB to CESM</dt>
+<dd>
+<p>Imports data from a Spine/GridDB SQLite database into CESM DuckDB format.</p>
+<div class="paragraph">
+<p>Items: <strong>GridDB sqlite2</strong> &#8594; <strong>GridDB to CESAME</strong> &#8594; <strong>CESAME-db</strong></p>
+</div>
+</dd>
+<dt class="hdlist1">CESM to GridDB</dt>
+<dd>
+<p>Exports CESM DuckDB data to a Spine/GridDB SQLite database.</p>
+<div class="paragraph">
+<p>Items: <strong>CESAME-db</strong> &#8594; <strong>CESAME to GridDB</strong> &#8594; <strong>GridDB sqlite</strong></p>
+</div>
+</dd>
+<dt class="hdlist1">CESM to Spine DB</dt>
+<dd>
+<p>Exports CESM data to a native Spine DB format for visualization in Spine Toolbox&#8217;s DB editor.</p>
+<div class="paragraph">
+<p>Items: <strong>CESAME-db</strong> &#8594; <strong>CESAME to Spine DB</strong> &#8594; <strong>CESAME in Spine DB</strong></p>
+</div>
+</dd>
+<dt class="hdlist1">FlexTool to CESM</dt>
+<dd>
+<p>Imports FlexTool input data from a Spine DB into CESM DuckDB format.</p>
+<div class="paragraph">
+<p>Items: <strong>flextool input2</strong> &#8594; <strong>flextool to CESAME</strong> &#8594; <strong>CESAME-db</strong></p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_a_workflow"><a class="anchor" href="#_running_a_workflow"></a>Running a workflow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To execute a workflow:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the items you want to run by clicking on them (hold Ctrl to select multiple items)</p>
+</li>
+<li>
+<p>Click the <strong>Execute Selected</strong> button in the toolbar, or press Ctrl+Enter</p>
+</li>
+<li>
+<p>Alternatively, use <strong>Execute All</strong> to run the entire project</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Execution proceeds left-to-right through the connected items. Progress and logs are shown in the <strong>Event Log</strong> panel at the bottom.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flextool3_configuration"><a class="anchor" href="#_flextool3_configuration"></a>FlexTool3 configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The FlexTool3 tool specification references an external path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This path must point to a local FlexTool installation. To configure it:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open <code>.spinetoolbox/project.json</code> in a text editor</p>
+</li>
+<li>
+<p>Find the FlexTool3 specification entry under <code>"specifications" &gt; "Tool"</code></p>
+</li>
+<li>
+<p>Update the <code>"path"</code> value to your local FlexTool installation path</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you do not have FlexTool installed, the FlexTool3 tool item will show an error.
+This does not affect other workflows&#8201;&#8212;&#8201;FlexTool3 is optional for core CESM data conversion tasks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_notes"><a class="anchor" href="#_notes"></a>Notes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The CESM DuckDB file (<code>CESAME-db</code> item) is the central data store shared by most workflows.</p>
+</li>
+<li>
+<p>Some tool items use <code>--clear-target-db</code> to overwrite existing data; others append. Check the command-line arguments shown in each tool&#8217;s properties panel.</p>
+</li>
+<li>
+<p>Data Store items use SQLite databases for Spine DB / GridDB format. Data Connection items reference flat files (YAML, DuckDB).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="quickstart.html">Quickstart</a></span>
+  <span class="next"><a href="../specification/overview.html">Overview</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

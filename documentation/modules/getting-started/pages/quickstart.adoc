@@ -1,0 +1,181 @@
+= Quickstart
+
+This guide walks you through loading sample data, inspecting it, and running format conversions with CESM.
+For full setup instructions, see the xref:installation.adoc[Installation Guide].
+
+== Prerequisites
+
+Ensure CESM is installed and the Pydantic classes have been generated:
+
+[source,bash]
+----
+git clone <repository-url>
+cd oes-spec
+pip install -e .
+----
+
+Generate the required Python classes from the LinkML schema:
+
+[source,bash]
+----
+pip install linkml
+gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+----
+
+All scripts below are run from the repository root (`oes-spec/`).
+
+== Load sample data into DuckDB
+
+The repository includes a sample CESM dataset at `data/samples/cesm-sample.yaml`.
+It contains balance nodes, storage, commodities, units, ports, links, groups, periods, solve patterns, and system configuration.
+
+Load it into a DuckDB database:
+
+[source,bash]
+----
+python src/readers/from_yaml.py data/samples/cesm-sample.yaml artifacts/cesm.duckdb
+----
+
+This reads the YAML file, validates it against the CESM schema, converts it to DataFrames, and writes them as tables in a DuckDB file.
+
+TIP: Run `python src/readers/from_yaml.py --help` for all available options, including `--schema` and `--clear-target-db`.
+
+== Inspect the data
+
+You can query the resulting DuckDB file directly with Python:
+
+[source,python]
+----
+import duckdb
+
+con = duckdb.connect("artifacts/cesm.duckdb", read_only=True)
+
+# List all tables
+tables = con.execute("SHOW TABLES").fetchall()
+for t in tables:
+    print(t[0])
+
+# Preview a specific table
+print(con.execute("SELECT * FROM balance LIMIT 5").df())
+
+con.close()
+----
+
+This gives you a quick way to verify that the data was loaded correctly and to explore the table structure.
+
+== Transform CESM to FlexTool
+
+Convert a CESM DuckDB database to FlexTool format in a Spine database:
+
+[source,bash]
+----
+python scripts/processing/cesm_to_flextool.py artifacts/cesm.duckdb artifacts/flextool.sqlite
+----
+
+The script reads CESM DataFrames from DuckDB, transforms them to FlexTool parameters, and writes them to a Spine database.
+
+NOTE: The input CESM data must include `solve_pattern` entries. Run `python scripts/processing/cesm_to_flextool.py --help` for full usage details.
+
+== Transform CESM to GridDB
+
+Convert a CESM DuckDB database to GridDB (SQLite) format:
+
+[source,bash]
+----
+python scripts/processing/cesm_to_griddb.py artifacts/cesm.duckdb artifacts/griddb.sqlite
+----
+
+Optional flags control version metadata:
+
+[source,bash]
+----
+python scripts/processing/cesm_to_griddb.py artifacts/cesm.duckdb artifacts/griddb.sqlite \
+    --cesm-version cesm_v0.1.0 \
+    --griddb-version v0.2.0
+----
+
+== Import from external formats
+
+=== FlexTool (Spine DB) to CESM
+
+Convert FlexTool data from a Spine database into CESM DuckDB format:
+
+[source,bash]
+----
+python scripts/processing/flextool_to_cesm.py input_flextool.sqlite my_scenario artifacts/cesm.duckdb \
+    --cesm-version cesm_v0.1.0 \
+    --flextool-version v3.14.0 \
+    --start-time "2023-01-01T00:00:00"
+----
+
+To list available scenarios in the source database first:
+
+[source,bash]
+----
+python scripts/processing/flextool_to_cesm.py input_flextool.sqlite dummy output.duckdb --list-scenarios
+----
+
+=== GridDB (SQLite) to CESM
+
+Convert a GridDB SQLite database into CESM DuckDB format:
+
+[source,bash]
+----
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite artifacts/cesm_from_griddb.duckdb
+----
+
+== Export CESM to Spine DB
+
+Write CESM data directly to a Spine database (without FlexTool transformation):
+
+[source,bash]
+----
+python scripts/processing/cesm_to_spine_db.py artifacts/cesm.duckdb artifacts/cesm_spine.sqlite
+----
+
+== Round-trip example
+
+A round-trip demonstrates that data survives conversion between formats.
+For example, starting from a FlexTool Spine database, converting to CESM, and back:
+
+[source,bash]
+----
+# 1. FlexTool → CESM
+python scripts/processing/flextool_to_cesm.py flextool.sqlite my_scenario artifacts/cesm_rt.duckdb \
+    --start-time "2023-01-01T00:00:00"
+
+# 2. CESM → FlexTool
+python scripts/processing/cesm_to_flextool.py artifacts/cesm_rt.duckdb artifacts/flextool_rt.sqlite
+----
+
+Similarly, for GridDB:
+
+[source,bash]
+----
+# 1. GridDB → CESM
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite artifacts/cesm_rt.duckdb
+
+# 2. CESM → GridDB
+python scripts/processing/cesm_to_griddb.py artifacts/cesm_rt.duckdb artifacts/griddb_rt.sqlite
+----
+
+You can then compare the original and round-tripped databases to verify fidelity.
+
+== Spine Toolbox workflows
+
+As an alternative to the command-line scripts, CESM includes predefined workflows for https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox], a graphical workflow manager.
+The project file at `.spinetoolbox/project.json` defines GUI-based pipelines for the same transformations described above.
+
+To use them:
+
+. Install the Spine Toolbox extra: `pip install -e ".[spine]"`
+. Open Spine Toolbox and load the project from the repository root.
+. Select a workflow and execute it through the GUI.
+
+This approach is useful for interactive exploration and for users who prefer a visual pipeline over command-line scripts.
+
+== Next steps
+
+* Examine the CESM schema at `model/cesm.yaml` to understand the data model.
+* Check `python <script> --help` for any script to see all available options.
+* See the xref:installation.adoc[Installation Guide] for development and testing setup.

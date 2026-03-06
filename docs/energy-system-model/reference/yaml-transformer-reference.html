@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>YAML Transformer Reference :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/reference/yaml-transformer-reference.html">
+    <link rel="prev" href="../developer-guide/testing.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Reference</li>
+    <li><a href="yaml-transformer-reference.html">YAML Transformer Reference</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/reference/pages/yaml-transformer-reference.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">YAML Transformer Reference</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The YAML transformer engine (<code>src/core/transform_parameters.py</code>) reads a YAML configuration file that defines how to map data between two formats (e.g., CESM to FlexTool).
+Configuration files are stored under <code>src/transformers/</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_structure"><a class="anchor" href="#_configuration_structure"></a>Configuration structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each entry in the YAML config defines one transformation rule.
+Rules have a descriptive key and a list of 2 or 3 items:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">rule-name:
+- source specification
+- target specification
+- operations (optional)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_operation_types"><a class="anchor" href="#_operation_types"></a>Operation types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The transformer automatically determines the operation type based on the source and target specifications:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Entity mapping (<code>copy_entities</code>)</dt>
+<dd>
+<p>Copies entity names from a source class to a target class. No parameters are transferred.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">balance-entities:
+- balance
+- node</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Parameter mapping (<code>transform_parameter</code>)</dt>
+<dd>
+<p>Copies a parameter value from a source class/attribute to a target class/attribute.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">balance-penalty_upward:
+- balance: penalty_upward
+- node: penalty_up</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Parameter creation (<code>create_parameter</code>)</dt>
+<dd>
+<p>Assigns a constant value to a target parameter for all entities of the source class.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">balance-has_balance:
+- balance
+- node: has_balance
+- value: 'yes'</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_arithmetic_operations"><a class="anchor" href="#_arithmetic_operations"></a>Arithmetic operations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use the <code>operation</code> key to apply arithmetic transformations to parameter values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">inflation_rate:
+- system: inflation_rate
+- model: discount_rate
+- operation:
+  - multiply:
+      with: 0.01</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supported operations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>multiply</code>&#8201;&#8212;&#8201;multiply values by a constant</p>
+</li>
+<li>
+<p><code>divide</code>&#8201;&#8212;&#8201;divide values by a constant</p>
+</li>
+<li>
+<p><code>add</code>&#8201;&#8212;&#8201;add a constant to values</p>
+</li>
+<li>
+<p><code>subtract</code>&#8201;&#8212;&#8201;subtract a constant from values</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Operations are applied in list order.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_algebra_expressions"><a class="anchor" href="#_algebra_expressions"></a>Algebra expressions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>algebra</code> key supports formulas that reference multiple source parameters by position.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">combined_value:
+- [source_class: param_a, source_class: param_b]
+- target_class: result
+- algebra: "1*2"
+  match: [0, 1]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>match</code> specifies which dimension indexes to align when combining sources.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_filter_options"><a class="anchor" href="#_filter_options"></a>Filter options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Conditional rules include or exclude entities based on parameter existence.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>if_parameter</code></dt>
+<dd>
+<p>Only process entities that have the specified parameter(s). Accepts a single parameter name or a list.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">profile-entities:
+- unit_to_node
+- - profile:
+      order: [[0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><code>if_not_parameter</code></dt>
+<dd>
+<p>Exclude entities that have the specified parameter(s).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">non_startup_units:
+- unit
+- process:
+    if_not_parameter: startup_method</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Filters can check both scalar parameters (columns in the entity DataFrame) and time series parameters (separate DataFrames named <code>class.ts.parameter</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dimension_operations"><a class="anchor" href="#_dimension_operations"></a>Dimension operations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_order"><a class="anchor" href="#_order"></a><code>order</code></h3>
+<div class="paragraph">
+<p>Controls how source dimensions map to target dimensions.
+Each inner list specifies which source dimension indexes contribute to each target dimension.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">unit-to-node-entities:
+- unit_to_node
+- unit.outputNode:
+    order: [[0], [1], [2]]
+- dimensions: [unit, node]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a source with dimensions <code>[name, source, sink]</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>[[0], [1], [2]]</code> maps name &#8594; dim0, source &#8594; dim1, sink &#8594; dim2</p>
+</li>
+<li>
+<p><code>[[0], [2], [1]]</code> swaps the second and third dimensions</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aggregate"><a class="anchor" href="#_aggregate"></a><code>aggregate</code></h3>
+<div class="paragraph">
+<p>Reduces dimensions by aggregating values. Used when the target has fewer dimensions than the source.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">units_capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: max</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supported aggregation methods: <code>sum</code>, <code>average</code>, <code>max</code>, <code>min</code>, <code>first</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dimensions"><a class="anchor" href="#_dimensions"></a><code>dimensions</code></h3>
+<div class="paragraph">
+<p>Declares the dimension names for multi-dimensional entities, used alongside <code>order</code> to specify how named dimensions are mapped.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">node-to-unit-entities:
+- node_to_unit
+- unit.inputNode:
+    order: [[0], [2], [1]]
+- dimensions: [unit, node]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_type_indicators"><a class="anchor" href="#_data_type_indicators"></a>Data type indicators</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Square brackets after a parameter name indicate the data type:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>[ts]</code></dt>
+<dd>
+<p>Time series data. The parameter is stored in a separate DataFrame with a datetime index.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- balance: [flow_profile, [ts]]
+- node: [inflow, [str]]</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><code>[str]</code></dt>
+<dd>
+<p>String/map data. The parameter is stored in a separate DataFrame with a string index.</p>
+</dd>
+<dt class="hdlist1"><code>[array]</code></dt>
+<dd>
+<p>Array data. The parameter contains a list of values.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- system: [solve_order, [array]]
+- model: [solves, [array]]</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>When no type indicator is present, the parameter is treated as a scalar value in the entity DataFrame.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_value_rename"><a class="anchor" href="#_value_rename"></a>Value rename</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>rename</code> key maps source values to target values. Useful for enum translations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">solve_mode:
+- solve_pattern: solve_mode
+- solve: solve_mode
+- default: single_solve
+- rename:
+    single_solve: single_solve
+    rolling_solve: rolling_window</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Values not listed in the rename map are passed through unchanged.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_default_values"><a class="anchor" href="#_default_values"></a>Default values</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>default</code> key provides a fallback value for entities where the source parameter is <code>NaN</code> or <code>None</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">solve_mode:
+- solve_pattern: solve_mode
+- solve: solve_mode
+- default: single_solve</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default is applied before rename operations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reference_configuration"><a class="anchor" href="#_reference_configuration"></a>Reference configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A complete working transformer configuration is available at:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This file maps the full CESM data model to FlexTool3 input format and demonstrates all of the features described above.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../developer-guide/testing.html">Testing</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

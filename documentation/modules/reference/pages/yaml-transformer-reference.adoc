@@ -1,0 +1,236 @@
+= YAML Transformer Reference
+
+The YAML transformer engine (`src/core/transform_parameters.py`) reads a YAML configuration file that defines how to map data between two formats (e.g., CESM to FlexTool).
+Configuration files are stored under `src/transformers/`.
+
+== Configuration structure
+
+Each entry in the YAML config defines one transformation rule.
+Rules have a descriptive key and a list of 2 or 3 items:
+
+[source,yaml]
+----
+rule-name:
+- source specification
+- target specification
+- operations (optional)
+----
+
+== Operation types
+
+The transformer automatically determines the operation type based on the source and target specifications:
+
+Entity mapping (`copy_entities`)::
+Copies entity names from a source class to a target class. No parameters are transferred.
++
+[source,yaml]
+----
+balance-entities:
+- balance
+- node
+----
+
+Parameter mapping (`transform_parameter`)::
+Copies a parameter value from a source class/attribute to a target class/attribute.
++
+[source,yaml]
+----
+balance-penalty_upward:
+- balance: penalty_upward
+- node: penalty_up
+----
+
+Parameter creation (`create_parameter`)::
+Assigns a constant value to a target parameter for all entities of the source class.
++
+[source,yaml]
+----
+balance-has_balance:
+- balance
+- node: has_balance
+- value: 'yes'
+----
+
+== Arithmetic operations
+
+Use the `operation` key to apply arithmetic transformations to parameter values.
+
+[source,yaml]
+----
+inflation_rate:
+- system: inflation_rate
+- model: discount_rate
+- operation:
+  - multiply:
+      with: 0.01
+----
+
+Supported operations:
+
+* `multiply` -- multiply values by a constant
+* `divide` -- divide values by a constant
+* `add` -- add a constant to values
+* `subtract` -- subtract a constant from values
+
+Operations are applied in list order.
+
+== Algebra expressions
+
+The `algebra` key supports formulas that reference multiple source parameters by position.
+
+[source,yaml]
+----
+combined_value:
+- [source_class: param_a, source_class: param_b]
+- target_class: result
+- algebra: "1*2"
+  match: [0, 1]
+----
+
+`match` specifies which dimension indexes to align when combining sources.
+
+== Filter options
+
+Conditional rules include or exclude entities based on parameter existence.
+
+`if_parameter`::
+Only process entities that have the specified parameter(s). Accepts a single parameter name or a list.
++
+[source,yaml]
+----
+profile-entities:
+- unit_to_node
+- - profile:
+      order: [[0]]
+      if_parameter: [profile_limit_upper, profile_limit_lower]
+----
+
+`if_not_parameter`::
+Exclude entities that have the specified parameter(s).
++
+[source,yaml]
+----
+non_startup_units:
+- unit
+- process:
+    if_not_parameter: startup_method
+----
+
+Filters can check both scalar parameters (columns in the entity DataFrame) and time series parameters (separate DataFrames named `class.ts.parameter`).
+
+== Dimension operations
+
+=== `order`
+
+Controls how source dimensions map to target dimensions.
+Each inner list specifies which source dimension indexes contribute to each target dimension.
+
+[source,yaml]
+----
+unit-to-node-entities:
+- unit_to_node
+- unit.outputNode:
+    order: [[0], [1], [2]]
+- dimensions: [unit, node]
+----
+
+For a source with dimensions `[name, source, sink]`:
+
+* `[[0], [1], [2]]` maps name -> dim0, source -> dim1, sink -> dim2
+* `[[0], [2], [1]]` swaps the second and third dimensions
+
+=== `aggregate`
+
+Reduces dimensions by aggregating values. Used when the target has fewer dimensions than the source.
+
+[source,yaml]
+----
+units_capacity:
+- unit_to_node: capacity
+- unit: virtual_unitsize
+- - order: [[1]]
+    aggregate: max
+----
+
+Supported aggregation methods: `sum`, `average`, `max`, `min`, `first`.
+
+=== `dimensions`
+
+Declares the dimension names for multi-dimensional entities, used alongside `order` to specify how named dimensions are mapped.
+
+[source,yaml]
+----
+node-to-unit-entities:
+- node_to_unit
+- unit.inputNode:
+    order: [[0], [2], [1]]
+- dimensions: [unit, node]
+----
+
+== Data type indicators
+
+Square brackets after a parameter name indicate the data type:
+
+`[ts]`::
+Time series data. The parameter is stored in a separate DataFrame with a datetime index.
++
+[source,yaml]
+----
+- balance: [flow_profile, [ts]]
+- node: [inflow, [str]]
+----
+
+`[str]`::
+String/map data. The parameter is stored in a separate DataFrame with a string index.
+
+`[array]`::
+Array data. The parameter contains a list of values.
++
+[source,yaml]
+----
+- system: [solve_order, [array]]
+- model: [solves, [array]]
+----
+
+When no type indicator is present, the parameter is treated as a scalar value in the entity DataFrame.
+
+== Value rename
+
+The `rename` key maps source values to target values. Useful for enum translations.
+
+[source,yaml]
+----
+solve_mode:
+- solve_pattern: solve_mode
+- solve: solve_mode
+- default: single_solve
+- rename:
+    single_solve: single_solve
+    rolling_solve: rolling_window
+----
+
+Values not listed in the rename map are passed through unchanged.
+
+== Default values
+
+The `default` key provides a fallback value for entities where the source parameter is `NaN` or `None`.
+
+[source,yaml]
+----
+solve_mode:
+- solve_pattern: solve_mode
+- solve: solve_mode
+- default: single_solve
+----
+
+The default is applied before rename operations.
+
+== Reference configuration
+
+A complete working transformer configuration is available at:
+
+----
+src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml
+----
+
+This file maps the full CESM data model to FlexTool3 input format and demonstrates all of the features described above.

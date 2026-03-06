@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Troubleshooting :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/user-guide/troubleshooting.html">
+    <link rel="prev" href="cesm-yaml-examples.html">
+    <link rel="next" href="../developer-guide/transformer-developer-guide.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../schema/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>User Guide</li>
+    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/user-guide/pages/troubleshooting.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Troubleshooting</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Common issues and solutions when working with CESM.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_missing_spinedb_api_module"><a class="anchor" href="#_missing_spinedb_api_module"></a>Missing <code>spinedb_api</code> module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>ModuleNotFoundError: No module named 'spinedb_api'</code></p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> The Spine DB API is an optional dependency. Install it with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[spine]"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is only needed for workflows that read from or write to Spine Toolbox databases (GridDB, FlexTool).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_duckdb_file_locked"><a class="anchor" href="#_duckdb_file_locked"></a>DuckDB file locked</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>duckdb.IOException: Could not set lock on file</code> or similar locking errors.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> DuckDB allows only one write connection at a time. Close any other processes or notebooks that have the same <code>.duckdb</code> file open. Common culprits:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Another Python script or Jupyter notebook with an active DuckDB connection</p>
+</li>
+<li>
+<p>A Spine Toolbox workflow that wrote to the same file</p>
+</li>
+<li>
+<p>The DuckDB CLI tool</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the lock persists after closing all known connections, check for stale <code>.wal</code> files next to the database and remove them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_timeline_length_mismatch"><a class="anchor" href="#_timeline_length_mismatch"></a>Timeline length mismatch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>AssertionError: Balance 'west' flow_profile length 8 != timeline length 10</code> or similar validation errors.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> All time series arrays (<code>flow_profile</code>, <code>profile_limit_upper</code>, etc.) must have exactly the same number of elements as the <code>timeline</code> array. Count the entries in your <code>timeline</code> and verify that every time series array matches.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># timeline has 3 entries, so all profiles must also have 3 entries
+timeline: ["2023-01-01T00:00:00Z", "2023-01-01T01:00:00Z", "2023-01-01T02:00:00Z"]
+balance:
+  - name: west
+    flow_profile: [-602.1, -780.7, -802]  # 3 entries - correct</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schema_validation_errors"><a class="anchor" href="#_schema_validation_errors"></a>Schema validation errors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> Validation errors when loading YAML data, such as missing required fields.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> Check that all required fields are present for each entity type:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>balance</code>: requires <code>name</code></p>
+</li>
+<li>
+<p><code>commodity</code>: requires <code>name</code>, <code>commodity_type</code></p>
+</li>
+<li>
+<p><code>unit</code>: requires <code>name</code></p>
+</li>
+<li>
+<p><code>link</code>: requires <code>name</code>, <code>node_A</code>, <code>node_B</code></p>
+</li>
+<li>
+<p><code>storage</code>: requires <code>name</code></p>
+</li>
+<li>
+<p><code>unit_to_node</code> / <code>node_to_unit</code>: requires <code>name</code>, <code>source</code>, <code>sink</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use the LinkML schema at <code>model/cesm.yaml</code> as the authoritative reference for required and optional fields.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spine_toolbox_flextool3_tool_not_found"><a class="anchor" href="#_spine_toolbox_flextool3_tool_not_found"></a>Spine Toolbox FlexTool3 tool not found</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> Spine Toolbox reports that the FlexTool3 tool specification cannot be found.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> The FlexTool3 specification references an external path outside this repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "type": "path",
+    "relative": false,
+    "path": "/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This path is hardcoded in <code>.spinetoolbox/project.json</code>. Update it to point to your local FlexTool installation, or remove it if you do not need to run FlexTool3 directly. FlexTool3 is optional for core CESM workflows.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generated_pydantic_classes_out_of_date"><a class="anchor" href="#_generated_pydantic_classes_out_of_date"></a>Generated Pydantic classes out of date</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> Import errors or validation mismatches in <code>src/generated/cesm_pydantic.py</code> after schema changes.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> Regenerate the Pydantic classes from the LinkML schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
+gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This must be re-run whenever <code>model/cesm.yaml</code> is modified.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_import_errors_after_cloning"><a class="anchor" href="#_import_errors_after_cloning"></a>Import errors after cloning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>ModuleNotFoundError</code> for <code>core</code>, <code>readers</code>, <code>writers</code>, <code>transformers</code>, or <code>generated</code> modules.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> The project must be installed in development mode so that Python can find the packages under <code>src/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you also need development tools (pytest, ruff):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_yaml_parsing_errors"><a class="anchor" href="#_yaml_parsing_errors"></a>YAML parsing errors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>yaml.scanner.ScannerError</code> or unexpected data when loading CESM YAML files.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> Common YAML pitfalls:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Unquoted strings that look like numbers or booleans (e.g., <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code>)</p>
+</li>
+<li>
+<p>Missing quotes around ISO 8601 timestamps in non-timeline fields</p>
+</li>
+<li>
+<p>Indentation errors&#8201;&#8212;&#8201;YAML is whitespace-sensitive</p>
+</li>
+<li>
+<p>Using tabs instead of spaces</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Validate your YAML syntax with an external tool before debugging CESM-specific issues.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tests_failing"><a class="anchor" href="#_tests_failing"></a>Tests failing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Symptom:</strong> <code>pytest</code> failures after a fresh clone.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong> Ensure the full development setup is complete:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"
+pip install linkml
+gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py
+pytest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some tests (particularly those using <code>SchemaView</code>) may be skipped if there are LinkML version compatibility issues. Skipped tests are expected and do not indicate a problem.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="cesm-yaml-examples.html">CESM YAML Examples</a></span>
+  <span class="next"><a href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>
