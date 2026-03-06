@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@antora/cli": "^3.1.14",
+    "@antora/lunr-extension": "^1.0.0-alpha.13",
+    "@antora/site-generator-default": "^3.1.14",
+    "@djencks/asciidoctor-mathjax": "^0.0.9",
+    "asciidoctor-kroki": "^0.18.1"
+  }
+}

@@ -1,3 +1,8 @@
+[![CI](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/ci.yml/badge.svg)](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/ci.yml)
+[![Docs](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/docs.yml/badge.svg)](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+
 # Common Energy System Model
 
 This repository contains a LinkML model that defines an information standard for multi-energy system modelling. The model provides a structured framework for representing energy systems with balances, storages, commodities, and other components.
