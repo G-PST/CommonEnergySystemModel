@@ -5,7 +5,8 @@ node_modules/
 .spinetoolbox/items/*
 .spinetoolbox/local/*
 dev_files/*
-src/generated/*
+# Generated pydantic models are tracked in git.
+# Regenerate with: gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
 specs/*
 data/*
 !data/samples/
