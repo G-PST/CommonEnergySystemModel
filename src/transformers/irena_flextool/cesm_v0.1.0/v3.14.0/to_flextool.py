@@ -20,7 +20,6 @@ import pandas as pd
 
 from core.transform_parameters import transform_data
 
-
 # Default YAML transformer config path (relative to project root)
 _DEFAULT_TRANSFORMER_CONFIG = str(
     Path(__file__).parent / "to_flextool.yaml"
