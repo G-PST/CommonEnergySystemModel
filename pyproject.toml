@@ -15,15 +15,19 @@ dependencies = [
 [project.optional-dependencies]
 spine = ["spinedb_api"]
 dev = ["pytest", "ruff"]
-docs = ["linkml"]
+docs = ["linkml==1.9.6"]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 120
 exclude = ["src/generated/*", "scripts/cesm-pydantic.py"]
+src = ["src", "scripts"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "generated", "readers", "transformers", "writers"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -13,7 +13,7 @@ Common issues and solutions when working with CESM.
 pip install -e ".[spine]"
 ----
 
-This is only needed for workflows that read from or write to Spine Toolbox databases (GridDB, FlexTool).
+This is only needed for workflows that read from or write to Spine Toolbox databases (IRENA FlexTool).
 
 == DuckDB file locked
 
@@ -68,7 +68,7 @@ Use the LinkML schema at `model/cesm.yaml` as the authoritative reference for re
 {
     "type": "path",
     "relative": false,
-    "path": "/home/jkiviluo/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
+    "path": "/home/username/sources/flextool/.spinetoolbox/specifications/Tool/flextool3.json"
 }
 ----
 
