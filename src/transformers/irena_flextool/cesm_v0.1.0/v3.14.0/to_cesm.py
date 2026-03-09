@@ -231,7 +231,7 @@ def time_from_spine(flextool: Dict[str, pd.DataFrame],
 
     # Create combined dataframe for multi-row timesets
     if multi_row_timesets:
-        cesm['solve_pattern.ts.start_time_durations'] = pd.DataFrame(multi_row_timesets)
+        cesm['solve_pattern.map.start_time_durations'] = pd.DataFrame(multi_row_timesets)
 
     # Create solve_pattern DataFrame
     if solve_patterns:

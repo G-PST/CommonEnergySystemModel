@@ -517,7 +517,7 @@
             "cmd_line_args": [
                 {
                     "type": "resource",
-                    "arg": "<project>/data/cesm_flextool.duckdb"
+                    "arg": "<project>/data/cesm_sample.duckdb"
                 },
                 {
                     "type": "resource",

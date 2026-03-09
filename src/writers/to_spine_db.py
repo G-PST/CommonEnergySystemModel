@@ -149,7 +149,7 @@ def dataframes_to_spine(
         import_datetime = datetime.now().strftime('%Y_%m_%d-%H_%M')
     alternative_name = f'cesm-{import_datetime}'
 
-    with DatabaseMapping(db_url) as db_map:
+    with DatabaseMapping(db_url, create=True) as db_map:
         # Phase -1: Purge if requested
         if purge_before_import:
             logger.info("Phase -1: Purging database...")
