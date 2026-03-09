@@ -16,10 +16,10 @@ def to_griddb(cesm):
         'cesm_timeline': time_diffs
     })
 
-    flextool['timeline'] = pd.DataFrame({
+    flextool['timeline'] = pd.DataFrame({  # noqa: F821
         'name': ['cesm_timeline']
     })
-    flextool['timeline.table.timestep_duration'] = timeline
+    flextool['timeline.table.timestep_duration'] = timeline  # noqa: F821
 
     # Create solve.table.period_timeset dataframe
     periods = set()
@@ -27,14 +27,14 @@ def to_griddb(cesm):
     periods.update(cesm['solve_pattern']['periods_realise_operations'].iloc[0])
     periods.update(cesm['solve_pattern']['periods_additional_horizon'].iloc[0])
 
-    flextool['timeset'] = pd.DataFrame({
+    flextool['timeset'] = pd.DataFrame({  # noqa: F821
         'name': ['cesm_timeset'],
         'timeline': ['cesm_timeline']
     })
     period_timeset = pd.DataFrame({'period': list(periods)})
-    for solve_name in flextool['solve']['name']:
+    for solve_name in flextool['solve']['name']:  # noqa: F821
         period_timeset[solve_name] = 'cesm_timeset'
 
-    flextool['solve.table.period_timeset'] = period_timeset
+    flextool['solve.table.period_timeset'] = period_timeset  # noqa: F821
 
-    return flextool
+    return flextool  # noqa: F821

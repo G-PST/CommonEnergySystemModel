@@ -1,7 +1,8 @@
 = Spine Toolbox Guide
 
-https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] is a graphical workflow management tool for energy system modelling.
+https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] is a graphical workflow management tool especially for modelling purposes.
 This project includes a Spine Toolbox project that provides ready-made workflows for converting between CESM and other data formats.
+This is for convenience - data conversions can also be made using python scripts from a terminal.
 
 == What Spine Toolbox provides
 

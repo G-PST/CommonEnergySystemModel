@@ -223,11 +223,15 @@ def time_to_spine(flextool, cesm):
 
         if 'solve_pattern.array.periods_additional_investments_horizon' in cesm:
             if index in cesm['solve_pattern.array.periods_additional_investments_horizon'].columns:
-                periods_add_inv = list(cesm['solve_pattern.array.periods_additional_investments_horizon'][index].dropna())
+                periods_add_inv = list(
+                    cesm['solve_pattern.array.periods_additional_investments_horizon'][index].dropna()
+                )
 
         if 'solve_pattern.array.periods_additional_operations_horizon' in cesm:
             if index in cesm['solve_pattern.array.periods_additional_operations_horizon'].columns:
-                periods_add_ops = list(cesm['solve_pattern.array.periods_additional_operations_horizon'][index].dropna())
+                periods_add_ops = list(
+                    cesm['solve_pattern.array.periods_additional_operations_horizon'][index].dropna()
+                )
 
         solve_periods[index] = {
             'operations': periods_ops,
@@ -295,7 +299,10 @@ def time_to_spine(flextool, cesm):
 
                 # rolling_solve_horizon = rolling_jump + rolling_additional_horizon
                 horizon_hours = jump_hours
-                if 'rolling_additional_horizon' in solve_pattern_df.columns and pd.notna(row.get('rolling_additional_horizon')):
+                if (
+                    'rolling_additional_horizon' in solve_pattern_df.columns
+                    and pd.notna(row.get('rolling_additional_horizon'))
+                ):
                     add_horizon = timedelta_to_hours(row['rolling_additional_horizon'])
                     if add_horizon is not None:
                         horizon_hours += add_horizon
@@ -466,7 +473,8 @@ def main():
         "-t",
         type=str,
         default="src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml",
-        help="Transformer configuration file path (default: src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml)"
+        help="Transformer configuration file path "
+        "(default: src/transformers/irena_flextool/cesm_v0.1.0/v3.14.0/to_flextool.yaml)"
     )
 
     args = parser.parse_args()

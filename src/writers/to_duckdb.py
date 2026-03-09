@@ -181,11 +181,11 @@ def dataframes_to_duckdb(
             all_metadata.append(metadata_entry)
 
             # Flatten the DataFrame (index columns become first, MultiIndex cols use dot convention)
-            flat_df = _flatten_dataframe(df)
+            _flat_df = _flatten_dataframe(df)
 
             # Write to DuckDB
             conn.execute(f'DROP TABLE IF EXISTS "{sql_table_name}"')
-            conn.execute(f'CREATE TABLE "{sql_table_name}" AS SELECT * FROM flat_df')
+            conn.execute(f'CREATE TABLE "{sql_table_name}" AS SELECT * FROM _flat_df')
 
         # Merge with existing metadata (new entries override existing ones)
         if not overwrite and existing_metadata:
@@ -196,9 +196,9 @@ def dataframes_to_duckdb(
             all_metadata = list(existing_metadata.values())
 
         # Write metadata table
-        metadata_df = pd.DataFrame(all_metadata)
+        _metadata_df = pd.DataFrame(all_metadata)
         conn.execute('DROP TABLE IF EXISTS "_dataframe_metadata"')
-        conn.execute('CREATE TABLE "_dataframe_metadata" AS SELECT * FROM metadata_df')
+        conn.execute('CREATE TABLE "_dataframe_metadata" AS SELECT * FROM _metadata_df')
 
         print(f"\nSuccessfully wrote {len(dataframes)} tables to {db_path}")
 

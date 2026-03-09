@@ -277,9 +277,15 @@ def classify_storage_prime_mover(
     # Decision tree
     if duration_hours is not None and duration_hours < FLYWHEEL_MAX_DURATION_HOURS:
         if link_efficiency >= BATTERY_MIN_EFFICIENCY:
-            return ClassificationResult('FW', False, f"duration={duration_hours:.2f}h < 0.5h, efficiency={link_efficiency:.2f} >= 0.85")
+            return ClassificationResult(
+                'FW', False,
+                f"duration={duration_hours:.2f}h < 0.5h, efficiency={link_efficiency:.2f} >= 0.85"
+            )
         else:
-            return ClassificationResult('BA', True, f"short duration ({duration_hours:.2f}h) but low efficiency ({link_efficiency:.2f})")
+            return ClassificationResult(
+                'BA', True,
+                f"short duration ({duration_hours:.2f}h) but low efficiency ({link_efficiency:.2f})"
+            )
 
     if link_efficiency >= BATTERY_MIN_EFFICIENCY:
         return ClassificationResult('BA', False, f"efficiency={link_efficiency:.2f} >= 0.85")
@@ -288,7 +294,10 @@ def classify_storage_prime_mover(
         if has_inflow:
             return ClassificationResult('PS', False, f"efficiency={link_efficiency:.2f} in 0.70-0.85 range, has inflow")
         else:
-            return ClassificationResult('PS', True, f"efficiency={link_efficiency:.2f} in 0.70-0.85 range, no inflow detected")
+            return ClassificationResult(
+                'PS', True,
+                f"efficiency={link_efficiency:.2f} in 0.70-0.85 range, no inflow detected"
+            )
 
     # Low efficiency - generic storage
     return ClassificationResult('ES', True, f"low efficiency={link_efficiency:.2f} < 0.70")
@@ -327,18 +336,30 @@ def classify_thermal_prime_mover(fuel_type: str, efficiency: float) -> Classific
         if efficiency >= CCGT_CERTAIN_MIN_EFFICIENCY:
             return ClassificationResult('CC', False, f"gas-fired, efficiency={efficiency:.2f} >= 0.54 → Combined Cycle")
         elif efficiency >= CCGT_UNCERTAIN_MIN_EFFICIENCY:
-            return ClassificationResult('CS', True, f"gas-fired, efficiency={efficiency:.2f} in 0.50-0.54 range (could be IC)")
+            return ClassificationResult(
+                'CS', True,
+                f"gas-fired, efficiency={efficiency:.2f} in 0.50-0.54 range (could be IC)"
+            )
         elif efficiency < CT_MAX_EFFICIENCY:
-            return ClassificationResult('CT', False, f"gas-fired, efficiency={efficiency:.2f} < 0.45 → Combustion Turbine")
+            return ClassificationResult(
+                'CT', False,
+                f"gas-fired, efficiency={efficiency:.2f} < 0.45 → Combustion Turbine"
+            )
         else:
             return ClassificationResult('CT', True, f"gas-fired, efficiency={efficiency:.2f} in boundary 0.45-0.50")
 
     # Oil-fired classification
     if any(f in fuel_lower for f in ['oil', 'diesel', 'distillate', 'residual', 'petroleum']):
         if efficiency >= IC_MIN_EFFICIENCY:
-            return ClassificationResult('IC', False, f"oil-fired, efficiency={efficiency:.2f} >= 0.45 → Internal Combustion")
+            return ClassificationResult(
+                'IC', False,
+                f"oil-fired, efficiency={efficiency:.2f} >= 0.45 → Internal Combustion"
+            )
         else:
-            return ClassificationResult('CT', False, f"oil-fired, efficiency={efficiency:.2f} < 0.45 → Combustion Turbine")
+            return ClassificationResult(
+                'CT', False,
+                f"oil-fired, efficiency={efficiency:.2f} < 0.45 → Combustion Turbine"
+            )
 
     # Unknown fuel - classify by efficiency
     if efficiency >= CCGT_CERTAIN_MIN_EFFICIENCY:
@@ -346,7 +367,10 @@ def classify_thermal_prime_mover(fuel_type: str, efficiency: float) -> Classific
     elif efficiency < CT_MAX_EFFICIENCY:
         return ClassificationResult('CT', True, f"unknown fuel '{fuel_type}', efficiency={efficiency:.2f} < 0.45")
     else:
-        return ClassificationResult('ST', True, f"unknown fuel '{fuel_type}', efficiency={efficiency:.2f} → default Steam Turbine")
+        return ClassificationResult(
+            'ST', True,
+            f"unknown fuel '{fuel_type}', efficiency={efficiency:.2f} → default Steam Turbine"
+        )
 
 
 def classify_renewable_prime_mover(
@@ -383,7 +407,10 @@ def classify_renewable_prime_mover(
             if daily_ratio > SOLAR_DAILY_PATTERN_THRESHOLD:
                 return ClassificationResult('PVe', False, f"daily pattern ratio={daily_ratio:.2f} > 0.5 → Solar")
             elif daily_ratio > SOLAR_DAILY_PATTERN_THRESHOLD * 0.8:  # Near threshold
-                return ClassificationResult('WT', True, f"daily pattern ratio={daily_ratio:.2f} near threshold → Wind (uncertain)")
+                return ClassificationResult(
+                    'WT', True,
+                    f"daily pattern ratio={daily_ratio:.2f} near threshold → Wind (uncertain)"
+                )
             else:
                 return ClassificationResult('WT', False, f"daily pattern ratio={daily_ratio:.2f} < 0.5 → Wind")
         else:
@@ -487,7 +514,10 @@ class TransformationErrors:
             for miss in self.missing_transformations:
                 print(f"  • {miss}")
         elif not self.strict and self.missing_transformations:
-            print(f"(Suppressed {len(self.missing_transformations)} missing transformation notices in relaxed validation mode)")
+            print(
+                f"(Suppressed {len(self.missing_transformations)}"
+                " missing transformation notices in relaxed validation mode)"
+            )
 
 
 class IDGenerator:
@@ -887,7 +917,7 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
         for group_name in group_entities.index.get_level_values('group').unique():
             # Access using xs() for multi-level index
             try:
-                entities = group_entities.xs(group_name, level='group')
+                group_entities.xs(group_name, level='group')
                 # Check if members are links (simplification: assume they are if not in balance)
                 key = f"interchange_{group_name}"
                 add_entity('transmission_interchanges', 'SiennaOpenAPIModels.AreaInterchange', key, key)
@@ -1225,7 +1255,9 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
                                      'efficiency_up', 'efficiency_down', 'rating', 'base_power'])
 
     storages = source['storage']
-    existing_storages = storages[safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)].copy()
+    existing_storages = storages[
+        safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)
+    ].copy()
     links = source['link']
 
     power_grid_nodes = identify_power_grid_nodes(source, errors)
@@ -1942,7 +1974,10 @@ def transform_time_series(source: Dict[str, pd.DataFrame],
 
             # Validate datetime index (required for initial_timestamp and resolution)
             if not isinstance(ts_df.index, pd.DatetimeIndex):
-                errors.add_error(f"Time series '{key}' missing datetime index (required for initial_timestamp/resolution)")
+                errors.add_error(
+                    f"Time series '{key}' missing datetime index"
+                    " (required for initial_timestamp/resolution)"
+                )
                 continue
 
             if len(ts_df.index) == 0:

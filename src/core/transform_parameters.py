@@ -477,7 +477,10 @@ def create_parameter(source_dfs: Dict[str, pd.DataFrame],
 
             # Apply rename if specified
             if 'rename' in op_dict:
-                raise ValueError(f"There should be no renaming for parameters that are freshly created through _value_, target attribute: {target_attribute}")
+                raise ValueError(
+                    f"There should be no renaming for parameters that are freshly created "
+                    f"through _value_, target attribute: {target_attribute}"
+                )
 
         # Skip if no value was specified
         if new_parameter_value is None:
@@ -549,18 +552,33 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
         source_attribute = source_spec.get('attribute')
         source_attributes.append(source_attribute)
 
-        # List based attributes indicate that the dataframe is pivoted (usually for time series content) and contains only one attribute
+        # List based attributes indicate that the dataframe is pivoted
+        # (usually for time series content) and contains only one attribute
         if isinstance(source_attribute, list):
             is_pivoted = True
             if len(source_attribute) == 2:
                 source_datatypes = source_attribute[1]
                 if not isinstance(target_attribute, list):
-                    raise ValueError(f"Source attribute is of list type (indicates pivoted data) and there is a datatype conversion (second item in the attribute list), but target attribute does not have a list with two items. {source_class} {source_attribute}")
+                    raise ValueError(
+                        f"Source attribute is of list type (indicates pivoted data) and there is a "
+                        f"datatype conversion (second item in the attribute list), but target "
+                        f"attribute does not have a list with two items. "
+                        f"{source_class} {source_attribute}"
+                    )
                 if len(source_datatypes) != len(target_attribute[1]):
-                    raise ValueError(f"Source attribute is of list type (indicates pivoted data) and there is a datatype conversion, but target attribute does not have the same number of datatypes in the attribute list. {source_class} {source_attribute}")
+                    raise ValueError(
+                        f"Source attribute is of list type (indicates pivoted data) and there is a "
+                        f"datatype conversion, but target attribute does not have the same number "
+                        f"of datatypes in the attribute list. "
+                        f"{source_class} {source_attribute}"
+                    )
                 source_class = source_class + '.' + '.'.join(source_attribute[1]) + '.' + source_attribute[0]
             else:
-                raise ValueError(f"Source attribute is of list type (indicates pivoted data) but the length of the list is not 2 (the list should have parameter name and data type list for the index columns). {source_class} {source_attribute}")
+                raise ValueError(
+                    f"Source attribute is of list type (indicates pivoted data) but the length of "
+                    f"the list is not 2 (the list should have parameter name and data type list "
+                    f"for the index columns). {source_class} {source_attribute}"
+                )
 
         # Check if source class exists
         if source_class not in source_dfs:
@@ -638,7 +656,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
         else:
             # Filter rows for regular data
             if filtered_names:
-                idx_to_keep = list_of_lists_to_index(filtered_names) if isinstance(filtered_names[0], list) else pd.Index(filtered_names)
+                idx_to_keep = (
+                    list_of_lists_to_index(filtered_names)
+                    if isinstance(filtered_names[0], list)
+                    else pd.Index(filtered_names)
+                )
                 result = result.loc[result.index.intersection(idx_to_keep)]
             else:
                 result = pd.DataFrame()
@@ -697,7 +719,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     for col in result.select_dtypes(include=[np.number]).columns:
                         result[col] = result[col] * with_value
                 else:
-                    raise ValueError(f"When trying to do {op_dict}: 'operation' and 'with' work only with constant values - use 'algebra' if operations between two dataframes are needed")
+                    raise ValueError(
+                        f"When trying to do {op_dict}: 'operation' and 'with' work only "
+                        f"with constant values - use 'algebra' if operations between two "
+                        f"dataframes are needed"
+                    )
 
             elif operation == 'divide':
                 with_value = op_dict.get('with')
@@ -705,7 +731,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     for col in result.select_dtypes(include=[np.number]).columns:
                         result[col] = result[col] / with_value
                 else:
-                    raise ValueError(f"When trying to do {op_dict}: 'operation' and 'with' work only with constant values - use 'algebra' if operations between two dataframes are needed")
+                    raise ValueError(
+                        f"When trying to do {op_dict}: 'operation' and 'with' work only "
+                        f"with constant values - use 'algebra' if operations between two "
+                        f"dataframes are needed"
+                    )
 
             elif operation == 'add':
                 with_value = op_dict.get('with')
@@ -713,7 +743,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     for col in result.select_dtypes(include=[np.number]).columns:
                         result[col] = result[col] + with_value
                 else:
-                    raise ValueError(f"When trying to do {op_dict}: 'operation' and 'with' work only with constant values - use 'algebra' if operations between two dataframes are needed")
+                    raise ValueError(
+                        f"When trying to do {op_dict}: 'operation' and 'with' work only "
+                        f"with constant values - use 'algebra' if operations between two "
+                        f"dataframes are needed"
+                    )
 
             elif operation == 'subtract':
                 with_value = op_dict.get('with')
@@ -721,7 +755,11 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
                     for col in result.select_dtypes(include=[np.number]).columns:
                         result[col] = result[col] - with_value
                 else:
-                    raise ValueError(f"When trying to do {op_dict}: 'operation' and 'with' work only with constant values - use 'algebra' if operations between two dataframes are needed")
+                    raise ValueError(
+                        f"When trying to do {op_dict}: 'operation' and 'with' work only "
+                        f"with constant values - use 'algebra' if operations between two "
+                        f"dataframes are needed"
+                    )
 
             elif operation == 'sum':
                 # Sum all source dataframes
@@ -792,7 +830,9 @@ def transform_parameter(source_dfs: Dict[str, pd.DataFrame],
             isinstance(target_idx, pd.MultiIndex) and
             not isinstance(result_idx, pd.MultiIndex)):
             # Extract 'name' level from target (first level of MultiIndex)
-            name_level = target_idx.get_level_values('name') if 'name' in target_idx.names else target_idx.get_level_values(0)
+            name_level = (target_idx.get_level_values('name')
+                         if 'name' in target_idx.names
+                         else target_idx.get_level_values(0))
 
             # Build match keys from target names by extracting specified components
             # e.g., 'battery_inverter.west.battery' with match_by=[0] -> 'battery_inverter'

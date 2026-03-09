@@ -363,7 +363,7 @@ def transform_entities_and_ids(source: Dict[str, pd.DataFrame],
         for group_name in group_entities.index.get_level_values('group').unique():
             # Access using xs() for multi-level index
             try:
-                entities = group_entities.xs(group_name, level='group')
+                _entities = group_entities.xs(group_name, level='group')
                 # Check if members are links (simplification: assume they are if not in balance)
                 key = f"interchange_{group_name}"
                 add_entity('transmission_interchanges', 'Arc', key, key)
@@ -692,7 +692,9 @@ def transform_storage_units(source: Dict[str, pd.DataFrame],
                                      'efficiency_up', 'efficiency_down', 'rating', 'base_power'])
 
     storages = source['storage']
-    existing_storages = storages[safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)].copy()
+    existing_storages = storages[
+        safe_filter(storages, 'storages_existing') & (storages['storages_existing'] > 0)
+    ].copy()
     links = source['link']
 
     power_grid_nodes = identify_power_grid_nodes(source, errors)
@@ -1121,7 +1123,7 @@ def transform_operational_data(source: Dict[str, pd.DataFrame],
         op_id += 1
 
         # Get efficiency if available (simplified for now)
-        efficiency = safe_get(units, unit_name, 'efficiency')
+        _efficiency = safe_get(units, unit_name, 'efficiency')
 
         operational_data.append({
             'id': op_id,
@@ -1387,7 +1389,10 @@ def transform_time_series(source: Dict[str, pd.DataFrame],
 
             # Validate datetime index (required for initial_timestamp and resolution)
             if not isinstance(ts_df.index, pd.DatetimeIndex):
-                errors.add_error(f"Time series '{key}' missing datetime index (required for initial_timestamp/resolution)")
+                errors.add_error(
+                    f"Time series '{key}' missing datetime index"
+                    " (required for initial_timestamp/resolution)"
+                )
                 continue
 
             if len(ts_df.index) == 0:

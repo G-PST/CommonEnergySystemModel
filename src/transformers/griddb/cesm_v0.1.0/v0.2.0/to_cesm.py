@@ -448,7 +448,10 @@ def transform_balance_flow_profile(griddb: Dict[str, pd.DataFrame],
             flow_data[bt_name] = ts_values
 
     if not flow_data:
-        warnings.add_warning("No flow profiles created - no loads with time series in areas that have peak_active_power")
+        warnings.add_warning(
+            "No flow profiles created - no loads with time series "
+            "in areas that have peak_active_power"
+        )
         return pd.DataFrame(index=timeline.index).rename_axis('datetime')
 
     # Build DataFrame with timeline index

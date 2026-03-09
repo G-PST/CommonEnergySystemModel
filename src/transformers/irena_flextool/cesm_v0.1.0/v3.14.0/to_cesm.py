@@ -90,7 +90,7 @@ def _convert_str_index_to_datetime(
                 # Can't parse, try as datetime string
                 try:
                     new_index.append(pd.to_datetime(idx_val))
-                except:
+                except Exception:
                     raise ValueError(f"Cannot convert index value '{idx_val}' to datetime")
         else:
             # Already datetime or other, try to convert
@@ -704,7 +704,9 @@ def efficiency_to_cesm(flextool: Dict[str, pd.DataFrame],
         if isinstance(cesm[entity_type[1]].index, pd.MultiIndex):
             for full_name in cesm[entity_type[1]].index:
                 map_names[full_name[0].split('.')[0]] = full_name
-                #full_names[entity_name] = [(name, node_A, node_B) for name, node_A, node_B in index_tuples if stripped_name == name.split('.')[0]]
+                # full_names[entity_name] = [(name, node_A, node_B)
+                #     for name, node_A, node_B in index_tuples
+                #     if stripped_name == name.split('.')[0]]
         else:
             for name in cesm[entity_type[1]].index:
                 map_names[name] = name
@@ -745,8 +747,10 @@ def efficiency_to_cesm(flextool: Dict[str, pd.DataFrame],
 
             for entity_name in variable_entities:
                 efficiency = source_df.loc[entity_name, 'efficiency']
-                min_load = source_df.loc[entity_name, 'min_load'] if 'min_load' in source_df.columns else None
-                eff_at_min = source_df.loc[entity_name, 'efficiency_at_min_load'] if 'efficiency_at_min_load' in source_df.columns else None
+                min_load = (source_df.loc[entity_name, 'min_load']
+                           if 'min_load' in source_df.columns else None)
+                eff_at_min = (source_df.loc[entity_name, 'efficiency_at_min_load']
+                              if 'efficiency_at_min_load' in source_df.columns else None)
 
                 # Use efficiency_at_min_load if available, otherwise fall back to efficiency
                 if pd.isna(eff_at_min):

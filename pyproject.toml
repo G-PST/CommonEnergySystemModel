@@ -19,7 +19,8 @@ docs = ["linkml"]
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
+line-length = 120
+exclude = ["src/generated/*", "scripts/cesm-pydantic.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
