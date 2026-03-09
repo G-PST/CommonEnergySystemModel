@@ -191,8 +191,21 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Common Energy System Model (CESM) is a LinkML-based information standard for multi-energy system modelling.
-It provides a structured framework for representing energy systems with balances, storages, commodities, units, links, and other components.</p>
+<p>The Common Energy System Model (<a href="https://github.com/G-PST/CommonEnergySystemModel">CESM</a>) is a data model for multi-energy system modelling together with tooling for converting data between tool-specific formats.
+CESM uses a hub-and-spoke approach: each tool needs only one transformer (to and from CESM) instead of direct converters to every other tool.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>          +----------------+
+          |     CESM       |
+          |  Data Model    |
+          +--+----------+--+
+             |          |
+  +-------------+    +--+----------+
+  |   Tool A    |    |   Tool B    |
+  | Data Format |    | Data Format |
+  +-------------+    +-------------+</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>CESM is designed to work well with other relevant standards like the <a href="https://www.entsoe.eu/digital/common-information-model/">IEC-CIM</a> and <a href="https://qudt.org/">QUDT</a>.

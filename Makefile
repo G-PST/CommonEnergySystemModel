@@ -17,6 +17,8 @@ format:
 
 docs-schema:
 	python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
+	@mkdir -p artifacts/documentation/modules/schema/pages/enumeration
+	@echo '= Duration\n\nDuration is an ISO 8601 duration type (xsd:duration).' > artifacts/documentation/modules/schema/pages/enumeration/Duration.adoc
 
 docs-html:
 	npx antora antora-playbook.yml
