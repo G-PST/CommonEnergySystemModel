@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Supported Modeling Domains :: Energy System Model</title>
+    <link rel="canonical" href="https://G-PST.github.io/CommonEnergySystemModel/energy-system-model/specification/supported-domains.html">
+    <link rel="prev" href="overview.html">
+    <link rel="next" href="entities.html">
+    <meta name="generator" content="Antora 3.1.14">
+    <link rel="stylesheet" href="../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../index.html">Energy System Model</a>
+      <button class="navbar-burger" aria-label="Toggle navigation" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/G-PST/CommonEnergySystemModel">GitHub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="energy-system-model" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Getting Started</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../getting-started/spine-toolbox-guide.html">Spine Toolbox Guide</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Specification</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="supported-domains.html">Supported Domains</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="entities.html">Entity Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="methods.html">Methods Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="temporal-model.html">Temporal Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="data-format.html">Data Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="unit-conventions.html">Unit Conventions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/transformation-workflows.html">Transformation Workflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/supported-formats.html">Supported Formats</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/cesm-yaml-examples.html">CESM YAML Examples</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../user-guide/troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/transformer-developer-guide.html">Transformer Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/adding-a-new-format.html">Adding a New Format</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/readers-writers.html">Readers &amp; Writers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../developer-guide/testing.html">Testing</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/yaml-transformer-reference.html">YAML Transformer Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Energy System Model</span>
+    <span class="version"></span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Energy System Model</a></div>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Energy System Model</a></li>
+    <li>Specification</li>
+    <li><a href="supported-domains.html">Supported Domains</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///home/jkiviluo/sources/oes-spec/documentation/modules/specification/pages/supported-domains.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Supported Modeling Domains</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page describes the energy system modeling domains that CESM supports, what it covers well, and what falls outside its current scope.</p>
+</div>
+<div class="paragraph">
+<p>CESM is designed as a general-purpose schema for energy system planning models.
+Its abstractions are intentionally generic: a <a href="../schema/class/Unit.html" class="xref page">Unit</a> converts inputs to outputs, a <a href="../schema/class/Node.html" class="xref page">Node</a> balances supply and demand, and a <a href="../schema/class/Link.html" class="xref page">Link</a> transfers energy between nodes.
+This architecture supports a range of modeling domains without requiring domain-specific entity types.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multi_energy_and_sector_coupling"><a class="anchor" href="#_multi_energy_and_sector_coupling"></a>Multi-Energy and Sector Coupling</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM does not restrict the energy carriers that can be modeled.
+Because <a href="../schema/class/Node.html" class="xref page">Nodes</a> do not declare which commodity they carry&#8201;&#8212;&#8201;commodity association is implicit through port connections&#8201;&#8212;&#8201;the same Node/Unit/Link architecture can represent electricity, heat, gas, hydrogen, biomass, or any other energy carrier.</p>
+</div>
+<div class="paragraph">
+<p>A multi-energy system is built by creating Balance nodes for each carrier (e.g. <code>elec_bus</code>, <code>heat_bus</code>, <code>h2_bus</code>) and connecting them through Units that perform conversion between carriers.
+A heat pump, for example, is simply a Unit with an electricity input port and a heat output port.
+A power-to-gas electrolyser is a Unit with an electricity input and a hydrogen output.</p>
+</div>
+<div class="paragraph">
+<p>This approach extends to material flows as well.
+A Unit can model, for example, a steel production process with ore and energy inputs and steel output.
+However, CESM&#8217;s built-in units of measure are energy-based (MW for capacity, MWh for flow), so material flows require the user to maintain consistent unit interpretation outside the schema.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_capacity_expansion_planning"><a class="anchor" href="#_capacity_expansion_planning"></a>Capacity Expansion Planning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM supports investment modeling through the <a href="../schema/class/HasInvestments.html" class="xref page">HasInvestments</a> mixin, which is available on <a href="../schema/class/Unit.html" class="xref page">Units</a>, <a href="../schema/class/Storage.html" class="xref page">Storages</a>, <a href="../schema/class/Link.html" class="xref page">Links</a>, and <a href="../schema/class/Port.html" class="xref page">Ports</a>.</p>
+</div>
+<div class="paragraph">
+<p>Key features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>investment_method</code> controls whether investment is allowed (<code>no_limits</code>) or blocked (<code>not_allowed</code>).</p>
+</li>
+<li>
+<p><code>discount_rate</code> and <code>payback_time</code> annualise investment costs.</p>
+</li>
+<li>
+<p><a href="../schema/class/Period.html" class="xref page">Period</a> entities define multi-year planning horizons, where each period can represent multiple years via <code>years_represented</code>.</p>
+</li>
+<li>
+<p>Period-dependent parameters (costs, discount rates) are expressed through the PeriodFloat helper type.</p>
+</li>
+<li>
+<p><a href="../schema/class/Group.html" class="xref page">Groups</a> can enforce aggregate investment constraints across entities (e.g. a cap on total installed wind capacity).</p>
+</li>
+<li>
+<p><a href="../schema/class/System.html" class="xref page">System</a>-level <code>inflation_rate</code> supports real-terms cost adjustments.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Capacity expansion in CESM operates at a zonal level&#8201;&#8212;&#8201;each node represents a zone or bus, not an individual network node with electrical properties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_production_cost_modeling"><a class="anchor" href="#_production_cost_modeling"></a>Production Cost Modeling</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM supports unit commitment and economic dispatch at a zonal level.</p>
+</div>
+<div class="paragraph">
+<p>Unit commitment features include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>startup_method</code> on <a href="../schema/class/Unit.html" class="xref page">Units</a>: <code>linear</code> (continuous relaxation of the online variable) or <code>integer</code> (discrete on/off decisions).</p>
+</li>
+<li>
+<p><code>startup_cost</code> for modeling the cost of bringing a unit online.</p>
+</li>
+<li>
+<p><code>conversion_method</code> controls the efficiency representation: <code>constant_efficiency</code> for a single heat rate, <code>two_point_efficiency</code> for piecewise-linear efficiency curves via <code>conversion_rates</code>.</p>
+</li>
+<li>
+<p><code>availability</code> time series on Units and Ports for forced outage or maintenance scheduling.</p>
+</li>
+<li>
+<p><code>other_operational_cost</code> on Ports for variable operation and maintenance costs.</p>
+</li>
+<li>
+<p><code>profile_limit_upper</code> and <code>profile_limit_lower</code> on Ports for time-varying output bounds (e.g. renewable capacity factors).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_storage_modeling"><a class="anchor" href="#_storage_modeling"></a>Storage Modeling</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/class/Storage.html" class="xref page">Storage</a> node class provides a dedicated state variable that tracks stored energy across time steps.</p>
+</div>
+<div class="paragraph">
+<p>Storage-specific parameters include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>storage_capacity</code>&#8201;&#8212;&#8201;energy capacity of a single storage asset (MWh).</p>
+</li>
+<li>
+<p><code>storages_existing</code>&#8201;&#8212;&#8201;number of pre-existing storage assets.</p>
+</li>
+<li>
+<p><code>storage_loss_from_stored_energy</code>&#8201;&#8212;&#8201;hourly self-discharge rate as a percentage of stored energy.</p>
+</li>
+<li>
+<p><code>availability</code>&#8201;&#8212;&#8201;time series for forced outage representation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Storages include the HasInvestments mixin, so the model can invest in new storage capacity with associated <code>investment_cost</code>, <code>discount_rate</code>, and <code>payback_time</code>.</p>
+</div>
+<div class="paragraph">
+<p>Charging and discharging are modeled through the same port mechanism as other entities: Units connect to Storage nodes via ports, and the port capacity and profiles govern charge/discharge rates.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_network_representation"><a class="anchor" href="#_network_representation"></a>Network Representation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../schema/class/Link.html" class="xref page">Link</a> class models energy transfer between two nodes&#8201;&#8212;&#8201;transmission lines, pipelines, heat networks, or any other transfer corridor.</p>
+</div>
+<div class="paragraph">
+<p>Link features include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Bidirectional flow between <code>node_A</code> and <code>node_B</code>.</p>
+</li>
+<li>
+<p>Directional efficiency and capacity via the <a href="../schema/class/DirectionalValue.html" class="xref page">DirectionalValue</a> type, allowing different loss rates or limits for each direction.</p>
+</li>
+<li>
+<p><code>transfer_method</code> controls the mathematical formulation (currently <code>regular_linear</code>).</p>
+</li>
+<li>
+<p>Investment options through the HasInvestments mixin.</p>
+</li>
+<li>
+<p><code>operational_cost</code> for variable transfer costs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Network modeling in CESM is zonal: each link represents an aggregate transfer corridor between zones.
+CESM does not model individual AC or DC circuits with electrical parameters such as impedance, voltage angles, or power flow equations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_cesm_does_not_support"><a class="anchor" href="#_what_cesm_does_not_support"></a>What CESM Does Not Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CESM is scoped for energy system planning at the zonal level.
+The following domains are outside its current scope:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">AC/DC power flow analysis</dt>
+<dd>
+<p>CESM has no representation of impedance, voltage, reactive power, or power flow equations.
+Network transfer is modeled as simple capacity-constrained linear flow between zones.</p>
+</dd>
+<dt class="hdlist1">Dynamic and transient stability</dt>
+<dd>
+<p>CESM is a steady-state planning model.
+It does not model sub-second electrical dynamics, frequency response, or voltage stability.</p>
+</dd>
+<dt class="hdlist1">Distribution-level modeling</dt>
+<dd>
+<p>CESM targets transmission-level or zonal planning.
+It does not include distribution network topology, voltage regulation, or distributed energy resource aggregation.</p>
+</dd>
+<dt class="hdlist1">Building energy modeling</dt>
+<dd>
+<p>CESM does not model thermal envelopes, HVAC systems, occupant behaviour, or other building-level energy dynamics.
+Buildings can be represented only as aggregate demand profiles on Balance nodes.</p>
+</dd>
+<dt class="hdlist1">Transportation energy</dt>
+<dd>
+<p>CESM does not model vehicle fleets, charging infrastructure siting, route optimisation, or mobility demand.
+Electric vehicle charging can be represented as aggregate demand or storage, but without transportation-specific detail.</p>
+</dd>
+<dt class="hdlist1">Stochastic and probabilistic analysis</dt>
+<dd>
+<p>CESM currently represents deterministic scenarios.
+Support for stochastic or probabilistic analysis (e.g. scenario trees, chance constraints) is a potential future extension but is not part of the current specification.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="overview.html">Overview</a></span>
+  <span class="next"><a href="entities.html">Entity Reference</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>
