@@ -15,7 +15,7 @@ dependencies = [
 [project.optional-dependencies]
 spine = ["spinedb_api"]
 dev = ["pytest", "ruff"]
-docs = ["linkml==1.9.6"]
+docs = ["linkml==1.9.6", "linkml-runtime==1.9.5"]
 
 [tool.ruff]
 target-version = "py311"
