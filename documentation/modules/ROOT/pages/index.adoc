@@ -1,0 +1,38 @@
+= Common Energy System Model
+
+The Common Energy System Model (CESM) is a LinkML-based information standard for multi-energy system modelling.
+It provides a structured framework for representing energy systems with balances, storages, commodities, units, links, and other components.
+
+CESM is designed to work well with other relevant standards like the https://www.entsoe.eu/digital/common-information-model/[IEC-CIM] and https://qudt.org/[QUDT].
+It has roots in https://github.com/ines-tools/ines-spec[ines-spec], but is built from the ground up to conform with ontology standards and to have a clear separation between specification and implementation.
+
+== Where to start
+
+[cols="1,2"]
+|===
+| Section | Description
+
+| xref:getting-started:installation.adoc[Installation]
+| Set up CESM and install dependencies.
+
+| xref:getting-started:quickstart.adoc[Quickstart]
+| Load sample data, inspect it, and run format conversions.
+
+| xref:specification:overview.adoc[Specification]
+| Understand the data model: entities, methods, temporal model, and data formats.
+
+| xref:schema:index.adoc[Schema Reference]
+| Auto-generated reference for all classes and enumerations in the LinkML schema.
+
+| xref:user-guide:supported-formats.adoc[Supported Formats]
+| Overview of supported input and output formats.
+
+| xref:developer-guide:architecture.adoc[Developer Guide]
+| Architecture, adding new formats, and writing transformers.
+|===
+
+== Design principles
+
+* *Standard-based* -- built on LinkML with integration to IEC-CIM and QUDT ontologies.
+* *Tool-agnostic* -- defines the data model, not the tool. Transformers handle conversions to and from tool-specific formats.
+* *Separation of concerns* -- the specification (LinkML schema) is independent of the implementation (Python readers, writers, and transformers).

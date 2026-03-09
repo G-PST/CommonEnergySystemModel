@@ -2,7 +2,7 @@
 site:
   title: Energy System Model
   url: https://G-PST.github.io/CommonEnergySystemModel
-  start_page: energy-system-model:schema:index.adoc
+  start_page: energy-system-model::index.adoc
 content:
   sources: 
   - url: .

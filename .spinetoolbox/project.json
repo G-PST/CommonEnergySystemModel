@@ -42,6 +42,11 @@
                     "type": "path",
                     "relative": true,
                     "path": ".spinetoolbox/specifications/Tool/flextool_to_cesame.json"
+                },
+                {
+                    "type": "path",
+                    "relative": true,
+                    "path": ".spinetoolbox/specifications/Tool/visualize_network.json"
                 }
             ]
         },
@@ -385,6 +390,24 @@
                 "to": [
                     "output info test",
                     "right"
+                ],
+                "filter_settings": {
+                    "auto_online": true,
+                    "enabled_filter_types": {
+                        "alternative_filter": false,
+                        "scenario_filter": true
+                    }
+                }
+            },
+            {
+                "name": "from CESAME-db to Visualize network",
+                "from": [
+                    "CESAME-db",
+                    "right"
+                ],
+                "to": [
+                    "Visualize network",
+                    "bottom"
                 ],
                 "filter_settings": {
                     "auto_online": true,
@@ -820,6 +843,26 @@
                 },
                 "schema": ""
             }
+        },
+        "Visualize network": {
+            "type": "Tool",
+            "description": "",
+            "x": -139.98162834750605,
+            "y": -437.0158153287994,
+            "specification": "Visualize network",
+            "execute_in_work": false,
+            "cmd_line_args": [
+                {
+                    "type": "resource",
+                    "arg": "<project>/data/cesm_sample.duckdb"
+                },
+                {
+                    "type": "literal",
+                    "arg": "../../data/network.png"
+                }
+            ],
+            "kill_completed_processes": false,
+            "log_process_output": false
         }
     }
 }

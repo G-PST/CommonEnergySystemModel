@@ -1,17 +1,17 @@
 [![CI](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/ci.yml/badge.svg)](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/ci.yml)
-[![Docs](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/docs.yml/badge.svg)](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html)
+[![Docs](https://github.com/G-PST/CommonEnergySystemModel/actions/workflows/docs.yml/badge.svg)](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/index.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 # Common Energy System Model
 
-This repository contains a LinkML model that defines an information standard for multi-energy system modelling. The model provides a structured framework for representing energy systems with balances, storages, commodities, and other components.
+This repository contains a LinkML model that defines an information standard for multi-energy system modelling. The model provides a structured framework for representing energy systems with balances, storages, commodities, and other components. For full documentation, see the [CESM Documentation](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/index.html).
 
-It is designed to work well with other relevant standards like the [IEC-CIM](https://www.entsoe.eu/digital/common-information-model/), [qudt](https://qudt.org/). CESM has roots in in [ines-spec](https://github.com/ines-tools/ines-spec), but is built from the ground-up to conform with ontology standards and to have a clear separation between specification and implementation. It tries to consider the needs of several major modeling tools in the domain.
+It is designed to work well with other relevant standards like the [IEC-CIM](https://www.entsoe.eu/digital/common-information-model/), [qudt](https://qudt.org/). CESM has roots in [ines-spec](https://github.com/ines-tools/ines-spec), but is built from the ground-up to conform with ontology standards and to have a clear separation between specification and implementation. It tries to consider the needs of several major modeling tools in the domain.
 
-For users of the data transformers: read this README.md and use the generated documentation when necessary (hopefully the data just transforms)
+For users of the data transformers: read this README.md and use the [generated documentation](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/index.html) when necessary (hopefully the data just transforms).
 
-For developers of transformers: read this README.md and then consult transformer-developer-guide.md in this same root folder.
+For developers of transformers: read this README.md and then consult the [Developer Guide](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/architecture.html) in the documentation.
 
 ## Overview
 

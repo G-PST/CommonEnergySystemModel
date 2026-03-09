@@ -57,6 +57,22 @@ classes:
         # designates_type: true
         range: NodeType
         description: "Limits allowed types: Balance, Storage, Commodity"
+      latitude:
+        range: float
+        description: "Geographic latitude of the node in decimal degrees (WGS 84)."
+        minimum_value: -90
+        maximum_value: 90
+        annotations:
+          qudt.ucum_code: "[deg]"
+          qudt.unit: "unit:DEG"
+      longitude:
+        range: float
+        description: "Geographic longitude of the node in decimal degrees (WGS 84)."
+        minimum_value: -180
+        maximum_value: 180
+        annotations:
+          qudt.ucum_code: "[deg]"
+          qudt.unit: "unit:DEG"
 
   Balance:
     is_a: Node
@@ -80,7 +96,7 @@ classes:
         description: "Capacity of a single storage asset."
         annotations:
           qudt.ucum_code: "[MW.h]"
-          qudt_unit: "unit:MegaW-HR"
+          qudt.unit: "unit:MegaW-HR"
       storages_existing:
         any_of:
           - range: float
@@ -88,7 +104,7 @@ classes:
         description: "Number of pre-existing storage assets at the model start."
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
       investment_cost:
         is_a: currency_per_kilowatt-hour
         range: Any
@@ -102,7 +118,7 @@ classes:
         description: "Loss of stored energy over one hour as a fraction of the energy stored."
         annotations:
           qudt.ucum_code:  "[10*-2]"
-          qudt_unit: "unit:PERCENT"
+          qudt.unit: "unit:PERCENT"
 
   Commodity:
     is_a: Node
@@ -128,6 +144,22 @@ classes:
       - conversion_rates
       - availability
     attributes:
+      latitude:
+        range: float
+        description: "Geographic latitude of the unit in decimal degrees (WGS 84)."
+        minimum_value: -90
+        maximum_value: 90
+        annotations:
+          qudt.ucum_code: "[deg]"
+          qudt.unit: "unit:DEG"
+      longitude:
+        range: float
+        description: "Geographic longitude of the unit in decimal degrees (WGS 84)."
+        minimum_value: -180
+        maximum_value: 180
+        annotations:
+          qudt.ucum_code: "[deg]"
+          qudt.unit: "unit:DEG"
       conversion_method:
         range: ConversionMethod
         description: "Choose how the unit converts inputs to outputs."
@@ -141,7 +173,7 @@ classes:
         description: "Number of pre-existing conversion units at the model start."
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
       startup_cost:
         is_a: currency_per_unit
         range: float
@@ -173,7 +205,7 @@ classes:
         description: "Capacity of the port for a single unit."
         annotations:
           qudt.ucum_code: "[MW]"
-          qudt_unit: "unit:MegaW"
+          qudt.unit: "unit:MegaW"
       investment_cost:
         is_a: currency_per_kilowatt
         any_of:
@@ -197,7 +229,7 @@ classes:
         description: Multiplier between constraints and the flow. Map of constraints and respective coefficients.
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
       inertia_constant:
         range: float
         description: Inertia constant for a synchronously connected unit to this node.
@@ -270,7 +302,7 @@ classes:
         description: "Capacity of a single asset (flow or link)."
         annotations:
           qudt.ucum_code: "[MW]"
-          qudt_unit: "unit:MegaW"
+          qudt.unit: "unit:MegaW"
       links_existing:
         any_of:
           - range: float
@@ -278,7 +310,7 @@ classes:
         description: "Number of pre-existing links at the model start"
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
       investment_cost:
         is_a: currency_per_kilowatt
         range: Any
@@ -313,7 +345,7 @@ classes:
         description: "Maximum investment to the aggregated capacity of set member flows (unit__to_node, node__to_unit, link) and storage capacity. Applies as a sum over all periods. Constant."
         annotations:
           qudt.ucum_code: "[MW]"
-          qudt_unit: "unit:MegaW"
+          qudt.unit: "unit:MegaW"
 
   Group_entity:
     is_a: Entity
@@ -412,7 +444,7 @@ classes:
           - range: PeriodFloat
         annotations:
           qudt.ucum_code: "[10*-2]"
-          qudt_unit: "unit:PERCENT"
+          qudt.unit: "unit:PERCENT"
 
   HasFlow:
     mixin: true
@@ -422,13 +454,13 @@ classes:
         range: float
         annotations:
           qudt.ucum_code: "[MW.h]"
-          qudt_unit: "unit:MegaW-HR"
+          qudt.unit: "unit:MegaW-HR"
         description: "Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction."
       flow_profile:
         range: Any
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
         description: "Flow profile that can be scaled by flow_annual. Positive values are inflow and negative values outflow from the node."
       flow_scaling_method:
         range: FlowScalingMethod
@@ -463,7 +495,7 @@ classes:
         description: Discount rate of the investment.
         annotations:
           qudt.ucum_code: "[10*-2]"
-          qudt_unit: "unit:PERCENT"
+          qudt.unit: "unit:PERCENT"
       payback_time:
         any_of:
           - range: float
@@ -471,7 +503,7 @@ classes:
         description: Economic payback time of the investment. Used to annualize investments.
         annotations:
           qudt.ucum_code: "[a]"
-          qudt_unit: "unit:YR"
+          qudt.unit: "unit:YR"
 
 
   HasProfiles:
@@ -483,13 +515,13 @@ classes:
         multivalued: true
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
       profile_limit_lower:
         range: float
         multivalued: true
         annotations:
           qudt.ucum_code: "[1]"
-          qudt_unit: "unit:UNITLESS"
+          qudt.unit: "unit:UNITLESS"
 
   DirectionalValue:
     attributes:
@@ -731,7 +763,7 @@ slots:
     description: "Multiplier(s) for turning inputs to outputs or for transferring between nodes. Can be given as single float (constant efficiency) or as a list of tuples where first value is for operating point and second value is for efficiency. The list must have decreasing values for the operating points - starting from 100%."
     annotations:
       qudt.ucum_code: "[10*-2]"
-      qudt_unit: "unit:PERCENT"
+      qudt.unit: "unit:PERCENT"
 
   # minimum_operating_point:
   #   range: float
@@ -759,7 +791,7 @@ slots:
     description: "Time series for availability (to represent forced outages)."
     annotations:
       qudt.ucum_code: "[10*-2]"
-      qudt_unit: "unit:PERCENT"
+      qudt.unit: "unit:PERCENT"
 
 enums:
   FlowScalingMethod:

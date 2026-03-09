@@ -1,0 +1,13 @@
+{
+    "name": "Visualize network",
+    "tooltype": "python",
+    "includes": [
+        "visualize_network.py"
+    ],
+    "description": "",
+    "inputfiles": [],
+    "inputfiles_opt": [],
+    "outputfiles": [],
+    "cmdline_args": [],
+    "includes_main_path": "../../../scripts/visualization"
+}

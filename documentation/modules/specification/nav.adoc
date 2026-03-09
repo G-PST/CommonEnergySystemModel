@@ -1,5 +1,6 @@
 * Specification
 ** xref:overview.adoc[Overview]
+** xref:supported-domains.adoc[Supported Domains]
 ** xref:entities.adoc[Entity Reference]
 ** xref:methods.adoc[Methods Reference]
 ** xref:temporal-model.adoc[Temporal Model]

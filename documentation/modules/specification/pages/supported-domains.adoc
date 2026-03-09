@@ -1,0 +1,113 @@
+= Supported Modeling Domains
+
+This page describes the energy system modeling domains that CESM supports, what it covers well, and what falls outside its current scope.
+
+CESM is designed as a general-purpose schema for energy system planning models.
+Its abstractions are intentionally generic: a xref:schema:class/Unit.adoc[Unit] converts inputs to outputs, a xref:schema:class/Node.adoc[Node] balances supply and demand, and a xref:schema:class/Link.adoc[Link] transfers energy between nodes.
+This architecture supports a range of modeling domains without requiring domain-specific entity types.
+
+
+== Multi-Energy and Sector Coupling
+
+CESM does not restrict the energy carriers that can be modeled.
+Because xref:schema:class/Node.adoc[Nodes] do not declare which commodity they carry -- commodity association is implicit through port connections -- the same Node/Unit/Link architecture can represent electricity, heat, gas, hydrogen, biomass, or any other energy carrier.
+
+A multi-energy system is built by creating Balance nodes for each carrier (e.g. `elec_bus`, `heat_bus`, `h2_bus`) and connecting them through Units that perform conversion between carriers.
+A heat pump, for example, is simply a Unit with an electricity input port and a heat output port.
+A power-to-gas electrolyser is a Unit with an electricity input and a hydrogen output.
+
+This approach extends to material flows as well.
+A Unit can model, for example, a steel production process with ore and energy inputs and steel output.
+However, CESM's built-in units of measure are energy-based (MW for capacity, MWh for flow), so material flows require the user to maintain consistent unit interpretation outside the schema.
+
+
+== Capacity Expansion Planning
+
+CESM supports investment modeling through the xref:schema:class/HasInvestments.adoc[HasInvestments] mixin, which is available on xref:schema:class/Unit.adoc[Units], xref:schema:class/Storage.adoc[Storages], xref:schema:class/Link.adoc[Links], and xref:schema:class/Port.adoc[Ports].
+
+Key features:
+
+* `investment_method` controls whether investment is allowed (`no_limits`) or blocked (`not_allowed`).
+* `discount_rate` and `payback_time` annualise investment costs.
+* xref:schema:class/Period.adoc[Period] entities define multi-year planning horizons, where each period can represent multiple years via `years_represented`.
+* Period-dependent parameters (costs, discount rates) are expressed through the PeriodFloat helper type.
+* xref:schema:class/Group.adoc[Groups] can enforce aggregate investment constraints across entities (e.g. a cap on total installed wind capacity).
+* xref:schema:class/System.adoc[System]-level `inflation_rate` supports real-terms cost adjustments.
+
+Capacity expansion in CESM operates at a zonal level -- each node represents a zone or bus, not an individual network node with electrical properties.
+
+
+== Production Cost Modeling
+
+CESM supports unit commitment and economic dispatch at a zonal level.
+
+Unit commitment features include:
+
+* `startup_method` on xref:schema:class/Unit.adoc[Units]: `linear` (continuous relaxation of the online variable) or `integer` (discrete on/off decisions).
+* `startup_cost` for modeling the cost of bringing a unit online.
+* `conversion_method` controls the efficiency representation: `constant_efficiency` for a single heat rate, `two_point_efficiency` for piecewise-linear efficiency curves via `conversion_rates`.
+* `availability` time series on Units and Ports for forced outage or maintenance scheduling.
+* `other_operational_cost` on Ports for variable operation and maintenance costs.
+* `profile_limit_upper` and `profile_limit_lower` on Ports for time-varying output bounds (e.g. renewable capacity factors).
+
+
+== Storage Modeling
+
+The xref:schema:class/Storage.adoc[Storage] node class provides a dedicated state variable that tracks stored energy across time steps.
+
+Storage-specific parameters include:
+
+* `storage_capacity` -- energy capacity of a single storage asset (MWh).
+* `storages_existing` -- number of pre-existing storage assets.
+* `storage_loss_from_stored_energy` -- hourly self-discharge rate as a percentage of stored energy.
+* `availability` -- time series for forced outage representation.
+
+Storages include the HasInvestments mixin, so the model can invest in new storage capacity with associated `investment_cost`, `discount_rate`, and `payback_time`.
+
+Charging and discharging are modeled through the same port mechanism as other entities: Units connect to Storage nodes via ports, and the port capacity and profiles govern charge/discharge rates.
+
+
+== Network Representation
+
+The xref:schema:class/Link.adoc[Link] class models energy transfer between two nodes -- transmission lines, pipelines, heat networks, or any other transfer corridor.
+
+Link features include:
+
+* Bidirectional flow between `node_A` and `node_B`.
+* Directional efficiency and capacity via the xref:schema:class/DirectionalValue.adoc[DirectionalValue] type, allowing different loss rates or limits for each direction.
+* `transfer_method` controls the mathematical formulation (currently `regular_linear`).
+* Investment options through the HasInvestments mixin.
+* `operational_cost` for variable transfer costs.
+
+Network modeling in CESM is zonal: each link represents an aggregate transfer corridor between zones.
+CESM does not model individual AC or DC circuits with electrical parameters such as impedance, voltage angles, or power flow equations.
+
+
+== What CESM Does Not Support
+
+CESM is scoped for energy system planning at the zonal level.
+The following domains are outside its current scope:
+
+AC/DC power flow analysis::
+CESM has no representation of impedance, voltage, reactive power, or power flow equations.
+Network transfer is modeled as simple capacity-constrained linear flow between zones.
+
+Dynamic and transient stability::
+CESM is a steady-state planning model.
+It does not model sub-second electrical dynamics, frequency response, or voltage stability.
+
+Distribution-level modeling::
+CESM targets transmission-level or zonal planning.
+It does not include distribution network topology, voltage regulation, or distributed energy resource aggregation.
+
+Building energy modeling::
+CESM does not model thermal envelopes, HVAC systems, occupant behaviour, or other building-level energy dynamics.
+Buildings can be represented only as aggregate demand profiles on Balance nodes.
+
+Transportation energy::
+CESM does not model vehicle fleets, charging infrastructure siting, route optimisation, or mobility demand.
+Electric vehicle charging can be represented as aggregate demand or storage, but without transportation-specific detail.
+
+Stochastic and probabilistic analysis::
+CESM currently represents deterministic scenarios.
+Support for stochastic or probabilistic analysis (e.g. scenario trees, chance constraints) is a potential future extension but is not part of the current specification.

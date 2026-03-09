@@ -2,6 +2,7 @@ name: energy-system-model
 title: Energy System Model
 version: ~
 nav:
+- modules/ROOT/nav.adoc
 - modules/getting-started/nav.adoc
 - modules/specification/nav.adoc
 - modules/user-guide/nav.adoc
