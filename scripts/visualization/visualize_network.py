@@ -10,7 +10,6 @@ Usage:
 """
 
 import argparse
-import sys
 
 import matplotlib
 import matplotlib.patches as mpatches

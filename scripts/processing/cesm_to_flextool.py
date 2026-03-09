@@ -91,7 +91,7 @@ def main():
     )
 
     # Load and apply Python transformer
-    print(f"Transforming to FlexTool format...")
+    print("Transforming to FlexTool format...")
     print(f"  Transformer versions: {args.cesm_version} / {args.flextool_version}")
     try:
         transformer_module = load_transformer_module(args.cesm_version, args.flextool_version)
