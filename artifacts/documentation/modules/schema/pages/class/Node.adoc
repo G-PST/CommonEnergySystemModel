@@ -32,6 +32,20 @@
 |===
 | Name | Type | Description | Inherited from
 
+| <<latitude,`latitude`>>
+//| [[slots_table.latitude]]<<latitude,`latitude`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Geographic latitude of the node in decimal degrees (WGS 84).+++
+| _n/a_
+
+| <<longitude,`longitude`>>
+//| [[slots_table.longitude]]<<longitude,`longitude`>>
+| 0..* +
+https://w3id.org/linkml/Float[`float`]
+| +++Geographic longitude of the node in decimal degrees (WGS 84).+++
+| _n/a_
+
 | <<node_type,`node_type`>>
 //| [[slots_table.node_type]]<<node_type,`node_type`>>
 | 0..* +
@@ -125,6 +139,58 @@ https://w3id.org/linkml/Uriorcurie[`uriorcurie`]
 [.text-left]
 --
 <<slots_table.description,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#latitude]
+=== `latitude`
++++Geographic latitude of the node in decimal degrees (WGS 84).+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.latitude,&#10548;>>
+--
+////
+
+
+//[discrete]
+[#longitude]
+=== `longitude`
++++Geographic longitude of the node in decimal degrees (WGS 84).+++
+
+
+[cols="h,4",width=65%]
+|===
+| URI
+| _n/a_
+| Cardinality
+| 0..*
+| Type
+| https://w3id.org/linkml/Float[`float`]
+
+
+|===
+
+////
+[.text-left]
+--
+<<slots_table.longitude,&#10548;>>
 --
 ////
 

@@ -14,13 +14,8 @@
 <header class="header">
   <nav class="navbar">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://G-PST.github.io/CommonEnergySystemModel">Energy System Model</a>
-      <div class="navbar-item search hide-for-print">
-        <div id="search-field" class="field">
-          <input id="search-input" type="text" placeholder="Search the docs">
-        </div>
-      </div>
-      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+      <a class="navbar-item" href="../../index.html">Energy System Model</a>
+      <button class="navbar-burger" aria-label="Toggle navigation" data-target="topbar-nav">
         <span></span>
         <span></span>
         <span></span>
@@ -28,28 +23,7 @@
     </div>
     <div id="topbar-nav" class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="#">Home</a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Products</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Product A</a>
-            <a class="navbar-item" href="#">Product B</a>
-            <a class="navbar-item" href="#">Product C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Services</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Service A</a>
-            <a class="navbar-item" href="#">Service B</a>
-            <a class="navbar-item" href="#">Service C</a>
-          </div>
-        </div>
-        <div class="navbar-item">
-          <span class="control">
-            <a class="button is-primary" href="#">Download</a>
-          </span>
-        </div>
+        <a class="navbar-item" href="https://github.com/G-PST/CommonEnergySystemModel">GitHub</a>
       </div>
     </div>
   </nav>
@@ -63,6 +37,13 @@
     <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
     <h3 class="title"><a href="../index.html">Energy System Model</a></h3>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
@@ -90,6 +71,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../specification/overview.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../specification/supported-domains.html">Supported Domains</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../specification/entities.html">Entity Reference</a>
@@ -190,7 +174,7 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../schema/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Energy System Model</a></li>
@@ -217,9 +201,39 @@ For initial setup, see the <a href="../getting-started/quickstart.html" class="x
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_internal_pipeline"><a class="anchor" href="#_internal_pipeline"></a>Internal pipeline</h3>
 <div class="paragraph">
-<p>All transformations use <strong>CESM DuckDB</strong> as the central hub format.
-Data flows through the hub when converting between any two external formats:</p>
+<p>Each transformation script follows the same internal three-step pipeline:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  Reader  ──►  Transformer  ──►  Writer</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A <strong>reader</strong> loads source data into a set of pandas DataFrames (e.g. <code>from_spine_db</code> reads a FlexTool Spine database).</p>
+</li>
+<li>
+<p>A <strong>transformer</strong> converts between the source model&#8217;s DataFrames and the CESM DataFrames (e.g. <code>flextool_to_cesm</code> maps FlexTool entities and parameters to CESM equivalents).</p>
+</li>
+<li>
+<p>A <strong>writer</strong> persists the resulting DataFrames to the target format (e.g. <code>to_duckdb</code> writes CESM DataFrames into a DuckDB database).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This means it is equally possible to chain transformations without persisting to disk in between&#8201;&#8212;&#8201;read from format A, transform to CESM DataFrames, transform from CESM DataFrames to format B, and write to format B&#8201;&#8212;&#8201;all in a single pipeline.
+The processing scripts in this repository choose to write an intermediate CESM DuckDB file because it makes each step independently inspectable and debuggable, but this is a convenience, not a requirement.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_script_level_view"><a class="anchor" href="#_script_level_view"></a>Script-level view</h3>
+<div class="paragraph">
+<p>The provided scripts use <strong>CESM DuckDB</strong> as a convenient hub format.
+Converting between any two external formats is a two-script process through the hub:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -229,8 +243,9 @@ YAML                 ──►  CESM DuckDB  ──►  Spine DB</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Each arrow corresponds to a single script invocation.
+<p>Each arrow is a single script invocation. Internally, each script runs the reader → transformer → writer pipeline described above.
 The scripts live in <code>scripts/processing/</code> and <code>src/readers/</code>.</p>
+</div>
 </div>
 </div>
 </div>

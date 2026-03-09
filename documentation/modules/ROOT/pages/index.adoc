@@ -31,6 +31,10 @@ It has roots in https://github.com/ines-tools/ines-spec[ines-spec], but is built
 | Architecture, adding new formats, and writing transformers.
 |===
 
+== Source code
+
+The source code and LinkML schema are available on https://github.com/G-PST/CommonEnergySystemModel[GitHub].
+
 == Design principles
 
 * *Standard-based* -- built on LinkML with integration to IEC-CIM and QUDT ontologies.
