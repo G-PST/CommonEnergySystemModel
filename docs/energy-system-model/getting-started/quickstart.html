@@ -207,7 +207,10 @@ For full setup instructions, see the <a href="installation.html" class="xref pag
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
-cd oes-spec
+cd CommonEnergySystemModel
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
 pip install -e .</code></pre>
 </div>
 </div>
@@ -221,7 +224,7 @@ gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py</code></
 </div>
 </div>
 <div class="paragraph">
-<p>All scripts below are run from the repository root (<code>oes-spec/</code>).</p>
+<p>All scripts below are run from the repository root (<code>CommonEnergySystemModel/</code>).</p>
 </div>
 </div>
 </div>

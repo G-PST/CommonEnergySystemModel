@@ -15,7 +15,7 @@ Clone the repository, create a virtual environment, and install CESM in editable
 [source,bash]
 ----
 git clone <repository-url>
-cd oes-spec
+cd CommonEnergySystemModel
 python -m venv .venv
 source .venv/bin/activate   # Linux/macOS
 # .venv\Scripts\activate    # Windows
@@ -42,7 +42,7 @@ Development tools (pytest, ruff)::
 pip install -e ".[dev]"
 ----
 
-Spine DB workflows (spinedb_api)::
+Spine Toolbox workflows (includes Spine Toolbox and spinedb_api)::
 +
 [source,bash]
 ----
@@ -141,17 +141,29 @@ If this completes without errors, the core installation is working correctly. Se
 
 == Spine Toolbox setup
 
-The repository includes Spine Toolbox project files in `.spinetoolbox/project.json` that define GUI-based workflows for data transformations.
+The repository includes a https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] project with GUI-based workflows for data transformations.
 
-To use them:
+=== Install
 
-. Install CESM with the Spine extra: `pip install -e ".[spine]"`
-. Open https://github.com/spine-tools/Spine-Toolbox[Spine Toolbox] and load the project from the repository root.
-. Select a workflow and execute it through the GUI.
+[source,bash]
+----
+pip install -e ".[spine]"
+----
+
+This installs Spine Toolbox and all its dependencies (including `spinedb_api`).
+
+=== Launch and open the project
+
+[source,bash]
+----
+spinetoolbox
+----
+
+In Spine Toolbox, go to **File > Open project...** and select the repository root directory (the folder containing `.spinetoolbox/project.json`). The workflows for YAML to CESM, CESM to FlexTool, CESM to GridDB, and other transformations will be available.
 
 [NOTE]
 ====
-The FlexTool3 tool specification in the project file references an external path that must be updated to match your local installation. FlexTool3 itself is optional -- the core CESM transformation tools work without it.
+The FlexTool3 tool specification in the project file references an external path that must be updated to match your local FlexTool3 installation. FlexTool3 itself is optional -- the core CESM transformation tools work without it.
 ====
 
 For more details, see the xref:spine-toolbox-guide.adoc[Spine Toolbox Guide].

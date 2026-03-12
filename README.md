@@ -65,7 +65,7 @@ Prerequisites: Python 3.11+ and git.
 
 ```bash
 git clone <repository-url>
-cd oes-spec
+cd CommonEnergySystemModel
 python -m venv .venv
 source .venv/bin/activate   # Linux/macOS
 # .venv\Scripts\activate    # Windows
@@ -78,7 +78,7 @@ For development (includes pytest and ruff):
 pip install -e ".[dev]"
 ```
 
-For Spine DB workflows (requires `spinedb_api`):
+For Spine Toolbox workflows (includes Spine Toolbox and spinedb_api):
 
 ```bash
 pip install -e ".[spine]"
@@ -134,11 +134,18 @@ This project includes a devcontainer configuration that provides a consistent de
 
 ### Spine Toolbox Setup
 
-The `.spinetoolbox/project.json` file defines workflows for transforming data between CESM and various formats. Most tools (YAML to CESM, CESM to FlexTool, CESM to GridDB, etc.) use relative paths and work out of the box.
+The repository includes a Spine Toolbox project with workflows for transforming data between CESM and various formats.
 
-However, the FlexTool3 tool specification references an external absolute path (to a local FlexTool3 installation). If you want to run FlexTool3 within Spine Toolbox, you must update this path in `.spinetoolbox/project.json` to point to your own FlexTool3 installation's `.spinetoolbox/specifications/Tool/flextool3.json`.
+Install CESM with the Spine extra and launch Spine Toolbox:
 
-FlexTool3 is optional -- the core CESM transformation tools (YAML to CESM, CESM to FlexTool format, CESM to GridDB, etc.) work without it. FlexTool3 is only needed if you want to execute the FlexTool3 solver from within the Spine Toolbox workflow.
+```bash
+pip install -e ".[spine]"
+spinetoolbox
+```
+
+In Spine Toolbox, open the CESM project: **File > Open project...** and select the repository root directory (the folder containing `.spinetoolbox/project.json`).
+
+Most tools (YAML to CESM, CESM to FlexTool, CESM to GridDB, etc.) use relative paths and work out of the box. The FlexTool3 tool specification references an external absolute path (to a local FlexTool3 installation). If you want to run FlexTool3 within Spine Toolbox, update this path in `.spinetoolbox/project.json` to point to your own FlexTool3 installation. FlexTool3 is optional -- the core CESM transformation tools work without it.
 
 ### Generate Documentation
 

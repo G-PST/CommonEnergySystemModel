@@ -224,7 +224,7 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
-cd oes-spec
+cd CommonEnergySystemModel
 python -m venv .venv
 source .venv/bin/activate   # Linux/macOS
 # .venv\Scripts\activate    # Windows
@@ -280,7 +280,7 @@ Always use a virtual environment. Installing CESM and its dependencies into your
 </div>
 </div>
 </dd>
-<dt class="hdlist1">Spine DB workflows (spinedb_api)</dt>
+<dt class="hdlist1">Spine Toolbox workflows (includes Spine Toolbox and spinedb_api)</dt>
 <dd>
 <div class="listingblock">
 <div class="content">
@@ -427,23 +427,28 @@ pip install -e .            # or: pip install -e ".[dev]"</code></pre>
 <h2 id="_spine_toolbox_setup"><a class="anchor" href="#_spine_toolbox_setup"></a>Spine Toolbox setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The repository includes Spine Toolbox project files in <code>.spinetoolbox/project.json</code> that define GUI-based workflows for data transformations.</p>
+<p>The repository includes a <a href="https://github.com/spine-tools/Spine-Toolbox">Spine Toolbox</a> project with GUI-based workflows for data transformations.</p>
+</div>
+<div class="sect2">
+<h3 id="_install"><a class="anchor" href="#_install"></a>Install</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[spine]"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>To use them:</p>
+<p>This installs Spine Toolbox and all its dependencies (including <code>spinedb_api</code>).</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Install CESM with the Spine extra: <code>pip install -e ".[spine]"</code></p>
-</li>
-<li>
-<p>Open <a href="https://github.com/spine-tools/Spine-Toolbox">Spine Toolbox</a> and load the project from the repository root.</p>
-</li>
-<li>
-<p>Select a workflow and execute it through the GUI.</p>
-</li>
-</ol>
+</div>
+<div class="sect2">
+<h3 id="_launch_and_open_the_project"><a class="anchor" href="#_launch_and_open_the_project"></a>Launch and open the project</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">spinetoolbox</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Spine Toolbox, go to <strong>File &gt; Open project&#8230;&#8203;</strong> and select the repository root directory (the folder containing <code>.spinetoolbox/project.json</code>). The workflows for YAML to CESM, CESM to FlexTool, CESM to GridDB, and other transformations will be available.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -453,7 +458,7 @@ pip install -e .            # or: pip install -e ".[dev]"</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The FlexTool3 tool specification in the project file references an external path that must be updated to match your local installation. FlexTool3 itself is optional&#8201;&#8212;&#8201;the core CESM transformation tools work without it.</p>
+<p>The FlexTool3 tool specification in the project file references an external path that must be updated to match your local FlexTool3 installation. FlexTool3 itself is optional&#8201;&#8212;&#8201;the core CESM transformation tools work without it.</p>
 </div>
 </td>
 </tr>
@@ -461,6 +466,7 @@ pip install -e .            # or: pip install -e ".[dev]"</code></pre>
 </div>
 <div class="paragraph">
 <p>For more details, see the <a href="spine-toolbox-guide.html" class="xref page">Spine Toolbox Guide</a>.</p>
+</div>
 </div>
 </div>
 </div>

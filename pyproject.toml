@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-spine = ["spinedb_api"]
+spine = ["spinetoolbox"]
 dev = ["pytest", "ruff"]
 docs = ["linkml"]
 

@@ -18,7 +18,7 @@ To open it:
 
 . Launch Spine Toolbox
 . Select **File > Open project...**
-. Navigate to the `oes-spec` repository root and open it
+. Navigate to the `CommonEnergySystemModel` repository root and open it
 
 Spine Toolbox will load the project and display the workflow canvas.
 

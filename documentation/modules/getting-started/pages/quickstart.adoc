@@ -10,7 +10,10 @@ Ensure CESM is installed and the Pydantic classes have been generated:
 [source,bash]
 ----
 git clone <repository-url>
-cd oes-spec
+cd CommonEnergySystemModel
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
 pip install -e .
 ----
 
@@ -22,7 +25,7 @@ pip install linkml
 gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ----
 
-All scripts below are run from the repository root (`oes-spec/`).
+All scripts below are run from the repository root (`CommonEnergySystemModel/`).
 
 == Load sample data into DuckDB
 
