@@ -6,6 +6,7 @@ to GridDB format, and writes to a SQLite database.
 """
 
 import argparse
+from pathlib import Path
 
 from readers.from_duckdb import dataframes_from_duckdb
 from transformers.griddb import to_griddb
@@ -25,7 +26,9 @@ def main():
     parser.add_argument(
         "output",
         type=str,
-        help="Output SQLite file path"
+        nargs="?",
+        default=None,
+        help="Output SQLite file path (default: input path with _griddb.sqlite extension)"
     )
     parser.add_argument(
         "--cesm-version",
@@ -50,6 +53,11 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Default output: same path as input but with _griddb.sqlite extension
+    if args.output is None:
+        input_stem = Path(args.input).stem
+        args.output = str(Path(args.input).parent / f"{input_stem}_griddb.sqlite")
 
     # Determine schema path
     if args.schema:

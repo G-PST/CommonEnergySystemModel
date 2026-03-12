@@ -36,16 +36,22 @@ def main():
     parser.add_argument(
         "output",
         type=str,
-        help="Output Spine database file path or URL (e.g., output.sqlite or sqlite:///output.sqlite)"
+        nargs="?",
+        default=None,
+        help="Output Spine database file path or URL (default: input path with .sqlite extension)"
     )
 
     args = parser.parse_args()
+
+    # Default output: same path as input but with .sqlite extension
+    if args.output is None:
+        args.output = str(Path(args.input).with_suffix('.sqlite'))
 
     # Load CESM data from DuckDB
     print(f"Loading CESM data from {args.input}...")
     cesm = dataframes_from_duckdb(args.input)
 
-    # Write CESM dataset to Spine DB
+    # Write CESM dataset to Spine DB (created automatically if it doesn't exist)
     output_url = path_to_sqlite_url(args.output)
     print(f"Writing to Spine database: {output_url}...")
     dataframes_to_spine(cesm, output_url)

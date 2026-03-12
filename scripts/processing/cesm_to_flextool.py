@@ -7,6 +7,7 @@ to FlexTool format, and writes to a Spine database.
 
 import argparse
 import importlib.util
+import shutil
 from pathlib import Path
 
 from readers.from_duckdb import dataframes_from_duckdb
@@ -62,7 +63,9 @@ def main():
     parser.add_argument(
         "output",
         type=str,
-        help="Output Spine database file path or URL (e.g., output.sqlite or sqlite:///output.sqlite)"
+        nargs="?",
+        default=None,
+        help="Output Spine database file path or URL (default: input path with _flextool.sqlite extension)"
     )
     parser.add_argument(
         "--cesm-version",
@@ -80,6 +83,21 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Default output: same path as input but with _flextool.sqlite extension
+    if args.output is None:
+        input_stem = Path(args.input).stem
+        args.output = str(Path(args.input).parent / f"{input_stem}_flextool.sqlite")
+
+    # If output doesn't exist, copy the FlexTool template DB (has class/parameter definitions)
+    output_path = Path(args.output)
+    if not output_path.exists() and not args.output.startswith(("sqlite:", "http:", "https:")):
+        template = Path("data/samples/flextool_examples.sqlite")
+        if template.exists():
+            shutil.copy2(template, output_path)
+            print(f"Created {args.output} from FlexTool template database")
+        else:
+            print(f"Warning: FlexTool template not found at {template}, creating empty database")
 
     # Load CESM data from DuckDB
     print(f"Loading CESM data from {args.input}...")
