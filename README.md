@@ -57,7 +57,7 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - 'src/core/' - Functions to perform data conversions
 - 'src/readers/' - Functions to read from files to memory
 - 'src/writers/' - Functions to write from memory to files
-- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
+- 'src/generated/' - Auto-generated Pydantic classes from the LinkML schema. Only needed for YAML import and schema validation, not for regular transformation workflows. Run `gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py` to generate (needs `pip install linkml`).
 
 ## Quick Install
 
@@ -84,7 +84,7 @@ For Spine Toolbox workflows (includes Spine Toolbox and spinedb_api):
 pip install -e ".[spine]"
 ```
 
-**Generate Python classes from the schema** (required before running scripts):
+**Generate Pydantic classes from the schema** (only needed for YAML import via `from_yaml.py` and schema validation -- not required for regular transformation workflows):
 
 ```bash
 pip install linkml
@@ -103,18 +103,14 @@ See the [schema documentation](https://g-pst.github.io/CommonEnergySystemModel/e
 
 ## Getting Started
 
-1. **Understanding the Model**: The `cesm_v0.1.0.yaml` file defines the core classes:
-   - `Balance`: Energy balance nodes with flow characteristics
-   - `Storage`: Storage units with capacity and investment parameters
-   - `Commodity`: Energy commodities with pricing
-   - `Unit`: Conversion units with efficiency
-   - `Link`: Transfer energy between nodes
+The `cesm_v0.1.0.yaml` schema defines the core classes: `Balance` (energy balance nodes), `Unit` (conversion units), `Storage`, `Commodity`, and `Link`. The sample file at `data/samples/cesm-sample.yaml` shows how to structure data according to the model.
 
-2. **Sample Data**: The sample file shows how to structure data according to the model. It has examples for all the classes and forms a small test system.
+For quickstart workflows, transformation examples, and detailed guides, see the [CESM Documentation](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/index.html):
 
-3. **Documentation**:
-   - [Schema Reference](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html) -- auto-generated class and enumeration documentation
-   - [Transformer Developer Guide](transformer-developer-guide.md) -- architecture, DataFrame conventions, YAML syntax, and how to add new formats
+- [Quickstart](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/getting-started/quickstart.html) -- load data, run conversions, try round-trips
+- [Schema Reference](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/schema/index.html) -- auto-generated class and enumeration documentation
+- [Transformation Workflows](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/user-guide/transformation-workflows.html) -- end-to-end pipeline documentation
+- [Developer Guide](https://g-pst.github.io/CommonEnergySystemModel/energy-system-model/developer-guide/architecture.html) -- architecture, adding new formats, writing transformers
 
 ## Development Environment
 

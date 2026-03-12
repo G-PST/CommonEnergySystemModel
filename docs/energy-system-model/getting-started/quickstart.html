@@ -196,35 +196,9 @@
 <p>This guide walks you through loading sample data, inspecting it, and running format conversions with CESM.
 For full setup instructions, see the <a href="installation.html" class="xref page">Installation Guide</a>.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Ensure CESM is installed and the Pydantic classes have been generated:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
-cd CommonEnergySystemModel
-python -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-# .venv\Scripts\activate    # Windows
-pip install -e .</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generate the required Python classes from the LinkML schema:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
-gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>All scripts below are run from the repository root (<code>CommonEnergySystemModel/</code>).</p>
+<p>Before starting, complete the <a href="installation.html" class="xref page">Installation Guide</a> (including generating Pydantic classes from the schema).
+All scripts below are run from the repository root with the virtual environment activated.</p>
 </div>
 </div>
 </div>

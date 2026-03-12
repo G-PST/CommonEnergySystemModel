@@ -58,9 +58,9 @@ pip install -e ".[docs]"
 
 You can combine extras: `pip install -e ".[dev,spine]"`.
 
-== Generating Pydantic classes from the schema
+== Generating Pydantic classes from the schema (optional)
 
-Before running any scripts, you must generate the Python classes from the LinkML schema. This step is required because the readers, writers, and transformation scripts depend on these generated classes.
+This step is only needed if you want to import CESM data from YAML files (via `from_yaml.py`) or validate data against the schema. Regular transformation workflows (DuckDB, FlexTool, GridDB, Spine DB) do not require it.
 
 [source,bash]
 ----

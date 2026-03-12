@@ -304,10 +304,10 @@ Always use a virtual environment. Installing CESM and its dependencies into your
 </div>
 </div>
 <div class="sect1">
-<h2 id="_generating_pydantic_classes_from_the_schema"><a class="anchor" href="#_generating_pydantic_classes_from_the_schema"></a>Generating Pydantic classes from the schema</h2>
+<h2 id="_generating_pydantic_classes_from_the_schema_optional"><a class="anchor" href="#_generating_pydantic_classes_from_the_schema_optional"></a>Generating Pydantic classes from the schema (optional)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before running any scripts, you must generate the Python classes from the LinkML schema. This step is required because the readers, writers, and transformation scripts depend on these generated classes.</p>
+<p>This step is only needed if you want to import CESM data from YAML files (via <code>from_yaml.py</code>) or validate data against the schema. Regular transformation workflows (DuckDB, FlexTool, GridDB, Spine DB) do not require it.</p>
 </div>
 <div class="listingblock">
 <div class="content">

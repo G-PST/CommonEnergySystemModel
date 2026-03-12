@@ -3,29 +3,8 @@
 This guide walks you through loading sample data, inspecting it, and running format conversions with CESM.
 For full setup instructions, see the xref:installation.adoc[Installation Guide].
 
-== Prerequisites
-
-Ensure CESM is installed and the Pydantic classes have been generated:
-
-[source,bash]
-----
-git clone <repository-url>
-cd CommonEnergySystemModel
-python -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-# .venv\Scripts\activate    # Windows
-pip install -e .
-----
-
-Generate the required Python classes from the LinkML schema:
-
-[source,bash]
-----
-pip install linkml
-gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
-----
-
-All scripts below are run from the repository root (`CommonEnergySystemModel/`).
+Before starting, complete the xref:installation.adoc[Installation Guide] (including generating Pydantic classes from the schema).
+All scripts below are run from the repository root with the virtual environment activated.
 
 == Load sample data into DuckDB
 
