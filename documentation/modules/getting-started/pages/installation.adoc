@@ -60,10 +60,10 @@ Before running any scripts, you must generate the Python classes from the LinkML
 [source,bash]
 ----
 pip install linkml
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ----
 
-The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to `model/cesm.yaml`.
+The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to `model/cesm_v0.1.0.yaml`.
 
 == Devcontainer setup
 
@@ -112,7 +112,7 @@ pip install -e git+https://github.com/Netbeheer-Nederland/linkml-asciidoc-genera
 
 [source,bash]
 ----
-python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
+python -m linkml_asciidoc_generator.main "model/cesm_v0.1.0.yaml" -o "artifacts/documentation/modules/schema"
 ----
 
 This produces AsciiDoc pages describing every class, slot, and enum in the CESM schema.

@@ -52,3 +52,4 @@ The source code and LinkML schema are available on https://github.com/G-PST/Comm
 * *Standard-based* -- built on LinkML with integration to IEC-CIM and QUDT ontologies.
 * *Tool-agnostic* -- defines the data model, not the tool. Transformers handle conversions to and from tool-specific formats.
 * *Separation of concerns* -- the specification (LinkML schema) is independent of the implementation (Python readers, writers, and transformers).
+* *Version-aware transformers* -- each tool can have multiple transformer versions, one per tool version, all targeting the same CESM version. This allows the same CESM hub to interoperate with different releases of the same tool without breaking existing transformers.

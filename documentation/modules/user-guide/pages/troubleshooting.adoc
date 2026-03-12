@@ -55,7 +55,7 @@ balance:
 * `storage`: requires `name`
 * `unit_to_node` / `node_to_unit`: requires `name`, `source`, `sink`
 
-Use the LinkML schema at `model/cesm.yaml` as the authoritative reference for required and optional fields.
+Use the LinkML schema at `model/cesm_v0.1.0.yaml` as the authoritative reference for required and optional fields.
 
 == Spine Toolbox FlexTool3 tool not found
 
@@ -83,10 +83,10 @@ This path is hardcoded in `.spinetoolbox/project.json`. Update it to point to yo
 [source,bash]
 ----
 pip install linkml
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ----
 
-This must be re-run whenever `model/cesm.yaml` is modified.
+This must be re-run whenever `model/cesm_v0.1.0.yaml` is modified.
 
 == Import errors after cloning
 
@@ -129,7 +129,7 @@ Validate your YAML syntax with an external tool before debugging CESM-specific i
 ----
 pip install -e ".[dev]"
 pip install linkml
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 pytest
 ----
 

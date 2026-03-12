@@ -81,7 +81,7 @@ class TestSchemaViewLoading:
             sv = SchemaView(str(CESM_SCHEMA_YAML))
         except Exception as e:
             pytest.skip(
-                f"SchemaView cannot load cesm.yaml (linkml compatibility issue): {e}"
+                f"SchemaView cannot load cesm_v0.1.0.yaml (linkml compatibility issue): {e}"
             )
 
         # If we get here, schema loaded -- run basic checks

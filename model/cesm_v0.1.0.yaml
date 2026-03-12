@@ -1,10 +1,11 @@
-id: file:///cesm.yaml
+id: file:///cesm_v0.1.0.yaml
 name: cesm
 description: Common Energy System Model schema
 license: https://creativecommons.org/publicdomain/zero/1.0/
+version: v0.1.0
 default_prefix: cesm
 prefixes:
-  cesm: file:///cesm.yaml
+  cesm: file:///cesm_v0.1.0.yaml
   linkml: https://w3id.org/linkml/
   qudt: http://qudt.org/schema/qudt/           # Core QUDT schema (classes like QuantityValue, Unit)
   unit: http://qudt.org/vocab/unit/            # Individual units (MegaW-HR, Meter, etc.)

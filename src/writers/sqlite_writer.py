@@ -1,22 +1,18 @@
 """
-SQLite dumper for target dataframes.
+Generic SQLite writer for target dataframes.
 
-DEPRECATED: This module is superseded by the restructured writer stack:
-  - Generic writer:           src/writers/sqlite_writer.py
-  - v0.2.0 version wrapper:  src/transformers/griddb/cesm_v0.1.0/v0.2.0/to_griddb_sqlite.py
-  - v0.3.0 version wrapper:  src/transformers/griddb/cesm_v0.1.0/v0.3.0/to_griddb_sqlite.py
+This module creates and populates an SQLite database from target dataframes,
+using the provided SQL schema for initialization. It is schema-version-agnostic;
+the caller supplies the table insertion order appropriate for their schema.
 
-This file is kept for backward compatibility. New code should import from
-the version-specific wrappers or from src.writers.sqlite_writer directly.
-
-Original description:
-This module creates and populates an SQLite database from the target dataframes,
-using the provided SQL schema for initialization.
+Version-specific wrappers live in each schema version folder, e.g.
+  src/transformers/griddb/cesm_v0.1.0/v0.2.0/to_griddb_sqlite.py
+  src/transformers/griddb/cesm_v0.1.0/v0.3.0/to_griddb_sqlite.py
 """
 
 import sqlite3
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
 
@@ -60,9 +56,10 @@ def _insert_or_replace(conn: sqlite3.Connection, table_name: str, df: pd.DataFra
 
 
 def write_to_sqlite(schema_path: str,
-                   target_dataframes: Dict[str, pd.DataFrame],
-                   output_db_path: str,
-                   clear_existing: bool = True) -> None:
+                    target_dataframes: Dict[str, pd.DataFrame],
+                    output_db_path: str,
+                    table_order: List[str],
+                    clear_existing: bool = True) -> None:
     """
     Create SQLite database from schema and populate with dataframes.
 
@@ -70,6 +67,8 @@ def write_to_sqlite(schema_path: str,
         schema_path: Path to schema.sql file
         target_dataframes: Dictionary of dataframes matching schema tables
         output_db_path: Path for output SQLite database file
+        table_order: List of table names in foreign-key-safe insertion order.
+                     Tables not present in *target_dataframes* are skipped.
         clear_existing: If True, delete existing database and create fresh.
                        If False, add/replace data in existing database.
                        Default: True.
@@ -119,44 +118,6 @@ def write_to_sqlite(schema_path: str,
         else:
             print("Skipping schema initialization (incremental update mode)")
 
-        # Define table insertion order (respecting foreign keys)
-        # Tables must be inserted in dependency order.
-        # This is a UNION of old (v0.1/v0.2) and new (v0.3+) table names so that
-        # the same writer works with both schema versions.  Tables that don't
-        # exist in the target database are simply skipped (they won't appear in
-        # target_dataframes).
-        table_order = [
-            # entity_types already populated by schema
-            'entities',
-            'prime_mover_types',
-            'fuels',
-            'storage_technology_types',       # v0.3+
-            'planning_regions',
-            'balancing_topologies',
-            'arcs',
-            'transmission_lines',
-            'transmission_interchanges',
-            'generation_units',               # v0.1/v0.2
-            'thermal_generators',             # v0.3+
-            'renewable_generators',           # v0.3+
-            'hydro_generators',               # v0.3+
-            'storage_units',
-            'hydro_reservoir',                # v0.1/v0.2
-            'hydro_reservoirs',               # v0.3+
-            'hydro_reservoir_connections',
-            'supply_technologies',
-            'storage_technologies',           # v0.1/v0.2
-            'transport_technologies',
-            'attributes',
-            'supplemental_attributes',
-            'supplemental_attributes_association',
-            'time_series_associations',
-            'static_time_series_data',        # v0.1/v0.2
-            'static_time_series',             # v0.3+
-            'deterministic_forecast_data',    # v0.1/v0.2
-            'loads',
-        ]
-
         # Insert data for each table
         print("\nInserting data into tables...")
         for table_name in table_order:
@@ -185,18 +146,18 @@ def write_to_sqlite(schema_path: str,
                             # Incremental update: use INSERT OR REPLACE
                             _insert_or_replace(conn, table_name, df)
 
-                        print(f"  ✓ {table_name}: {len(df)} rows")
+                        print(f"  \u2713 {table_name}: {len(df)} rows")
                     except Exception as e:
-                        print(f"  ✗ {table_name}: Error - {str(e)}")
+                        print(f"  \u2717 {table_name}: Error - {str(e)}")
                         # Continue with other tables even if one fails
                 else:
-                    print(f"  ○ {table_name}: Empty (skipped)")
+                    print(f"  \u25cb {table_name}: Empty (skipped)")
             else:
-                print(f"  ○ {table_name}: Not in dataframes (skipped)")
+                print(f"  \u25cb {table_name}: Not in dataframes (skipped)")
 
         # Commit all changes
         conn.commit()
-        print(f"\n✓ Database created successfully: {output_db_path}")
+        print(f"\n\u2713 Database created successfully: {output_db_path}")
 
         # Print summary statistics
         print("\n" + "="*60)
@@ -216,12 +177,12 @@ def write_to_sqlite(schema_path: str,
         print("="*60)
 
     except sqlite3.Error as e:
-        print(f"\n✗ Database error: {str(e)}")
+        print(f"\n\u2717 Database error: {str(e)}")
         conn.rollback()
         raise
 
     except Exception as e:
-        print(f"\n✗ Unexpected error: {str(e)}")
+        print(f"\n\u2717 Unexpected error: {str(e)}")
         conn.rollback()
         raise
 
@@ -277,7 +238,7 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) != 4:
-        print("Usage: python dumper.py <schema.sql> <output.db> <verify_only>")
+        print("Usage: python sqlite_writer.py <schema.sql> <output.db> <verify_only>")
         print("  verify_only: 'true' to only verify existing database, 'false' to create new")
         sys.exit(1)
 
@@ -293,4 +254,4 @@ if __name__ == "__main__":
             print(f"  {table:40s} {count:6d} rows")
     else:
         print("Error: This example requires target dataframes")
-        print("Use dump_to_sqlite() function in your code")
+        print("Use write_to_sqlite() function in your code")

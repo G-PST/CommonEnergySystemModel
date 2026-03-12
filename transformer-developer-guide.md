@@ -69,7 +69,7 @@ CESM DuckDB --> DuckDB Reader --> CESM DataFrames --> YAML Transformer --> Pytho
 
 ### CESM as Central Interchange Format
 
-CESM (stored in DuckDB and defined by [LinkML schema](model/cesm.yaml)) serves as the canonical data representation:
+CESM (stored in DuckDB and defined by [LinkML schema](model/cesm_v0.1.0.yaml)) serves as the canonical data representation:
 
 - **Normalization**: All timestamps are UTC, all entity relationships are explicit
 - **Versioning**: CESM schema versions enable forward compatibility

@@ -33,8 +33,8 @@ def main():
         "--schema",
         "-s",
         type=str,
-        default="model/cesm.yaml",
-        help="CESM schema path (default: model/cesm.yaml)"
+        default="model/cesm_v0.1.0.yaml",
+        help="CESM schema path (default: model/cesm_v0.1.0.yaml)"
     )
     parser.add_argument(
         "--clear-target-db",

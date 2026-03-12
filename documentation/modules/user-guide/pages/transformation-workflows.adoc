@@ -45,7 +45,7 @@ python src/readers/from_yaml.py data/samples/cesm-sample.yaml output/cesm.duckdb
 
 Optional flags:
 
-* `--schema` / `-s` -- Path to the CESM schema (default: `model/cesm.yaml`).
+* `--schema` / `-s` -- Path to the CESM schema (default: `model/cesm_v0.1.0.yaml`).
 * `--clear-target-db` -- Clear the target database before writing.
 
 [source,bash]
@@ -155,6 +155,36 @@ The output argument accepts either a file path or a `sqlite:///` URL.
 ----
 python scripts/processing/cesm_to_spine_db.py --help
 ----
+
+== Transformer Versioning
+
+Transformers are organized by CESM version and tool version under `src/transformers/`.
+A single tool can have *multiple transformer versions*, one for each version of the tool's data format, all targeting the same CESM version.
+
+----
+src/transformers/<tool>/<cesm_version>/<tool_version>/
+----
+
+For example, GridDB has three transformer versions for CESM v0.1.0:
+
+----
+src/transformers/griddb/cesm_v0.1.0/v0.1.0/   ← GridDB v0.1.0
+src/transformers/griddb/cesm_v0.1.0/v0.2.0/   ← GridDB v0.2.0
+src/transformers/griddb/cesm_v0.1.0/v0.3.0/   ← GridDB v0.3.0
+----
+
+Each version directory contains its own transformer code and configuration (e.g. `to_cesm.py`, `to_griddb.py`, `schema.sql`).
+When a tool releases a new version with schema changes, a new transformer version is added alongside the existing ones -- existing transformers remain untouched.
+
+The `--griddb-version` (or equivalent) flag on the processing scripts selects which transformer to use:
+
+[source,bash]
+----
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite output/cesm.duckdb --griddb-version v0.3.0
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite output/cesm.duckdb --griddb-version v0.2.0
+----
+
+Both commands produce the same CESM output format -- only the input parsing differs.
 
 == Tips
 

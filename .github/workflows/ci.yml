@@ -56,4 +56,4 @@ jobs:
         run: pip install -e ".[docs]"
 
       - name: Validate schema
-        run: python scripts/validation/validate_linkml_schema.py model/cesm.yaml
+        run: python scripts/validation/validate_linkml_schema.py model/cesm_v0.1.0.yaml

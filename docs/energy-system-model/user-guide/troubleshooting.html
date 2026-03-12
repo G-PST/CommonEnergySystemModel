@@ -295,7 +295,7 @@ balance:
 </ul>
 </div>
 <div class="paragraph">
-<p>Use the LinkML schema at <code>model/cesm.yaml</code> as the authoritative reference for required and optional fields.</p>
+<p>Use the LinkML schema at <code>model/cesm_v0.1.0.yaml</code> as the authoritative reference for required and optional fields.</p>
 </div>
 </div>
 </div>
@@ -334,11 +334,11 @@ balance:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
-gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
+gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This must be re-run whenever <code>model/cesm.yaml</code> is modified.</p>
+<p>This must be re-run whenever <code>model/cesm_v0.1.0.yaml</code> is modified.</p>
 </div>
 </div>
 </div>
@@ -409,7 +409,7 @@ gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"
 pip install linkml
-gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py
 pytest</code></pre>
 </div>
 </div>

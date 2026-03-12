@@ -517,7 +517,7 @@
             "cmd_line_args": [
                 {
                     "type": "resource",
-                    "arg": "<project>/data/cesm_sample.duckdb"
+                    "arg": "<project>/data/cesm_flextool.duckdb"
                 },
                 {
                     "type": "resource",
@@ -559,6 +559,22 @@
                 {
                     "type": "literal",
                     "arg": "data/griddb.sqlite"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--cesm-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "v0.1.0"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--griddb-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "v0.2.0"
                 }
             ],
             "kill_completed_processes": false,
@@ -615,6 +631,22 @@
                 {
                     "type": "literal",
                     "arg": "--clear-target-db"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--cesm-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "v0.1.0"
+                },
+                {
+                    "type": "literal",
+                    "arg": "--griddb-version"
+                },
+                {
+                    "type": "literal",
+                    "arg": "v0.2.0"
                 }
             ],
             "kill_completed_processes": false,
@@ -693,8 +725,8 @@
         "GridDB extras to CESAME": {
             "type": "Tool",
             "description": "",
-            "x": -350.14095929024774,
-            "y": -36.75043744548697,
+            "x": -342.2836269811597,
+            "y": -40.11786557795325,
             "specification": "yaml to CESAME",
             "execute_in_work": false,
             "cmd_line_args": [

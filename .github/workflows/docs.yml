@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate schema AsciiDoc from LinkML
         run: |
-          python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
+          python -m linkml_asciidoc_generator.main "model/cesm_v0.1.0.yaml" -o "artifacts/documentation/modules/schema"
           mkdir -p artifacts/documentation/modules/schema/pages/enumeration
           echo '= Duration' > artifacts/documentation/modules/schema/pages/enumeration/Duration.adoc
           echo '' >> artifacts/documentation/modules/schema/pages/enumeration/Duration.adoc

@@ -13,7 +13,7 @@ DATA_SAMPLES_DIR = PROJECT_ROOT / "data" / "samples"
 MODEL_DIR = PROJECT_ROOT / "model"
 
 CESM_SAMPLE_YAML = DATA_SAMPLES_DIR / "cesm-sample.yaml"
-CESM_SCHEMA_YAML = MODEL_DIR / "cesm.yaml"
+CESM_SCHEMA_YAML = MODEL_DIR / "cesm_v0.1.0.yaml"
 
 
 @pytest.fixture

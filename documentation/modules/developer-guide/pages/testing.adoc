@@ -41,7 +41,7 @@ pytest -v -x
 
 === Schema validation (`test_schema.py`)
 
-Verifies that the LinkML schema at `model/cesm.yaml` is well-formed:
+Verifies that the LinkML schema at `model/cesm_v0.1.0.yaml` is well-formed:
 
 * Schema file exists and is valid YAML
 * Required LinkML fields (`id`, `name`, `classes`) are present

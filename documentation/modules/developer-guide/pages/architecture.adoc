@@ -8,7 +8,7 @@ It is intended for developers who want to understand how the components fit toge
 The following diagram shows how data moves through the system, from schema definition to format-specific output.
 
 ----
-LinkML Schema (model/cesm.yaml)
+LinkML Schema (model/cesm_v0.1.0.yaml)
      |
      | gen-pydantic
      v
@@ -31,13 +31,13 @@ DuckDB sits at the centre as persistent storage, making it easy to inspect inter
 
 == Schema
 
-*Location:* `model/cesm.yaml`
+*Location:* `model/cesm_v0.1.0.yaml`
 
 The LinkML schema is the single source of truth.
 It defines all classes, enums, slots, and their relationships.
 From this schema, Pydantic classes are generated automatically:
 
- gen-pydantic model/cesm.yaml
+ gen-pydantic model/cesm_v0.1.0.yaml
 
 The generated file (`src/generated/cesm_pydantic.py`) provides runtime validation.
 The core `DataHandler` class in `src/core/data_handler.py` wraps the generated `Database` object and offers utilities for working with entity collections.

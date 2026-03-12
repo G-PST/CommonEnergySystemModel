@@ -102,7 +102,7 @@ class TestLinkmlYamlReader:
             from linkml_runtime.utils.schemaview import SchemaView
             SchemaView(str(CESM_SCHEMA_YAML))
         except Exception:
-            pytest.skip("SchemaView cannot load cesm.yaml (linkml compatibility issue)")
+            pytest.skip("SchemaView cannot load cesm_v0.1.0.yaml (linkml compatibility issue)")
 
     def test_yaml_to_df_returns_dict(self):
         from linkml_runtime.loaders import yaml_loader

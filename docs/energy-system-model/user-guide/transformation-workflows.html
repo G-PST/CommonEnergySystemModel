@@ -266,7 +266,7 @@ The scripts live in <code>scripts/processing/</code> and <code>src/readers/</cod
 <div class="ulist">
 <ul>
 <li>
-<p><code>--schema</code> / <code>-s</code>&#8201;&#8212;&#8201;Path to the CESM schema (default: <code>model/cesm.yaml</code>).</p>
+<p><code>--schema</code> / <code>-s</code>&#8201;&#8212;&#8201;Path to the CESM schema (default: <code>model/cesm_v0.1.0.yaml</code>).</p>
 </li>
 <li>
 <p><code>--clear-target-db</code>&#8201;&#8212;&#8201;Clear the target database before writing.</p>
@@ -435,6 +435,46 @@ python scripts/processing/flextool_to_cesm.py flextool.sqlite --list-scenarios</
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/cesm_to_spine_db.py --help</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transformer_versioning"><a class="anchor" href="#_transformer_versioning"></a>Transformer Versioning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Transformers are organized by CESM version and tool version under <code>src/transformers/</code>.
+A single tool can have <strong>multiple transformer versions</strong>, one for each version of the tool&#8217;s data format, all targeting the same CESM version.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>src/transformers/&lt;tool&gt;/&lt;cesm_version&gt;/&lt;tool_version&gt;/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, GridDB has three transformer versions for CESM v0.1.0:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>src/transformers/griddb/cesm_v0.1.0/v0.1.0/   ← GridDB v0.1.0
+src/transformers/griddb/cesm_v0.1.0/v0.2.0/   ← GridDB v0.2.0
+src/transformers/griddb/cesm_v0.1.0/v0.3.0/   ← GridDB v0.3.0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each version directory contains its own transformer code and configuration (e.g. <code>to_cesm.py</code>, <code>to_griddb.py</code>, <code>schema.sql</code>).
+When a tool releases a new version with schema changes, a new transformer version is added alongside the existing ones&#8201;&#8212;&#8201;existing transformers remain untouched.</p>
+</div>
+<div class="paragraph">
+<p>The <code>--griddb-version</code> (or equivalent) flag on the processing scripts selects which transformer to use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python scripts/processing/griddb_to_cesm.py data/griddb.sqlite output/cesm.duckdb --griddb-version v0.3.0
+python scripts/processing/griddb_to_cesm.py data/griddb.sqlite output/cesm.duckdb --griddb-version v0.2.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both commands produce the same CESM output format&#8201;&#8212;&#8201;only the input parsing differs.</p>
 </div>
 </div>
 </div>

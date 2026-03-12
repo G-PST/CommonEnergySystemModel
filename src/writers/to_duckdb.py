@@ -113,6 +113,45 @@ def _flatten_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return flat_df
 
 
+def _convert_legacy_metadata_entry(row: pd.Series) -> Dict[str, Any]:
+    """
+    Convert a legacy metadata row to the current format.
+
+    Legacy format used JSON strings for 'index_metadata' and 'columns_metadata'.
+    Current format uses flat columns: index_type, index_count, columns_multiindex,
+    columns_levels, table_name, sql_table_name.
+
+    Args:
+        row: A metadata row with legacy columns
+
+    Returns:
+        Dictionary with current-format metadata keys
+    """
+    index_meta = json.loads(row['index_metadata'])
+    legacy_type = index_meta.get('type', 'single')
+    # Legacy used 'multiindex' instead of 'multi'
+    index_type = 'multi' if legacy_type == 'multiindex' else legacy_type
+    index_count = index_meta.get('nlevels', 1)
+
+    columns_meta = json.loads(row['columns_metadata'])
+    columns_type = columns_meta.get('type', 'single')
+    if columns_type == 'multiindex':
+        columns_multiindex = True
+        columns_levels = json.dumps(columns_meta.get('names'))
+    else:
+        columns_multiindex = False
+        columns_levels = None
+
+    return {
+        'table_name': row['table_name'],
+        'sql_table_name': row['sql_table_name'],
+        'index_type': index_type,
+        'index_count': index_count,
+        'columns_multiindex': columns_multiindex,
+        'columns_levels': columns_levels,
+    }
+
+
 def dataframes_to_duckdb(
     dataframes: Dict[str, pd.DataFrame],
     db_path: str,
@@ -151,9 +190,18 @@ def dataframes_to_duckdb(
                 existing_df = conn.execute(
                     'SELECT * FROM "_dataframe_metadata"'
                 ).fetchdf()
-                # Index by table_name for easy lookup/update
+                # Detect legacy metadata format and convert to current format
+                is_legacy = (
+                    'index_metadata' in existing_df.columns
+                    and 'index_type' not in existing_df.columns
+                )
                 for _, row in existing_df.iterrows():
-                    existing_metadata[row['table_name']] = row.to_dict()
+                    if is_legacy:
+                        existing_metadata[row['table_name']] = (
+                            _convert_legacy_metadata_entry(row)
+                        )
+                    else:
+                        existing_metadata[row['table_name']] = row.to_dict()
             except duckdb.CatalogException:
                 pass  # No existing metadata table
 
@@ -161,6 +209,16 @@ def dataframes_to_duckdb(
         all_metadata: List[Dict[str, Any]] = []
 
         for table_name, df in dataframes.items():
+            # When merging, skip empty DataFrames to avoid overwriting existing data
+            sql_table_check = table_name.replace('.', '_').replace('-', '_')
+            if not overwrite and df.empty:
+                try:
+                    conn.execute(f'SELECT 1 FROM "{sql_table_check}" LIMIT 1').fetchone()
+                    print(f"  Skipping empty table: {table_name} (existing data preserved)")
+                    continue
+                except duckdb.CatalogException:
+                    pass  # Table doesn't exist yet, write the empty one
+
             print(f"  Writing table: {table_name} ({df.shape})")
 
             # Extract simplified metadata

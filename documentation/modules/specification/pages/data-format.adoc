@@ -563,7 +563,7 @@ constraint:
 == Schema Source
 
 The CESM data format is formally defined as a https://linkml.io/[LinkML] schema.
-The canonical schema file is `model/cesm.yaml` in the specification repository.
+The canonical schema file is `model/cesm_v0.1.0.yaml` in the specification repository.
 The LinkML schema enables:
 
 * Automated validation of YAML datasets

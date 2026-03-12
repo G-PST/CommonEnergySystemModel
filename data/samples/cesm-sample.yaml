@@ -27,9 +27,6 @@ storage:
     flow_profile: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     penalty_upward: 10000
 commodity:
-  - name: biomass
-    commodity_type: fuel
-    price_per_unit: 30
   - name: natural_gas
     commodity_type: fuel
     price_per_unit: 25
@@ -69,9 +66,6 @@ node_to_unit:
   - name: natural_gas.ccgt
     source: natural_gas
     sink: ccgt
-  - name: biomass.bio_chp
-    source: biomass
-    sink: bio_chp
 unit_to_node:
   - name: ocgt.west
     source: ocgt
@@ -95,20 +89,6 @@ unit_to_node:
     capacity: 1500
     investment_cost: 1000
     profile_limit_upper: [0.03, 0.34, 0.55, 0.67, 0.6, 0.42, 0.41, 0.33, 0.11, 0.14]
-  - name: bio_chp.east
-    source: bio_chp
-    sink: east
-    capacity: 10
-    investment_cost: 1400
-  - name: bio_chp.heat
-    source: bio_chp
-    sink: heat
-    capacity: 40
-  - name: heatpump.heat
-    source: heatpump
-    sink: heat
-    capacity: 40
-    investment_cost: 700
 link:
   - name: pony1
     node_A: east
@@ -158,6 +138,9 @@ group_entity:
   - name: elec_nodes.east
     group: elec_nodes
     entity: east
+  - name: elec_nodes.north
+    group: elec_nodes
+    entity: north
 solve_pattern:
   - name: solve_2030
     solve_mode: single_solve

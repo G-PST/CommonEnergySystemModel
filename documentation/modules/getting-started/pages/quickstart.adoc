@@ -19,7 +19,7 @@ Generate the required Python classes from the LinkML schema:
 [source,bash]
 ----
 pip install linkml
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ----
 
 All scripts below are run from the repository root (`oes-spec/`).
@@ -176,6 +176,6 @@ This approach is useful for interactive exploration and for users who prefer a v
 
 == Next steps
 
-* Examine the CESM schema at `model/cesm.yaml` to understand the data model.
+* Examine the CESM schema at `model/cesm_v0.1.0.yaml` to understand the data model.
 * Check `python <script> --help` for any script to see all available options.
 * See the xref:installation.adoc[Installation Guide] for development and testing setup.

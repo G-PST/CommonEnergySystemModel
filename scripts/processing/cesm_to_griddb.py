@@ -31,15 +31,15 @@ def main():
         "--cesm-version",
         "-c",
         type=str,
-        default="cesm_v0.1.0",
-        help="CESM version (default: cesm_v0.1.0)"
+        default="v0.1.0",
+        help="CESM version (default: v0.1.0)"
     )
     parser.add_argument(
         "--griddb-version",
         "-g",
         type=str,
-        default="v0.2.0",
-        help="GridDB version (default: v0.2.0)"
+        default="v0.3.0",
+        help="GridDB version (default: v0.3.0)"
     )
     parser.add_argument(
         "--schema",
@@ -55,7 +55,7 @@ def main():
     if args.schema:
         schema_path = args.schema
     else:
-        schema_path = f"src/transformers/griddb/{args.cesm_version}/{args.griddb_version}/schema.sql"
+        schema_path = f"src/transformers/griddb/cesm_{args.cesm_version}/{args.griddb_version}/schema.sql"
 
     # Load CESM data from DuckDB
     print(f"Loading CESM data from {args.input}...")

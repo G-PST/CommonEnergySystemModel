@@ -25,15 +25,15 @@
 | Value | URI | Description
 
 | `Balance`
-| file:///cesm.yamlBalance[`cesm:Balance`]
+| file:///cesm_v0.1.0.yamlBalance[`cesm:Balance`]
 | n/a
 
 | `Commodity`
-| file:///cesm.yamlCommodity[`cesm:Commodity`]
+| file:///cesm_v0.1.0.yamlCommodity[`cesm:Commodity`]
 | n/a
 
 | `Storage`
-| file:///cesm.yamlStorage[`cesm:Storage`]
+| file:///cesm_v0.1.0.yamlStorage[`cesm:Storage`]
 | n/a
 |===
 

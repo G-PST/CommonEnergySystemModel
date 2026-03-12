@@ -35,10 +35,10 @@ pytest tests/ -v
 
 ### Schema changes
 
-If you modify `model/cesm.yaml`, regenerate the Python classes:
+If you modify `model/cesm_v0.1.0.yaml`, regenerate the Python classes:
 
 ```bash
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ```
 
 Validate the schema:

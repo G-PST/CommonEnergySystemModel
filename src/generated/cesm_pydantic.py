@@ -68,26 +68,26 @@ class LinkMLMeta(RootModel):
 linkml_meta = LinkMLMeta({'default_prefix': 'cesm',
      'default_range': 'float',
      'description': 'Common Energy System Model schema',
-     'id': 'file:///cesm.yaml',
+     'id': 'file:///cesm_v0.1.0.yaml',
      'imports': ['linkml:types'],
      'license': 'https://creativecommons.org/publicdomain/zero/1.0/',
      'name': 'cesm',
      'prefixes': {'cesm': {'prefix_prefix': 'cesm',
-                           'prefix_reference': 'file:///cesm.yaml'},
+                           'prefix_reference': 'file:///cesm_v0.1.0.yaml'},
                   'linkml': {'prefix_prefix': 'linkml',
                              'prefix_reference': 'https://w3id.org/linkml/'},
                   'qudt': {'prefix_prefix': 'qudt',
                            'prefix_reference': 'http://qudt.org/schema/qudt/'},
                   'unit': {'prefix_prefix': 'unit',
                            'prefix_reference': 'http://qudt.org/vocab/unit/'}},
-     'source_file': 'model/cesm.yaml',
+     'source_file': 'model/cesm_v0.1.0.yaml',
      'types': {'Duration': {'base': 'str',
                             'description': 'An ISO 8601 duration string (e.g. '
                                            '"PT5M30S" for 5 minutes 30 seconds). '
                                            'When loaded into Dataframes, this '
                                            'should be converted to '
                                            'pa.duration("us") or similar.',
-                            'from_schema': 'file:///cesm.yaml',
+                            'from_schema': 'file:///cesm_v0.1.0.yaml',
                             'name': 'Duration',
                             'pattern': '^-?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$',
                             'repr': 'str',
@@ -195,7 +195,7 @@ class Entity(ConfiguredBaseModel):
     """
     Abstract top-level class that contains all other classes (except Dataset).
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True, 'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True, 'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     name: str = Field(default=..., description="""User-facing unique name identifier.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Entity']} })
     semantic_id: Optional[str] = Field(default=None, description="""Optional id for semantic web integration.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Entity']} })
@@ -207,7 +207,7 @@ class Node(Entity):
     """
     Abstract class that contains all types of nodes
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True, 'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True, 'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     node_type: Optional[NodeType] = Field(default=None, description="""Limits allowed types: Balance, Storage, Commodity""", json_schema_extra = { "linkml_meta": {'domain_of': ['Node']} })
     name: str = Field(default=..., description="""User-facing unique name identifier.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Entity']} })
@@ -220,7 +220,7 @@ class Commodity(Node):
     """
     Nodes where the model can buy and sell commodities against an exogenous price.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     commodity_type: CommodityType = Field(default=..., description="""Type of a commodity""", json_schema_extra = { "linkml_meta": {'domain_of': ['Commodity']} })
     price_per_unit: Optional[Union[PeriodFloat, float]] = Field(default=None, description="""Price (in dataset currency using reference_year denomination) per unit of the product being bought or sold.""", json_schema_extra = { "linkml_meta": {'any_of': [{'range': 'float'}, {'range': 'PeriodFloat'}],
@@ -237,7 +237,7 @@ class Period(Entity):
     """
     The properties of the periods available for the model.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     years_represented: Optional[float] = Field(default=None, description="""How many years the period represents before the next period in the solve. Used for discounting. Can be below one (multiple periods in one year).""", json_schema_extra = { "linkml_meta": {'domain_of': ['Period']} })
     name: str = Field(default=..., description="""User-facing unique name identifier.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Entity']} })
@@ -250,7 +250,7 @@ class Group(Entity):
     """
     Groups define constraints on multiple entities at once
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     group_type: GroupType = Field(default=..., description="""Choice of group type""", json_schema_extra = { "linkml_meta": {'domain_of': ['Group']} })
     invest_max_total: Optional[float] = Field(default=None, description="""Maximum investment to the aggregated capacity of set member flows (unit__to_node, node__to_unit, link) and storage capacity. Applies as a sum over all periods. Constant.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code', 'value': '[MW]'},
@@ -266,7 +266,7 @@ class GroupEntity(Entity):
     """
     Makes an entity to be a member of a group
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     group: str = Field(default=..., description="""Group name that the entity belongs to""", json_schema_extra = { "linkml_meta": {'annotations': {'is_dimension': {'tag': 'is_dimension', 'value': True}},
          'domain_of': ['Group_entity', 'Dataset']} })
@@ -282,7 +282,7 @@ class Constraint(Entity):
     """
     Constraints define constraints on multiple variables at once
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     constant: Optional[list[float]] = Field(default=[], description="""Right hand side of the constraint.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Constraint']} })
     sense: Optional[Equality] = Field(default=None, description="""Is the sense of the constraint equal to, greater than or less than.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Constraint']} })
@@ -296,7 +296,7 @@ class SolvePattern(Entity):
     """
     Defines the properties of each solve pattern.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     solve_mode: Optional[SolveMode] = Field(default=None, description="""Choice of solve process handled within the model.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Solve_pattern']} })
     periods_realise_operations: Optional[list[str]] = Field(default=[], description="""A list of periods from which the model will report investment results and possibly pass to the next solve.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Solve_pattern'], 'list_elements_ordered': True} })
@@ -320,7 +320,7 @@ class System(Entity):
     """
     Parameters related to the whole system to be modelled.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     solve_order: Optional[list[str]] = Field(default=[], json_schema_extra = { "linkml_meta": {'domain_of': ['System'], 'list_elements_ordered': True} })
     inflation_rate: Optional[Union[PeriodFloat, float]] = Field(default=None, description="""Rate of inflation for the currency_year of the dataset.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
@@ -338,7 +338,7 @@ class HasFlow(ConfiguredBaseModel):
     """
     Mixin for flow (annual_flow, flow_profile) related properties.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixin': True})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixin': True})
 
     flow_annual: Optional[float] = Field(default=None, description="""Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code', 'value': '[MW.h]'},
                          'qudt_unit': {'tag': 'qudt_unit', 'value': 'unit:MegaW-HR'}},
@@ -354,7 +354,7 @@ class HasPenalty(ConfiguredBaseModel):
     """
     Mixin for penalty related attributes (penalty_upward, penalty_downward).
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixin': True})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixin': True})
 
     penalty_upward: Optional[Union[PeriodFloat, float]] = Field(default=None, description="""Creates the commodity out of nothing using a slack variable that causes a penalty of currency_year per unit of created stuff.""", json_schema_extra = { "linkml_meta": {'any_of': [{'range': 'float'}, {'range': 'PeriodFloat'}],
          'domain_of': ['HasPenalty']} })
@@ -366,7 +366,7 @@ class Balance(HasPenalty, HasFlow, Node):
     """
     Nodes that maintain a balance between inputs and outputs in each time step, but do not have a storage.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixins': ['HasFlow', 'HasPenalty']})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixins': ['HasFlow', 'HasPenalty']})
 
     flow_annual: Optional[float] = Field(default=None, description="""Annual flow that can be used to scale the flow profile. Always positive - flow_profile defines the direction.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code', 'value': '[MW.h]'},
                          'qudt_unit': {'tag': 'qudt_unit', 'value': 'unit:MegaW-HR'}},
@@ -391,7 +391,7 @@ class HasInvestments(ConfiguredBaseModel):
     """
     Mixin for investment related attributes.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixin': True})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixin': True})
 
     investment_method: Optional[InvestmentMethod] = Field(default=None, description="""Choice of investment method.""", json_schema_extra = { "linkml_meta": {'domain_of': ['HasInvestments']} })
     discount_rate: Optional[Union[PeriodFloat, float]] = Field(default=None, description="""Discount rate of the investment.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
@@ -409,7 +409,7 @@ class Storage(HasInvestments, HasPenalty, HasFlow, Node):
     """
     Nodes that include a state variable to represent storage. Also maintains balance between inputs and outputs including charging and discharging of the state.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml',
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml',
          'mixins': ['HasFlow', 'HasPenalty', 'HasInvestments']})
 
     availability: Optional[float] = Field(default=None, description="""Time series for availability (to represent forced outages).""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
@@ -460,7 +460,7 @@ class Unit(HasInvestments, Entity):
     """
     Units convert input(s) to output(s) using a ratio multiplier.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixins': ['HasInvestments']})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixins': ['HasInvestments']})
 
     efficiency: Optional[float] = Field(default=None, description="""Multiplier for turning inputs to outputs or for transferring between nodes.""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
                                             'value': '[10*-2]'},
@@ -499,7 +499,7 @@ class Link(HasInvestments, Entity):
     """
     Connects two nodes.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml',
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml',
          'mixins': ['HasInvestments'],
          'slot_usage': {'efficiency': {'any_of': [{'range': 'float'},
                                                   {'multivalued': True,
@@ -555,7 +555,7 @@ class HasProfiles(ConfiguredBaseModel):
     """
     Mixin for profile related attributes.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'mixin': True})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'mixin': True})
 
     profile_limit_upper: Optional[list[float]] = Field(default=[], json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code', 'value': '[1]'},
                          'qudt_unit': {'tag': 'qudt_unit', 'value': 'unit:UNITLESS'}},
@@ -570,7 +570,7 @@ class Port(HasProfiles, Entity):
     Ports designates an input or an output between a unit and a node.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'abstract': True,
-         'from_schema': 'file:///cesm.yaml',
+         'from_schema': 'file:///cesm_v0.1.0.yaml',
          'mixins': ['HasProfiles']})
 
     availability: Optional[float] = Field(default=None, description="""Time series for availability (to represent forced outages).""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
@@ -613,7 +613,7 @@ class UnitToNode(Port):
     """
     An output port from a unit to a node.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml',
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml',
          'slot_usage': {'sink': {'description': 'Sink node of the unit_to_node port.',
                                  'name': 'sink',
                                  'range': 'Node'},
@@ -662,7 +662,7 @@ class NodeToUnit(Port):
     """
     An input port from a node to a unit.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml',
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml',
          'slot_usage': {'sink': {'description': 'Sink unit of the node_to_unit port.',
                                  'name': 'sink',
                                  'range': 'Unit'},
@@ -711,28 +711,28 @@ class DirectionalValue(ConfiguredBaseModel):
     """
     To which direction the parameter value is applied for in a link.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     forward: Optional[list[float]] = Field(default=[], description="""The parameter is applied to the forward direction (Node_A --> Node_B).""", json_schema_extra = { "linkml_meta": {'domain_of': ['DirectionalValue']} })
     reverse: Optional[list[float]] = Field(default=[], description="""The parameter is applied to the backward direction (Node_B --> Node_A).""", json_schema_extra = { "linkml_meta": {'domain_of': ['DirectionalValue']} })
 
 
 class PeriodFloat(ConfiguredBaseModel):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     period: Optional[list[str]] = Field(default=[], json_schema_extra = { "linkml_meta": {'domain_of': ['PeriodFloat', 'Dataset']} })
     value: Optional[list[float]] = Field(default=[], json_schema_extra = { "linkml_meta": {'domain_of': ['PeriodFloat', 'ConstraintFloat']} })
 
 
 class ConstraintFloat(ConfiguredBaseModel):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     constraint: Optional[list[str]] = Field(default=[], json_schema_extra = { "linkml_meta": {'domain_of': ['ConstraintFloat', 'Dataset']} })
     value: Optional[list[float]] = Field(default=[], json_schema_extra = { "linkml_meta": {'domain_of': ['PeriodFloat', 'ConstraintFloat']} })
 
 
 class Timeset(ConfiguredBaseModel):
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml'})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml'})
 
     start_time: Optional[datetime ] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['Timeset']} })
     duration: Optional[str] = Field(default=None, json_schema_extra = { "linkml_meta": {'domain_of': ['Timeset']} })
@@ -742,7 +742,7 @@ class Dataset(ConfiguredBaseModel):
     """
     Dataset properties and holder for classes available in the schema.
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm.yaml', 'tree_root': True})
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'file:///cesm_v0.1.0.yaml', 'tree_root': True})
 
     currency: str = Field(default=..., description="""QUDT currency for all monetary values in the dataset""", json_schema_extra = { "linkml_meta": {'annotations': {'qudt.ucum_code': {'tag': 'qudt.ucum_code',
                                             'value': '[currency]'},

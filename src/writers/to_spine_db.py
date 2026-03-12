@@ -59,21 +59,19 @@ def _get_entity_names_from_columns(
     df: pd.DataFrame,
 ) -> List[Tuple[str, ...]]:
     """
-    Extract entity names from DataFrame columns.
+    Extract entity names from DataFrame columns as single-element byname tuples.
 
-    For MultiIndex columns, drops the first level (entity name) and returns
-    remaining levels as entity_byname tuples.
+    For MultiIndex columns, flattens all levels into a composite '__'-joined name.
     For regular columns, wraps each name in a single-element tuple.
 
     Args:
         df: DataFrame with entity names in columns.
 
     Returns:
-        List of entity_byname tuples.
+        List of entity_byname tuples (always single-element).
     """
     if isinstance(df.columns, pd.MultiIndex):
-        # Multi-dimensional columns: drop name dimension for entity_byname
-        return [col[1:] for col in df.columns]
+        return [('__'.join(str(level) for level in col),) for col in df.columns]
     return [(str(col),) for col in df.columns]
 
 
@@ -170,7 +168,7 @@ def dataframes_to_spine(
         for name, df in dataframes.items():
             if '.ts.' in name:
                 ts_dfs[name] = df
-            elif '.str.' in name:
+            elif '.str.' in name or '.map.' in name:
                 str_dfs[name] = df
             elif '.array.' in name:
                 array_dfs[name] = df
@@ -266,93 +264,47 @@ def _add_entity_classes_and_entities(
     # List of entity_classes that require entity_alternative to be true
     ent_alt_classes = ['unit', 'node', 'connection', 'reserve__upDown__unit__node', 'reserve__upDown__connection__node']
 
-    # Sort: single-dimensional classes first (no dots), then multi-dimensional
-    sorted_classes = sorted(entity_dfs.keys(), key=lambda x: ('.' in x, x))
+    sorted_classes = sorted(entity_dfs.keys())
 
     for class_name in sorted_classes:
         df = entity_dfs[class_name]
 
-        # Determine if multi-dimensional
-        if '.' in class_name:
-            dimensions = class_name.split('.')
+        # Convert class name to DB format (dots to __)
+        db_class_name = _class_name_to_db(class_name)
 
-            # Get dimension names from index (skip first 'name' level)
-            if isinstance(df.index, pd.MultiIndex):
-                dimension_name_list = tuple(df.index.names[1:])
-            else:
-                # Fallback if names not set
-                dimension_name_list = tuple(dimensions)
-
-            class_name = '__'.join(dimensions)
-        else:
-            dimension_name_list = None
-
-        # Add entity class
+        # Add entity class (always single-dimensional for CESM)
         try:
-            db_map.add_entity_class(
-                name=class_name,
-                dimension_name_list=dimension_name_list
-            )
-            logger.info("Added entity class: %s", class_name)
+            db_map.add_entity_class(name=db_class_name)
+            logger.info("Added entity class: %s", db_class_name)
         except (RuntimeError, KeyError, SpineDBAPIError) as e:
-            logger.debug("Entity class %s already exists or error: %s", class_name, e)
+            logger.debug("Entity class %s already exists or error: %s", db_class_name, e)
 
         # Add entities
-        if dimension_name_list:
-            # Multi-dimensional: index levels are dimensions
-            if isinstance(df.index, pd.MultiIndex):
-                for element_tuple in df.index.unique():
-                    element_name_list = tuple(str(elem) for elem in element_tuple[1:])
-                    try:
-                        db_map.add_entity(
-                            entity_class_name=class_name,
-                            element_name_list=element_name_list,
-                            name=element_tuple[0]
-                        )
-                    except (RuntimeError, KeyError, SpineDBAPIError) as e:
-                        logger.debug("Entity already exists or error: %s", e)
-
-                    if class_name in ent_alt_classes:
-                        try:
-                            db_map.add_entity_alternative(
-                                entity_class_name=class_name,
-                                element_name_list=element_name_list,
-                                alternative_name=alternative_name
-                            )
-                        except (RuntimeError, KeyError, SpineDBAPIError) as e:
-                            logger.debug("Entity alternative already exists or error: %s", e)
+        for raw_name in df.index.unique():
+            # Flatten MultiIndex tuples to composite name
+            if isinstance(raw_name, tuple):
+                entity_name = '__'.join(str(elem) for elem in raw_name)
             else:
-                # Single index but class name has dots - treat as single entity per row
-                for entity_name in df.index.unique():
-                    try:
-                        db_map.add_entity(
-                            entity_class_name=class_name,
-                            element_name_list=(str(entity_name),)
-                        )
-                    except (RuntimeError, KeyError, SpineDBAPIError) as e:
-                        logger.debug("Entity already exists or error: %s", e)
+                entity_name = str(raw_name)
 
-        else:
-            # Single-dimensional: index contains entity names
-            for entity_name in df.index.unique():
+            try:
+                db_map.add_entity(
+                    entity_class_name=db_class_name,
+                    name=entity_name
+                )
+            except (RuntimeError, KeyError, SpineDBAPIError) as e:
+                logger.debug("Entity already exists or error: %s", db_class_name, e)
+
+            if db_class_name in ent_alt_classes:
                 try:
-                    db_map.add_entity(
-                        entity_class_name=class_name,
-                        name=str(entity_name)
+                    db_map.add_entity_alternative(
+                        entity_class_name=db_class_name,
+                        entity_byname=(entity_name,),
+                        alternative_name=alternative_name,
+                        active=True
                     )
                 except (RuntimeError, KeyError, SpineDBAPIError) as e:
-                    logger.debug("Entity already exists or error: %s", e)
-
-                if class_name in ent_alt_classes:
-                    try:
-                        db_map.add_entity_alternative(
-                            entity_class_name=class_name,
-                            entity_byname=(str(entity_name),),
-                            alternative_name=alternative_name,
-                            active=True
-                        )
-                    except (RuntimeError, KeyError, SpineDBAPIError) as e:
-                        logger.debug("Entity alternative already exists or error: %s", e)
+                    logger.debug("Entity alternative already exists or error: %s", e)
 
 
 def _add_parameters(
@@ -379,12 +331,10 @@ def _add_parameters(
                 if pd.isna(value):
                     continue
 
-                # Build entity_byname tuple
+                # Build entity_byname tuple (flatten MultiIndex to composite name)
                 if isinstance(idx, tuple):
-                    # MultiIndex - use tuple of strings
-                    entity_byname = tuple(str(elem) for elem in idx[1:])
+                    entity_byname = ('__'.join(str(elem) for elem in idx),)
                 else:
-                    # Single index
                     entity_byname = (str(idx),)
 
                 # Parse value
@@ -510,9 +460,11 @@ def _add_indexed_values(
     """
     from spinedb_api.parameter_value import Array, Map
 
-    separator = '.str.' if value_type == 'map' else '.array.'
-
     for df_name, df in indexed_dfs.items():
+        if value_type == 'map':
+            separator = '.map.' if '.map.' in df_name else '.str.'
+        else:
+            separator = '.array.'
         parsed = _parse_df_name(df_name, separator)
         if parsed is None:
             continue
@@ -533,7 +485,11 @@ def _add_indexed_values(
             col_data = df.iloc[:, i].dropna()
 
             if value_type == 'map':
-                col_values = col_data.tolist()
+                # Convert Timedelta values to hours (float) for JSON serialization
+                col_values = [
+                    v.total_seconds() / 3600 if isinstance(v, pd.Timedelta) else v
+                    for v in col_data.tolist()
+                ]
                 col_indexes = col_data.index.tolist()
             else:
                 # For arrays, just get the list of values

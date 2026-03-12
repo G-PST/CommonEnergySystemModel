@@ -297,11 +297,11 @@ pip install -e .</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install linkml
-gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
+gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to <code>model/cesm.yaml</code>.</p>
+<p>The generated file is not tracked in version control, so you need to run this command after every fresh clone and after any change to <code>model/cesm_v0.1.0.yaml</code>.</p>
 </div>
 </div>
 </div>
@@ -375,7 +375,7 @@ gen-pydantic model/cesm.yaml &gt; src/generated/cesm_pydantic.py</code></pre>
 <h3 id="_step_2_generate_schema_reference_pages"><a class="anchor" href="#_step_2_generate_schema_reference_pages"></a>Step 2: Generate schema reference pages</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python -m linkml_asciidoc_generator.main "model/cesm_v0.1.0.yaml" -o "artifacts/documentation/modules/schema"</code></pre>
 </div>
 </div>
 <div class="paragraph">

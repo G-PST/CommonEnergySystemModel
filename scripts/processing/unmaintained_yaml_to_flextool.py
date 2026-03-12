@@ -81,7 +81,7 @@ def main():
     dataset = yaml_loader.load("data/samples/cesm-sample.yaml", target_class=Dataset)
 
     # Extract all DataFrames
-    cesm = yaml_to_df(dataset, schema_path="model/cesm.yaml")
+    cesm = yaml_to_df(dataset, schema_path="model/cesm_v0.1.0.yaml")
 
     # Transform from CESM to FlexTool (using configuration file)
     flextool = transform_data(cesm,

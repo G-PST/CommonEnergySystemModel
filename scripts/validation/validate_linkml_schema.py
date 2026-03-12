@@ -3,7 +3,7 @@
 Usage:
     python scripts/validation/validate_linkml_schema.py [path/to/schema.yaml]
 
-If no path is given, defaults to model/cesm.yaml relative to the project root.
+If no path is given, defaults to model/cesm_v0.1.0.yaml relative to the project root.
 Exits with code 0 on success, 1 on validation failure.
 """
 
@@ -93,9 +93,9 @@ def main() -> int:
     if len(sys.argv) > 1:
         schema_path = Path(sys.argv[1])
     else:
-        # Default to model/cesm.yaml relative to project root
+        # Default to model/cesm_v0.1.0.yaml relative to project root
         project_root = Path(__file__).resolve().parent.parent.parent
-        schema_path = project_root / "model" / "cesm.yaml"
+        schema_path = project_root / "model" / "cesm_v0.1.0.yaml"
 
     success = validate_schema(schema_path)
     return 0 if success else 1

@@ -4,14 +4,21 @@ Reverse transformer for converting GridDB SQLite database to CESM dataframe form
 This module converts GridDB SQLite tables to CESM-format DataFrames matching the
 structure produced by linkml_to_dataframes.yaml_to_df().
 
-v0.2.0 - Initial implementation
+v0.3.0 - Updated for split generator tables and schema changes
+
+Key changes from v0.2.0:
+- generation_units split into thermal_generators, renewable_generators, hydro_generators
+- prime_mover column renamed to prime_mover_type in all generator/storage tables
+- storage_units: max_capacity -> storage_capacity, efficiency_up/down -> efficiency JSON
+- hydro_reservoir -> hydro_reservoirs (plural)
+- static_time_series_data -> static_time_series (table name)
 
 Key mappings:
 - balancing_topologies -> balance (LoadZones become balance nodes)
 - loads + max_active_power -> balance.ts.flow_profile (demand as negative)
-- generation_units -> unit (prime_mover stored in description)
-- generation_units connections -> unit_to_node ports
-- generation_units fuel FK -> node_to_unit, commodity
+- thermal_generators + renewable_generators + hydro_generators -> unit
+- generator connections -> unit_to_node ports
+- generator fuel FK -> node_to_unit, commodity
 - storage_units -> storage
 - storage_units connections -> link (bidirectional)
 - transmission_lines + arcs -> link
@@ -24,6 +31,7 @@ Key mappings:
 Configuration is loaded from to_cesm_config.yaml in the same directory.
 """
 
+import json
 import os
 import sqlite3
 from dataclasses import dataclass, field
@@ -157,6 +165,39 @@ def map_fuel_name_reverse(griddb_fuel: str) -> str:
 def get_prime_mover_description(prime_mover_code: str) -> str:
     """Get descriptive text for prime mover code."""
     return PRIME_MOVER_DESCRIPTIONS.get(prime_mover_code, f"Unknown ({prime_mover_code})")
+
+
+# =============================================================================
+# HELPER: MERGE ALL GENERATOR TABLES
+# =============================================================================
+
+def _get_all_generators(griddb: Dict[str, pd.DataFrame]) -> pd.DataFrame:
+    """
+    Merge thermal, renewable, and hydro generators into a unified view.
+
+    In v0.3.0 the single generation_units table was split into three separate
+    tables: thermal_generators, renewable_generators, hydro_generators.
+    This helper re-merges them for functions that need a unified generator view.
+
+    The column prime_mover_type (v0.3.0) is carried through as-is.
+    A _source_table column is added to track the origin of each row.
+    Columns that only exist in some tables (e.g. fuel in thermal_generators)
+    will be NaN for rows from the other tables.
+    """
+    dfs = []
+
+    for table_name in ['thermal_generators', 'renewable_generators', 'hydro_generators']:
+        if table_name in griddb and not griddb[table_name].empty:
+            df = griddb[table_name].copy()
+            df['_source_table'] = table_name
+            dfs.append(df)
+
+    if not dfs:
+        return pd.DataFrame()
+
+    # Merge with common columns, keeping all columns
+    result = pd.concat(dfs, ignore_index=True)
+    return result
 
 
 # =============================================================================
@@ -369,7 +410,6 @@ def transform_balance_flow_profile(griddb: Dict[str, pd.DataFrame],
                 # Handle JSON value - could be a number or a JSON string
                 if isinstance(value, str):
                     try:
-                        import json
                         value = json.loads(value)
                     except (json.JSONDecodeError, TypeError):
                         pass
@@ -628,20 +668,24 @@ def transform_unit(griddb: Dict[str, pd.DataFrame],
                    db_path: str,
                    warnings: TransformationWarnings) -> pd.DataFrame:
     """
-    Transform generation_units to CESM unit entities.
+    Transform generators to CESM unit entities.
 
-    - prime_mover code stored in description
+    Merges thermal_generators, renewable_generators, and hydro_generators into
+    a unified view, then:
+    - prime_mover_type code stored in description
     - heatrate converted to efficiency using PRIME_MOVER_FUEL_TO_TS_OWNER mapping
+    - For thermal generators, also checks operation_cost JSON for efficiency data
     - For yearly data (resolution='P1Y'), use values directly without averaging
     - units_existing from rating/base_power
     """
-    if 'generation_units' not in griddb:
-        warnings.add_missing("No generation_units table")
+    all_generators = _get_all_generators(griddb)
+
+    if all_generators.empty:
+        warnings.add_missing("No generator tables found (thermal_generators, "
+                             "renewable_generators, hydro_generators)")
         return pd.DataFrame(columns=['availability', 'conversion_method', 'discount_rate',
                                      'efficiency', 'investment_method', 'payback_time',
                                      'units_existing']).rename_axis('unit')
-
-    gu = griddb['generation_units']
 
     # Load heatrate time series indexed by owner_type
     # owner_type is the key (e.g., 'NGCC', 'Coal', 'Nuclear')
@@ -671,10 +715,18 @@ def transform_unit(griddb: Dict[str, pd.DataFrame],
             heatrates[owner_type] = heatrate_val
 
     unit_data = []
-    for _, row in gu.iterrows():
+    for _, row in all_generators.iterrows():
         unit_name = row['name']
-        prime_mover = row['prime_mover']
-        fuel = row.get('fuel')  # May be None in this database
+        prime_mover = row['prime_mover_type']
+        source_table = row['_source_table']
+
+        # Fuel: thermal_generators has a fuel column; renewables/hydro do not
+        fuel = None
+        if source_table == 'thermal_generators':
+            fuel = row.get('fuel')
+            if pd.isna(fuel):
+                fuel = None
+
         prime_mover_desc = get_prime_mover_description(prime_mover)
 
         # Look up the time series owner_type using the mapping (pass unit_name for fuel hints)
@@ -689,6 +741,19 @@ def transform_unit(griddb: Dict[str, pd.DataFrame],
         elif ts_owner and ts_owner in DEFAULT_EFFICIENCIES:
             # Use default efficiency from config when heatrate not available
             efficiency = DEFAULT_EFFICIENCIES[ts_owner]
+
+        # For thermal generators, try to extract efficiency from operation_cost JSON
+        if source_table == 'thermal_generators' and efficiency == 1.0:
+            operation_cost = row.get('operation_cost')
+            if operation_cost and not pd.isna(operation_cost):
+                try:
+                    cost_data = json.loads(operation_cost) if isinstance(operation_cost, str) else operation_cost
+                    if isinstance(cost_data, dict) and 'efficiency' in cost_data:
+                        parsed_eff = cost_data['efficiency']
+                        if isinstance(parsed_eff, (int, float)) and parsed_eff > 0:
+                            efficiency = float(parsed_eff)
+                except (json.JSONDecodeError, TypeError, KeyError):
+                    pass
 
         unit_data.append({
             'name': row['name'],
@@ -720,24 +785,25 @@ def transform_unit_to_node(griddb: Dict[str, pd.DataFrame],
                            db_path: str,
                            warnings: TransformationWarnings) -> pd.DataFrame:
     """
-    Transform generation_unit connections to CESM unit_to_node ports.
+    Transform generator connections to CESM unit_to_node ports.
 
-    Creates ports from generation_units to their balancing_topology.
-    Port name follows pattern: unit_name.balance_name
+    Creates ports from generators (thermal + renewable + hydro) to their
+    balancing_topology. Port name follows pattern: unit_name.balance_name
 
     Also populates costs from time series:
     - capcost -> investment_cost
     - fom -> fixed_cost
     - vom -> other_operational_cost
     """
-    if 'generation_units' not in griddb or 'balancing_topologies' not in griddb:
-        warnings.add_missing("No generation_units or balancing_topologies for unit_to_node")
+    all_generators = _get_all_generators(griddb)
+
+    if all_generators.empty or 'balancing_topologies' not in griddb:
+        warnings.add_missing("No generator tables or balancing_topologies for unit_to_node")
         return pd.DataFrame(columns=['availability', 'capacity', 'constraint_flow_coefficient',
                                      'fixed_cost', 'investment_cost', 'other_operational_cost',
                                      'profile_limit_lower', 'profile_limit_upper']).set_index(
             pd.MultiIndex.from_tuples([], names=['name', 'source', 'sink']))
 
-    gu = griddb['generation_units']
     bt = griddb['balancing_topologies']
 
     # Create mapping from balancing_topology id to name
@@ -773,10 +839,18 @@ def transform_unit_to_node(griddb: Dict[str, pd.DataFrame],
                 cost_dict[owner_type] = cost_val
 
     port_data = []
-    for _, row in gu.iterrows():
+    for _, row in all_generators.iterrows():
         unit_name = row['name']
-        prime_mover = row['prime_mover']
-        fuel = row.get('fuel')
+        prime_mover = row['prime_mover_type']
+        source_table = row['_source_table']
+
+        # Fuel: only thermal_generators has a fuel column
+        fuel = None
+        if source_table == 'thermal_generators':
+            fuel = row.get('fuel')
+            if pd.isna(fuel):
+                fuel = None
+
         bt_id = row['balancing_topology']
         bt_name = bt_id_to_name.get(bt_id, f"zone_{bt_id}")
 
@@ -821,27 +895,35 @@ def transform_node_to_unit(griddb: Dict[str, pd.DataFrame],
     """
     Transform fuel connections to CESM node_to_unit ports.
 
-    Creates ports from fuel commodities to generation_units using the
+    Creates ports from fuel commodities to generators using the
     PRIME_MOVER_FUEL_TO_TS_OWNER mapping to determine which fuel connects
-    to which unit type.
+    to which unit type. Fuel column exists only for thermal_generators;
+    renewable and hydro generators have no fuel.
     """
-    if 'generation_units' not in griddb:
-        warnings.add_missing("No generation_units for node_to_unit")
+    all_generators = _get_all_generators(griddb)
+
+    if all_generators.empty:
+        warnings.add_missing("No generator tables for node_to_unit")
         return pd.DataFrame(columns=['availability', 'capacity', 'constraint_flow_coefficient',
                                      'fixed_cost', 'investment_cost', 'other_operational_cost',
                                      'profile_limit_lower', 'profile_limit_upper']).set_index(
             pd.MultiIndex.from_tuples([], names=['name', 'source', 'sink']))
 
-    gu = griddb['generation_units']
-
     # Get available fuel commodity names (lowercase)
     available_fuels = set(fuel_commodities.index) if not fuel_commodities.empty else set()
 
     port_data = []
-    for _, row in gu.iterrows():
+    for _, row in all_generators.iterrows():
         unit_name = row['name']
-        prime_mover = row['prime_mover']
-        fuel = row.get('fuel')  # May be None
+        prime_mover = row['prime_mover_type']
+        source_table = row['_source_table']
+
+        # Fuel: only thermal_generators has a fuel column
+        fuel = None
+        if source_table == 'thermal_generators':
+            fuel = row.get('fuel')
+            if pd.isna(fuel):
+                fuel = None
 
         # Use the mapping to find the fuel type for this unit (pass unit_name for fuel hints)
         ts_owner = get_ts_owner_for_unit(prime_mover, fuel, unit_name)
@@ -887,19 +969,26 @@ def transform_unit_to_node_profile(griddb: Dict[str, pd.DataFrame],
     Transform renewable max_active_power to unit_to_node.ts.profile_limit_upper.
 
     Capacity factors for renewables become profile_limit_upper time series.
+    Checks owner_type for Renewable patterns across renewable_generators table
+    specifically.
     """
-    if 'generation_units' not in griddb or 'time_series_associations' not in griddb:
-        warnings.add_missing("No generation_units or time_series_associations for profiles")
+    all_generators = _get_all_generators(griddb)
+
+    if all_generators.empty or 'time_series_associations' not in griddb:
+        warnings.add_missing("No generator tables or time_series_associations for profiles")
         return pd.DataFrame(index=timeline.index).rename_axis('datetime')
 
-    gu = griddb['generation_units']
+    if 'balancing_topologies' not in griddb:
+        warnings.add_missing("No balancing_topologies for profiles")
+        return pd.DataFrame(index=timeline.index).rename_axis('datetime')
+
     bt = griddb['balancing_topologies']
     tsa = griddb['time_series_associations']
 
     # Create mapping from balancing_topology id to name
     bt_id_to_name = dict(zip(bt['id'], bt['name']))
 
-    # Find renewable time series
+    # Find renewable time series - check for RenewableGenerator owner_type patterns
     renewable_ts = tsa[
         (tsa['owner_type'].str.contains('Renewable', case=False, na=False)) &
         (tsa['name'] == 'max_active_power')
@@ -909,6 +998,11 @@ def transform_unit_to_node_profile(griddb: Dict[str, pd.DataFrame],
         warnings.add_warning("No renewable time series found for profile_limit_upper")
         return pd.DataFrame(index=timeline.index).rename_axis('datetime')
 
+    # Build set of renewable generator IDs for lookup
+    renewable_ids = set()
+    if 'renewable_generators' in griddb and not griddb['renewable_generators'].empty:
+        renewable_ids = set(griddb['renewable_generators']['id'])
+
     # Build profile DataFrame with MultiIndex columns
     profile_data = {}
     column_tuples = []
@@ -916,8 +1010,8 @@ def transform_unit_to_node_profile(griddb: Dict[str, pd.DataFrame],
     for _, ts_row in renewable_ts.iterrows():
         owner_id = ts_row['owner_id']
 
-        # Find the generation unit
-        unit_row = gu[gu['id'] == owner_id]
+        # Find the generator in the merged view
+        unit_row = all_generators[all_generators['id'] == owner_id]
         if unit_row.empty:
             continue
 
@@ -958,6 +1052,11 @@ def transform_storage(griddb: Dict[str, pd.DataFrame],
                       warnings: TransformationWarnings) -> pd.DataFrame:
     """
     Transform storage_units to CESM storage entities.
+
+    v0.3.0 changes:
+    - prime_mover -> prime_mover_type
+    - max_capacity -> storage_capacity
+    - efficiency_up/efficiency_down -> efficiency JSON {"in": ..., "out": ...}
     """
     if 'storage_units' not in griddb:
         warnings.add_missing("No storage_units table")
@@ -971,7 +1070,7 @@ def transform_storage(griddb: Dict[str, pd.DataFrame],
 
     storage_data = []
     for _, row in su.iterrows():
-        prime_mover = row.get('prime_mover', 'ES')
+        prime_mover = row.get('prime_mover_type', 'ES')
         prime_mover_desc = get_prime_mover_description(prime_mover)
 
         storage_data.append({
@@ -987,7 +1086,7 @@ def transform_storage(griddb: Dict[str, pd.DataFrame],
             'payback_time': None,
             'penalty_downward': None,
             'penalty_upward': None,
-            'storage_capacity': row.get('max_capacity', 0.0),
+            'storage_capacity': row.get('storage_capacity', 0.0),
             'storages_existing': 1.0,
         })
 
@@ -1013,6 +1112,10 @@ def transform_link(griddb: Dict[str, pd.DataFrame],
 
     - transmission_lines with arcs become links between balance nodes
     - storage_units connected to balancing_topologies become storage<->balance links
+
+    v0.3.0 changes for storage:
+    - prime_mover -> prime_mover_type
+    - efficiency is now a JSON column {"in": ..., "out": ...}
     """
     if 'balancing_topologies' not in griddb:
         warnings.add_missing("No balancing_topologies for link transformation")
@@ -1084,7 +1187,20 @@ def transform_link(griddb: Dict[str, pd.DataFrame],
                 continue
 
             link_name = f"{storage_name}__{bt_name}"
-            efficiency = row.get('efficiency_up', 1.0) or 1.0
+
+            # Extract efficiency from JSON efficiency column {"in": ..., "out": ...}
+            efficiency = 1.0
+            eff_raw = row.get('efficiency')
+            if eff_raw and not pd.isna(eff_raw):
+                try:
+                    eff_data = json.loads(eff_raw) if isinstance(eff_raw, str) else eff_raw
+                    if isinstance(eff_data, dict):
+                        # Use 'in' efficiency for the link (charging direction)
+                        efficiency = float(eff_data.get('in', 1.0))
+                    elif isinstance(eff_data, (int, float)):
+                        efficiency = float(eff_data)
+                except (json.JSONDecodeError, TypeError, ValueError):
+                    efficiency = 1.0
 
             link_data.append({
                 'name': link_name,
@@ -1199,7 +1315,7 @@ def to_cesm(db_path: str) -> Dict[str, pd.DataFrame]:
         cesm['commodity'] = transform_commodity(griddb, db_path, warnings)
         cesm['group'], cesm['group_entity'] = transform_groups(griddb, warnings)
 
-        # Phase 3: Units
+        # Phase 3: Units (merged from thermal + renewable + hydro generators)
         print("Phase 3: Transforming units...")
         cesm['unit'] = transform_unit(griddb, db_path, warnings)
         cesm['unit_to_node'] = transform_unit_to_node(griddb, db_path, warnings)

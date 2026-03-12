@@ -45,7 +45,7 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 ## Files Structure
 
 ### Core Model
-- `model/cesm.yaml` - The main LinkML schema defining the energy system model
+- `model/cesm_v0.1.0.yaml` - The main LinkML schema defining the energy system model
 
 ### Sample Data
 - `data/samples/cesm-sample.yaml` - Example data demonstrating how to structure energy system information
@@ -57,7 +57,7 @@ The Common Energy System Model (CESM) is built using [LinkML](https://linkml.io/
 - 'src/core/' - Functions to perform data conversions
 - 'src/readers/' - Functions to read from files to memory
 - 'src/writers/' - Functions to write from memory to files
-- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-pydantic model/cesm.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
+- 'src/generated/' - Auto-generated CESM Python class from the linkml specification. Not in repository - run `gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm.py` to generate (needs `pip install linkml`).
 
 ## Quick Install
 
@@ -85,7 +85,7 @@ pip install -e ".[spine]"
 
 ```bash
 pip install linkml
-gen-pydantic model/cesm.yaml > src/generated/cesm_pydantic.py
+gen-pydantic model/cesm_v0.1.0.yaml > src/generated/cesm_pydantic.py
 ```
 
 ### Verify Installation
@@ -100,7 +100,7 @@ See the [schema documentation](https://g-pst.github.io/CommonEnergySystemModel/e
 
 ## Getting Started
 
-1. **Understanding the Model**: The `cesm.yaml` file defines the core classes:
+1. **Understanding the Model**: The `cesm_v0.1.0.yaml` file defines the core classes:
    - `Balance`: Energy balance nodes with flow characteristics
    - `Storage`: Storage units with capacity and investment parameters
    - `Commodity`: Energy commodities with pricing
@@ -144,7 +144,7 @@ In order to generate the static website for local use or to be published on g-PS
 First, to generate the asciidoc files from the linkML models, run (inside devcontainer)
 
 ```BASH
-python -m linkml_asciidoc_generator.main "model/cesm.yaml" -o "artifacts/documentation/modules/schema"
+python -m linkml_asciidoc_generator.main "model/cesm_v0.1.0.yaml" -o "artifacts/documentation/modules/schema"
 ```
 
 Note: `linkml-asciidoc-generator` must be installed from source (not PyPI) due to a packaging issue with template files. Install via: `pip install -e git+https://github.com/Netbeheer-Nederland/linkml-asciidoc-generator.git#egg=linkml-asciidoc-generator` or use the devcontainer which includes it.

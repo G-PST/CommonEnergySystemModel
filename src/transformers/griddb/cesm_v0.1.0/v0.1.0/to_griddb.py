@@ -1206,7 +1206,7 @@ def transform_transmission_interchanges(source: Dict[str, pd.DataFrame],
     return pd.DataFrame(interchanges_data)
 
 
-def get_parameter_unit(param_name: str, schema_path: str = 'model/cesm.yaml') -> str:
+def get_parameter_unit(param_name: str, schema_path: str = 'model/cesm_v0.1.0.yaml') -> str:
     """
     Extract unit annotation from CESM schema for given parameter.
 

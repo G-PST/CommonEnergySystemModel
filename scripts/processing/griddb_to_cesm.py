@@ -44,6 +44,20 @@ Examples:
         help="Path for the output DuckDB file"
     )
     parser.add_argument(
+        "--cesm-version",
+        "-c",
+        type=str,
+        default="v0.1.0",
+        help="CESM version (default: v0.1.0)"
+    )
+    parser.add_argument(
+        "--griddb-version",
+        "-g",
+        type=str,
+        default="v0.3.0",
+        help="GridDB version (default: v0.3.0)"
+    )
+    parser.add_argument(
         "--clear-target-db",
         action="store_true",
         default=False,
@@ -65,7 +79,7 @@ def main():
 
     # Transform GridDB to CESM DataFrames
     print(f"Reading GridDB from: {args.input_griddb}")
-    cesm_dfs = to_cesm("cesm_v0.1.0", "v0.2.0", args.input_griddb)
+    cesm_dfs = to_cesm(args.cesm_version, args.griddb_version, args.input_griddb)
 
     # Write to DuckDB
     print(f"\nWriting DataFrames to DuckDB: {args.output_duckdb}")
