@@ -998,11 +998,6 @@ def transform_unit_to_node_profile(griddb: Dict[str, pd.DataFrame],
         warnings.add_warning("No renewable time series found for profile_limit_upper")
         return pd.DataFrame(index=timeline.index).rename_axis('datetime')
 
-    # Build set of renewable generator IDs for lookup
-    renewable_ids = set()
-    if 'renewable_generators' in griddb and not griddb['renewable_generators'].empty:
-        renewable_ids = set(griddb['renewable_generators']['id'])
-
     # Build profile DataFrame with MultiIndex columns
     profile_data = {}
     column_tuples = []

@@ -85,7 +85,7 @@ def write_sqlite(griddb_dfs, output_path):
     print(f"  Schema: {schema_path}")
     print(f"  Output: {output_path}")
     writer_module.write_to_sqlite(schema_path, griddb_dfs, output_path)
-    print(f"  SQLite database written successfully.")
+    print("  SQLite database written successfully.")
 
 
 def reverse_transform(db_path):
@@ -144,7 +144,7 @@ def compare_dataframes(original, roundtrip):
 
         if orig_df.shape != rt_df.shape:
             shape_mismatch_count += 1
-            print(f"    -> SHAPE MISMATCH")
+            print("    -> SHAPE MISMATCH")
 
             # Show column differences
             orig_cols = set(str(c) for c in orig_df.columns)
@@ -179,7 +179,7 @@ def compare_dataframes(original, roundtrip):
             )
 
             if not shared_cols:
-                print(f"    -> No shared columns to compare")
+                print("    -> No shared columns to compare")
                 diff_count += 1
                 continue
 
@@ -204,13 +204,13 @@ def compare_dataframes(original, roundtrip):
                 max_abs_diff = np.nanmax(abs_diff) if abs_diff.size > 0 else 0.0
 
                 if max_abs_diff == 0.0:
-                    print(f"    -> NUMERIC MATCH (exact)")
+                    print("    -> NUMERIC MATCH (exact)")
                     match_count += 1
                 elif max_rel < 1e-6:
                     print(f"    -> NUMERIC MATCH (max relative diff: {max_rel:.2e})")
                     match_count += 1
                 else:
-                    print(f"    -> NUMERIC DIFFERENCE")
+                    print("    -> NUMERIC DIFFERENCE")
                     print(f"       Max absolute diff: {max_abs_diff:.6g}")
                     print(f"       Max relative diff: {max_rel:.6g}")
                     print(f"       Mean relative diff: {mean_rel:.6g}")
@@ -222,7 +222,7 @@ def compare_dataframes(original, roundtrip):
                     o = orig_subset.reset_index(drop=True)
                     r = rt_subset.reset_index(drop=True)
                     if o.equals(r):
-                        print(f"    -> MATCH (exact)")
+                        print("    -> MATCH (exact)")
                         match_count += 1
                     else:
                         # Count differing cells
@@ -271,17 +271,17 @@ def compare_dataframes(original, roundtrip):
     print(f"  Only in round-trip:      {len(only_roundtrip)}")
 
     if only_original:
-        print(f"\n  Note: DataFrames only in original may include data that the")
-        print(f"  transformer intentionally filters (e.g., heat network units")
-        print(f"  like bio_chp/heatpump that are not in the power_grid domain,")
-        print(f"  or units without units_existing counts).")
+        print("\n  Note: DataFrames only in original may include data that the")
+        print("  transformer intentionally filters (e.g., heat network units")
+        print("  like bio_chp/heatpump that are not in the power_grid domain,")
+        print("  or units without units_existing counts).")
 
     if match_count == len(common_keys) and not only_original and not only_roundtrip:
-        print(f"\n  RESULT: PERFECT ROUND-TRIP")
+        print("\n  RESULT: PERFECT ROUND-TRIP")
     elif match_count == len(common_keys):
-        print(f"\n  RESULT: All common DataFrames match, but coverage differs.")
+        print("\n  RESULT: All common DataFrames match, but coverage differs.")
     else:
-        print(f"\n  RESULT: Round-trip has differences (see details above).")
+        print("\n  RESULT: Round-trip has differences (see details above).")
 
     print("=" * 80)
 

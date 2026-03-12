@@ -66,6 +66,9 @@ Prerequisites: Python 3.11+ and git.
 ```bash
 git clone <repository-url>
 cd oes-spec
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
 pip install -e .
 ```
 
@@ -127,7 +130,7 @@ This project includes a devcontainer configuration that provides a consistent de
    - LinkML tools
    - Required dependencies
    - Pre-configured extensions for AsciiDoc and Drawio
-5. Once the repository has been reopened in the container, run `pip install -e .` to download all the python dependencies. For development, use `pip install -e ".[dev]"` to also install testing and linting tools.
+5. Once the repository has been reopened in the container, create a virtual environment (`python -m venv .venv && source .venv/bin/activate`) and run `pip install -e .` to install dependencies. For development, use `pip install -e ".[dev]"` to also install testing and linting tools.
 
 ### Spine Toolbox Setup
 

@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import pytest
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -18,7 +17,6 @@ from writers.to_duckdb import (
     _get_index_info,
     dataframes_to_duckdb,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helper-function unit tests

@@ -10,14 +10,19 @@ This guide covers all the ways to set up CESM for use, development, and document
 
 == Basic installation
 
-Clone the repository and install CESM in editable mode:
+Clone the repository, create a virtual environment, and install CESM in editable mode:
 
 [source,bash]
 ----
 git clone <repository-url>
 cd oes-spec
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
 pip install -e .
 ----
+
+IMPORTANT: Always use a virtual environment. Installing CESM and its dependencies into your global Python is not recommended -- it can cause version conflicts with other projects.
 
 This installs the core dependencies defined in `pyproject.toml`:
 
@@ -81,18 +86,13 @@ VS Code's Dev Containers extension is not available in VSCodium. Use https://dev
 
 === After opening the container
 
-Once inside the container, install CESM:
+Once inside the container, create a virtual environment and install CESM:
 
 [source,bash]
 ----
-pip install -e .
-----
-
-Or, for development:
-
-[source,bash]
-----
-pip install -e ".[dev]"
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .            # or: pip install -e ".[dev]"
 ----
 
 == Documentation generation (optional)

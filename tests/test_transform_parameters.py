@@ -3,7 +3,6 @@
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -19,7 +18,6 @@ from core.transform_parameters import (
     load_config,
     parse_spec,
 )
-
 
 # ---------------------------------------------------------------------------
 # list_of_lists_to_index

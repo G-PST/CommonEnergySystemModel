@@ -1,6 +1,5 @@
 """Shared fixtures for oes-spec tests."""
 
-import os
 from pathlib import Path
 
 import numpy as np

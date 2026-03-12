@@ -12,7 +12,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from tests.conftest import CESM_SAMPLE_YAML, CESM_SCHEMA_YAML
 
-
 # ---------------------------------------------------------------------------
 # YAML sample file tests (using raw pyyaml since linkml SchemaView may
 # have compatibility issues with the current schema)
@@ -106,6 +105,7 @@ class TestLinkmlYamlReader:
 
     def test_yaml_to_df_returns_dict(self):
         from linkml_runtime.loaders import yaml_loader
+
         from core.linkml_to_dataframes import yaml_to_df
         from generated.cesm_pydantic import Dataset
 
@@ -115,6 +115,7 @@ class TestLinkmlYamlReader:
 
     def test_yaml_to_df_contains_expected_keys(self):
         from linkml_runtime.loaders import yaml_loader
+
         from core.linkml_to_dataframes import yaml_to_df
         from generated.cesm_pydantic import Dataset
 
@@ -136,8 +137,9 @@ class TestDuckdbReader:
 
     def test_read_invalid_db_raises(self, tmp_path):
         """A DuckDB file without metadata should raise ValueError."""
-        from readers.from_duckdb import dataframes_from_duckdb
         import duckdb
+
+        from readers.from_duckdb import dataframes_from_duckdb
 
         db_path = tmp_path / "empty.duckdb"
         conn = duckdb.connect(str(db_path))

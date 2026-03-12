@@ -219,14 +219,29 @@
 <h2 id="_basic_installation"><a class="anchor" href="#_basic_installation"></a>Basic installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Clone the repository and install CESM in editable mode:</p>
+<p>Clone the repository, create a virtual environment, and install CESM in editable mode:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone &lt;repository-url&gt;
 cd oes-spec
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
 pip install -e .</code></pre>
 </div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Always use a virtual environment. Installing CESM and its dependencies into your global Python is not recommended&#8201;&#8212;&#8201;it can cause version conflicts with other projects.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>This installs the core dependencies defined in <code>pyproject.toml</code>:</p>
@@ -336,19 +351,13 @@ gen-pydantic model/cesm_v0.1.0.yaml &gt; src/generated/cesm_pydantic.py</code></
 <div class="sect2">
 <h3 id="_after_opening_the_container"><a class="anchor" href="#_after_opening_the_container"></a>After opening the container</h3>
 <div class="paragraph">
-<p>Once inside the container, install CESM:</p>
+<p>Once inside the container, create a virtual environment and install CESM:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e .</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or, for development:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pip install -e ".[dev]"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python -m venv .venv
+source .venv/bin/activate
+pip install -e .            # or: pip install -e ".[dev]"</code></pre>
 </div>
 </div>
 </div>

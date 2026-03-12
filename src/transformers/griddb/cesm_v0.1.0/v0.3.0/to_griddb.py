@@ -457,7 +457,8 @@ def classify_thermal_prime_mover(fuel_type: str, efficiency: float) -> Classific
     # Gas-fired classification based on efficiency
     if any(f in fuel_lower for f in ['gas', 'natural_gas', 'lng', 'methane']):
         if efficiency >= CCGT_CERTAIN_MIN_EFFICIENCY:
-            return ClassificationResult('CC', False, f"gas-fired, efficiency={efficiency:.2f} >= 0.54 -> Combined Cycle")
+            return ClassificationResult(
+                'CC', False, f"gas-fired, efficiency={efficiency:.2f} >= 0.54 -> Combined Cycle")
         elif efficiency >= CCGT_UNCERTAIN_MIN_EFFICIENCY:
             return ClassificationResult(
                 'CS', True,
