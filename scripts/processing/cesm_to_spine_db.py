@@ -43,9 +43,9 @@ def main():
 
     args = parser.parse_args()
 
-    # Default output: same path as input but with .sqlite extension
+    # Default output
     if args.output is None:
-        args.output = str(Path(args.input).with_suffix('.sqlite'))
+        args.output = "data/cesm_in_spine.sqlite"
 
     # Load CESM data from DuckDB
     print(f"Loading CESM data from {args.input}...")

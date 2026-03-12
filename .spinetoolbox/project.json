@@ -508,10 +508,6 @@
                 {
                     "type": "resource",
                     "arg": "<project>/data/cesm.duckdb"
-                },
-                {
-                    "type": "resource",
-                    "arg": "db_url@flextool input"
                 }
             ],
             "kill_completed_processes": false,
@@ -574,12 +570,12 @@
             "type": "Data Connection",
             "description": "",
             "x": 147.0751461697497,
-            "y": -208.21810126413027,
+            "y": -206.87113001114372,
             "file_references": [
                 {
                     "type": "path",
                     "relative": true,
-                    "path": "data/griddb.sqlite"
+                    "path": "data/flextool_input.sqlite"
                 }
             ],
             "file_patterns": [],
@@ -653,10 +649,6 @@
                 {
                     "type": "resource",
                     "arg": "<project>/data/cesm.duckdb"
-                },
-                {
-                    "type": "resource",
-                    "arg": "db_url@CESAME in Spine DB"
                 }
             ],
             "kill_completed_processes": false,
@@ -698,7 +690,7 @@
         "CESAME in Spine DB": {
             "type": "Data Store",
             "description": "",
-            "x": 76.80852527372858,
+            "x": 79.50246777970162,
             "y": -54.281049432870454,
             "url": {
                 "dialect": "sqlite",
@@ -707,7 +699,7 @@
                 "database": {
                     "type": "path",
                     "relative": true,
-                    "path": "data/CESAME in Spine.sqlite"
+                    "path": "data/cesm_in_spine.sqlite"
                 },
                 "schema": ""
             }

@@ -6,7 +6,6 @@ to GridDB format, and writes to a SQLite database.
 """
 
 import argparse
-from pathlib import Path
 
 from readers.from_duckdb import dataframes_from_duckdb
 from transformers.griddb import to_griddb
@@ -54,10 +53,9 @@ def main():
 
     args = parser.parse_args()
 
-    # Default output: same path as input but with _griddb.sqlite extension
+    # Default output
     if args.output is None:
-        input_stem = Path(args.input).stem
-        args.output = str(Path(args.input).parent / f"{input_stem}_griddb.sqlite")
+        args.output = "data/griddb_input.sqlite"
 
     # Determine schema path
     if args.schema:

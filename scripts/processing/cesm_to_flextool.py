@@ -84,10 +84,9 @@ def main():
 
     args = parser.parse_args()
 
-    # Default output: same path as input but with _flextool.sqlite extension
+    # Default output
     if args.output is None:
-        input_stem = Path(args.input).stem
-        args.output = str(Path(args.input).parent / f"{input_stem}_flextool.sqlite")
+        args.output = "data/flextool_input.sqlite"
 
     # If output doesn't exist, copy the FlexTool template DB (has class/parameter definitions)
     output_path = Path(args.output)
